@@ -1325,7 +1325,6 @@
           <button class="btn btn-primary" onclick="openModal('addExpense')">+ مصروف جديد</button>
         </div>
       </div>
-      <div class="metrics" id="ov-metrics"></div>
       <div class="grid-2">
         <div class="card">
           <div class="card-title">توزيع المصاريف</div>
@@ -1364,6 +1363,7 @@
           <div id="ov-maint"></div>
         </div>
       </div>
+      <div class="metrics" id="ov-metrics"></div>
     </div>
 
     <!-- ── STATEMENT PAGE ── -->
@@ -1707,6 +1707,30 @@
     </div>
   </div>
 
+  <!-- Edit Income Source -->
+  <div class="modal-ov" id="modal-editIncome">
+    <div class="modal">
+      <div class="modal-title">تعديل مصدر الدخل الثابت</div>
+      <div class="modal-body">
+        <div class="field"><label>اسم المصدر</label><input class="inp" id="e-inc-name" /></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="field"><label>المبلغ الشهري (د.أ)</label><input class="inp" type="number" id="e-inc-amount" step="0.01" /></div>
+          <div class="field"><label>النوع</label>
+            <select class="inp" id="e-inc-type">
+              <option value="salary">راتب ثابت</option>
+              <option value="freelance_fixed">فري لانس ثابت</option>
+              <option value="rent">إيجار</option>
+              <option value="investment">استثمار</option>
+              <option value="other">أخرى</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label>تاريخ البداية</label><input class="inp" type="date" id="e-inc-start" /></div>
+      </div>
+      <div class="modal-actions"><button class="btn" onclick="closeModal('editIncome')">إلغاء</button><button class="btn btn-green" onclick="saveEditIncome()">حفظ التعديل</button></div>
+    </div>
+  </div>
+
   <!-- Add Subscription -->
   <div class="modal-ov" id="modal-addSub">
     <div class="modal">
@@ -1745,6 +1769,42 @@
       </div>
       <div class="modal-actions"><button class="btn" onclick="closeModal('addSub')">إلغاء</button><button
           class="btn btn-primary" onclick="addSubscription()">إضافة</button></div>
+    </div>
+  </div>
+
+  <!-- Edit Subscription -->
+  <div class="modal-ov" id="modal-editSub">
+    <div class="modal">
+      <div class="modal-title">تعديل اشتراك</div>
+      <div class="modal-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="field"><label>الاسم</label><input class="inp" id="e-sub-name" /></div>
+          <div class="field"><label>الإيموجي / الأيقونة</label><input class="inp" id="e-sub-icon" maxlength="2" /></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+          <div class="field"><label>المبلغ (د.أ)</label><input class="inp" type="number" id="e-sub-amount" step="0.01" /></div>
+          <div class="field"><label>الدورية</label>
+            <select class="inp" id="e-sub-freq">
+              <option value="daily">يومي</option>
+              <option value="monthly">شهري</option>
+              <option value="yearly">سنوي</option>
+            </select>
+          </div>
+          <div class="field"><label>الفئة</label>
+            <select class="inp" id="e-sub-cat">
+              <option value="ترفيه">ترفيه</option>
+              <option value="تعليم">تعليم</option>
+              <option value="عمل">عمل</option>
+              <option value="صحة">صحة</option>
+              <option value="خدمات">خدمات</option>
+              <option value="أخرى">أخرى</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label>تاريخ التجديد القادم</label><input class="inp" type="date" id="e-sub-next" /></div>
+        <div class="field"><label>ملاحظة (اختياري)</label><input class="inp" id="e-sub-note" /></div>
+      </div>
+      <div class="modal-actions"><button class="btn" onclick="closeModal('editSub')">إلغاء</button><button class="btn btn-primary" onclick="saveEditSub()">حفظ التعديل</button></div>
     </div>
   </div>
 
@@ -1796,6 +1856,49 @@
     </div>
   </div>
 
+  <!-- Edit Maintenance -->
+  <div class="modal-ov" id="modal-editMaint">
+    <div class="modal">
+      <div class="modal-title">تعديل صيانة</div>
+      <div class="modal-body">
+        <div class="field"><label>الوصف</label><input class="inp" id="e-maint-desc" /></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="field"><label>التكلفة المتوقعة (د.أ)</label><input class="inp" type="number" id="e-maint-cost" step="0.01" /></div>
+          <div class="field"><label>الأولوية</label>
+            <select class="inp" id="e-maint-priority">
+              <option value="urgent">عاجل 🔴</option>
+              <option value="high">مهم 🟠</option>
+              <option value="medium">متوسط 🟡</option>
+              <option value="low">منخفض 🟢</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="field"><label>الفئة</label>
+            <select class="inp" id="e-maint-cat">
+              <option>سيارة</option>
+              <option>بيت</option>
+              <option>أجهزة</option>
+              <option>صحة</option>
+              <option>عمل</option>
+              <option>أخرى</option>
+            </select>
+          </div>
+          <div class="field"><label>التاريخ المجدول</label><input class="inp" type="date" id="e-maint-date" /></div>
+        </div>
+        <div class="field"><label>الحالة</label>
+          <select class="inp" id="e-maint-status">
+            <option value="pending">قيد الانتظار</option>
+            <option value="scheduled">مجدولة</option>
+            <option value="done">منجزة</option>
+          </select>
+        </div>
+        <div class="field"><label>ملاحظة</label><input class="inp" id="e-maint-note" /></div>
+      </div>
+      <div class="modal-actions"><button class="btn" onclick="closeModal('editMaint')">إلغاء</button><button class="btn btn-primary" onclick="saveEditMaint()">حفظ التعديل</button></div>
+    </div>
+  </div>
+
   <!-- Add Loan -->
   <div class="modal-ov" id="modal-addLoan">
     <div class="modal">
@@ -1832,6 +1935,53 @@
       </div>
       <div class="modal-actions"><button class="btn" onclick="closeModal('addLoan')">إلغاء</button><button
           class="btn btn-primary" onclick="addLoan()">إضافة</button></div>
+    </div>
+  </div>
+
+  <!-- Edit Loan -->
+  <div class="modal-ov" id="modal-editLoan">
+    <div class="modal">
+      <div class="modal-title">تعديل قرض</div>
+      <div class="modal-body">
+        <div class="field"><label>اسم القرض / الجهة</label><input class="inp" id="e-loan-name" /></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="field"><label>المبلغ الأصلي (د.أ)</label><input class="inp" type="number" id="e-loan-total" step="0.01" /></div>
+          <div class="field"><label>المبلغ المتبقي (د.أ)</label><input class="inp" type="number" id="e-loan-remaining" step="0.01" /></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="field"><label>القسط الشهري (د.أ)</label><input class="inp" type="number" id="e-loan-monthly" step="0.01" /></div>
+          <div class="field"><label>نسبة الفائدة %</label><input class="inp" type="number" id="e-loan-interest" step="0.1" min="0" /></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="field"><label>تاريخ البداية</label><input class="inp" type="date" id="e-loan-start" /></div>
+          <div class="field"><label>تاريخ الانتهاء</label><input class="inp" type="date" id="e-loan-end" /></div>
+        </div>
+        <div class="field"><label>النوع</label>
+          <select class="inp" id="e-loan-type">
+            <option value="bank">قرض بنكي</option>
+            <option value="personal">قرض شخصي</option>
+            <option value="car">قرض سيارة</option>
+            <option value="home">قرض منزل</option>
+            <option value="other">أخرى</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-actions"><button class="btn" onclick="closeModal('editLoan')">إلغاء</button><button class="btn btn-primary" onclick="saveEditLoan()">حفظ التعديل</button></div>
+    </div>
+  </div>
+
+  <!-- Edit Freelance -->
+  <div class="modal-ov" id="modal-editFreelance">
+    <div class="modal">
+      <div class="modal-title">تعديل دخل متغير</div>
+      <div class="modal-body">
+        <div class="field"><label>الوصف</label><input class="inp" id="e-fl-desc" /></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="field"><label>المبلغ (د.أ)</label><input class="inp" type="number" id="e-fl-amount" min="0" step="0.01" /></div>
+          <div class="field"><label>التاريخ</label><input class="inp" type="date" id="e-fl-date" /></div>
+        </div>
+      </div>
+      <div class="modal-actions"><button class="btn" onclick="closeModal('editFreelance')">إلغاء</button><button class="btn btn-green" onclick="saveEditFreelance()">حفظ التعديل</button></div>
     </div>
   </div>
 
@@ -2245,7 +2395,10 @@
         <div class="income-source-amt">+${src.amount.toFixed(2)} د.أ</div>
         <div style="font-size:10px;color:var(--text3)">شهرياً</div>
       </div>
-      <button class="del-btn" onclick="delIncomeSource(${src.id})">✕</button>
+      <div style="display:flex;gap:4px">
+        <button class="del-btn" style="color:var(--accent2)" onclick="openEditIncome(${src.id})" title="تعديل">✎</button>
+        <button class="del-btn" onclick="delIncomeSource(${src.id})" title="حذف">✕</button>
+      </div>
     </div>`).join('') : '<div class="empty">لا مصادر دخل ثابتة — أضف من الأعلى</div>';
       // freelance in period
       const { from, to } = getDateRange();
@@ -2261,7 +2414,7 @@
       const rows = state.freelanceLog.sort((a, b) => new Date(b.date) - new Date(a.date));
       document.getElementById('income-var-table').innerHTML = rows.length ? `
     <table><thead><tr><th>التاريخ</th><th>الوصف</th><th>المبلغ</th><th></th></tr></thead><tbody>
-    ${rows.map(f => `<tr><td class="td-mono" style="font-size:11px">${f.date}</td><td class="td-main">${f.desc}</td><td class="td-mono" style="color:var(--green)">+${f.amount.toFixed(2)} د.أ</td><td><button class="del-btn" onclick="delFL(${f.id})">✕</button></td></tr>`).join('')}
+    ${rows.map(f => `<tr><td class="td-mono" style="font-size:11px">${f.date}</td><td class="td-main">${f.desc}</td><td class="td-mono" style="color:var(--green)">+${f.amount.toFixed(2)} د.أ</td><td style="white-space:nowrap"><button class="del-btn" style="color:var(--accent2);margin-inline-end:6px" onclick="openEditFreelance(${f.id})" title="تعديل">✎</button><button class="del-btn" onclick="delFL(${f.id})" title="حذف">✕</button></td></tr>`).join('')}
     </tbody></table>`: '<div class="empty">لا سجلات</div>';
     }
     function addIncomeSource() {
@@ -2275,6 +2428,28 @@
       document.getElementById('m-inc-name').value = ''; document.getElementById('m-inc-amount').value = '';
     }
     function delIncomeSource(id) { state.incomeSources = state.incomeSources.filter(s => s.id !== id); saveState(); renderIncome(); renderOverview(); toast('تم الحذف'); }
+    let editingIncId = null;
+    function openEditIncome(id) {
+      const src = state.incomeSources.find(x => x.id === id);
+      if (!src) return;
+      editingIncId = id;
+      document.getElementById('e-inc-name').value = src.name;
+      document.getElementById('e-inc-amount').value = src.amount;
+      document.getElementById('e-inc-type').value = src.type;
+      document.getElementById('e-inc-start').value = src.start;
+      openModal('editIncome');
+    }
+    function saveEditIncome() {
+      const src = state.incomeSources.find(x => x.id === editingIncId);
+      if (!src) return;
+      const name = document.getElementById('e-inc-name').value.trim();
+      const amount = parseFloat(document.getElementById('e-inc-amount').value);
+      const type = document.getElementById('e-inc-type').value;
+      const start = document.getElementById('e-inc-start').value || td();
+      if (!name || isNaN(amount) || amount <= 0) { toast('يرجى ملء جميع الحقول'); return; }
+      src.name = name; src.amount = amount; src.type = type; src.start = start;
+      saveState(); closeModal('editIncome'); renderIncome(); renderOverview(); toast('تم التعديل ✓');
+    }
     function addFreelance() {
       const desc = document.getElementById('fl-desc').value.trim();
       const amount = parseFloat(document.getElementById('fl-amount').value);
@@ -2285,6 +2460,26 @@
       document.getElementById('fl-desc').value = ''; document.getElementById('fl-amount').value = '';
     }
     function delFL(id) { state.freelanceLog = state.freelanceLog.filter(f => f.id !== id); saveState(); renderFLTable(); }
+    let editingFLId = null;
+    function openEditFreelance(id) {
+      const f = state.freelanceLog.find(x => x.id === id);
+      if (!f) return;
+      editingFLId = id;
+      document.getElementById('e-fl-desc').value = f.desc;
+      document.getElementById('e-fl-amount').value = f.amount;
+      document.getElementById('e-fl-date').value = f.date;
+      openModal('editFreelance');
+    }
+    function saveEditFreelance() {
+      const f = state.freelanceLog.find(x => x.id === editingFLId);
+      if (!f) return;
+      const desc = document.getElementById('e-fl-desc').value.trim();
+      const amount = parseFloat(document.getElementById('e-fl-amount').value);
+      const date = document.getElementById('e-fl-date').value || td();
+      if (!desc || isNaN(amount) || amount <= 0) { toast('أدخل البيانات'); return; }
+      f.desc = desc; f.amount = amount; f.date = date;
+      saveState(); closeModal('editFreelance'); renderIncome(); renderOverview(); toast('تم التعديل ✓');
+    }
 
     // ═══════════════════════════════════════
     //  EXPENSES
@@ -2367,6 +2562,34 @@
       ['m-sub-name', 'm-sub-icon', 'm-sub-amount', 'm-sub-next', 'm-sub-note'].forEach(id => document.getElementById(id).value = '');
     }
     function delSub(id) { state.subscriptions = state.subscriptions.filter(s => s.id !== id); saveState(); renderSubs(); renderOverview(); toast('تم الحذف'); }
+    let editingSubId = null;
+    function openEditSub(id) {
+      const s = state.subscriptions.find(x => x.id === id);
+      if (!s) return;
+      editingSubId = id;
+      document.getElementById('e-sub-name').value = s.name;
+      document.getElementById('e-sub-icon').value = s.icon;
+      document.getElementById('e-sub-amount').value = s.amount;
+      document.getElementById('e-sub-freq').value = s.freq;
+      document.getElementById('e-sub-cat').value = s.cat;
+      document.getElementById('e-sub-next').value = s.next;
+      document.getElementById('e-sub-note').value = s.note || '';
+      openModal('editSub');
+    }
+    function saveEditSub() {
+      const s = state.subscriptions.find(x => x.id === editingSubId);
+      if (!s) return;
+      const name = document.getElementById('e-sub-name').value.trim();
+      const icon = document.getElementById('e-sub-icon').value || '📦';
+      const amount = parseFloat(document.getElementById('e-sub-amount').value);
+      const freq = document.getElementById('e-sub-freq').value;
+      const cat = document.getElementById('e-sub-cat').value;
+      const next = document.getElementById('e-sub-next').value || td();
+      const note = document.getElementById('e-sub-note').value;
+      if (!name || isNaN(amount) || amount <= 0) { toast('أدخل البيانات'); return; }
+      s.name = name; s.icon = icon; s.amount = amount; s.freq = freq; s.cat = cat; s.next = next; s.note = note;
+      saveState(); closeModal('editSub'); renderSubs(); renderOverview(); toast('تم التعديل ✓');
+    }
     function renderSubs() {
       const monthly = calcSubMonthly();
       const daily = state.subscriptions.filter(s => s.freq === 'daily').reduce((s, x) => s + x.amount, 0);
@@ -2392,7 +2615,10 @@
           <div class="sub-amt">${s.amount} د.أ</div>
           <div class="sub-next">تجديد: ${s.next}</div>
         </div>
-        <button class="del-btn" onclick="delSub(${s.id})">✕</button>
+        <div style="display:flex;gap:4px">
+          <button class="del-btn" style="color:var(--accent2)" onclick="openEditSub(${s.id})" title="تعديل">✎</button>
+          <button class="del-btn" onclick="delSub(${s.id})" title="حذف">✕</button>
+        </div>
       </div>`).join('') : `<div class="empty">لا اشتراكات ${freqLabel[freq]}ة</div>`;
       });
     }
@@ -2418,6 +2644,34 @@
     }
     function delMaint(id) { state.maintenance = state.maintenance.filter(m => m.id !== id); saveState(); renderMaint(); renderOverview(); }
     function doneMaint(id) { const m = state.maintenance.find(x => x.id === id); if (m) { m.status = 'done'; saveState(); renderMaint(); renderOverview(); toast('تم تحديد الصيانة كمنجزة ✓'); } }
+    let editingMaintId = null;
+    function openEditMaint(id) {
+      const m = state.maintenance.find(x => x.id === id);
+      if (!m) return;
+      editingMaintId = id;
+      document.getElementById('e-maint-desc').value = m.desc;
+      document.getElementById('e-maint-cost').value = m.cost;
+      document.getElementById('e-maint-priority').value = m.priority;
+      document.getElementById('e-maint-cat').value = m.cat;
+      document.getElementById('e-maint-date').value = m.date;
+      document.getElementById('e-maint-status').value = m.status;
+      document.getElementById('e-maint-note').value = m.note || '';
+      openModal('editMaint');
+    }
+    function saveEditMaint() {
+      const m = state.maintenance.find(x => x.id === editingMaintId);
+      if (!m) return;
+      const desc = document.getElementById('e-maint-desc').value.trim();
+      const cost = parseFloat(document.getElementById('e-maint-cost').value) || 0;
+      const priority = document.getElementById('e-maint-priority').value;
+      const cat = document.getElementById('e-maint-cat').value;
+      const date = document.getElementById('e-maint-date').value || td();
+      const status = document.getElementById('e-maint-status').value;
+      const note = document.getElementById('e-maint-note').value;
+      if (!desc) { toast('أدخل الوصف'); return; }
+      m.desc = desc; m.cost = cost; m.priority = priority; m.cat = cat; m.date = date; m.status = status; m.note = note;
+      saveState(); closeModal('editMaint'); renderMaint(); renderOverview(); toast('تم التعديل ✓');
+    }
     function renderMaint() {
       const totalCost = state.maintenance.filter(m => m.status !== 'done').reduce((s, m) => s + m.cost, 0);
       const pending = state.maintenance.filter(m => m.status !== 'done');
@@ -2441,8 +2695,11 @@
           <div class="maint-cost">${m.cost > 0 ? m.cost + ' د.أ' : '—'}</div>
           <div class="maint-date">${m.date}</div>
         </div>
-        <button class="btn btn-sm btn-green" onclick="doneMaint(${m.id})" style="margin-left:4px">✓</button>
-        <button class="del-btn" onclick="delMaint(${m.id})">✕</button>
+        <button class="btn btn-sm btn-green" onclick="doneMaint(${m.id})" style="margin-left:4px" title="إنجاز">✓</button>
+        <div style="display:flex;gap:4px">
+          <button class="del-btn" style="color:var(--accent2)" onclick="openEditMaint(${m.id})" title="تعديل">✎</button>
+          <button class="del-btn" onclick="delMaint(${m.id})" title="حذف">✕</button>
+        </div>
       </div>`).join('') : '<div class="empty">لا بنود</div>';
       };
       renderList(urgent, 'maint-urgent');
@@ -2450,7 +2707,7 @@
       const all = state.maintenance.sort((a, b) => new Date(b.date) - new Date(a.date));
       document.getElementById('maint-table').innerHTML = all.length ? `
     <table><thead><tr><th>الوصف</th><th>الفئة</th><th>الأولوية</th><th>الحالة</th><th>التكلفة</th><th>التاريخ</th><th></th></tr></thead><tbody>
-    ${all.map(m => `<tr><td class="td-main">${m.desc}</td><td>${m.cat}</td><td><span style="color:${PRIO_COLORS[m.priority]};font-size:12px">${PRIO_LABELS[m.priority]}</span></td><td style="font-size:12px">${STATUS_LABELS[m.status]}</td><td class="td-mono">${m.cost > 0 ? m.cost + ' د.أ' : '—'}</td><td class="td-mono" style="font-size:11px">${m.date}</td><td><button class="del-btn" onclick="delMaint(${m.id})">✕</button></td></tr>`).join('')}
+    ${all.map(m => `<tr><td class="td-main">${m.desc}</td><td>${m.cat}</td><td><span style="color:${PRIO_COLORS[m.priority]};font-size:12px">${PRIO_LABELS[m.priority]}</span></td><td style="font-size:12px">${STATUS_LABELS[m.status]}</td><td class="td-mono">${m.cost > 0 ? m.cost + ' د.أ' : '—'}</td><td class="td-mono" style="font-size:11px">${m.date}</td><td style="white-space:nowrap"><button class="del-btn" style="color:var(--accent2);margin-inline-end:6px" onclick="openEditMaint(${m.id})" title="تعديل">✎</button><button class="del-btn" onclick="delMaint(${m.id})" title="حذف">✕</button></td></tr>`).join('')}
     </tbody></table>`: '<div class="empty">لا سجلات</div>';
     }
 
@@ -2473,6 +2730,36 @@
       ['m-loan-name', 'm-loan-total', 'm-loan-remaining', 'm-loan-monthly', 'm-loan-interest', 'm-loan-start', 'm-loan-end'].forEach(id => document.getElementById(id).value = '');
     }
     function delLoan(id) { state.loans = state.loans.filter(l => l.id !== id); saveState(); renderLoans(); renderOverview(); }
+    let editingLoanId = null;
+    function openEditLoan(id) {
+      const l = state.loans.find(x => x.id === id);
+      if (!l) return;
+      editingLoanId = id;
+      document.getElementById('e-loan-name').value = l.name;
+      document.getElementById('e-loan-total').value = l.total;
+      document.getElementById('e-loan-remaining').value = l.remaining;
+      document.getElementById('e-loan-monthly').value = l.monthly;
+      document.getElementById('e-loan-interest').value = l.interest;
+      document.getElementById('e-loan-start').value = l.start;
+      document.getElementById('e-loan-end').value = l.end;
+      document.getElementById('e-loan-type').value = l.type;
+      openModal('editLoan');
+    }
+    function saveEditLoan() {
+      const l = state.loans.find(x => x.id === editingLoanId);
+      if (!l) return;
+      const name = document.getElementById('e-loan-name').value.trim();
+      const total = parseFloat(document.getElementById('e-loan-total').value);
+      const remaining = parseFloat(document.getElementById('e-loan-remaining').value);
+      const monthly = parseFloat(document.getElementById('e-loan-monthly').value);
+      const interest = parseFloat(document.getElementById('e-loan-interest').value) || 0;
+      const start = document.getElementById('e-loan-start').value || td();
+      const end = document.getElementById('e-loan-end').value || td();
+      const type = document.getElementById('e-loan-type').value;
+      if (!name || isNaN(total) || isNaN(remaining) || isNaN(monthly)) { toast('يرجى ملء الحقول المطلوبة'); return; }
+      l.name = name; l.total = total; l.remaining = remaining; l.monthly = monthly; l.interest = interest; l.start = start; l.end = end; l.type = type;
+      saveState(); closeModal('editLoan'); renderLoans(); renderOverview(); toast('تم التعديل ✓');
+    }
     function payLoan(id) {
       const l = state.loans.find(x => x.id === id);
       if (!l) return;
@@ -2502,7 +2789,8 @@
         </div>
         <div style="display:flex;gap:8px">
           <button class="btn btn-sm btn-green" onclick="payLoan(${l.id})">+ دفعة</button>
-          <button class="del-btn" onclick="delLoan(${l.id})">✕</button>
+          <button class="del-btn" style="color:var(--accent2)" onclick="openEditLoan(${l.id})" title="تعديل">✎</button>
+          <button class="del-btn" onclick="delLoan(${l.id})" title="حذف">✕</button>
         </div>
       </div>
       <div class="loan-stats">
