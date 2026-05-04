@@ -2272,6 +2272,13 @@
     function renderDonut(exps) {
       const byCat = {};
       exps.forEach(e => byCat[e.cat] = (byCat[e.cat] || 0) + e.amount);
+      if(state.subscriptions) state.subscriptions.forEach(s => {
+        const amt = s.freq === 'daily' ? s.amount * 30 : s.freq === 'yearly' ? s.amount / 12 : s.amount;
+        byCat[s.cat] = (byCat[s.cat] || 0) + amt;
+      });
+      if(state.loans) state.loans.forEach(l => {
+        byCat['ديون'] = (byCat['ديون'] || 0) + l.monthly;
+      });
       const cats = Object.keys(byCat).sort((a, b) => byCat[b] - byCat[a]);
       const vals = cats.map(c => byCat[c]);
       const total = vals.reduce((s, v) => s + v, 0);
@@ -2522,6 +2529,23 @@
       const ecSel = document.getElementById('exp-cat-sel');
       if (ecSel) ecSel.innerHTML = '<option value="all">كل الفئات</option>' + state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
     }
+    function checkBudgetWarning(cat) {
+      if (!state.budgets || !state.budgets[cat]) return;
+      const limit = state.budgets[cat];
+      const exps = state.expenses.filter(e => e.cat === cat && inRange(e.date));
+      let spent = exps.reduce((s, e) => s + e.amount, 0);
+      if(state.subscriptions) state.subscriptions.forEach(s => {
+        if (s.cat === cat) spent += (s.freq === 'daily' ? s.amount * 30 : s.freq === 'yearly' ? s.amount / 12 : s.amount);
+      });
+      if(cat === 'ديون' && state.loans) state.loans.forEach(l => { spent += l.monthly; });
+      
+      if (spent >= limit) {
+        setTimeout(() => alert(`🚨 تحذير الميزانية 🚨\n\nلقد تجاوزت الميزانية المخصصة لفئة "${cat}"!\n\nالمنفق: ${spent.toFixed(2)} د.أ\nالميزانية: ${limit.toFixed(2)} د.أ`), 100);
+      } else if (spent >= limit * 0.8) {
+        setTimeout(() => alert(`⚠️ تنبيه الميزانية ⚠️\n\nلقد استهلكت ${(spent/limit*100).toFixed(0)}% من ميزانية فئة "${cat}".\n\nالمتبقي فقط: ${(limit - spent).toFixed(2)} د.أ`), 100);
+      }
+    }
+
     function addExpense() {
       const desc = document.getElementById('exp-desc').value.trim();
       const amount = parseFloat(document.getElementById('exp-amount').value);
@@ -2531,6 +2555,7 @@
       state.expenses.push({ id: state.nextId++, desc, amount, cat, date });
       saveState(); renderExpTable(); renderOverview(); toast('تمت الإضافة ✓');
       document.getElementById('exp-desc').value = ''; document.getElementById('exp-amount').value = '';
+      checkBudgetWarning(cat);
     }
     let editingExpId = null;
     function openEditExpense(id) {
@@ -2563,6 +2588,7 @@
       state.expenses.push({ id: state.nextId++, desc, amount, cat, date });
       saveState(); renderExpTable(); renderOverview(); closeModal('addExpense'); toast('تمت الإضافة ✓');
       document.getElementById('m-exp-desc').value = ''; document.getElementById('m-exp-amount').value = '';
+      checkBudgetWarning(cat);
     }
     function delExpense(id) { state.expenses = state.expenses.filter(e => e.id !== id); saveState(); renderExpTable(); renderOverview(); toast('تم الحذف'); }
     
