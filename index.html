@@ -1970,6 +1970,18 @@
     </div>
   </div>
 
+  <!-- Edit Category -->
+  <div class="modal-ov" id="modal-editCat">
+    <div class="modal">
+      <div class="modal-title">تعديل فئة</div>
+      <div class="modal-body">
+        <div class="field"><label>اسم الفئة</label><input class="inp" id="e-cat-name" /></div>
+        <div class="field"><label>اللون</label><input type="color" class="inp" id="e-cat-color" style="height:40px;padding:2px;cursor:pointer" /></div>
+      </div>
+      <div class="modal-actions"><button class="btn" onclick="closeModal('editCat')">إلغاء</button><button class="btn btn-primary" onclick="saveEditCat()">حفظ التعديل</button></div>
+    </div>
+  </div>
+
   <!-- Edit Freelance -->
   <div class="modal-ov" id="modal-editFreelance">
     <div class="modal">
@@ -2903,7 +2915,8 @@
       <div class="leg-dot" style="background:${c.color};width:10px;height:10px"></div>
       <span style="font-size:13px;flex:1">${c.name}</span>
       <span style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">${byCat[c.name] || 0}</span>
-      ${i >= 8 ? `<button class="del-btn" onclick="delCat('${c.name}')">✕</button>` : ''}
+      <button class="del-btn" style="color:var(--accent2)" onclick="openEditCat('${c.name}')" title="تعديل">✎</button>
+      ${i >= 9 ? `<button class="del-btn" onclick="delCat('${c.name}')" title="حذف">✕</button>` : ''}
     </div>`).join('');
     }
     function addCategory() {
@@ -2920,6 +2933,49 @@
       state.categories = state.categories.filter(c => c.name !== name);
       delete state.budgets[name];
       saveState(); populateCatSelects(); renderCategories();
+    }
+
+    let editingCatName = null;
+    function openEditCat(name) {
+      const c = state.categories.find(x => x.name === name);
+      if (!c) return;
+      editingCatName = name;
+      document.getElementById('e-cat-name').value = c.name;
+      document.getElementById('e-cat-color').value = c.color;
+      openModal('editCat');
+    }
+
+    function saveEditCat() {
+      const c = state.categories.find(x => x.name === editingCatName);
+      if (!c) return;
+      const newName = document.getElementById('e-cat-name').value.trim();
+      const newColor = document.getElementById('e-cat-color').value;
+      if (!newName) { toast('أدخل اسم الفئة'); return; }
+      
+      if (newName !== editingCatName) {
+        if (state.categories.find(x => x.name === newName)) { toast('الاسم موجود مسبقاً'); return; }
+        state.expenses.forEach(e => { if(e.cat === editingCatName) e.cat = newName; });
+        if(state.subscriptions) state.subscriptions.forEach(s => { if(s.cat === editingCatName) s.cat = newName; });
+        if(state.maintenance) state.maintenance.forEach(m => { if(m.cat === editingCatName) m.cat = newName; });
+        if (state.budgets && state.budgets[editingCatName] !== undefined) {
+          state.budgets[newName] = state.budgets[editingCatName];
+          delete state.budgets[editingCatName];
+        }
+      }
+      c.name = newName;
+      c.color = newColor;
+      
+      saveState(); 
+      typeof populateCatSelects === 'function' && populateCatSelects();
+      typeof renderCategories === 'function' && renderCategories();
+      typeof renderBudget === 'function' && renderBudget();
+      typeof renderExpTable === 'function' && renderExpTable();
+      typeof renderSubs === 'function' && renderSubs();
+      typeof renderMaint === 'function' && renderMaint();
+      typeof renderOverview === 'function' && renderOverview();
+      
+      closeModal('editCat'); 
+      toast('تم التعديل ✓');
     }
 
     // ═══════════════════════════════════════
