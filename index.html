@@ -2060,51 +2060,68 @@
     const db = firebase.database();
 
     async function loadState() {
+      const processLoadedState = (p) => {
+        state.expenses = p.expenses ? Object.values(p.expenses) : [];
+        state.freelanceLog = p.freelanceLog ? Object.values(p.freelanceLog) : [];
+        state.incomeSources = p.incomeSources ? Object.values(p.incomeSources) : [];
+        state.subscriptions = p.subscriptions ? Object.values(p.subscriptions) : [];
+        state.maintenance = p.maintenance ? Object.values(p.maintenance) : [];
+        state.loans = p.loans ? Object.values(p.loans) : [];
+        if (p.categories) state.categories = p.categories;
+        if (p.budgets) state.budgets = p.budgets;
+        if (p.periodMode) state.periodMode = p.periodMode;
+        if (p.periodMonth !== undefined) state.periodMonth = p.periodMonth;
+        state.periodYear = p.periodYear || new Date().getFullYear();
+        
+        let maxId = 0;
+        const seenIds = new Set();
+        [state.expenses, state.freelanceLog, state.incomeSources, state.subscriptions, state.maintenance, state.loans].forEach(arr => {
+          arr.forEach(item => {
+            if (item.id > maxId) maxId = item.id;
+          });
+        });
+        state.nextId = Math.max(state.nextId, maxId + 1);
+        
+        // Fix duplicate IDs
+        let updatedIds = false;
+        [state.expenses, state.freelanceLog, state.incomeSources, state.subscriptions, state.maintenance, state.loans].forEach(arr => {
+          arr.forEach(item => {
+            if (seenIds.has(item.id)) {
+              item.id = state.nextId++;
+              updatedIds = true;
+            }
+            seenIds.add(item.id);
+          });
+        });
+        if (p.nextId && p.nextId > state.nextId) state.nextId = p.nextId;
+        return updatedIds;
+      };
+
+      let needsSave = false;
       try {
         const snapshot = await db.ref('state').once('value');
         const p = snapshot.val();
-        if (p) {
-          // Firebase omits empty arrays and turns arrays with gaps into objects.
-          // We must safely parse them back into arrays, or default to empty arrays to clear hardcoded state.
-          state.expenses = p.expenses ? Object.values(p.expenses) : [];
-          state.freelanceLog = p.freelanceLog ? Object.values(p.freelanceLog) : [];
-          state.incomeSources = p.incomeSources ? Object.values(p.incomeSources) : [];
-          state.subscriptions = p.subscriptions ? Object.values(p.subscriptions) : [];
-          state.maintenance = p.maintenance ? Object.values(p.maintenance) : [];
-          state.loans = p.loans ? Object.values(p.loans) : [];
-          if (p.categories) state.categories = p.categories;
-          if (p.budgets) state.budgets = p.budgets;
-          state.periodYear = p.periodYear || new Date().getFullYear();
-        }
+        if (p) needsSave = processLoadedState(p);
       } catch (err) {
         console.error("Firebase not reachable, falling back to localStorage.", err);
         const s = localStorage.getItem('mwsarify_v3');
         if (s) {
           try {
             const p = JSON.parse(s);
-            state.expenses = p.expenses || [];
-            state.freelanceLog = p.freelanceLog || [];
-            state.incomeSources = p.incomeSources || [];
-            state.subscriptions = p.subscriptions || [];
-            state.maintenance = p.maintenance || [];
-            state.loans = p.loans || [];
-            if (p.categories) state.categories = p.categories;
-            if (p.budgets) state.budgets = p.budgets;
-            state.periodYear = p.periodYear || new Date().getFullYear();
+            needsSave = processLoadedState(p);
           } catch (e) { }
         }
       }
       
       // ALWAYS ensure the new default categories exist, regardless of data source
-      const newCats = [{ name: 'سيارة', color: '#fb7185' }, { name: 'إيجار', color: '#818cf8' }, { name: 'ديون', color: '#facc15' }, { name: 'المصاريف الشهرية', color: '#f43f5e' }, { name: 'مصاريف السيارة', color: '#ef4444' }, { name: 'مصاريف المدارس', color: '#3b82f6' }, { name: 'الحارس', color: '#8b5cf6' }, { name: 'اخرى', color: '#64748b' }];
-      let updated = false;
+      const newCats = [{ name: 'سيارة', color: '#fb7185' }, { name: 'إيجار', color: '#818cf8' }, { name: 'ديون', color: '#facc15' }, { name: 'المصاريف الشهرية', color: '#f43f5e' }, { name: 'مصاريف السيارة', color: '#ef4444' }, { name: 'مصاريف المدارس', color: '#3b82f6' }, { name: 'الحارس', color: '#8b5cf6' }, { name: 'اخرى', color: '#64748b' }, { name: 'أخرى', color: '#888' }];
       newCats.forEach(nc => { 
         if (!state.categories.find(c => c.name === nc.name)) {
           state.categories.push(nc);
-          updated = true;
+          needsSave = true;
         }
       });
-      if (updated) saveState();
+      if (needsSave) saveState();
     }
 
     async function saveState() {
