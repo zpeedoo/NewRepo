@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مصاريفي — لوحة المالية الشخصية</title>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
-          rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -123,16 +124,16 @@
             transition: all .15s
         }
 
-            .nav-item:hover {
-                color: var(--text);
-                background: var(--surface2)
-            }
+        .nav-item:hover {
+            color: var(--text);
+            background: var(--surface2)
+        }
 
-            .nav-item.active {
-                color: var(--accent2);
-                border-right-color: var(--accent);
-                background: rgba(124, 109, 250, 0.08)
-            }
+        .nav-item.active {
+            color: var(--accent2);
+            border-right-color: var(--accent);
+            background: rgba(124, 109, 250, 0.08)
+        }
 
         .nav-icon {
             width: 15px;
@@ -176,13 +177,13 @@
             min-width: 80px
         }
 
-            .period-sel:focus {
-                border-color: var(--accent)
-            }
+        .period-sel:focus {
+            border-color: var(--accent)
+        }
 
-            .period-sel option {
-                background: var(--surface2)
-            }
+        .period-sel option {
+            background: var(--surface2)
+        }
 
         /* ── Main ── */
         .main {
@@ -197,9 +198,9 @@
             display: none
         }
 
-            .page.active {
-                display: block
-            }
+        .page.active {
+            display: block
+        }
 
         /* Topbar */
         .topbar {
@@ -251,9 +252,9 @@
             white-space: nowrap
         }
 
-            .btn:hover {
-                background: var(--surface2)
-            }
+        .btn:hover {
+            background: var(--surface2)
+        }
 
         .btn-primary {
             background: var(--accent);
@@ -261,10 +262,10 @@
             color: #fff
         }
 
-            .btn-primary:hover {
-                background: var(--accent2);
-                border-color: var(--accent2)
-            }
+        .btn-primary:hover {
+            background: var(--accent2);
+            border-color: var(--accent2)
+        }
 
         .btn-green {
             background: rgba(52, 211, 153, 0.15);
@@ -272,9 +273,9 @@
             color: var(--green)
         }
 
-            .btn-green:hover {
-                background: rgba(52, 211, 153, 0.25)
-            }
+        .btn-green:hover {
+            background: rgba(52, 211, 153, 0.25)
+        }
 
         .btn-danger {
             background: rgba(248, 113, 113, 0.12);
@@ -282,9 +283,9 @@
             color: var(--red)
         }
 
-            .btn-danger:hover {
-                background: rgba(248, 113, 113, 0.2)
-            }
+        .btn-danger:hover {
+            background: rgba(248, 113, 113, 0.2)
+        }
 
         .btn-sm {
             padding: 5px 10px;
@@ -308,39 +309,39 @@
             overflow: hidden
         }
 
-            .metric::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                right: 0;
-                width: 3px;
-                height: 100%;
-                border-radius: 0 var(--r2) var(--r2) 0
-            }
+        .metric::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 3px;
+            height: 100%;
+            border-radius: 0 var(--r2) var(--r2) 0
+        }
 
-            .metric.m-p::before {
-                background: var(--accent)
-            }
+        .metric.m-p::before {
+            background: var(--accent)
+        }
 
-            .metric.m-g::before {
-                background: var(--green)
-            }
+        .metric.m-g::before {
+            background: var(--green)
+        }
 
-            .metric.m-r::before {
-                background: var(--red)
-            }
+        .metric.m-r::before {
+            background: var(--red)
+        }
 
-            .metric.m-a::before {
-                background: var(--amber)
-            }
+        .metric.m-a::before {
+            background: var(--amber)
+        }
 
-            .metric.m-c::before {
-                background: var(--cyan)
-            }
+        .metric.m-c::before {
+            background: var(--cyan)
+        }
 
-            .metric.m-pk::before {
-                background: var(--pink)
-            }
+        .metric.m-pk::before {
+            background: var(--pink)
+        }
 
         .metric-lbl {
             font-size: 10px;
@@ -555,9 +556,9 @@
             outline: none
         }
 
-            .search-inp:focus {
-                border-color: var(--accent)
-            }
+        .search-inp:focus {
+            border-color: var(--accent)
+        }
 
         table {
             width: 100%;
@@ -625,10 +626,10 @@
             transition: all .15s
         }
 
-            .del-btn:hover {
-                background: rgba(248, 113, 113, 0.15);
-                color: var(--red)
-            }
+        .del-btn:hover {
+            background: rgba(248, 113, 113, 0.15);
+            color: var(--red)
+        }
 
         /* Form */
         .form-card {
@@ -654,12 +655,12 @@
             gap: 4px
         }
 
-            .field label {
-                font-size: 10px;
-                color: var(--text3);
-                font-family: 'JetBrains Mono', monospace;
-                letter-spacing: .3px
-            }
+        .field label {
+            font-size: 10px;
+            color: var(--text3);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: .3px
+        }
 
         .inp {
             background: var(--surface2);
@@ -674,9 +675,9 @@
             width: 100%
         }
 
-            .inp:focus {
-                border-color: var(--accent)
-            }
+        .inp:focus {
+            border-color: var(--accent)
+        }
 
         select.inp option {
             background: var(--surface2)
@@ -966,11 +967,11 @@
             transition: all .2s
         }
 
-            .export-card:hover {
-                border-color: var(--accent);
-                background: rgba(124, 109, 250, 0.05);
-                transform: translateY(-2px)
-            }
+        .export-card:hover {
+            border-color: var(--accent);
+            background: rgba(124, 109, 250, 0.05);
+            transform: translateY(-2px)
+        }
 
         .export-icon {
             font-size: 28px;
@@ -1000,9 +1001,9 @@
             z-index: 300
         }
 
-            .modal-ov.open {
-                display: flex
-            }
+        .modal-ov.open {
+            display: flex
+        }
 
         .modal {
             background: var(--surface);
@@ -1059,9 +1060,9 @@
             gap: 7px
         }
 
-            .toast.show {
-                transform: translateX(-50%) translateY(0)
-            }
+        .toast.show {
+            transform: translateX(-50%) translateY(0)
+        }
 
         .toast-dot {
             width: 6px;
@@ -1082,9 +1083,9 @@
             margin-top: 18px
         }
 
-            .sec-title:first-child {
-                margin-top: 0
-            }
+        .sec-title:first-child {
+            margin-top: 0
+        }
 
         .empty {
             padding: 36px;
@@ -1107,12 +1108,12 @@
             transition: all .15s
         }
 
-            .chip:hover,
-            .chip.active {
-                background: rgba(124, 109, 250, 0.15);
-                border-color: rgba(124, 109, 250, 0.3);
-                color: var(--accent2)
-            }
+        .chip:hover,
+        .chip.active {
+            background: rgba(124, 109, 250, 0.15);
+            border-color: rgba(124, 109, 250, 0.3);
+            color: var(--accent2)
+        }
 
         /* Bottom Nav for Mobile */
         .bottom-nav {
@@ -1145,20 +1146,20 @@
             border-radius: var(--r);
         }
 
-            .bnav-item svg {
-                width: 20px;
-                height: 20px;
-            }
+        .bnav-item svg {
+            width: 20px;
+            height: 20px;
+        }
 
-            .bnav-item span {
-                font-size: 10px;
-                font-family: 'JetBrains Mono', monospace;
-            }
+        .bnav-item span {
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+        }
 
-            .bnav-item.active {
-                color: var(--accent2);
-                background: rgba(124, 109, 250, 0.08);
-            }
+        .bnav-item.active {
+            color: var(--accent2);
+            background: rgba(124, 109, 250, 0.08);
+        }
 
         @media(max-width:900px) {
             .sidebar {
@@ -1214,25 +1215,25 @@
             font-family: 'IBM Plex Sans Arabic', sans-serif;
         }
 
-            .shop-tab:hover {
-                border-color: var(--accent);
-                color: var(--accent2);
-            }
+        .shop-tab:hover {
+            border-color: var(--accent);
+            color: var(--accent2);
+        }
 
-            .shop-tab.active {
-                background: rgba(124, 109, 250, 0.15);
-                border-color: rgba(124, 109, 250, 0.4);
-                color: var(--accent2);
-                font-weight: 500;
-            }
+        .shop-tab.active {
+            background: rgba(124, 109, 250, 0.15);
+            border-color: rgba(124, 109, 250, 0.4);
+            color: var(--accent2);
+            font-weight: 500;
+        }
 
-            .shop-tab .tab-amt {
-                font-family: 'JetBrains Mono', monospace;
-                font-size: 10px;
-                background: rgba(255, 255, 255, 0.07);
-                padding: 1px 5px;
-                border-radius: 8px;
-            }
+        .shop-tab .tab-amt {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            background: rgba(255, 255, 255, 0.07);
+            padding: 1px 5px;
+            border-radius: 8px;
+        }
 
         .invoice-card {
             background: var(--surface);
@@ -1243,9 +1244,9 @@
             transition: border-color .15s;
         }
 
-            .invoice-card:hover {
-                border-color: var(--border2);
-            }
+        .invoice-card:hover {
+            border-color: var(--border2);
+        }
 
         .invoice-hdr {
             display: flex;
@@ -1297,9 +1298,9 @@
             display: none;
         }
 
-            .invoice-body.open {
-                display: block;
-            }
+        .invoice-body.open {
+            display: block;
+        }
 
         .inv-item-row {
             display: flex;
@@ -1310,9 +1311,9 @@
             font-size: 12px;
         }
 
-            .inv-item-row:last-child {
-                border-bottom: none;
-            }
+        .inv-item-row:last-child {
+            border-bottom: none;
+        }
 
         .inv-subcat-dot {
             width: 8px;
@@ -1351,26 +1352,26 @@
             margin-bottom: 10px;
         }
 
-            .shop-analysis-bar .bar-hdr {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 4px;
-                font-size: 12px;
-            }
+        .shop-analysis-bar .bar-hdr {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+            font-size: 12px;
+        }
 
-            .shop-analysis-bar .bar-bg {
-                height: 6px;
-                background: var(--surface3);
-                border-radius: 4px;
-                overflow: hidden;
-            }
+        .shop-analysis-bar .bar-bg {
+            height: 6px;
+            background: var(--surface3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
 
-            .shop-analysis-bar .bar-fill {
-                height: 100%;
-                border-radius: 4px;
-                transition: width .4s;
-            }
+        .shop-analysis-bar .bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width .4s;
+        }
 
         /* Add item row in modal */
         .item-row {
@@ -1399,9 +1400,9 @@
             height: 34px;
         }
 
-            .remove-item-btn:hover {
-                color: var(--red);
-            }
+        .remove-item-btn:hover {
+            color: var(--red);
+        }
 
         .shop-modal-items {
             max-height: 320px;
@@ -1423,14 +1424,17 @@
         <div class="nav-section">الرئيسية</div>
         <div class="nav-item active" data-page="overview" onclick="goPage(this)">
             <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M1 2.5A1.5 1.5 0 012.5 1h3A1.5 1.5 0 017 2.5v3A1.5 1.5 0 015.5 7h-3A1.5 1.5 0 011 5.5v-3zm8 0A1.5 1.5 0 0110.5 1h3A1.5 1.5 0 0115 2.5v3A1.5 1.5 0 0113.5 7h-3A1.5 1.5 0 019 5.5v-3zM1 10.5A1.5 1.5 0 012.5 9h3A1.5 1.5 0 017 10.5v3A1.5 1.5 0 015.5 15h-3A1.5 1.5 0 011 13.5v-3zm8 0A1.5 1.5 0 0110.5 9h3a1.5 1.5 0 011.5 1.5v3a1.5 1.5 0 01-1.5 1.5h-3A1.5 1.5 0 019 13.5v-3z" />
+                <path
+                    d="M1 2.5A1.5 1.5 0 012.5 1h3A1.5 1.5 0 017 2.5v3A1.5 1.5 0 015.5 7h-3A1.5 1.5 0 011 5.5v-3zm8 0A1.5 1.5 0 0110.5 1h3A1.5 1.5 0 0115 2.5v3A1.5 1.5 0 0113.5 7h-3A1.5 1.5 0 019 5.5v-3zM1 10.5A1.5 1.5 0 012.5 9h3A1.5 1.5 0 017 10.5v3A1.5 1.5 0 015.5 15h-3A1.5 1.5 0 011 13.5v-3zm8 0A1.5 1.5 0 0110.5 9h3a1.5 1.5 0 011.5 1.5v3a1.5 1.5 0 01-1.5 1.5h-3A1.5 1.5 0 019 13.5v-3z" />
             </svg>
             نظرة عامة
         </div>
         <div class="nav-item" data-page="statement" onclick="goPage(this)">
             <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M5 4a.5.5 0 000 1h6a.5.5 0 000-1H5zm-.5 2.5A.5.5 0 015 6h6a.5.5 0 010 1H5a.5.5 0 01-.5-.5zM5 8a.5.5 0 000 1h6a.5.5 0 000-1H5zm0 2a.5.5 0 000 1h3a.5.5 0 000-1H5z" />
-                <path d="M2 2a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V2zm10-1H4a1 1 0 00-1 1v12a1 1 0 001 1h8a1 1 0 001-1V2a1 1 0 00-1-1z" />
+                <path
+                    d="M5 4a.5.5 0 000 1h6a.5.5 0 000-1H5zm-.5 2.5A.5.5 0 015 6h6a.5.5 0 010 1H5a.5.5 0 01-.5-.5zM5 8a.5.5 0 000 1h6a.5.5 0 000-1H5zm0 2a.5.5 0 000 1h3a.5.5 0 000-1H5z" />
+                <path
+                    d="M2 2a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V2zm10-1H4a1 1 0 00-1 1v12a1 1 0 001 1h8a1 1 0 001-1V2a1 1 0 00-1-1z" />
             </svg>
             كشف الحساب
         </div>
@@ -1447,7 +1451,8 @@
         <div class="nav-section">المصاريف</div>
         <div class="nav-item" data-page="transactions" onclick="goPage(this)">
             <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M3 4.5a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0 3a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0 3a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5z" />
+                <path
+                    d="M3 4.5a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0 3a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0 3a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5z" />
             </svg>
             المصاريف
         </div>
@@ -1460,13 +1465,15 @@
         </div>
         <div class="nav-item" data-page="maintenance" onclick="goPage(this)">
             <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 01-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 01.872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 012.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 012.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 01.872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 01-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 01-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 110-5.86 2.929 2.929 0 010 5.858z" />
+                <path
+                    d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 01-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 01.872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 012.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 012.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 01.872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 01-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 01-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 110-5.86 2.929 2.929 0 010 5.858z" />
             </svg>
             الصيانة
         </div>
         <div class="nav-item" data-page="loans" onclick="goPage(this)">
             <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M1 3a1 1 0 00-1 1v8a1 1 0 001 1h14a1 1 0 001-1V4a1 1 0 00-1-1H1zm0 1h14v3H1V4zm0 4h4v4H1V8zm5 0h4v4H6V8zm5 0h3v4h-3V8z" />
+                <path
+                    d="M1 3a1 1 0 00-1 1v8a1 1 0 001 1h14a1 1 0 001-1V4a1 1 0 00-1-1H1zm0 1h14v3H1V4zm0 4h4v4H1V8zm5 0h4v4H6V8zm5 0h3v4h-3V8z" />
             </svg>
             القروض
         </div>
@@ -1474,20 +1481,24 @@
         <div class="nav-section">الأدوات</div>
         <div class="nav-item" data-page="budget" onclick="goPage(this)">
             <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M4 10.781c.148 1.667 1.513 2.855 3.591 3.087V15h1.043v-1.166c2.11-.252 3.46-1.44 3.46-3.d053 0-1.552-.977-2.461-2.521-2.78l-.932-.195c-1.347-.282-1.964-.(?)-?.831-.831V4.489c1.07.144 1.758.943 1.822 2.01h1.017C11.383 4.667 10.619 3.481 8.634 3.111V2H7.591v1.099C5.69 3.37 4.595 4.48 4.595 5.931c0 1.471.86 2.288 2.073 2.6l1.297.323c1.383.363 1.795.944 1.795 1.681 0 .839-.732 1.458-1.925 1.573v-3.5H6.68v3.5c-1.193-.114-1.925-.734-1.925-1.573V10H4z" />
+                <path
+                    d="M4 10.781c.148 1.667 1.513 2.855 3.591 3.087V15h1.043v-1.166c2.11-.252 3.46-1.44 3.46-3.d053 0-1.552-.977-2.461-2.521-2.78l-.932-.195c-1.347-.282-1.964-.(?)-?.831-.831V4.489c1.07.144 1.758.943 1.822 2.01h1.017C11.383 4.667 10.619 3.481 8.634 3.111V2H7.591v1.099C5.69 3.37 4.595 4.48 4.595 5.931c0 1.471.86 2.288 2.073 2.6l1.297.323c1.383.363 1.795.944 1.795 1.681 0 .839-.732 1.458-1.925 1.573v-3.5H6.68v3.5c-1.193-.114-1.925-.734-1.925-1.573V10H4z" />
             </svg>
             الميزانية
         </div>
         <div class="nav-item" data-page="categories" onclick="goPage(this)">
             <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M2 2a1 1 0 00-1 1v4.586a1 1 0 00.293.707l7 7a1 1 0 001.414 0l4.586-4.586a1 1 0 000-1.414l-7-7A1 1 0 006.586 2H2zm3.5 3a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" />
+                <path
+                    d="M2 2a1 1 0 00-1 1v4.586a1 1 0 00.293.707l7 7a1 1 0 001.414 0l4.586-4.586a1 1 0 000-1.414l-7-7A1 1 0 006.586 2H2zm3.5 3a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" />
             </svg>
             الفئات
         </div>
         <div class="nav-item" data-page="export" onclick="goPage(this)">
             <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M.5 9.9a.5.5 0 01.5.5v2.1a1 1 0 001 1h12a1 1 0 001-1v-2.1a.5.5 0 011 0v2.1a2 2 0 01-2 2H2a2 2 0 01-2-2v-2.1a.5.5 0 01.5-.5z" />
-                <path d="M7.646 11.854a.5.5 0 00.708 0l3-3a.5.5 0 00-.708-.708L8.5 10.293V1.5a.5.5 0 00-1 0v8.793L5.354 8.146a.5.5 0 10-.708.708l3 3z" />
+                <path
+                    d="M.5 9.9a.5.5 0 01.5.5v2.1a1 1 0 001 1h12a1 1 0 001-1v-2.1a.5.5 0 011 0v2.1a2 2 0 01-2 2H2a2 2 0 01-2-2v-2.1a.5.5 0 01.5-.5z" />
+                <path
+                    d="M7.646 11.854a.5.5 0 00.708 0l3-3a.5.5 0 00-.708-.708L8.5 10.293V1.5a.5.5 0 00-1 0v8.793L5.354 8.146a.5.5 0 10-.708.708l3 3z" />
             </svg>
             تصدير / استيراد
         </div>
@@ -1635,11 +1646,11 @@
                 <div class="form-row fr-4">
                     <div class="field">
                         <label>الوصف</label><input class="inp" id="fl-desc" placeholder="مشروع / عميل"
-                                                   list="list-fl-desc" autocomplete="off" /><datalist id="list-fl-desc"></datalist>
+                            list="list-fl-desc" autocomplete="off" /><datalist id="list-fl-desc"></datalist>
                     </div>
                     <div class="field">
                         <label>المبلغ (د.أ)</label><input class="inp" type="number" id="fl-amount" placeholder="0.00"
-                                                          min="0" step="0.01" />
+                            min="0" step="0.01" />
                     </div>
                     <div class="field"><label>التاريخ</label><input class="inp" type="date" id="fl-date" /></div>
                     <div class="field" style="justify-content:flex-end">
@@ -1658,7 +1669,7 @@
         </div>
 
         <!-- ── TRANSACTIONS PAGE ── -->
-        
+
         <div class="page" id="page-transactions">
             <div class="topbar">
                 <div class="page-title">المصاريف التفصيلية</div>
@@ -1687,7 +1698,8 @@
             <div class="table-card">
                 <div class="table-hdr">
                     <div class="table-title">سجل المصاريف</div>
-                    <input class="search-inp" id="exp-search" placeholder="بحث باسم أو فئة..." oninput="renderExpTable()" />
+                    <input class="search-inp" id="exp-search" placeholder="بحث باسم أو فئة..."
+                        oninput="renderExpTable()" />
                 </div>
                 <div id="exp-table"></div>
             </div>
@@ -1786,12 +1798,11 @@
                 <div class="form-title" style="margin-top:14px">إضافة فئة جديدة</div>
                 <div class="form-row fr-3" style="max-width:400px">
                     <div class="field">
-                        <label>الاسم</label><input class="inp" id="new-cat-name"
-                                                   placeholder="اسم الفئة" />
+                        <label>الاسم</label><input class="inp" id="new-cat-name" placeholder="اسم الفئة" />
                     </div>
                     <div class="field">
                         <label>اللون</label><input type="color" class="inp" id="new-cat-color" value="#7c6dfa"
-                                                   style="height:38px;padding:2px 4px;cursor:pointer" />
+                            style="height:38px;padding:2px 4px;cursor:pointer" />
                     </div>
                     <div class="field" style="justify-content:flex-end">
                         <button class="btn btn-primary" onclick="addCategory()">
@@ -1854,12 +1865,14 @@
         <div class="bottom-nav">
             <div class="bnav-item active" data-page="overview" onclick="goPage(this)">
                 <svg viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M1 2.5A1.5 1.5 0 012.5 1h3A1.5 1.5 0 017 2.5v3A1.5 1.5 0 015.5 7h-3A1.5 1.5 0 011 5.5v-3zm8 0A1.5 1.5 0 0110.5 1h3A1.5 1.5 0 0115 2.5v3A1.5 1.5 0 0113.5 7h-3A1.5 1.5 0 019 5.5v-3zM1 10.5A1.5 1.5 0 012.5 9h3A1.5 1.5 0 017 10.5v3A1.5 1.5 0 015.5 15h-3A1.5 1.5 0 011 13.5v-3zm8 0A1.5 1.5 0 0110.5 9h3a1.5 1.5 0 011.5 1.5v3a1.5 1.5 0 01-1.5 1.5h-3A1.5 1.5 0 019 13.5v-3z" />
+                    <path
+                        d="M1 2.5A1.5 1.5 0 012.5 1h3A1.5 1.5 0 017 2.5v3A1.5 1.5 0 015.5 7h-3A1.5 1.5 0 011 5.5v-3zm8 0A1.5 1.5 0 0110.5 1h3A1.5 1.5 0 0115 2.5v3A1.5 1.5 0 0113.5 7h-3A1.5 1.5 0 019 5.5v-3zM1 10.5A1.5 1.5 0 012.5 9h3A1.5 1.5 0 017 10.5v3A1.5 1.5 0 015.5 15h-3A1.5 1.5 0 011 13.5v-3zm8 0A1.5 1.5 0 0110.5 9h3a1.5 1.5 0 011.5 1.5v3a1.5 1.5 0 01-1.5 1.5h-3A1.5 1.5 0 019 13.5v-3z" />
                 </svg><span>الرئيسية</span>
             </div>
             <div class="bnav-item" data-page="transactions" onclick="goPage(this)">
                 <svg viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M3 4.5a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0 3a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0 3a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5z" />
+                    <path
+                        d="M3 4.5a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0 3a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0 3a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5z" />
                 </svg><span>المصاريف</span>
             </div>
             <div class="bnav-item" data-page="income" onclick="goPage(this)">
@@ -1870,8 +1883,10 @@
             </div>
             <div class="bnav-item" data-page="statement" onclick="goPage(this)">
                 <svg viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M5 4a.5.5 0 000 1h6a.5.5 0 000-1H5zm-.5 2.5A.5.5 0 015 6h6a.5.5 0 010 1H5a.5.5 0 01-.5-.5zM5 8a.5.5 0 000 1h6a.5.5 0 000-1H5zm0 2a.5.5 0 000 1h3a.5.5 0 000-1H5z" />
-                    <path d="M2 2a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V2zm10-1H4a1 1 0 00-1 1v12a1 1 0 001 1h8a1 1 0 001-1V2a1 1 0 00-1-1z" />
+                    <path
+                        d="M5 4a.5.5 0 000 1h6a.5.5 0 000-1H5zm-.5 2.5A.5.5 0 015 6h6a.5.5 0 010 1H5a.5.5 0 01-.5-.5zM5 8a.5.5 0 000 1h6a.5.5 0 000-1H5zm0 2a.5.5 0 000 1h3a.5.5 0 000-1H5z" />
+                    <path
+                        d="M2 2a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V2zm10-1H4a1 1 0 00-1 1v12a1 1 0 001 1h8a1 1 0 001-1V2a1 1 0 00-1-1z" />
                 </svg><span>كشف</span>
             </div>
             <div class="bnav-item" data-page="subscriptions" onclick="goPage(this)">
@@ -1882,7 +1897,8 @@
             </div>
             <div class="bnav-item" data-page="loans" onclick="goPage(this)">
                 <svg viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M1 3a1 1 0 00-1 1v8a1 1 0 001 1h14a1 1 0 001-1V4a1 1 0 00-1-1H1zm0 1h14v3H1V4zm0 4h4v4H1V8zm5 0h4v4H6V8zm5 0h3v4h-3V8z" />
+                    <path
+                        d="M1 3a1 1 0 00-1 1v8a1 1 0 001 1h14a1 1 0 001-1V4a1 1 0 00-1-1H1zm0 1h14v3H1V4zm0 4h4v4H1V8zm5 0h4v4H6V8zm5 0h3v4h-3V8z" />
                 </svg><span>قروض</span>
             </div>
         </div>
@@ -1896,12 +1912,12 @@
             <div class="modal-body">
                 <div class="field">
                     <label>اسم المصدر</label><input class="inp" id="m-inc-name" placeholder="مثال: راتب، عمل حر ثابت"
-                                                    list="list-m-inc-name" autocomplete="off" /><datalist id="list-m-inc-name"></datalist>
+                        list="list-m-inc-name" autocomplete="off" /><datalist id="list-m-inc-name"></datalist>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
                     <div class="field">
                         <label>المبلغ الشهري (د.أ)</label><input class="inp" type="number" id="m-inc-amount"
-                                                                 placeholder="0.00" step="0.01" />
+                            placeholder="0.00" step="0.01" />
                     </div>
                     <div class="field">
                         <label>النوع</label>
@@ -1918,7 +1934,7 @@
             </div>
             <div class="modal-actions">
                 <button class="btn" onclick="closeModal('addIncome')">إلغاء</button><button class="btn btn-green"
-                                                                                            onclick="addIncomeSource()">
+                    onclick="addIncomeSource()">
                     إضافة
                 </button>
             </div>
@@ -1933,17 +1949,17 @@
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
                     <div class="field">
                         <label>الاسم</label><input class="inp" id="m-sub-name" placeholder="Netflix, Spotify..."
-                                                   list="list-m-sub-name" autocomplete="off" /><datalist id="list-m-sub-name"></datalist>
+                            list="list-m-sub-name" autocomplete="off" /><datalist id="list-m-sub-name"></datalist>
                     </div>
                     <div class="field">
                         <label>الإيموجي / الأيقونة</label><input class="inp" id="m-sub-icon" placeholder="🎬"
-                                                                 maxlength="2" />
+                            maxlength="2" />
                     </div>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
                     <div class="field">
                         <label>المبلغ (د.أ)</label><input class="inp" type="number" id="m-sub-amount" placeholder="0.00"
-                                                          step="0.01" />
+                            step="0.01" />
                     </div>
                     <div class="field">
                         <label>الدورية</label>
@@ -1974,7 +1990,7 @@
             </div>
             <div class="modal-actions">
                 <button class="btn" onclick="closeModal('addSub')">إلغاء</button><button class="btn btn-primary"
-                                                                                         onclick="addSubscription()">
+                    onclick="addSubscription()">
                     إضافة
                 </button>
             </div>
@@ -1988,13 +2004,13 @@
             <div class="modal-body">
                 <div class="field">
                     <label>الوصف</label><input class="inp" id="m-maint-desc"
-                                               placeholder="مثال: صيانة سيارة، تصليح تكييف" list="list-m-maint-desc"
-                                               autocomplete="off" /><datalist id="list-m-maint-desc"></datalist>
+                        placeholder="مثال: صيانة سيارة، تصليح تكييف" list="list-m-maint-desc"
+                        autocomplete="off" /><datalist id="list-m-maint-desc"></datalist>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
                     <div class="field">
                         <label>التكلفة المتوقعة (د.أ)</label><input class="inp" type="number" id="m-maint-cost"
-                                                                    placeholder="0.00" step="0.01" />
+                            placeholder="0.00" step="0.01" />
                     </div>
                     <div class="field">
                         <label>الأولوية</label>
@@ -2036,7 +2052,7 @@
             </div>
             <div class="modal-actions">
                 <button class="btn" onclick="closeModal('addMaint')">إلغاء</button><button class="btn btn-primary"
-                                                                                           onclick="addMaintenance()">
+                    onclick="addMaintenance()">
                     إضافة
                 </button>
             </div>
@@ -2050,26 +2066,27 @@
             <div class="modal-body">
                 <div class="field">
                     <label>اسم القرض / الجهة</label><input class="inp" id="m-loan-name"
-                                                           placeholder="مثال: قرض بنك / شخصي" list="list-m-loan-name" autocomplete="off" /><datalist id="list-m-loan-name"></datalist>
+                        placeholder="مثال: قرض بنك / شخصي" list="list-m-loan-name" autocomplete="off" /><datalist
+                        id="list-m-loan-name"></datalist>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
                     <div class="field">
                         <label>المبلغ الأصلي (د.أ)</label><input class="inp" type="number" id="m-loan-total"
-                                                                 placeholder="0.00" step="0.01" />
+                            placeholder="0.00" step="0.01" />
                     </div>
                     <div class="field">
                         <label>المبلغ المتبقي (د.أ)</label><input class="inp" type="number" id="m-loan-remaining"
-                                                                  placeholder="0.00" step="0.01" />
+                            placeholder="0.00" step="0.01" />
                     </div>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
                     <div class="field">
                         <label>القسط الشهري (د.أ)</label><input class="inp" type="number" id="m-loan-monthly"
-                                                                placeholder="0.00" step="0.01" />
+                            placeholder="0.00" step="0.01" />
                     </div>
                     <div class="field">
                         <label>نسبة الفائدة %</label><input class="inp" type="number" id="m-loan-interest"
-                                                            placeholder="0" step="0.1" min="0" />
+                            placeholder="0" step="0.1" min="0" />
                     </div>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
@@ -2093,7 +2110,7 @@
             </div>
             <div class="modal-actions">
                 <button class="btn" onclick="closeModal('addLoan')">إلغاء</button><button class="btn btn-primary"
-                                                                                          onclick="addLoan()">
+                    onclick="addLoan()">
                     إضافة
                 </button>
             </div>
@@ -2109,21 +2126,21 @@
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
                     <div class="field">
                         <label>المبلغ الأصلي (د.أ)</label><input class="inp" type="number" id="e-loan-total"
-                                                                 step="0.01" />
+                            step="0.01" />
                     </div>
                     <div class="field">
                         <label>المبلغ المتبقي (د.أ)</label><input class="inp" type="number" id="e-loan-remaining"
-                                                                  step="0.01" />
+                            step="0.01" />
                     </div>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
                     <div class="field">
                         <label>القسط الشهري (د.أ)</label><input class="inp" type="number" id="e-loan-monthly"
-                                                                step="0.01" />
+                            step="0.01" />
                     </div>
                     <div class="field">
                         <label>نسبة الفائدة %</label><input class="inp" type="number" id="e-loan-interest" step="0.1"
-                                                            min="0" />
+                            min="0" />
                     </div>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
@@ -2147,7 +2164,7 @@
             </div>
             <div class="modal-actions">
                 <button class="btn" onclick="closeModal('editLoan')">إلغاء</button><button class="btn btn-primary"
-                                                                                           onclick="saveEditLoan()">
+                    onclick="saveEditLoan()">
                     حفظ التعديل
                 </button>
             </div>
@@ -2162,19 +2179,19 @@
                 <div class="field"><label>اسم الفئة</label><input class="inp" id="e-cat-name" /></div>
                 <div class="field">
                     <label>اللون</label><input type="color" class="inp" id="e-cat-color"
-                                               style="height:40px;padding:2px;cursor:pointer" />
+                        style="height:40px;padding:2px;cursor:pointer" />
                 </div>
             </div>
             <div class="modal-actions">
                 <button class="btn" onclick="closeModal('editCat')">إلغاء</button><button class="btn btn-primary"
-                                                                                          onclick="saveEditCat()">
+                    onclick="saveEditCat()">
                     حفظ التعديل
                 </button>
             </div>
         </div>
     </div>
 
-    
+
     <!-- Add Expense Detailed -->
     <div class="modal-ov" id="modal-addExpense">
         <div class="modal" style="width:600px">
@@ -2182,7 +2199,9 @@
             <div class="modal-body">
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
                     <div class="field">
-                        <label>الوصف / الجهة</label><input class="inp" id="m-exp-desc" placeholder="مثال: مطعم، سوبرماركت..." list="list-m-exp-desc" autocomplete="off" /><datalist id="list-m-exp-desc"></datalist>
+                        <label>الوصف / الجهة</label><input class="inp" id="m-exp-desc"
+                            placeholder="مثال: مطعم، سوبرماركت..." list="list-m-exp-desc" autocomplete="off" /><datalist
+                            id="list-m-exp-desc"></datalist>
                     </div>
                     <div class="field"><label>التاريخ</label><input class="inp" type="date" id="m-exp-date" /></div>
                 </div>
@@ -2196,16 +2215,19 @@
                             <option value="تحويل">تحويل بنكي</option>
                         </select>
                     </div>
-                    <div class="field"><label>ملاحظة</label><input class="inp" id="m-exp-note" placeholder="اختياري" /></div>
+                    <div class="field"><label>ملاحظة</label><input class="inp" id="m-exp-note" placeholder="اختياري" />
+                    </div>
                 </div>
                 <div class="divider" style="margin:10px 0"></div>
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-                    <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;letter-spacing:.5px;text-transform:uppercase">
+                    <div
+                        style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;letter-spacing:.5px;text-transform:uppercase">
                         البنود (الأصناف)
                     </div>
                     <button class="btn btn-sm" onclick="addInvItemRow()">+ إضافة صنف</button>
                 </div>
-                <div style="display:grid;grid-template-columns:2fr 1fr 1.2fr 1fr auto;gap:6px;margin-bottom:4px;padding:0 2px">
+                <div
+                    style="display:grid;grid-template-columns:2fr 1fr 1.2fr 1fr auto;gap:6px;margin-bottom:4px;padding:0 2px">
                     <span style="font-size:10px;color:var(--text3)">الصنف</span>
                     <span style="font-size:10px;color:var(--text3)">الكمية</span>
                     <span style="font-size:10px;color:var(--text3)">السعر (د.أ)</span>
@@ -2213,10 +2235,11 @@
                     <span></span>
                 </div>
                 <div class="shop-modal-items" id="inv-items-container"></div>
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+                <div
+                    style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
                     <span style="font-size:12px;color:var(--text3)">الإجمالي</span>
                     <span style="font-size:17px;font-weight:600;font-family:'JetBrains Mono',monospace;color:var(--red)"
-                          id="inv-total-preview">0.00 د.أ</span>
+                        id="inv-total-preview">0.00 د.أ</span>
                 </div>
             </div>
             <div class="modal-actions">
@@ -2232,7 +2255,8 @@
             <div class="modal-title">✎ تعديل مصروف تفصيلي</div>
             <div class="modal-body">
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                    <div class="field"><label>الوصف / الجهة</label><input class="inp" id="e-exp-desc" list="list-m-exp-desc" autocomplete="off" /></div>
+                    <div class="field"><label>الوصف / الجهة</label><input class="inp" id="e-exp-desc"
+                            list="list-m-exp-desc" autocomplete="off" /></div>
                     <div class="field"><label>التاريخ</label><input class="inp" type="date" id="e-exp-date" /></div>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
@@ -2249,12 +2273,14 @@
                 </div>
                 <div class="divider" style="margin:10px 0"></div>
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-                    <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;letter-spacing:.5px;text-transform:uppercase">
+                    <div
+                        style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;letter-spacing:.5px;text-transform:uppercase">
                         البنود
                     </div>
                     <button class="btn btn-sm" onclick="addEInvItemRow()">+ إضافة صنف</button>
                 </div>
-                <div style="display:grid;grid-template-columns:2fr 1fr 1.2fr 1fr auto;gap:6px;margin-bottom:4px;padding:0 2px">
+                <div
+                    style="display:grid;grid-template-columns:2fr 1fr 1.2fr 1fr auto;gap:6px;margin-bottom:4px;padding:0 2px">
                     <span style="font-size:10px;color:var(--text3)">الصنف</span>
                     <span style="font-size:10px;color:var(--text3)">الكمية</span>
                     <span style="font-size:10px;color:var(--text3)">السعر (د.أ)</span>
@@ -2262,10 +2288,11 @@
                     <span></span>
                 </div>
                 <div class="shop-modal-items" id="einv-items-container"></div>
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+                <div
+                    style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
                     <span style="font-size:12px;color:var(--text3)">الإجمالي</span>
                     <span style="font-size:17px;font-weight:600;font-family:'JetBrains Mono',monospace;color:var(--red)"
-                          id="einv-total-preview">0.00 د.أ</span>
+                        id="einv-total-preview">0.00 د.أ</span>
                 </div>
             </div>
             <div class="modal-actions">
@@ -2331,6 +2358,7 @@
             budgets: { طعام: 300, مواصلات: 100, فواتير: 200, صحة: 150, تسوق: 200, سيارة: 150 },
             nextId: 200,
             shopping: [],
+            incomeDeductions: [],
             // period
             periodMode: 'month', // month | year | all
             periodMonth: new Date().getMonth(),
@@ -2356,6 +2384,7 @@
                 state.incomeSources = p.incomeSources ? Object.values(p.incomeSources) : [];
                 state.subscriptions = p.subscriptions ? Object.values(p.subscriptions) : [];
                 state.shopping = p.shopping ? Object.values(p.shopping) : [];
+                state.incomeDeductions = p.incomeDeductions ? Object.values(p.incomeDeductions) : [];
                 state.maintenance = p.maintenance ? Object.values(p.maintenance) : [];
                 state.loans = p.loans ? Object.values(p.loans) : [];
                 if (p.categories) state.categories = p.categories;
@@ -2366,7 +2395,7 @@
 
                 let maxId = 0;
                 const seenIds = new Set();
-                [state.expenses, state.freelanceLog, state.incomeSources, state.subscriptions, state.maintenance, state.loans, state.shopping].forEach(arr => {
+                [state.expenses, state.freelanceLog, state.incomeSources, state.subscriptions, state.maintenance, state.loans, state.shopping, state.incomeDeductions || []].forEach(arr => {
                     arr.forEach(item => {
                         if (item.id > maxId) maxId = item.id;
                     });
@@ -2374,9 +2403,9 @@
                 state.nextId = Math.max(state.nextId, maxId + 1);
 
                 // Fix duplicate IDs
-                
+
                 let updatedIds = false;
-                
+
                 // --- MIGRATION: Convert old simple expenses to detailed expenses ---
                 state.expenses = state.expenses.map(e => {
                     if (e.items) return e; // Already updated
@@ -2391,7 +2420,7 @@
                         items: [{ name: e.desc, qty: 1, price: e.amount, subcat: 'أخرى' }]
                     };
                 });
-                
+
                 // --- MIGRATION: Merge shopping into expenses ---
                 if (state.shopping && state.shopping.length > 0) {
                     state.shopping.forEach(inv => {
@@ -2530,6 +2559,11 @@
             btn.classList.add('active');
             renderCurrent();
         }
+        function syncPeriodChips() {
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            const activeChip = document.getElementById('chip-' + state.periodMode);
+            if (activeChip) activeChip.classList.add('active');
+        }
         function renderCurrent() {
             const active = document.querySelector('.page.active');
             if (!active) return;
@@ -2580,25 +2614,30 @@
             const net = inc.total - totalAll - subMonthly - loanMonthly;
 
             document.getElementById('ov-metrics').innerHTML = `
-        <div class="metric m-g"><div class="metric-lbl">الدخل الكلي</div><div class="metric-val">${inc.total.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div><div class="metric-sub">ثابت: ${inc.fixed} | فري لانس: ${inc.fl.toFixed(0)}</div></div>
-        <div class="metric m-r"><div class="metric-lbl">المصاريف اليومية</div><div class="metric-val">${totalExp.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div><div class="metric-sub">${exps.length} معاملة</div></div>
-        <div class="metric-val">${totalShop.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div><div class="metric-sub">${shopInvoices.length} فاتورة</div></div>
+        <div class="metric m-r"><div class="metric-lbl">المصاريف الكلية</div><div class="metric-val">${totalExp.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div><div class="metric-sub">${exps.length} معاملة</div></div>
         <div class="metric m-a"><div class="metric-lbl">الاشتراكات/شهر</div><div class="metric-val">${subMonthly.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
         <div class="metric m-p"><div class="metric-lbl">أقساط القروض</div><div class="metric-val">${loanMonthly.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
         <div class="metric ${net >= 0 ? 'm-g' : 'm-r'}"><div class="metric-lbl">الرصيد الصافي</div><div class="metric-val ${net >= 0 ? 'metric-pos' : 'metric-neg'}">${net.toFixed(0)} <span style="font-size:13px;font-weight:400">د.أ</span></div><div class="metric-sub">${net >= 0 ? '✓ وفر' : '⚠ عجز'}</div></div>
       `;
             renderDonut(exps);
-            renderBarCompare(inc, totalExp, subMonthly, loanMonthly, totalShop);
+            renderBarCompare(inc, totalExp, subMonthly, loanMonthly, 0);
             renderBudgetBars(exps);
             renderLine();
             renderOvSubs();
             renderOvLoans();
             renderOvMaint();
         }
+        function normCat(name) {
+            const v = (name || '').toString().trim();
+            return v || 'غير مصنفة';
+        }
         function catColor(name) { return (state.categories.find(c => c.name === name) || { color: '#888' }).color }
         function renderDonut(exps, shopInvoices) {
             const byCat = {};
-            exps.forEach(e => byCat[e.cat] = (byCat[e.cat] || 0) + e.amount);
+            exps.forEach(e => {
+                const cat = normCat(e.cat);
+                byCat[cat] = (byCat[cat] || 0) + e.amount;
+            });
             // Add shopping as subcategories in donut
             if (shopInvoices && shopInvoices.length) {
                 shopInvoices.forEach(inv => (inv.items || []).forEach(it => {
@@ -2608,7 +2647,8 @@
             }
             if (state.subscriptions) state.subscriptions.forEach(s => {
                 const amt = s.freq === 'daily' ? s.amount * 30 : s.freq === 'yearly' ? s.amount / 12 : s.amount;
-                byCat[s.cat] = (byCat[s.cat] || 0) + amt;
+                const cat = normCat(s.cat);
+                byCat[cat] = (byCat[cat] || 0) + amt;
             });
             if (state.loans) state.loans.forEach(l => {
                 byCat['ديون'] = (byCat['ديون'] || 0) + l.monthly;
@@ -2630,20 +2670,30 @@
         }
         function renderBudgetBars(exps, shopInvoices) {
             const byCat = {};
-            exps.forEach(e => byCat[e.cat] = (byCat[e.cat] || 0) + e.amount);
+            exps.forEach(e => {
+                const cat = normCat(e.cat);
+                byCat[cat] = (byCat[cat] || 0) + e.amount;
+            });
             // Add shopping total under 'تسوق' budget category
             if (shopInvoices && shopInvoices.length) {
                 const shopTotal = shopInvoices.reduce((s, inv) => s + inv.total, 0);
                 byCat['تسوق'] = (byCat['تسوق'] || 0) + shopTotal;
             }
-            const keys = Object.keys(state.budgets);
-            if (!keys.length) { document.getElementById('budgetBars').innerHTML = '<div class="empty">لم تحدد ميزانيات بعد</div>'; return; }
+            const budgetKeys = Object.keys(state.budgets || {}).map(normCat);
+            const spentKeys = Object.keys(byCat).map(normCat);
+            const keys = [...new Set([...budgetKeys, ...spentKeys])].sort((a, b) => (byCat[b] || 0) - (byCat[a] || 0));
+            if (!keys.length) { document.getElementById('budgetBars').innerHTML = '<div class="empty">لا توجد بيانات مصاريف</div>'; return; }
+            const maxSpent = Math.max(...keys.map(k => byCat[k] || 0), 1);
             document.getElementById('budgetBars').innerHTML = keys.map(cat => {
-                const spent = byCat[cat] || 0; const bud = state.budgets[cat];
-                const pct = Math.min(spent / bud * 100, 100);
-                const over = spent > bud; const warn = pct > 75 && !over;
+                const spent = byCat[cat] || 0;
+                const bud = parseFloat(state.budgets[cat]);
+                const hasBudget = !isNaN(bud) && bud > 0;
+                const pct = hasBudget ? Math.min(spent / bud * 100, 100) : (spent / maxSpent * 100);
+                const over = hasBudget && spent > bud;
+                const warn = hasBudget && pct > 75 && !over;
                 const col = over ? 'var(--red)' : warn ? 'var(--amber)' : catColor(cat);
-                return `<div class="bbar"><div class="bbar-hdr"><div class="bbar-name"><div class="leg-dot" style="background:${catColor(cat)}"></div>${cat}</div><div class="bbar-nums ${over ? 'over' : warn ? 'warn' : ''}">${spent.toFixed(0)} / ${bud} د.أ</div></div><div class="bbar-bg"><div class="bbar-fill" style="width:${pct}%;background:${col}"></div></div></div>`;
+                const nums = hasBudget ? `${spent.toFixed(0)} / ${bud.toFixed(0)} د.أ` : `${spent.toFixed(0)} د.أ`;
+                return `<div class="bbar"><div class="bbar-hdr"><div class="bbar-name"><div class="leg-dot" style="background:${catColor(cat)}"></div>${cat}</div><div class="bbar-nums ${over ? 'over' : warn ? 'warn' : ''}">${nums}</div></div><div class="bbar-bg"><div class="bbar-fill" style="width:${pct}%;background:${col}"></div></div></div>`;
             }).join('');
         }
         function renderLine() {
@@ -2772,6 +2822,23 @@
           </div>
           <button class="del-btn" onclick="delIncomeSource(${src.id})">✕</button>
         </div>`).join('') : '<div class="empty">لا مصادر دخل ثابتة — أضف من الأعلى</div>';
+            // deductions
+            const dedsEl = document.getElementById('income-deductions-list');
+            if (dedsEl) {
+                const deds = state.incomeDeductions || [];
+                dedsEl.innerHTML = deds.length ? deds.map(d => `
+        <div class="income-source">
+          <div>
+            <div class="income-source-name">${d.name}</div>
+            <div class="income-source-type">استقطاع شهري تلقائي</div>
+          </div>
+          <div style="text-align:left">
+            <div class="income-source-amt" style="color:var(--red)">-${d.amount.toFixed(2)} د.أ</div>
+            <div style="font-size:10px;color:var(--text3)">شهرياً</div>
+          </div>
+          <button class="del-btn" onclick="delDeduction(${d.id})">✕</button>
+        </div>`).join('') + `<div style="display:flex;justify-content:space-between;padding:10px 14px;border-top:1px solid var(--border);font-size:12px;font-weight:600"><span>صافي الراتب بعد الاستقطاعات</span><span style="color:var(--green)">${inc.netFixed.toFixed(2)} د.أ</span></div>` : '<div class="empty">لا استقطاعات — أضف تأمين أو ضمان</div>';
+            }
             // freelance in period
             const { from, to } = getDateRange();
             const flList = state.freelanceLog.filter(f => { const d = new Date(f.date); return d >= from && d <= to }).sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -2800,6 +2867,16 @@
             document.getElementById('m-inc-name').value = ''; document.getElementById('m-inc-amount').value = '';
         }
         function delIncomeSource(id) { state.incomeSources = state.incomeSources.filter(s => s.id !== id); saveState(); renderIncome(); renderOverview(); toast('تم الحذف'); }
+        function addDeduction() {
+            const name = document.getElementById('m-ded-name').value.trim();
+            const amount = parseFloat(document.getElementById('m-ded-amount').value);
+            if (!name || isNaN(amount) || amount <= 0) { toast('يرجى إدخال البيانات بشكل صحيح'); return; }
+            if (!state.incomeDeductions) state.incomeDeductions = [];
+            state.incomeDeductions.push({ id: state.nextId++, name, amount });
+            saveState(); renderIncome(); renderOverview(); toast('تم إضافة الاستقطاع ✓');
+            document.getElementById('m-ded-name').value = ''; document.getElementById('m-ded-amount').value = '';
+        }
+        function delDeduction(id) { state.incomeDeductions = state.incomeDeductions.filter(d => d.id !== id); saveState(); renderIncome(); renderOverview(); toast('تم الحذف'); }
         function addFreelance() {
             const desc = document.getElementById('fl-desc').value.trim();
             const amount = parseFloat(document.getElementById('fl-amount').value);
@@ -2824,7 +2901,18 @@
             { name: 'مجمدات', color: '#818cf8', icon: '❄️' },
             { name: 'عناية شخصية', color: '#f472b6', icon: '🧴' },
             { name: 'عام', color: '#3b82f6', icon: '🔹' },
+            { name: 'خضروات', color: '#34d399', icon: '🥦' },
+            { name: 'فواتير', color: '#34d399', icon: '💧' },
             { name: 'أخرى', color: '#64748b', icon: '📦' },
+            { name: 'طبية', color: '#34d399', icon: '💊' },
+            { name: 'سيارة', color: '#34d399', icon: '🚗' },
+            { name: 'مواصلات', color: '#34d399', icon: '🚗' },
+            { name: 'مصروفات شهرية', color: '#34d399', icon: '' },
+            { name: 'مطاعم', color: '#34d399', icon: '' },
+            { name: 'ديون', color: '#34d399', icon: '💰' },
+            { name: 'أقساط', color: '#34d399', icon: '💳' },
+
+
         ];
         function shopSubcatColor(n) { return (SHOP_SUBCATS.find(s => s.name === n) || { color: '#888' }).color; }
         function shopSubcatIcon(n) { return (SHOP_SUBCATS.find(s => s.name === n) || { icon: '📦' }).icon; }
@@ -2886,9 +2974,9 @@
             const cat = document.getElementById('m-exp-cat').value;
             const payment = document.getElementById('m-exp-payment').value;
             const note = document.getElementById('m-exp-note').value.trim();
-            
+
             if (!desc) { toast('أدخل الوصف / الجهة'); return; }
-            
+
             const items = [];
             let valid = true;
             document.querySelectorAll('#inv-items-container .item-row').forEach(row => {
@@ -2901,13 +2989,13 @@
                 if (!name) { valid = false; return; }
                 items.push({ name, qty, price, subcat });
             });
-            
+
             if (!valid || items.length === 0) { toast('أضف صنفاً واحداً على الأقل'); return; }
             const amount = items.reduce((s, it) => s + it.qty * it.price, 0);
-            
+
             state.expenses.push({ id: state.nextId++, desc, amount, cat, date, payment, note, items });
             saveState(); closeModal('addExpense'); renderExpTable(); renderOverview(); toast('تمت إضافة المصروف ✓');
-            
+
             document.getElementById('m-exp-desc').value = '';
             document.getElementById('m-exp-note').value = '';
             document.getElementById('inv-items-container').innerHTML = '';
@@ -2915,9 +3003,9 @@
             checkBudgetWarning(cat);
         }
 
-        function delExpense(id) { 
-            state.expenses = state.expenses.filter(e => e.id !== id); 
-            saveState(); renderExpTable(); renderOverview(); toast('تم الحذف'); 
+        function delExpense(id) {
+            state.expenses = state.expenses.filter(e => e.id !== id);
+            saveState(); renderExpTable(); renderOverview(); toast('تم الحذف');
         }
 
         function openEditExpense(id) {
@@ -2966,7 +3054,7 @@
             const cat = document.getElementById('e-exp-cat').value;
             const payment = document.getElementById('e-exp-payment').value;
             const note = document.getElementById('e-exp-note').value.trim();
-            
+
             if (!desc) { toast('أدخل الوصف'); return; }
             const items = [];
             let valid = true;
@@ -2982,9 +3070,9 @@
             });
             if (!valid || items.length === 0) { toast('أضف صنفاً واحداً على الأقل'); return; }
             const amount = items.reduce((s, it) => s + it.qty * it.price, 0);
-            
+
             exp.desc = desc; exp.date = date; exp.cat = cat; exp.payment = payment; exp.note = note; exp.items = items; exp.amount = amount;
-            
+
             saveState(); closeModal('editExpense'); renderExpTable(); renderOverview(); toast('تم التعديل ✓');
         }
 
@@ -3010,11 +3098,12 @@
 
             const catEl = document.getElementById('exp-dash-cats');
             if (catEl) {
-                const catTotal = Object.values(byCat).reduce((s, v) => s + v, 0);
+                const totalInc = monthlyIncome().total;
+                const catTotal = totalInc > 0 ? totalInc : Object.values(byCat).reduce((s, v) => s + v, 0);
                 catEl.innerHTML = Object.entries(byCat).sort((a, b) => b[1] - a[1]).map(([cat, amt]) => {
                     const pct = catTotal > 0 ? (amt / catTotal * 100) : 0;
                     const col = catColor(cat);
-                    return '<div class="shop-analysis-bar"><div class="bar-hdr"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + col + ';margin-inline-end:5px"></span>' + cat + '</span><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--text3)">' + pct.toFixed(1) + '% · ' + amt.toFixed(2) + ' د.أ</span></div><div class="bar-bg"><div class="bar-fill" style="width:' + pct + '%;background:' + col + '"></div></div></div>';
+                    return '<div class="shop-analysis-bar"><div class="bar-hdr"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + col + ';margin-inline-end:5px"></span>' + cat + '</span><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--text3)">' + pct.toFixed(1) + '% · ' + amt.toFixed(2) + ' د.أ</span></div><div class="bar-bg"><div class="bar-fill" style="width:' + Math.min(pct, 100) + '%;background:' + col + '"></div></div></div>';
                 }).join('') || '<div class="empty">لا بيانات</div>';
             }
 
@@ -3031,285 +3120,503 @@
             }
         }
 
-        function renderExpTable() {
-            renderExpDash();
+        function printFilteredExpenses() {
             const q = (document.getElementById('exp-search') || {}).value || '';
             const { from, to } = getDateRange();
-            
             let invoices = state.expenses.filter(e => {
-                const d = new Date(e.date); 
-                return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note||'')).includes(q));
+                const d = new Date(e.date);
+                return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '')).includes(q));
             });
-
-            const allSubcats = [...new Set(invoices.flatMap(inv => (inv.items || []).map(it => it.subcat)))];
-            document.getElementById('shop-tabs').innerHTML =
-                '<span class="shop-tab ' + (shopFilterCat === 'all' ? 'active' : '') + '" onclick="setShopFilter(\'all\')">الكل <span class="tab-amt">' + invoices.length + '</span></span>' +
-                allSubcats.map(sub => {
-                    const subAmt = invoices.reduce((s, inv) => s + (inv.items || []).filter(it => it.subcat === sub).reduce((ss, it) => ss + it.qty * it.price, 0), 0);
-                    return '<span class="shop-tab ' + (shopFilterCat === sub ? 'active' : '') + '" onclick="setShopFilter(\'' + sub + '\')">' + shopSubcatIcon(sub) + ' ' + sub + ' <span class="tab-amt">' + subAmt.toFixed(0) + ' د.أ</span></span>';
-                }).join('');
-
             const filtered = (shopFilterCat === 'all' ? invoices : invoices.filter(inv => (inv.items || []).some(it => it.subcat === shopFilterCat))).sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            document.getElementById('exp-table').innerHTML = filtered.length ? filtered.map(inv => {
-                const items2show = shopFilterCat === 'all' ? (inv.items || []) : (inv.items || []).filter(it => it.subcat === shopFilterCat);
-                const displayTotal = items2show.reduce((s, it) => s + it.qty * it.price, 0);
-                const itemsHtml = items2show.map(it => {
-                    const col = shopSubcatColor(it.subcat);
-                    return '<div class="inv-item-row"><div class="inv-subcat-dot" style="background:' + col + '"></div><span class="inv-item-name">' + it.name + '</span><span class="inv-item-qty">×' + it.qty + '</span><span class="inv-subcat-badge" style="background:' + col + '22;color:' + col + '">' + it.subcat + '</span><span class="inv-item-price">' + (it.qty * it.price).toFixed(2) + ' د.أ</span></div>';
-                }).join('');
-                return '<div class="invoice-card"><div class="invoice-hdr" onclick="toggleInvoice(' + inv.id + ')"><div class="invoice-icon" style="background:'+catColor(inv.cat)+'22;color:'+catColor(inv.cat)+'">📄</div><div class="invoice-info"><div class="invoice-title">' + inv.desc + '</div><div class="invoice-meta">' + inv.date + ' · ' + inv.cat + ' · ' + (inv.payment||'نقدي') + (inv.note ? ' · ' + inv.note : '') + ' · ' + (inv.items || []).length + ' صنف</div></div><div class="invoice-total">' + (shopFilterCat === 'all' ? inv.amount.toFixed(2) : displayTotal.toFixed(2)) + ' د.أ</div><button class="del-btn" style="color:var(--accent2);margin-inline-end:4px" onclick="event.stopPropagation();openEditExpense(' + inv.id + ')" title="تعديل">✎</button><button class="del-btn" onclick="event.stopPropagation();delExpense(' + inv.id + ')" title="حذف">✕</button></div><div class="invoice-body" id="inv-body-' + inv.id + '">' + itemsHtml + '<div style="display:flex;justify-content:space-between;padding-top:8px;margin-top:4px;border-top:1px solid var(--border)"><span style="font-size:11px;color:var(--text3)">إجمالي المصروف</span><span style="font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;color:var(--red)">' + inv.amount.toFixed(2) + ' د.أ</span></div></div></div>';
-            }).join('') : '<div class="empty">لا مصاريف في هذه الفترة — أضف مصروف جديد</div>';
+            const win = window.open('', '_blank');
+            win.document.write('<html dir="rtl"><head><title>سجل المصاريف (' + (shopFilterCat === 'all' ? 'الكل' : shopFilterCat) + ')</title><style>body{font-family:Tahoma,Arial;padding:20px;background:#fff;color:#000}table{width:100%;border-collapse:collapse;margin-top:20px;font-size:13px}th,td{border:1px solid #ccc;padding:8px;text-align:right}th{background:#f0f0f0}</style></head><body>');
+            win.document.write('<h2>سجل المصاريف (' + (shopFilterCat === 'all' ? 'الكل' : shopFilterCat) + ')</h2><p>الفترة: ' + periodLabel() + '</p>');
+            win.document.write('<table><thead><tr><th>التاريخ</th><th>الوصف</th><th>الفئة</th><th>طريقة الدفع</th><th>المبلغ</th></tr></thead><tbody>');
+            let t = 0;
+            filtered.forEach(e => {
+                let amt = shopFilterCat === 'all' ? e.amount : (e.items || []).filter(it => it.subcat === shopFilterCat).reduce((s, it) => s + it.qty * it.price, 0);
+                t += amt;
+                win.document.write('<tr><td>' + e.date + '</td><td>' + e.desc + '</td><td>' + e.cat + '</td><td>' + (e.payment || 'نقدي') + '</td><td>' + amt.toFixed(2) + ' د.أ</td></tr>');
+            });
+            win.document.write('</tbody><tfoot><tr><th colspan="4">الإجمالي</th><th>' + t.toFixed(2) + ' د.أ</th></tr></tfoot></table><script>window.print();<\\/script></body></html>');
+            win.document.close();
         }
 
-        // ═══════════════════════════════════════
-        //  SUBSCRIPTIONS
-        // ═══════════════════════════════════════
-        function addSubscription() {
-            const name = document.getElementById('m-sub-name').value.trim();
-            const icon = document.getElementById('m-sub-icon').value || '📦';
-            const amount = parseFloat(document.getElementById('m-sub-amount').value);
-            const freq = document.getElementById('m-sub-freq').value;
-            const cat = document.getElementById('m-sub-cat').value;
-            const next = document.getElementById('m-sub-next').value || td();
-            const note = document.getElementById('m-sub-note').value;
-            if (!name || isNaN(amount) || amount <= 0) { toast('أدخل البيانات'); return; }
-            state.subscriptions.push({ id: state.nextId++, name, icon, amount, freq, cat, next, note });
-            saveState(); closeModal('addSub'); renderSubs(); renderOverview(); toast('تمت الإضافة ✓');
-            ['m-sub-name', 'm-sub-icon', 'm-sub-amount', 'm-sub-next', 'm-sub-note'].forEach(id => document.getElementById(id).value = '');
+function printInvoice(id) {
+const inv = state.expenses.find(e => e.id === id);
+if(!inv) return;
+const items2show = shopFilterCat === 'all' ? (inv.items || []) : (inv.items || []).filter(it => it.subcat ===
+shopFilterCat);
+const total = shopFilterCat === 'all' ? inv.amount : items2show.reduce((s, it) => s + it.qty * it.price, 0);
+
+const win = window.open('', '_blank');
+win.document.write(`<html dir="rtl">
+<head>
+    <title>فاتورة: ${inv.desc}</title>
+    <style>
+        body { font-family: Tahoma, Arial; padding: 20px; background: #fff; color: #000 }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: right }
+        th { background: #f0f0f0 }
+        .hdr { display: flex; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 10px }
+    </style>
+</head>
+<body>`);
+    win.document.write(`<div class="hdr">
+        <div>
+            <h2>${inv.desc}</h2>
+            <div>الفئة: ${inv.cat} | الدفع: ${inv.payment || 'نقدي'}</div>
+        </div>
+        <div>
+            <h3>${inv.date}</h3>
+        </div>
+    </div>`);
+    if(shopFilterCat !== 'all') win.document.write('<p><b>مفلترة حسب:</b> ' + shopFilterCat + '</p>');
+    win.document.write(`<table>
+        <thead>
+            <tr>
+                <th>الصنف</th>
+                <th>الكمية</th>
+                <th>السعر</th>
+                <th>الإجمالي</th>
+            </tr>
+        </thead>
+        <tbody>`);
+            items2show.forEach(it => {
+            win.document.write(`<tr>
+                <td>${it.name}</td>
+                <td>${it.qty}</td>
+                <td>${it.price.toFixed(2)}</td>
+                <td>${(it.qty*it.price).toFixed(2)} د.أ</td>
+            </tr>`);
+            });
+            win.document.write(`</tbody>
+        <tfoot>
+            <tr>
+                <th colspan="3">الإجمالي الكلي</th>
+                <th>${total.toFixed(2)} د.أ</th>
+            </tr>
+        </tfoot>
+    </table>`);
+    if(inv.note) win.document.write('<p style="margin-top:20px"><b>ملاحظات:</b> '+inv.note+'</p>');
+    win.document.write('<script>window.print();<\\/script></body></html>');
+win.document.close();
+}
+
+function renderExpTable() {
+renderExpDash();
+const q = (document.getElementById('exp-search') || {}).value || '';
+const { from, to } = getDateRange();
+
+let invoices = state.expenses.filter(e => {
+const d = new Date(e.date);
+return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '' )).includes(q)); }); const allSubcats=[...new
+    Set(invoices.flatMap(inv=> (inv.items || []).map(it => it.subcat)))];
+    document.getElementById('shop-tabs').innerHTML =
+    `<span class="shop-tab ${shopFilterCat === 'all' ? 'active' : ''}" onclick="setShopFilter('all')">الكل <span class="tab-amt">${invoices.length}</span></span>` +
+    allSubcats.map(sub => {
+    const subAmt = invoices.reduce((s, inv) => s + (inv.items || []).filter(it => it.subcat === sub).reduce((ss, it) =>
+    ss + it.qty * it.price, 0), 0);
+    return `<span class="shop-tab ${shopFilterCat === sub ? 'active' : ''}" onclick="setShopFilter('${sub}')">${shopSubcatIcon(sub)} ${sub} <span class="tab-amt">${subAmt.toFixed(0)} د.أ</span></span>`;
+    }).join('');
+
+    const filtered = (shopFilterCat === 'all' ? invoices : invoices.filter(inv => (inv.items || []).some(it => it.subcat
+    === shopFilterCat))).sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    document.getElementById('exp-table').innerHTML = filtered.length ? filtered.map(inv => {
+    const items2show = shopFilterCat === 'all' ? (inv.items || []) : (inv.items || []).filter(it => it.subcat ===
+    shopFilterCat);
+    const displayTotal = items2show.reduce((s, it) => s + it.qty * it.price, 0);
+    const itemsHtml = items2show.map(it => {
+    const col = shopSubcatColor(it.subcat);
+    return `<div class="inv-item-row">
+        <div class="inv-subcat-dot" style="background:${col}"></div><span class="inv-item-name">${it.name}</span><span class="inv-item-qty">×${it.qty}</span><span class="inv-subcat-badge"
+            style="background:${col}22;color:${col}">${it.subcat}</span><span class="inv-item-price">${(it.qty * it.price).toFixed(2)} د.أ</span>
+    </div>`;
+    }).join('');
+    return `<div class="invoice-card">
+        <div class="invoice-hdr" onclick="toggleInvoice(${inv.id})">
+            <div class="invoice-icon" style="background:${catColor(inv.cat)}22;color:${catColor(inv.cat)}">📄
+            </div>
+            <div class="invoice-info">
+                <div class="invoice-title">${inv.desc}</div>
+                <div class="invoice-meta">${inv.date} · ${inv.cat} · ${inv.payment || 'نقدي'}${inv.note ? ' · ' + inv.note : ''} · ${(inv.items || []).length} صنف</div>
+            </div>
+            <div class="invoice-total">${(shopFilterCat === 'all' ? inv.amount.toFixed(2) : displayTotal.toFixed(2))} د.أ</div><button class="del-btn" style="color:var(--text);margin-inline-end:4px"
+                onclick="event.stopPropagation();printInvoice(${inv.id})" title="تصدير">🖨</button><button
+                class="del-btn" style="color:var(--accent2);margin-inline-end:4px"
+                onclick="event.stopPropagation();openEditExpense(${inv.id})" title="تعديل">✎</button><button
+                class="del-btn" onclick="event.stopPropagation();delExpense(${inv.id})" title="حذف">✕</button>
+        </div>
+        <div class="invoice-body" id="inv-body-${inv.id}">${itemsHtml}<div
+                style="display:flex;justify-content:space-between;padding-top:8px;margin-top:4px;border-top:1px solid var(--border)">
+                <span style="font-size:11px;color:var(--text3)">إجمالي المصروف</span><span
+                    style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--red)">${inv.amount.toFixed(2)} د.أ</span></div>
+        </div>
+    </div>`;
+    }).join('') : '<div class="empty">لا مصاريف في هذه الفترة — أضف مصروف جديد</div>';
+    }
+
+    // ═══════════════════════════════════════
+    // SUBSCRIPTIONS
+    // ═══════════════════════════════════════
+    function addSubscription() {
+    const name = document.getElementById('m-sub-name').value.trim();
+    const icon = document.getElementById('m-sub-icon').value || '📦';
+    const amount = parseFloat(document.getElementById('m-sub-amount').value);
+    const freq = document.getElementById('m-sub-freq').value;
+    const cat = document.getElementById('m-sub-cat').value;
+    const next = document.getElementById('m-sub-next').value || td();
+    const note = document.getElementById('m-sub-note').value;
+    if (!name || isNaN(amount) || amount <= 0) { toast('أدخل البيانات'); return; } state.subscriptions.push({ id:
+        state.nextId++, name, icon, amount, freq, cat, next, note }); saveState(); closeModal('addSub'); renderSubs();
+        renderOverview(); toast('تمت الإضافة ✓'); ['m-sub-name', 'm-sub-icon' , 'm-sub-amount' , 'm-sub-next'
+        , 'm-sub-note' ].forEach(id=> document.getElementById(id).value = '');
         }
-        function delSub(id) { state.subscriptions = state.subscriptions.filter(s => s.id !== id); saveState(); renderSubs(); renderOverview(); toast('تم الحذف'); }
+        function delSub(id) { state.subscriptions = state.subscriptions.filter(s => s.id !== id); saveState();
+        renderSubs(); renderOverview(); toast('تم الحذف'); }
         function renderSubs() {
-            const monthly = calcSubMonthly();
-            const daily = state.subscriptions.filter(s => s.freq === 'daily').reduce((s, x) => s + x.amount, 0);
-            const mOnly = state.subscriptions.filter(s => s.freq === 'monthly').reduce((s, x) => s + x.amount, 0);
-            const yearly = state.subscriptions.filter(s => s.freq === 'yearly').reduce((s, x) => s + x.amount, 0);
-            document.getElementById('sub-metrics').innerHTML = `
-        <div class="metric m-r"><div class="metric-lbl">يومي (شهرياً)</div><div class="metric-val">${(daily * 30).toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
-        <div class="metric m-p"><div class="metric-lbl">شهري</div><div class="metric-val">${mOnly.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
-        <div class="metric m-g"><div class="metric-lbl">سنوي</div><div class="metric-val">${yearly.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
-        <div class="metric m-a"><div class="metric-lbl">إجمالي/شهر (مكافئ)</div><div class="metric-val">${monthly.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
-      `;
-            ['daily', 'monthly', 'yearly'].forEach(freq => {
-                const list = state.subscriptions.filter(s => s.freq === freq);
-                const freqLabel = { daily: 'يومي', monthly: 'شهري', yearly: 'سنوي' };
-                document.getElementById('subs-' + freq).innerHTML = list.length ? list.map(s => `
-          <div class="sub-item">
+        const monthly = calcSubMonthly();
+        const daily = state.subscriptions.filter(s => s.freq === 'daily').reduce((s, x) => s + x.amount, 0);
+        const mOnly = state.subscriptions.filter(s => s.freq === 'monthly').reduce((s, x) => s + x.amount, 0);
+        const yearly = state.subscriptions.filter(s => s.freq === 'yearly').reduce((s, x) => s + x.amount, 0);
+        document.getElementById('sub-metrics').innerHTML = `
+        <div class="metric m-r">
+            <div class="metric-lbl">يومي (شهرياً)</div>
+            <div class="metric-val">${(daily * 30).toFixed(0)} <span
+                    style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div>
+        </div>
+        <div class="metric m-p">
+            <div class="metric-lbl">شهري</div>
+            <div class="metric-val">${mOnly.toFixed(0)} <span
+                    style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div>
+        </div>
+        <div class="metric m-g">
+            <div class="metric-lbl">سنوي</div>
+            <div class="metric-val">${yearly.toFixed(0)} <span
+                    style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div>
+        </div>
+        <div class="metric m-a">
+            <div class="metric-lbl">إجمالي/شهر (مكافئ)</div>
+            <div class="metric-val">${monthly.toFixed(0)} <span
+                    style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div>
+        </div>
+        `;
+        ['daily', 'monthly', 'yearly'].forEach(freq => {
+        const list = state.subscriptions.filter(s => s.freq === freq);
+        const freqLabel = { daily: 'يومي', monthly: 'شهري', yearly: 'سنوي' };
+        document.getElementById('subs-' + freq).innerHTML = list.length ? list.map(s => `
+        <div class="sub-item">
             <div class="sub-icon" style="background:rgba(124,109,250,0.15)">${s.icon || '📦'}</div>
             <div class="sub-info">
-              <div class="sub-name">${s.name}</div>
-              <div class="sub-meta">${s.cat}${s.note ? ' · ' + s.note : ''}</div>
+                <div class="sub-name">${s.name}</div>
+                <div class="sub-meta">${s.cat}${s.note ? ' · ' + s.note : ''}</div>
             </div>
             <div style="text-align:left">
-              <div class="sub-amt">${s.amount} د.أ</div>
-              <div class="sub-next">تجديد: ${s.next}</div>
+                <div class="sub-amt">${s.amount} د.أ</div>
+                <div class="sub-next">تجديد: ${s.next}</div>
             </div>
             <button class="del-btn" onclick="delSub(${s.id})">✕</button>
-          </div>`).join('') : `<div class="empty">لا اشتراكات ${freqLabel[freq]}ة</div>`;
-            });
+        </div>`).join('') : `<div class="empty">لا اشتراكات ${freqLabel[freq]}ة</div>`;
+        });
         }
 
         // ═══════════════════════════════════════
-        //  MAINTENANCE
+        // MAINTENANCE
         // ═══════════════════════════════════════
-        const PRIO_COLORS = { urgent: 'var(--red)', high: 'var(--orange)', medium: 'var(--amber)', low: 'var(--green)' };
+        const PRIO_COLORS = { urgent: 'var(--red)', high: 'var(--orange)', medium: 'var(--amber)', low: 'var(--green)'
+        };
         const PRIO_LABELS = { urgent: 'عاجل', high: 'مهم', medium: 'متوسط', low: 'منخفض' };
         const STATUS_LABELS = { pending: 'قيد الانتظار', scheduled: 'مجدولة', done: 'منجزة' };
         function addMaintenance() {
-            const desc = document.getElementById('m-maint-desc').value.trim();
-            const cost = parseFloat(document.getElementById('m-maint-cost').value) || 0;
-            const priority = document.getElementById('m-maint-priority').value;
-            const cat = document.getElementById('m-maint-cat').value;
-            const date = document.getElementById('m-maint-date').value || td();
-            const status = document.getElementById('m-maint-status').value;
-            const note = document.getElementById('m-maint-note').value;
-            if (!desc) { toast('أدخل الوصف'); return; }
-            state.maintenance.push({ id: state.nextId++, desc, cost, priority, cat, date, status, note });
-            saveState(); closeModal('addMaint'); renderMaint(); renderOverview(); toast('تمت الإضافة ✓');
-            ['m-maint-desc', 'm-maint-cost', 'm-maint-note'].forEach(id => document.getElementById(id).value = '');
+        const desc = document.getElementById('m-maint-desc').value.trim();
+        const cost = parseFloat(document.getElementById('m-maint-cost').value) || 0;
+        const priority = document.getElementById('m-maint-priority').value;
+        const cat = document.getElementById('m-maint-cat').value;
+        const date = document.getElementById('m-maint-date').value || td();
+        const status = document.getElementById('m-maint-status').value;
+        const note = document.getElementById('m-maint-note').value;
+        if (!desc) { toast('أدخل الوصف'); return; }
+        state.maintenance.push({ id: state.nextId++, desc, cost, priority, cat, date, status, note });
+        saveState(); closeModal('addMaint'); renderMaint(); renderOverview(); toast('تمت الإضافة ✓');
+        ['m-maint-desc', 'm-maint-cost', 'm-maint-note'].forEach(id => document.getElementById(id).value = '');
         }
-        function delMaint(id) { state.maintenance = state.maintenance.filter(m => m.id !== id); saveState(); renderMaint(); renderOverview(); }
-        function doneMaint(id) { const m = state.maintenance.find(x => x.id === id); if (m) { m.status = 'done'; saveState(); renderMaint(); renderOverview(); toast('تم تحديد الصيانة كمنجزة ✓'); } }
+        function delMaint(id) { state.maintenance = state.maintenance.filter(m => m.id !== id); saveState();
+        renderMaint(); renderOverview(); }
+        function doneMaint(id) { const m = state.maintenance.find(x => x.id === id); if (m) { m.status = 'done';
+        saveState(); renderMaint(); renderOverview(); toast('تم تحديد الصيانة كمنجزة ✓'); } }
         function renderMaint() {
-            const totalCost = state.maintenance.filter(m => m.status !== 'done').reduce((s, m) => s + m.cost, 0);
-            const pending = state.maintenance.filter(m => m.status !== 'done');
-            document.getElementById('maint-metrics').innerHTML = `
-        <div class="metric m-r"><div class="metric-lbl">عاجل / مهم</div><div class="metric-val">${state.maintenance.filter(m => m.status !== 'done' && (m.priority === 'urgent' || m.priority === 'high')).length}</div></div>
-        <div class="metric m-a"><div class="metric-lbl">إجمالي التكلفة المتوقعة</div><div class="metric-val">${totalCost.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
-        <div class="metric m-g"><div class="metric-lbl">منجزة</div><div class="metric-val">${state.maintenance.filter(m => m.status === 'done').length}</div></div>
-        <div class="metric m-p"><div class="metric-lbl">إجمالي البنود</div><div class="metric-val">${state.maintenance.length}</div></div>
-      `;
-            const urgent = state.maintenance.filter(m => m.status !== 'done' && (m.priority === 'urgent' || m.priority === 'high'));
-            const scheduled = state.maintenance.filter(m => m.status !== 'done' && m.priority !== 'urgent' && m.priority !== 'high');
-            const renderList = (arr, el) => {
-                document.getElementById(el).innerHTML = arr.length ? arr.map(m => `
-          <div class="maint-item">
+        const totalCost = state.maintenance.filter(m => m.status !== 'done').reduce((s, m) => s + m.cost, 0);
+        const pending = state.maintenance.filter(m => m.status !== 'done');
+        document.getElementById('maint-metrics').innerHTML = `
+        <div class="metric m-r">
+            <div class="metric-lbl">عاجل / مهم</div>
+            <div class="metric-val">${state.maintenance.filter(m => m.status !== 'done' && (m.priority === 'urgent' ||
+                m.priority === 'high')).length}</div>
+        </div>
+        <div class="metric m-a">
+            <div class="metric-lbl">إجمالي التكلفة المتوقعة</div>
+            <div class="metric-val">${totalCost.toFixed(0)} <span
+                    style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div>
+        </div>
+        <div class="metric m-g">
+            <div class="metric-lbl">منجزة</div>
+            <div class="metric-val">${state.maintenance.filter(m => m.status === 'done').length}</div>
+        </div>
+        <div class="metric m-p">
+            <div class="metric-lbl">إجمالي البنود</div>
+            <div class="metric-val">${state.maintenance.length}</div>
+        </div>
+        `;
+        const urgent = state.maintenance.filter(m => m.status !== 'done' && (m.priority === 'urgent' || m.priority ===
+        'high'));
+        const scheduled = state.maintenance.filter(m => m.status !== 'done' && m.priority !== 'urgent' && m.priority !==
+        'high');
+        const renderList = (arr, el) => {
+        document.getElementById(el).innerHTML = arr.length ? arr.map(m => `
+        <div class="maint-item">
             <div class="maint-urgency" style="background:${PRIO_COLORS[m.priority]}"></div>
             <div class="maint-info">
-              <div class="maint-name">${m.desc}</div>
-              <div class="maint-meta">${m.cat} · ${STATUS_LABELS[m.status]}${m.note ? ' · ' + m.note : ''}</div>
+                <div class="maint-name">${m.desc}</div>
+                <div class="maint-meta">${m.cat} · ${STATUS_LABELS[m.status]}${m.note ? ' · ' + m.note : ''}</div>
             </div>
             <div style="text-align:left">
-              <div class="maint-cost">${m.cost > 0 ? m.cost + ' د.أ' : '—'}</div>
-              <div class="maint-date">${m.date}</div>
+                <div class="maint-cost">${m.cost > 0 ? m.cost + ' د.أ' : '—'}</div>
+                <div class="maint-date">${m.date}</div>
             </div>
             <button class="btn btn-sm btn-green" onclick="doneMaint(${m.id})" style="margin-left:4px">✓</button>
             <button class="del-btn" onclick="delMaint(${m.id})">✕</button>
-          </div>`).join('') : '<div class="empty">لا بنود</div>';
-            };
-            renderList(urgent, 'maint-urgent');
-            renderList(scheduled, 'maint-scheduled');
-            const all = state.maintenance.sort((a, b) => new Date(b.date) - new Date(a.date));
-            document.getElementById('maint-table').innerHTML = all.length ? `
-        <table><thead><tr><th>الوصف</th><th>الفئة</th><th>الأولوية</th><th>الحالة</th><th>التكلفة</th><th>التاريخ</th><th></th></tr></thead><tbody>
-        ${all.map(m => `<tr><td class="td-main">${m.desc}</td><td>${m.cat}</td><td><span style="color:${PRIO_COLORS[m.priority]};font-size:12px">${PRIO_LABELS[m.priority]}</span></td><td style="font-size:12px">${STATUS_LABELS[m.status]}</td><td class="td-mono">${m.cost > 0 ? m.cost + ' د.أ' : '—'}</td><td class="td-mono" style="font-size:11px">${m.date}</td><td><button class="del-btn" onclick="delMaint(${m.id})">✕</button></td></tr>`).join('')}
-        </tbody></table>`: '<div class="empty">لا سجلات</div>';
+        </div>`).join('') : '<div class="empty">لا بنود</div>';
+        };
+        renderList(urgent, 'maint-urgent');
+        renderList(scheduled, 'maint-scheduled');
+        const all = state.maintenance.sort((a, b) => new Date(b.date) - new Date(a.date));
+        document.getElementById('maint-table').innerHTML = all.length ? `
+        <table>
+            <thead>
+                <tr>
+                    <th>الوصف</th>
+                    <th>الفئة</th>
+                    <th>الأولوية</th>
+                    <th>الحالة</th>
+                    <th>التكلفة</th>
+                    <th>التاريخ</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                ${all.map(m => `<tr>
+                    <td class="td-main">${m.desc}</td>
+                    <td>${m.cat}</td>
+                    <td><span style="color:${PRIO_COLORS[m.priority]};font-size:12px">${PRIO_LABELS[m.priority]}</span>
+                    </td>
+                    <td style="font-size:12px">${STATUS_LABELS[m.status]}</td>
+                    <td class="td-mono">${m.cost > 0 ? m.cost + ' د.أ' : '—'}</td>
+                    <td class="td-mono" style="font-size:11px">${m.date}</td>
+                    <td><button class="del-btn" onclick="delMaint(${m.id})">✕</button></td>
+                </tr>`).join('')}
+            </tbody>
+        </table>`: '<div class="empty">لا سجلات</div>';
         }
 
         // ═══════════════════════════════════════
-        //  LOANS
+        // LOANS
         // ═══════════════════════════════════════
         const LOAN_TYPES = { bank: 'بنكي', personal: 'شخصي', car: 'سيارة', home: 'منزل', other: 'أخرى' };
         function addLoan() {
-            const name = document.getElementById('m-loan-name').value.trim();
-            const total = parseFloat(document.getElementById('m-loan-total').value);
-            const remaining = parseFloat(document.getElementById('m-loan-remaining').value);
-            const monthly = parseFloat(document.getElementById('m-loan-monthly').value);
-            const interest = parseFloat(document.getElementById('m-loan-interest').value) || 0;
-            const start = document.getElementById('m-loan-start').value || td();
-            const end = document.getElementById('m-loan-end').value || td();
-            const type = document.getElementById('m-loan-type').value;
-            if (!name || isNaN(total) || isNaN(remaining) || isNaN(monthly)) { toast('يرجى ملء الحقول المطلوبة'); return; }
-            state.loans.push({ id: state.nextId++, name, total, remaining, monthly, interest, start, end, type });
-            saveState(); closeModal('addLoan'); renderLoans(); renderOverview(); toast('تمت الإضافة ✓');
-            ['m-loan-name', 'm-loan-total', 'm-loan-remaining', 'm-loan-monthly', 'm-loan-interest', 'm-loan-start', 'm-loan-end'].forEach(id => document.getElementById(id).value = '');
+        const name = document.getElementById('m-loan-name').value.trim();
+        const total = parseFloat(document.getElementById('m-loan-total').value);
+        const remaining = parseFloat(document.getElementById('m-loan-remaining').value);
+        const monthly = parseFloat(document.getElementById('m-loan-monthly').value);
+        const interest = parseFloat(document.getElementById('m-loan-interest').value) || 0;
+        const start = document.getElementById('m-loan-start').value || td();
+        const end = document.getElementById('m-loan-end').value || td();
+        const type = document.getElementById('m-loan-type').value;
+        if (!name || isNaN(total) || isNaN(remaining) || isNaN(monthly)) { toast('يرجى ملء الحقول المطلوبة'); return; }
+        state.loans.push({ id: state.nextId++, name, total, remaining, monthly, interest, start, end, type });
+        saveState(); closeModal('addLoan'); renderLoans(); renderOverview(); toast('تمت الإضافة ✓');
+        ['m-loan-name', 'm-loan-total', 'm-loan-remaining', 'm-loan-monthly', 'm-loan-interest', 'm-loan-start',
+        'm-loan-end'].forEach(id => document.getElementById(id).value = '');
         }
-        function delLoan(id) { state.loans = state.loans.filter(l => l.id !== id); saveState(); renderLoans(); renderOverview(); }
+        function delLoan(id) { state.loans = state.loans.filter(l => l.id !== id); saveState(); renderLoans();
+        renderOverview(); }
         let editingLoanId = null;
         function openEditLoan(id) {
-            const l = state.loans.find(x => x.id === id);
-            if (!l) return;
-            editingLoanId = id;
-            document.getElementById('e-loan-name').value = l.name;
-            document.getElementById('e-loan-total').value = l.total;
-            document.getElementById('e-loan-remaining').value = l.remaining;
-            document.getElementById('e-loan-monthly').value = l.monthly;
-            document.getElementById('e-loan-interest').value = l.interest;
-            document.getElementById('e-loan-start').value = l.start;
-            document.getElementById('e-loan-end').value = l.end;
-            document.getElementById('e-loan-type').value = l.type;
-            openModal('editLoan');
+        const l = state.loans.find(x => x.id === id);
+        if (!l) return;
+        editingLoanId = id;
+        document.getElementById('e-loan-name').value = l.name;
+        document.getElementById('e-loan-total').value = l.total;
+        document.getElementById('e-loan-remaining').value = l.remaining;
+        document.getElementById('e-loan-monthly').value = l.monthly;
+        document.getElementById('e-loan-interest').value = l.interest;
+        document.getElementById('e-loan-start').value = l.start;
+        document.getElementById('e-loan-end').value = l.end;
+        document.getElementById('e-loan-type').value = l.type;
+        openModal('editLoan');
         }
         function saveEditLoan() {
-            const l = state.loans.find(x => x.id === editingLoanId);
-            if (!l) return;
-            const name = document.getElementById('e-loan-name').value.trim();
-            const total = parseFloat(document.getElementById('e-loan-total').value);
-            const remaining = parseFloat(document.getElementById('e-loan-remaining').value);
-            const monthly = parseFloat(document.getElementById('e-loan-monthly').value);
-            const interest = parseFloat(document.getElementById('e-loan-interest').value) || 0;
-            const start = document.getElementById('e-loan-start').value || td();
-            const end = document.getElementById('e-loan-end').value || td();
-            const type = document.getElementById('e-loan-type').value;
-            if (!name || isNaN(total) || isNaN(remaining) || isNaN(monthly)) { toast('يرجى ملء الحقول المطلوبة'); return; }
-            l.name = name; l.total = total; l.remaining = remaining; l.monthly = monthly; l.interest = interest; l.start = start; l.end = end; l.type = type;
-            saveState(); closeModal('editLoan'); renderLoans(); renderOverview(); toast('تم التعديل ✓');
+        const l = state.loans.find(x => x.id === editingLoanId);
+        if (!l) return;
+        const name = document.getElementById('e-loan-name').value.trim();
+        const total = parseFloat(document.getElementById('e-loan-total').value);
+        const remaining = parseFloat(document.getElementById('e-loan-remaining').value);
+        const monthly = parseFloat(document.getElementById('e-loan-monthly').value);
+        const interest = parseFloat(document.getElementById('e-loan-interest').value) || 0;
+        const start = document.getElementById('e-loan-start').value || td();
+        const end = document.getElementById('e-loan-end').value || td();
+        const type = document.getElementById('e-loan-type').value;
+        if (!name || isNaN(total) || isNaN(remaining) || isNaN(monthly)) { toast('يرجى ملء الحقول المطلوبة'); return; }
+        l.name = name; l.total = total; l.remaining = remaining; l.monthly = monthly; l.interest = interest; l.start =
+        start; l.end = end; l.type = type;
+        saveState(); closeModal('editLoan'); renderLoans(); renderOverview(); toast('تم التعديل ✓');
         }
         function payLoan(id) {
-            const l = state.loans.find(x => x.id === id);
-            if (!l) return;
-            const pay = prompt('أدخل مبلغ الدفعة (د.أ):');
-            const amt = parseFloat(pay);
-            if (isNaN(amt) || amt <= 0) return;
-            l.remaining = Math.max(0, l.remaining - amt);
-            saveState(); renderLoans(); renderOverview(); toast('تم تسجيل الدفعة ✓');
-        }
-        function renderLoans() {
-            const totalRem = state.loans.reduce((s, l) => s + l.remaining, 0);
+        const l = state.loans.find(x => x.id === id);
+        if (!l) return;
+        const pay = prompt('أدخل مبلغ الدفعة (د.أ):');
+        const amt = parseFloat(pay);
+        if (isNaN(amt) || amt <= 0) return; l.remaining=Math.max(0, l.remaining - amt); saveState(); renderLoans();
+            renderOverview(); toast('تم تسجيل الدفعة ✓'); } function renderLoans() { const
+            totalRem=state.loans.reduce((s, l)=> s + l.remaining, 0);
             const totalMonth = state.loans.reduce((s, l) => s + l.monthly, 0);
             document.getElementById('loan-metrics').innerHTML = `
-        <div class="metric m-r"><div class="metric-lbl">إجمالي المديونية</div><div class="metric-val">${totalRem.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
-        <div class="metric m-a"><div class="metric-lbl">الأقساط الشهرية</div><div class="metric-val">${totalMonth.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
-        <div class="metric m-p"><div class="metric-lbl">عدد القروض</div><div class="metric-val">${state.loans.length}</div></div>
-      `;
+            <div class="metric m-r">
+                <div class="metric-lbl">إجمالي المديونية</div>
+                <div class="metric-val">${totalRem.toFixed(0)} <span
+                        style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div>
+            </div>
+            <div class="metric m-a">
+                <div class="metric-lbl">الأقساط الشهرية</div>
+                <div class="metric-val">${totalMonth.toFixed(0)} <span
+                        style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div>
+            </div>
+            <div class="metric m-p">
+                <div class="metric-lbl">عدد القروض</div>
+                <div class="metric-val">${state.loans.length}</div>
+            </div>
+            `;
             document.getElementById('loan-list').innerHTML = state.loans.length ? state.loans.map(l => {
-                const paid = l.total - l.remaining;
-                const pct = Math.min(paid / l.total * 100, 100);
-                const mLeft = l.monthly > 0 ? Math.ceil(l.remaining / l.monthly) : 0;
-                return `<div class="loan-card">
-          <div class="loan-hdr">
-            <div>
-              <div class="loan-name">${l.name}</div>
-              <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">${LOAN_TYPES[l.type] || l.type} · ${l.interest}% فائدة</div>
-            </div>
-            <div style="display:flex;gap:8px">
-              <button class="btn btn-sm btn-green" onclick="payLoan(${l.id})">+ دفعة</button>
-              <button class="del-btn" style="color:var(--accent2);margin-inline-end:6px" onclick="openEditLoan(${l.id})" title="تعديل">✎</button>
-              <button class="del-btn" onclick="delLoan(${l.id})">✕</button>
-            </div>
-          </div>
-          <div class="loan-stats">
-            <div class="loan-stat"><div class="loan-stat-lbl">المبلغ الأصلي</div><div class="loan-stat-val">${l.total.toLocaleString()} د.أ</div></div>
-            <div class="loan-stat"><div class="loan-stat-lbl">المتبقي</div><div class="loan-stat-val" style="color:var(--red)">${l.remaining.toLocaleString()} د.أ</div></div>
-            <div class="loan-stat"><div class="loan-stat-lbl">القسط الشهري</div><div class="loan-stat-val" style="color:var(--amber)">${l.monthly} د.أ</div></div>
-            <div class="loan-stat"><div class="loan-stat-lbl">الأشهر المتبقية</div><div class="loan-stat-val">${mLeft}</div></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:4px">
-            <span>تم سداد ${paid.toFixed(0)} د.أ (${pct.toFixed(1)}%)</span>
-            <span>${l.start} → ${l.end}</span>
-          </div>
-          <div class="progress-bg"><div class="progress-fill" style="width:${pct}%;background:var(--green)"></div></div>
-        </div>`;
+            const paid = l.total - l.remaining;
+            const pct = Math.min(paid / l.total * 100, 100);
+            const mLeft = l.monthly > 0 ? Math.ceil(l.remaining / l.monthly) : 0;
+            return `<div class="loan-card">
+                <div class="loan-hdr">
+                    <div>
+                        <div class="loan-name">${l.name}</div>
+                        <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">
+                            ${LOAN_TYPES[l.type] || l.type} · ${l.interest}% فائدة</div>
+                    </div>
+                    <div style="display:flex;gap:8px">
+                        <button class="btn btn-sm btn-green" onclick="payLoan(${l.id})">+ دفعة</button>
+                        <button class="del-btn" style="color:var(--accent2);margin-inline-end:6px"
+                            onclick="openEditLoan(${l.id})" title="تعديل">✎</button>
+                        <button class="del-btn" onclick="delLoan(${l.id})">✕</button>
+                    </div>
+                </div>
+                <div class="loan-stats">
+                    <div class="loan-stat">
+                        <div class="loan-stat-lbl">المبلغ الأصلي</div>
+                        <div class="loan-stat-val">${l.total.toLocaleString()} د.أ</div>
+                    </div>
+                    <div class="loan-stat">
+                        <div class="loan-stat-lbl">المتبقي</div>
+                        <div class="loan-stat-val" style="color:var(--red)">${l.remaining.toLocaleString()} د.أ</div>
+                    </div>
+                    <div class="loan-stat">
+                        <div class="loan-stat-lbl">القسط الشهري</div>
+                        <div class="loan-stat-val" style="color:var(--amber)">${l.monthly} د.أ</div>
+                    </div>
+                    <div class="loan-stat">
+                        <div class="loan-stat-lbl">الأشهر المتبقية</div>
+                        <div class="loan-stat-val">${mLeft}</div>
+                    </div>
+                </div>
+                <div
+                    style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:4px">
+                    <span>تم سداد ${paid.toFixed(0)} د.أ (${pct.toFixed(1)}%)</span>
+                    <span>${l.start} → ${l.end}</span>
+                </div>
+                <div class="progress-bg">
+                    <div class="progress-fill" style="width:${pct}%;background:var(--green)"></div>
+                </div>
+            </div>`;
             }).join('') : '<div class="empty" style="padding:3rem">لا قروض مسجلة — أضف من الأعلى</div>';
-        }
+            }
 
-        // ═══════════════════════════════════════
-        //  BUDGET
-        // ═══════════════════════════════════════
-        function renderBudget() {
+            // ═══════════════════════════════════════
+            // BUDGET
+            // ═══════════════════════════════════════
+            function renderBudget() {
             const exps = state.expenses.filter(e => inRange(e.date));
             const byCat = {};
             exps.forEach(e => byCat[e.cat] = (byCat[e.cat] || 0) + e.amount);
             document.getElementById('budget-form').innerHTML = state.categories.map(c => `
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <div class="leg-dot" style="background:${c.color}"></div>
-          <span style="flex:1;font-size:13px">${c.name}</span>
-          <input class="inp" type="number" style="width:110px" placeholder="الميزانية" value="${state.budgets[c.name] || ''}" oninput="updateBudget('${c.name}',this.value)" min="0" />
-          <span class="td-mono" style="width:70px;text-align:left;font-size:11px;color:var(--text3)">${(byCat[c.name] || 0).toFixed(1)} د.أ</span>
-        </div>`).join('');
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                <div class="leg-dot" style="background:${c.color}"></div>
+                <span style="flex:1;font-size:13px">${c.name}</span>
+                <input class="inp" type="number" style="width:110px" placeholder="الميزانية"
+                    value="${state.budgets[c.name] || ''}" oninput="updateBudget('${c.name}',this.value)" min="0" />
+                <span class="td-mono"
+                    style="width:70px;text-align:left;font-size:11px;color:var(--text3)">${(byCat[c.name] ||
+                    0).toFixed(1)} د.أ</span>
+            </div>`).join('');
             const total = exps.reduce((s, e) => s + e.amount, 0);
             const totalBudget = Object.values(state.budgets).reduce((s, v) => s + v, 0);
             const net = totalBudget - total;
             document.getElementById('budget-overview').innerHTML = `
-        <div class="stmt-box" style="margin-bottom:8px"><div class="stmt-box-lbl">الإنفاق الفعلي</div><div class="stmt-box-val metric-neg">${total.toFixed(2)} د.أ</div></div>
-        <div class="stmt-box" style="margin-bottom:8px"><div class="stmt-box-lbl">الميزانية المحددة</div><div class="stmt-box-val">${totalBudget.toFixed(2)} د.أ</div></div>
-        <div class="stmt-box" style="margin-bottom:14px"><div class="stmt-box-lbl">الفائض / العجز</div><div class="stmt-box-val ${net >= 0 ? 'metric-pos' : 'metric-neg'}">${net.toFixed(2)} د.أ</div></div>
-        ${Object.keys(state.budgets).map(cat => {
-                const spent = byCat[cat] || 0; const bud = state.budgets[cat];
-                const pct = Math.min(spent / bud * 100, 100);
-                const over = spent > bud; const warn = pct > 75 && !over;
-                const col = over ? 'var(--red)' : warn ? 'var(--amber)' : catColor(cat);
-                return `<div class="bbar"><div class="bbar-hdr"><div class="bbar-name"><div class="leg-dot" style="background:${catColor(cat)}"></div>${cat}</div><div class="bbar-nums ${over ? 'over' : warn ? 'warn' : ''}">${spent.toFixed(0)} / ${bud} د.أ</div></div><div class="bbar-bg"><div class="bbar-fill" style="width:${pct}%;background:${col}"></div></div></div>`;
+            <div class="stmt-box" style="margin-bottom:8px">
+                <div class="stmt-box-lbl">الإنفاق الفعلي</div>
+                <div class="stmt-box-val metric-neg">${total.toFixed(2)} د.أ</div>
+            </div>
+            <div class="stmt-box" style="margin-bottom:8px">
+                <div class="stmt-box-lbl">الميزانية المحددة</div>
+                <div class="stmt-box-val">${totalBudget.toFixed(2)} د.أ</div>
+            </div>
+            <div class="stmt-box" style="margin-bottom:14px">
+                <div class="stmt-box-lbl">الفائض / العجز</div>
+                <div class="stmt-box-val ${net >= 0 ? 'metric-pos' : 'metric-neg'}">${net.toFixed(2)} د.أ</div>
+            </div>
+            ${Object.keys(state.budgets).map(cat => {
+            const spent = byCat[cat] || 0; const bud = state.budgets[cat];
+            const pct = Math.min(spent / bud * 100, 100);
+            const over = spent > bud; const warn = pct > 75 && !over;
+            const col = over ? 'var(--red)' : warn ? 'var(--amber)' : catColor(cat);
+            return `<div class="bbar">
+                <div class="bbar-hdr">
+                    <div class="bbar-name">
+                        <div class="leg-dot" style="background:${catColor(cat)}"></div>${cat}
+                    </div>
+                    <div class="bbar-nums ${over ? 'over' : warn ? 'warn' : ''}">${spent.toFixed(0)} / ${bud} د.أ</div>
+                </div>
+                <div class="bbar-bg">
+                    <div class="bbar-fill" style="width:${pct}%;background:${col}"></div>
+                </div>
+            </div>`;
             }).join('')}`;
-        }
-        function updateBudget(cat, val) { const v = parseFloat(val); if (!isNaN(v) && v > 0) state.budgets[cat] = v; else delete state.budgets[cat]; saveState(); }
+            }
+            function updateBudget(cat, val) { const v = parseFloat(val); if (!isNaN(v) && v > 0) state.budgets[cat] = v;
+            else delete state.budgets[cat]; saveState(); }
 
-        // ═══════════════════════════════════════
-        //  CATEGORIES
-        // ═══════════════════════════════════════
-        function renderCategories() {
+            // ═══════════════════════════════════════
+            // CATEGORIES
+            // ═══════════════════════════════════════
+            function renderCategories() {
             const byCat = {};
             state.expenses.forEach(e => byCat[e.cat] = (byCat[e.cat] || 0) + 1);
             document.getElementById('cats-grid').innerHTML = state.categories.map((c, i) => `
-        <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);min-width:0">
-          <div class="leg-dot" style="background:${c.color};width:10px;height:10px"></div>
-          <span style="font-size:13px;flex:1">${c.name}</span>
-          <span style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">${byCat[c.name] || 0}</span>
-          <button class="del-btn" style="color:var(--accent2)" onclick="openEditCat('${c.name}')" title="تعديل">✎</button>
-          ${i >= 9 ? `<button class="del-btn" onclick="delCat('${c.name}')">✕</button>` : ''}
-        </div>`).join('');
-        }
-        function addCategory() {
+            <div
+                style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);min-width:0">
+                <div class="leg-dot" style="background:${c.color};width:10px;height:10px"></div>
+                <span style="font-size:13px;flex:1">${c.name}</span>
+                <span style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">${byCat[c.name]
+                    || 0}</span>
+                <button class="del-btn" style="color:var(--accent2)" onclick="openEditCat('${c.name}')"
+                    title="تعديل">✎</button>
+                ${i >= 9 ? `<button class="del-btn" onclick="delCat('${c.name}')">✕</button>` : ''}
+            </div>`).join('');
+            }
+            function addCategory() {
             const name = document.getElementById('new-cat-name').value.trim();
             const color = document.getElementById('new-cat-color').value;
             if (!name) { toast('أدخل اسم الفئة'); return; }
@@ -3317,25 +3624,25 @@
             state.categories.push({ name, color });
             saveState(); populateCatSelects(); renderCategories(); toast('تمت الإضافة ✓');
             document.getElementById('new-cat-name').value = '';
-        }
-        function delCat(name) {
+            }
+            function delCat(name) {
             if (state.expenses.find(e => e.cat === name)) { toast('لا يمكن حذف فئة بها مصاريف'); return; }
             state.categories = state.categories.filter(c => c.name !== name);
             delete state.budgets[name];
             saveState(); populateCatSelects(); renderCategories();
-        }
+            }
 
-        let editingCatName = null;
-        function openEditCat(name) {
+            let editingCatName = null;
+            function openEditCat(name) {
             const c = state.categories.find(x => x.name === name);
             if (!c) return;
             editingCatName = name;
             document.getElementById('e-cat-name').value = c.name;
             document.getElementById('e-cat-color').value = c.color;
             openModal('editCat');
-        }
+            }
 
-        function saveEditCat() {
+            function saveEditCat() {
             const c = state.categories.find(x => x.name === editingCatName);
             if (!c) return;
             const newName = document.getElementById('e-cat-name').value.trim();
@@ -3343,14 +3650,15 @@
             if (!newName) { toast('أدخل اسم الفئة'); return; }
 
             if (newName !== editingCatName) {
-                if (state.categories.find(x => x.name === newName)) { toast('الاسم موجود مسبقاً'); return; }
-                state.expenses.forEach(e => { if (e.cat === editingCatName) e.cat = newName; });
-                if (state.subscriptions) state.subscriptions.forEach(s => { if (s.cat === editingCatName) s.cat = newName; });
-                if (state.maintenance) state.maintenance.forEach(m => { if (m.cat === editingCatName) m.cat = newName; });
-                if (state.budgets && state.budgets[editingCatName] !== undefined) {
-                    state.budgets[newName] = state.budgets[editingCatName];
-                    delete state.budgets[editingCatName];
-                }
+            if (state.categories.find(x => x.name === newName)) { toast('الاسم موجود مسبقاً'); return; }
+            state.expenses.forEach(e => { if (e.cat === editingCatName) e.cat = newName; });
+            if (state.subscriptions) state.subscriptions.forEach(s => { if (s.cat === editingCatName) s.cat = newName;
+            });
+            if (state.maintenance) state.maintenance.forEach(m => { if (m.cat === editingCatName) m.cat = newName; });
+            if (state.budgets && state.budgets[editingCatName] !== undefined) {
+            state.budgets[newName] = state.budgets[editingCatName];
+            delete state.budgets[editingCatName];
+            }
             }
             c.name = newName;
             c.color = newColor;
@@ -3366,142 +3674,288 @@
 
             closeModal('editCat');
             toast('تم التعديل ✓');
-        }
+            }
 
-        // ═══════════════════════════════════════
-        //  EXPORT
-        // ═══════════════════════════════════════
-        function getExpData() {
+            // ═══════════════════════════════════════
+            // EXPORT
+            // ═══════════════════════════════════════
+            function getExpData() {
             const p = document.getElementById('exp-period-sel')?.value || 'all';
             const cat = document.getElementById('exp-cat-sel')?.value || 'all';
             return state.expenses.filter(e => {
-                const d = new Date(e.date); const now = new Date();
-                if (p === 'month' && (d.getMonth() !== state.periodMonth || d.getFullYear() !== state.periodYear)) return false;
-                if (p === 'year' && d.getFullYear() !== state.periodYear) return false;
-                if (cat !== 'all' && e.cat !== cat) return false;
-                return true;
+            const d = new Date(e.date); const now = new Date();
+            if (p === 'month' && (d.getMonth() !== state.periodMonth || d.getFullYear() !== state.periodYear)) return
+            false;
+            if (p === 'year' && d.getFullYear() !== state.periodYear) return false;
+            if (cat !== 'all' && e.cat !== cat) return false;
+            return true;
             });
-        }
-        function renderExport() {
+            }
+            function renderExport() {
             populateCatSelects();
             const data = getExpData();
             const el = document.getElementById('exp-stats');
-            if (el) el.textContent = `${data.length} معاملة — إجمالي: ${data.reduce((s, e) => s + e.amount, 0).toFixed(2)} د.أ`;
-        }
-        document.addEventListener('change', e => { if (['exp-period-sel', 'exp-cat-sel'].includes(e.target.id)) renderExport(); });
-        function dl(content, filename, type) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([content], { type })); a.download = filename; a.click(); }
-        function exportCSV() {
-            const rows = [['التاريخ', 'الوصف', 'الفئة', 'المبلغ'], ...getExpData().map(e => [e.date, e.desc, e.cat, e.amount])];
-            dl('\uFEFF' + rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n'), 'مصاريف.csv', 'text/csv;charset=utf-8');
+            if (el) el.textContent = `${data.length} معاملة — إجمالي: ${data.reduce((s, e) => s + e.amount,
+            0).toFixed(2)} د.أ`;
+            }
+            document.addEventListener('change', e => { if (['exp-period-sel', 'exp-cat-sel'].includes(e.target.id))
+            renderExport(); });
+            function dl(content, filename, type) { const a = document.createElement('a'); a.href =
+            URL.createObjectURL(new Blob([content], { type })); a.download = filename; a.click(); }
+            function exportCSV() {
+            const rows = [['التاريخ', 'الوصف', 'الفئة', 'المبلغ'], ...getExpData().map(e => [e.date, e.desc, e.cat,
+            e.amount])];
+            dl('\uFEFF' + rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n'), 'مصاريف.csv',
+            'text/csv;charset=utf-8');
             toast('تم تصدير CSV ✓');
-        }
-        function exportJSON() {
-            dl(JSON.stringify({ ...state, exportDate: new Date().toISOString() }, null, 2), 'مصاريفي-backup.json', 'application/json');
+            }
+            function exportJSON() {
+            dl(JSON.stringify({ ...state, exportDate: new Date().toISOString() }, null, 2), 'مصاريفي-backup.json',
+            'application/json');
             toast('تم تصدير JSON ✓');
-        }
-        function exportHTML() {
+            }
+            function exportHTML() {
             const data = getExpData(); const total = data.reduce((s, e) => s + e.amount, 0);
             const byCat = {}; data.forEach(e => byCat[e.cat] = (byCat[e.cat] || 0) + e.amount);
             const inc = monthlyIncome();
-            const html = `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>تقرير المصاريف</title><style>body{font-family:Arial,sans-serif;padding:32px;color:#111;direction:rtl;max-width:900px;margin:0 auto}h1{font-size:20px;border-bottom:2px solid #111;padding-bottom:8px;margin-bottom:16px}h2{font-size:15px;margin:24px 0 10px;color:#333}table{width:100%;border-collapse:collapse;margin-bottom:16px}th,td{border:1px solid #ddd;padding:8px 12px;text-align:right;font-size:13px}th{background:#f5f5f5;font-weight:600}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}.box{border:1px solid #ddd;border-radius:8px;padding:14px}.box-lbl{font-size:11px;color:#666;margin-bottom:4px}.box-val{font-size:18px;font-weight:700}</style></head><body>
-      <h1>تقرير المصاريف — ${new Date().toLocaleDateString('ar')}</h1>
-      <div class="grid">
-        <div class="box"><div class="box-lbl">إجمالي الدخل/شهر</div><div class="box-val">${inc.total.toFixed(2)} د.أ</div></div>
-        <div class="box"><div class="box-lbl">إجمالي المصاريف</div><div class="box-val">${total.toFixed(2)} د.أ</div></div>
-        <div class="box"><div class="box-lbl">الصافي</div><div class="box-val">${(inc.total - total).toFixed(2)} د.أ</div></div>
-      </div>
-      <h2>توزيع حسب الفئة</h2>
-      <table><thead><tr><th>الفئة</th><th>المبلغ</th><th>النسبة</th></tr></thead><tbody>
-      ${Object.entries(byCat).sort((a, b) => b[1] - a[1]).map(([c, v]) => `<tr><td>${c}</td><td>${v.toFixed(2)} د.أ</td><td>${(v / total * 100).toFixed(1)}%</td></tr>`).join('')}
-      </tbody></table>
-      <h2>المعاملات التفصيلية</h2>
-      <table><thead><tr><th>التاريخ</th><th>الوصف</th><th>الفئة</th><th>المبلغ</th></tr></thead><tbody>
-      ${data.sort((a, b) => new Date(b.date) - new Date(a.date)).map(e => `<tr><td>${e.date}</td><td>${e.desc}</td><td>${e.cat}</td><td>${e.amount.toFixed(2)} د.أ</td></tr>`).join('')}
-      <tr style="font-weight:700"><td colspan="3">الإجمالي</td><td>${total.toFixed(2)} د.أ</td></tr>
-      </tbody></table></body></html>`;
+            const html = `
+            <!DOCTYPE html>
+            <html lang="ar" dir="rtl">
+
+            <head>
+                <meta charset="UTF-8">
+                <title>تقرير المصاريف</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        padding: 32px;
+                        color: #111;
+                        direction: rtl;
+                        max-width: 900px;
+                        margin: 0 auto
+                    }
+
+                    h1 {
+                        font-size: 20px;
+                        border-bottom: 2px solid #111;
+                        padding-bottom: 8px;
+                        margin-bottom: 16px
+                    }
+
+                    h2 {
+                        font-size: 15px;
+                        margin: 24px 0 10px;
+                        color: #333
+                    }
+
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-bottom: 16px
+                    }
+
+                    th,
+                    td {
+                        border: 1px solid #ddd;
+                        padding: 8px 12px;
+                        text-align: right;
+                        font-size: 13px
+                    }
+
+                    th {
+                        background: #f5f5f5;
+                        font-weight: 600
+                    }
+
+                    .grid {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 12px;
+                        margin-bottom: 20px
+                    }
+
+                    .box {
+                        border: 1px solid #ddd;
+                        border-radius: 8px;
+                        padding: 14px
+                    }
+
+                    .box-lbl {
+                        font-size: 11px;
+                        color: #666;
+                        margin-bottom: 4px
+                    }
+
+                    .box-val {
+                        font-size: 18px;
+                        font-weight: 700
+                    }
+                </style>
+            </head>
+
+            <body>
+                <h1>تقرير المصاريف — ${new Date().toLocaleDateString('ar')}</h1>
+                <div class="grid">
+                    <div class="box">
+                        <div class="box-lbl">إجمالي الدخل/شهر</div>
+                        <div class="box-val">${inc.total.toFixed(2)} د.أ</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-lbl">إجمالي المصاريف</div>
+                        <div class="box-val">${total.toFixed(2)} د.أ</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-lbl">الصافي</div>
+                        <div class="box-val">${(inc.total - total).toFixed(2)} د.أ</div>
+                    </div>
+                </div>
+                <h2>توزيع حسب الفئة</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الفئة</th>
+                            <th>المبلغ</th>
+                            <th>النسبة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${Object.entries(byCat).sort((a, b) => b[1] - a[1]).map(([c, v]) => `<tr>
+                            <td>${c}</td>
+                            <td>${v.toFixed(2)} د.أ</td>
+                            <td>${(v / total * 100).toFixed(1)}%</td>
+                        </tr>`).join('')}
+                    </tbody>
+                </table>
+                <h2>المعاملات التفصيلية</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>الوصف</th>
+                            <th>الفئة</th>
+                            <th>المبلغ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.sort((a, b) => new Date(b.date) - new Date(a.date)).map(e => `<tr>
+                            <td>${e.date}</td>
+                            <td>${e.desc}</td>
+                            <td>${e.cat}</td>
+                            <td>${e.amount.toFixed(2)} د.أ</td>
+                        </tr>`).join('')}
+                        <tr style="font-weight:700">
+                            <td colspan="3">الإجمالي</td>
+                            <td>${total.toFixed(2)} د.أ</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </body>
+
+            </html>`;
             dl(html, 'تقرير-المصاريف.html', 'text/html;charset=utf-8'); toast('تم تصدير التقرير ✓');
-        }
-        function handleImport(event) {
+            }
+            function handleImport(event) {
             const file = event.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = e => {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    if (data.expenses) state.expenses = [...state.expenses, ...data.expenses.filter(ne => !state.expenses.find(oe => oe.id === ne.id))];
-                    if (data.categories) data.categories.forEach(c => { if (!state.categories.find(ec => ec.name === c.name)) state.categories.push(c); });
-                    if (data.budgets) Object.assign(state.budgets, data.budgets);
-                    if (data.incomeSources) state.incomeSources = [...state.incomeSources, ...(data.incomeSources || []).filter(n => !state.incomeSources.find(o => o.id === n.id))];
-                    if (data.freelanceLog) state.freelanceLog = [...state.freelanceLog, ...(data.freelanceLog || []).filter(n => !state.freelanceLog.find(o => o.id === n.id))];
-                    if (data.subscriptions) state.subscriptions = [...state.subscriptions, ...(data.subscriptions || []).filter(n => !state.subscriptions.find(o => o.id === n.id))];
-                    if (data.loans) state.loans = [...state.loans, ...(data.loans || []).filter(n => !state.loans.find(o => o.id === n.id))];
-                    if (data.maintenance) state.maintenance = [...state.maintenance, ...(data.maintenance || []).filter(n => !state.maintenance.find(o => o.id === n.id))];
-                    saveState(); populateCatSelects(); renderOverview(); toast('تم الاستيراد بنجاح ✓');
-                } catch { toast('خطأ في قراءة الملف'); }
+            try {
+            const data = JSON.parse(e.target.result);
+            if (data.expenses) state.expenses = [...state.expenses, ...data.expenses.filter(ne =>
+            !state.expenses.find(oe => oe.id === ne.id))];
+            if (data.categories) data.categories.forEach(c => { if (!state.categories.find(ec => ec.name === c.name))
+            state.categories.push(c); });
+            if (data.budgets) Object.assign(state.budgets, data.budgets);
+            if (data.incomeSources) state.incomeSources = [...state.incomeSources, ...(data.incomeSources ||
+            []).filter(n => !state.incomeSources.find(o => o.id === n.id))];
+            if (data.freelanceLog) state.freelanceLog = [...state.freelanceLog, ...(data.freelanceLog || []).filter(n =>
+            !state.freelanceLog.find(o => o.id === n.id))];
+            if (data.subscriptions) state.subscriptions = [...state.subscriptions, ...(data.subscriptions ||
+            []).filter(n => !state.subscriptions.find(o => o.id === n.id))];
+            if (data.loans) state.loans = [...state.loans, ...(data.loans || []).filter(n => !state.loans.find(o => o.id
+            === n.id))];
+            if (data.maintenance) state.maintenance = [...state.maintenance, ...(data.maintenance || []).filter(n =>
+            !state.maintenance.find(o => o.id === n.id))];
+            if (data.incomeDeductions) state.incomeDeductions = [...(state.incomeDeductions||[]),
+            ...(data.incomeDeductions || []).filter(n => !(state.incomeDeductions||[]).find(o => o.id === n.id))];
+            saveState(); populateCatSelects(); renderOverview(); toast('تم الاستيراد بنجاح ✓');
+            } catch { toast('خطأ في قراءة الملف'); }
             };
             reader.readAsText(file);
-        }
+            }
 
-        // ═══════════════════════════════════════
-        //  MODALS + TOAST
-        // ═══════════════════════════════════════
-        function openModal(name) {
+            // ═══════════════════════════════════════
+            // MODALS + TOAST
+            // ═══════════════════════════════════════
+            function openModal(name) {
             if (name === 'addExpense') { document.getElementById('m-exp-date').value = td(); }
             if (name === 'addIncome') { document.getElementById('m-inc-start').value = td(); }
             if (name === 'addSub') { document.getElementById('m-sub-next').value = td(); }
             if (name === 'addMaint') { document.getElementById('m-maint-date').value = td(); }
             if (name === 'addLoan') { document.getElementById('m-loan-start').value = td(); }
             if (name === 'addInvoice') {
-                document.getElementById('inv-date').value = td();
-                if (document.getElementById('inv-items-container').children.length === 0) addInvItemRow();
+            document.getElementById('inv-date').value = td();
+            if (document.getElementById('inv-items-container').children.length === 0) addInvItemRow();
             }
             document.getElementById('modal-' + name).classList.add('open');
-        }
-        function closeModal(name) { document.getElementById('modal-' + name).classList.remove('open'); }
-        document.querySelectorAll('.modal-ov').forEach(mo => mo.addEventListener('click', e => { if (e.target === mo) mo.classList.remove('open'); }));
-        let toastT;
-        function toast(msg) {
+            }
+            function closeModal(name) { document.getElementById('modal-' + name).classList.remove('open'); }
+            document.querySelectorAll('.modal-ov').forEach(mo => mo.addEventListener('click', e => { if (e.target ===
+            mo) mo.classList.remove('open'); }));
+            let toastT;
+            function toast(msg) {
             clearTimeout(toastT);
             document.getElementById('toast-msg').textContent = msg;
             document.getElementById('toast').classList.add('show');
             toastT = setTimeout(() => document.getElementById('toast').classList.remove('show'), 2800);
-        }
+            }
 
-        function updateDatalists() {
+            function updateDatalists() {
             const exps = [...new Set(state.expenses.map(e => e.desc))];
             const listExp = exps.map(x => '<option value="' + x + '">').join('');
-            if (document.getElementById('list-exp-desc')) document.getElementById('list-exp-desc').innerHTML = listExp;
-            if (document.getElementById('list-m-exp-desc')) document.getElementById('list-m-exp-desc').innerHTML = listExp;
+                if (document.getElementById('list-exp-desc')) document.getElementById('list-exp-desc').innerHTML =
+                listExp;
+                if (document.getElementById('list-m-exp-desc')) document.getElementById('list-m-exp-desc').innerHTML =
+                listExp;
 
-            const fls = [...new Set(state.freelanceLog.map(f => f.desc))];
-            if (document.getElementById('list-fl-desc')) document.getElementById('list-fl-desc').innerHTML = fls.map(x => '<option value="' + x + '">').join('');
+                const fls = [...new Set(state.freelanceLog.map(f => f.desc))];
+                if (document.getElementById('list-fl-desc')) document.getElementById('list-fl-desc').innerHTML =
+                fls.map(x => '<option value="' + x + '">').join('');
 
-            const incs = [...new Set(state.incomeSources.map(i => i.name))];
-            if (document.getElementById('list-m-inc-name')) document.getElementById('list-m-inc-name').innerHTML = incs.map(x => '<option value="' + x + '">').join('');
+                const incs = [...new Set(state.incomeSources.map(i => i.name))];
+                if (document.getElementById('list-m-inc-name')) document.getElementById('list-m-inc-name').innerHTML =
+                incs.map(x => '<option value="' + x + '">').join('');
 
-            const subs = [...new Set(state.subscriptions.map(s => s.name))];
-            if (document.getElementById('list-m-sub-name')) document.getElementById('list-m-sub-name').innerHTML = subs.map(x => '<option value="' + x + '">').join('');
+                const subs = [...new Set(state.subscriptions.map(s => s.name))];
+                if (document.getElementById('list-m-sub-name')) document.getElementById('list-m-sub-name').innerHTML =
+                subs.map(x => '<option value="' + x + '">').join('');
 
-            const maints = [...new Set(state.maintenance.map(m => m.desc))];
-            if (document.getElementById('list-m-maint-desc')) document.getElementById('list-m-maint-desc').innerHTML = maints.map(x => '<option value="' + x + '">').join('');
+                const maints = [...new Set(state.maintenance.map(m => m.desc))];
+                if (document.getElementById('list-m-maint-desc')) document.getElementById('list-m-maint-desc').innerHTML
+                = maints.map(x => '<option value="' + x + '">').join('');
 
-            const loans = [...new Set(state.loans.map(l => l.name))];
-            if (document.getElementById('list-m-loan-name')) document.getElementById('list-m-loan-name').innerHTML = loans.map(x => '<option value="' + x + '">').join('');
-        }
+                const loans = [...new Set(state.loans.map(l => l.name))];
+                if (document.getElementById('list-m-loan-name')) document.getElementById('list-m-loan-name').innerHTML =
+                loans.map(x => '<option value="' + x + '">').join('');
+                }
 
-        // ═══════════════════════════════════════
-        //  INIT
-        // ═══════════════════════════════════════
-        async function initApp() {
-            await loadState();
-            initPeriodSelects();
-            document.getElementById('exp-date').value = td();
-            document.getElementById('fl-date').value = td();
-            populateCatSelects();
-            updateDatalists();
-            renderOverview();
-        }
-        initApp();
-    </script>
-</body>
+                // ═══════════════════════════════════════
+                // INIT
+                // ═══════════════════════════════════════
+                async function initApp() {
+                await loadState();
+                initPeriodSelects();
+                state.periodMode = 'all';
+                syncPeriodChips();
+                document.getElementById('exp-date').value = td();
+                document.getElementById('fl-date').value = td();
+                populateCatSelects();
+                updateDatalists();
+                const overviewNav = document.querySelector('.nav-item[data-page="overview"]');
+                if (overviewNav) goPage(overviewNav);
+                else renderOverview();
+                }
+                initApp();
+                </script>
+                </body>
 
-</html>
+                </html>
