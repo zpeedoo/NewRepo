@@ -1451,12 +1451,6 @@
             </svg>
             المصاريف
         </div>
-        <div class="nav-item" data-page="shopping" onclick="goPage(this)">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M0 1.5A.5.5 0 01.5 1H2a.5.5 0 01.485.379L2.89 3H14.5a.5.5 0 01.491.592l-1.5 8A.5.5 0 0113 12H4a.5.5 0 01-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 01-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 100 4 2 2 0 000-4zm7 0a2 2 0 100 4 2 2 0 000-4zM5 13a1 1 0 110 2 1 1 0 010-2zm7 0a1 1 0 110 2 1 1 0 010-2z" />
-            </svg>
-            قائمة التسوق
-        </div>
         <div class="nav-item" data-page="subscriptions" onclick="goPage(this)">
             <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M8 3.5a.5.5 0 00-1 0V9a.5.5 0 00.252.434l3.5 2a.5.5 0 00.496-.868L8 8.71V3.5z" />
@@ -1664,18 +1658,20 @@
         </div>
 
         <!-- ── TRANSACTIONS PAGE ── -->
+        
         <div class="page" id="page-transactions">
             <div class="topbar">
-                <div class="page-title">المصاريف</div><button class="btn btn-primary" onclick="openModal('addExpense')">
-                    +
-                    إضافة
-                </button>
+                <div class="page-title">المصاريف التفصيلية</div>
+                <div class="topbar-right">
+                    <button class="btn btn-primary" onclick="openModal('addExpense')">+ إضافة مصروف</button>
+                </div>
             </div>
+
             <!-- Dashboard -->
             <div class="metrics" id="exp-dash-metrics" style="margin-bottom:14px"></div>
             <div class="grid-2" style="margin-bottom:14px">
                 <div class="card">
-                    <div class="card-title">توزيع حسب الفئة</div>
+                    <div class="card-title">توزيع حسب الفئة (الرئيسية)</div>
                     <div id="exp-dash-cats"></div>
                 </div>
                 <div class="card">
@@ -1683,71 +1679,18 @@
                     <div style="position:relative;height:160px"><canvas id="expDashLine"></canvas></div>
                 </div>
             </div>
-            <div class="form-card">
-                <div class="form-title">إضافة مصروف</div>
-                <div class="form-row fr-5">
-                    <div class="field">
-                        <label>الوصف</label><input class="inp" id="exp-desc" placeholder="مثال: غداء"
-                                                   list="list-exp-desc" autocomplete="off" /><datalist id="list-exp-desc"></datalist>
-                    </div>
-                    <div class="field">
-                        <label>المبلغ</label><input class="inp" type="number" id="exp-amount" placeholder="0.00"
-                                                    step="0.01" />
-                    </div>
-                    <div class="field"><label>الفئة</label><select class="inp" id="exp-cat"></select></div>
-                    <div class="field"><label>التاريخ</label><input class="inp" type="date" id="exp-date" /></div>
-                    <div class="field" style="justify-content:flex-end">
-                        <button class="btn btn-primary" onclick="addExpense()">
-                            إضافة
-                        </button>
-                    </div>
-                </div>
-            </div>
+
+            <!-- Filter tabs for items -->
+            <div class="card-title" style="margin-bottom:8px">فلتر حسب الصنف الفرعي</div>
+            <div class="shop-subcat-tabs" id="shop-tabs"></div>
+
             <div class="table-card">
                 <div class="table-hdr">
-                    <div class="table-title">السجل</div>
-                    <input class="search-inp" id="exp-search" placeholder="بحث..." oninput="renderExpTable()" />
+                    <div class="table-title">سجل المصاريف</div>
+                    <input class="search-inp" id="exp-search" placeholder="بحث باسم أو فئة..." oninput="renderExpTable()" />
                 </div>
                 <div id="exp-table"></div>
             </div>
-        </div>
-
-        <!-- ── SHOPPING PAGE ── -->
-        <div class="page" id="page-shopping">
-            <div class="topbar">
-                <div class="page-title">🛒 قائمة التسوق</div>
-                <div class="topbar-right">
-                    <span class="period-badge" id="shopPeriodBadge">...</span>
-                    <button class="btn" onclick="importExpensesToShopping()" title="استيراد مصاريف التسوق القديمة">
-                        📥 استيراد من
-                        المصاريف
-                    </button>
-                    <button class="btn btn-primary" onclick="openModal('addInvoice')">+ فاتورة جديدة</button>
-                </div>
-            </div>
-
-            <!-- Metrics -->
-            <div class="metrics" id="shop-metrics"></div>
-
-            <div class="grid-2" style="margin-bottom:18px">
-                <!-- Analysis by Subcategory -->
-                <div class="card">
-                    <div class="card-title">تحليل حسب الصنف</div>
-                    <div id="shop-subcat-analysis"></div>
-                </div>
-                <!-- Monthly trend chart -->
-                <div class="card">
-                    <div class="card-title">المصاريف الشهرية (تسوق)</div>
-                    <div style="position:relative;height:180px"><canvas id="shopLineChart"></canvas></div>
-                </div>
-            </div>
-
-            <!-- Filter tabs -->
-            <div class="card-title" style="margin-bottom:8px">فلتر حسب الصنف</div>
-            <div class="shop-subcat-tabs" id="shop-tabs"></div>
-
-            <!-- Invoice List -->
-            <div id="shop-invoice-list"></div>
         </div>
 
         <!-- ── SUBSCRIPTIONS PAGE ── -->
@@ -1919,11 +1862,6 @@
                     <path d="M3 4.5a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0 3a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0 3a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5z" />
                 </svg><span>المصاريف</span>
             </div>
-            <div class="bnav-item" data-page="shopping" onclick="goPage(this)">
-                <svg viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M0 1.5A.5.5 0 01.5 1H2a.5.5 0 01.485.379L2.89 3H14.5a.5.5 0 01.491.592l-1.5 8A.5.5 0 0113 12H4a.5.5 0 01-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 01-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 100 4 2 2 0 000-4zm7 0a2 2 0 100 4 2 2 0 000-4zM5 13a1 1 0 110 2 1 1 0 010-2zm7 0a1 1 0 110 2 1 1 0 010-2z" />
-                </svg><span>تسوق</span>
-            </div>
             <div class="bnav-item" data-page="income" onclick="goPage(this)">
                 <svg viewBox="0 0 16 16" fill="currentColor">
                     <path d="M8 10a2 2 0 100-4 2 2 0 000 4z" />
@@ -1951,60 +1889,6 @@
 
     </div><!-- end main -->
     <!-- ═══ MODALS ═══ -->
-    <!-- Add Expense -->
-    <div class="modal-ov" id="modal-addExpense">
-        <div class="modal">
-            <div class="modal-title">إضافة مصروف</div>
-            <div class="modal-body">
-                <div class="field">
-                    <label>الوصف</label><input class="inp" id="m-exp-desc" placeholder="وصف المصروف"
-                                               list="list-m-exp-desc" autocomplete="off" /><datalist id="list-m-exp-desc"></datalist>
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                    <div class="field">
-                        <label>المبلغ (د.أ)</label><input class="inp" type="number" id="m-exp-amount" placeholder="0.00"
-                                                          step="0.01" />
-                    </div>
-                    <div class="field"><label>الفئة</label><select class="inp" id="m-exp-cat"></select></div>
-                </div>
-                <div class="field"><label>التاريخ</label><input class="inp" type="date" id="m-exp-date" /></div>
-            </div>
-            <div class="modal-actions">
-                <button class="btn" onclick="closeModal('addExpense')">إلغاء</button><button class="btn btn-primary"
-                                                                                             onclick="addExpenseModal()">
-                    إضافة
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Edit Expense -->
-    <div class="modal-ov" id="modal-editExpense">
-        <div class="modal">
-            <div class="modal-title">تعديل مصروف</div>
-            <div class="modal-body">
-                <div class="field">
-                    <label>الوصف</label><input class="inp" id="e-exp-desc" placeholder="وصف المصروف"
-                                               list="list-m-exp-desc" autocomplete="off" />
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                    <div class="field">
-                        <label>المبلغ (د.أ)</label><input class="inp" type="number" id="e-exp-amount" placeholder="0.00"
-                                                          step="0.01" />
-                    </div>
-                    <div class="field"><label>الفئة</label><select class="inp" id="e-exp-cat"></select></div>
-                </div>
-                <div class="field"><label>التاريخ</label><input class="inp" type="date" id="e-exp-date" /></div>
-            </div>
-            <div class="modal-actions">
-                <button class="btn" onclick="closeModal('editExpense')">إلغاء</button><button class="btn btn-primary"
-                                                                                              onclick="saveEditExpense()">
-                    حفظ التعديل
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- Add Income Source -->
     <div class="modal-ov" id="modal-addIncome">
         <div class="modal">
@@ -2290,44 +2174,42 @@
         </div>
     </div>
 
-    <!-- Add Invoice (Shopping) -->
-    <div class="modal-ov" id="modal-addInvoice">
+    
+    <!-- Add Expense Detailed -->
+    <div class="modal-ov" id="modal-addExpense">
         <div class="modal" style="width:600px">
-            <div class="modal-title">🛒 إضافة فاتورة تسوق</div>
+            <div class="modal-title">إضافة مصروف تفصيلي</div>
             <div class="modal-body">
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
                     <div class="field">
-                        <label>اسم المحل / الجهة</label><input class="inp" id="inv-store"
-                                                               placeholder="مثال: الرفاه، الدانوب..." />
+                        <label>الوصف / الجهة</label><input class="inp" id="m-exp-desc" placeholder="مثال: مطعم، سوبرماركت..." list="list-m-exp-desc" autocomplete="off" /><datalist id="list-m-exp-desc"></datalist>
                     </div>
-                    <div class="field"><label>التاريخ</label><input class="inp" type="date" id="inv-date" /></div>
+                    <div class="field"><label>التاريخ</label><input class="inp" type="date" id="m-exp-date" /></div>
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+                    <div class="field"><label>الفئة الرئيسية</label><select class="inp" id="m-exp-cat"></select></div>
                     <div class="field">
                         <label>طريقة الدفع</label>
-                        <select class="inp" id="inv-payment">
+                        <select class="inp" id="m-exp-payment">
                             <option value="نقدي">نقدي</option>
                             <option value="بطاقة">بطاقة</option>
                             <option value="تحويل">تحويل بنكي</option>
                         </select>
                     </div>
-                    <div class="field">
-                        <label>ملاحظة</label><input class="inp" id="inv-note" placeholder="اختياري" />
-                    </div>
+                    <div class="field"><label>ملاحظة</label><input class="inp" id="m-exp-note" placeholder="اختياري" /></div>
                 </div>
                 <div class="divider" style="margin:10px 0"></div>
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
                     <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;letter-spacing:.5px;text-transform:uppercase">
-                        البنود
+                        البنود (الأصناف)
                     </div>
                     <button class="btn btn-sm" onclick="addInvItemRow()">+ إضافة صنف</button>
                 </div>
-                <!-- Header labels -->
                 <div style="display:grid;grid-template-columns:2fr 1fr 1.2fr 1fr auto;gap:6px;margin-bottom:4px;padding:0 2px">
                     <span style="font-size:10px;color:var(--text3)">الصنف</span>
                     <span style="font-size:10px;color:var(--text3)">الكمية</span>
                     <span style="font-size:10px;color:var(--text3)">السعر (د.أ)</span>
-                    <span style="font-size:10px;color:var(--text3)">الفئة</span>
+                    <span style="font-size:10px;color:var(--text3)">التصنيف الفرعي</span>
                     <span></span>
                 </div>
                 <div class="shop-modal-items" id="inv-items-container"></div>
@@ -2338,31 +2220,32 @@
                 </div>
             </div>
             <div class="modal-actions">
-                <button class="btn" onclick="closeModal('addInvoice')">إلغاء</button>
-                <button class="btn btn-primary" onclick="saveInvoice()">حفظ الفاتورة</button>
+                <button class="btn" onclick="closeModal('addExpense')">إلغاء</button>
+                <button class="btn btn-primary" onclick="addExpense()">حفظ المصروف</button>
             </div>
         </div>
     </div>
 
-    <!-- Edit Invoice (Shopping) -->
-    <div class="modal-ov" id="modal-editInvoice">
+    <!-- Edit Expense Detailed -->
+    <div class="modal-ov" id="modal-editExpense">
         <div class="modal" style="width:600px">
-            <div class="modal-title">✎ تعديل فاتورة تسوق</div>
+            <div class="modal-title">✎ تعديل مصروف تفصيلي</div>
             <div class="modal-body">
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                    <div class="field"><label>اسم المحل / الجهة</label><input class="inp" id="einv-store" /></div>
-                    <div class="field"><label>التاريخ</label><input class="inp" type="date" id="einv-date" /></div>
+                    <div class="field"><label>الوصف / الجهة</label><input class="inp" id="e-exp-desc" list="list-m-exp-desc" autocomplete="off" /></div>
+                    <div class="field"><label>التاريخ</label><input class="inp" type="date" id="e-exp-date" /></div>
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+                    <div class="field"><label>الفئة الرئيسية</label><select class="inp" id="e-exp-cat"></select></div>
                     <div class="field">
                         <label>طريقة الدفع</label>
-                        <select class="inp" id="einv-payment">
+                        <select class="inp" id="e-exp-payment">
                             <option value="نقدي">نقدي</option>
                             <option value="بطاقة">بطاقة</option>
                             <option value="تحويل">تحويل بنكي</option>
                         </select>
                     </div>
-                    <div class="field"><label>ملاحظة</label><input class="inp" id="einv-note" /></div>
+                    <div class="field"><label>ملاحظة</label><input class="inp" id="e-exp-note" /></div>
                 </div>
                 <div class="divider" style="margin:10px 0"></div>
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
@@ -2375,7 +2258,7 @@
                     <span style="font-size:10px;color:var(--text3)">الصنف</span>
                     <span style="font-size:10px;color:var(--text3)">الكمية</span>
                     <span style="font-size:10px;color:var(--text3)">السعر (د.أ)</span>
-                    <span style="font-size:10px;color:var(--text3)">الفئة</span>
+                    <span style="font-size:10px;color:var(--text3)">التصنيف الفرعي</span>
                     <span></span>
                 </div>
                 <div class="shop-modal-items" id="einv-items-container"></div>
@@ -2386,12 +2269,11 @@
                 </div>
             </div>
             <div class="modal-actions">
-                <button class="btn" onclick="closeModal('editInvoice')">إلغاء</button>
-                <button class="btn btn-primary" onclick="saveEditInvoice()">حفظ التعديل</button>
+                <button class="btn" onclick="closeModal('editExpense')">إلغاء</button>
+                <button class="btn btn-primary" onclick="saveEditExpense()">حفظ التعديل</button>
             </div>
         </div>
     </div>
-
     <!-- Toast -->
     <div class="toast" id="toast"><span class="toast-dot"></span><span id="toast-msg"></span></div>
 
@@ -2492,7 +2374,52 @@
                 state.nextId = Math.max(state.nextId, maxId + 1);
 
                 // Fix duplicate IDs
+                
                 let updatedIds = false;
+                
+                // --- MIGRATION: Convert old simple expenses to detailed expenses ---
+                state.expenses = state.expenses.map(e => {
+                    if (e.items) return e; // Already updated
+                    return {
+                        id: e.id,
+                        desc: e.desc,
+                        amount: e.amount,
+                        cat: e.cat,
+                        date: e.date,
+                        payment: 'نقدي',
+                        note: '',
+                        items: [{ name: e.desc, qty: 1, price: e.amount, subcat: 'أخرى' }]
+                    };
+                });
+                
+                // --- MIGRATION: Merge shopping into expenses ---
+                if (state.shopping && state.shopping.length > 0) {
+                    state.shopping.forEach(inv => {
+                        // Avoid duplicates if it was synced
+                        if (inv._expenseId && state.expenses.some(e => e.id === inv._expenseId)) {
+                            let ex = state.expenses.find(e => e.id === inv._expenseId);
+                            ex.items = inv.items;
+                            ex.payment = inv.payment;
+                            ex.note = inv.note;
+                            ex.amount = inv.total;
+                            ex.desc = inv.store;
+                        } else {
+                            state.expenses.push({
+                                id: inv.id,
+                                desc: inv.store,
+                                amount: inv.total,
+                                cat: 'تسوق',
+                                date: inv.date,
+                                payment: inv.payment,
+                                note: inv.note,
+                                items: inv.items
+                            });
+                        }
+                    });
+                    state.shopping = []; // Clear it
+                    updatedIds = true;
+                }
+
                 [state.expenses, state.freelanceLog, state.incomeSources, state.subscriptions, state.maintenance, state.loans, state.shopping].forEach(arr => {
                     arr.forEach(item => {
                         if (seenIds.has(item.id)) {
@@ -2589,7 +2516,7 @@
             document.querySelectorAll(`.nav-item[data-page="${name}"], .bnav-item[data-page="${name}"]`).forEach(n => n.classList.add('active'));
 
             document.getElementById('page-' + name).classList.add('active');
-            const renders = { overview: renderOverview, statement: renderStatement, income: renderIncome, transactions: renderExpTable, shopping: renderShopping, subscriptions: renderSubs, maintenance: renderMaint, loans: renderLoans, budget: renderBudget, categories: renderCategories, export: renderExport };
+            const renders = { overview: renderOverview, statement: renderStatement, income: renderIncome, transactions: renderExpTable, subscriptions: renderSubs, maintenance: renderMaint, loans: renderLoans, budget: renderBudget, categories: renderCategories, export: renderExport };
             if (renders[name]) renders[name]();
         }
         function updatePeriod() {
@@ -2607,7 +2534,7 @@
             const active = document.querySelector('.page.active');
             if (!active) return;
             const id = active.id.replace('page-', '');
-            const renders = { overview: renderOverview, statement: renderStatement, income: renderIncome, transactions: renderExpTable, shopping: renderShopping, subscriptions: renderSubs, maintenance: renderMaint, loans: renderLoans, budget: renderBudget };
+            const renders = { overview: renderOverview, statement: renderStatement, income: renderIncome, transactions: renderExpTable, subscriptions: renderSubs, maintenance: renderMaint, loans: renderLoans, budget: renderBudget };
             if (renders[id]) renders[id]();
         }
         function initPeriodSelects() {
@@ -2646,9 +2573,7 @@
             document.getElementById('periodBadge').textContent = periodLabel();
             const exps = state.expenses.filter(e => inRange(e.date));
             const totalExp = exps.reduce((s, e) => s + e.amount, 0);
-            const shopInvoices = (state.shopping || []).filter(inv => inRange(inv.date));
-            const totalShop = shopInvoices.reduce((s, inv) => s + inv.total, 0);
-            const totalAll = totalExp + totalShop;
+            const totalAll = totalExp; const totalShop = 0;
             const inc = monthlyIncome();
             const subMonthly = calcSubMonthly();
             const loanMonthly = state.loans.reduce((s, l) => s + l.monthly, 0);
@@ -2657,14 +2582,14 @@
             document.getElementById('ov-metrics').innerHTML = `
         <div class="metric m-g"><div class="metric-lbl">الدخل الكلي</div><div class="metric-val">${inc.total.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div><div class="metric-sub">ثابت: ${inc.fixed} | فري لانس: ${inc.fl.toFixed(0)}</div></div>
         <div class="metric m-r"><div class="metric-lbl">المصاريف اليومية</div><div class="metric-val">${totalExp.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div><div class="metric-sub">${exps.length} معاملة</div></div>
-        <div class="metric m-pk"><div class="metric-lbl">التسوق</div><div class="metric-val">${totalShop.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div><div class="metric-sub">${shopInvoices.length} فاتورة</div></div>
+        <div class="metric-val">${totalShop.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div><div class="metric-sub">${shopInvoices.length} فاتورة</div></div>
         <div class="metric m-a"><div class="metric-lbl">الاشتراكات/شهر</div><div class="metric-val">${subMonthly.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
         <div class="metric m-p"><div class="metric-lbl">أقساط القروض</div><div class="metric-val">${loanMonthly.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
         <div class="metric ${net >= 0 ? 'm-g' : 'm-r'}"><div class="metric-lbl">الرصيد الصافي</div><div class="metric-val ${net >= 0 ? 'metric-pos' : 'metric-neg'}">${net.toFixed(0)} <span style="font-size:13px;font-weight:400">د.أ</span></div><div class="metric-sub">${net >= 0 ? '✓ وفر' : '⚠ عجز'}</div></div>
       `;
-            renderDonut(exps, shopInvoices);
+            renderDonut(exps);
             renderBarCompare(inc, totalExp, subMonthly, loanMonthly, totalShop);
-            renderBudgetBars(exps, shopInvoices);
+            renderBudgetBars(exps);
             renderLine();
             renderOvSubs();
             renderOvLoans();
@@ -2887,10 +2812,30 @@
         function delFL(id) { state.freelanceLog = state.freelanceLog.filter(f => f.id !== id); saveState(); renderFLTable(); }
 
         // ═══════════════════════════════════════
-        //  EXPENSES
+        //  EXPENSES (DETAILED)
         // ═══════════════════════════════════════
+        const SHOP_SUBCATS = [
+            { name: 'منظفات', color: '#22d3ee', icon: '🧹' },
+            { name: 'خضار وفاكهة', color: '#34d399', icon: '🥦' },
+            { name: 'تموينية', color: '#fb923c', icon: '🛒' },
+            { name: 'ألبان وأجبان', color: '#fbbf24', icon: '🧀' },
+            { name: 'لحوم ودجاج', color: '#f87171', icon: '🥩' },
+            { name: 'مخبوزات', color: '#a78bfa', icon: '🍞' },
+            { name: 'مجمدات', color: '#818cf8', icon: '❄️' },
+            { name: 'عناية شخصية', color: '#f472b6', icon: '🧴' },
+            { name: 'عام', color: '#3b82f6', icon: '🔹' },
+            { name: 'أخرى', color: '#64748b', icon: '📦' },
+        ];
+        function shopSubcatColor(n) { return (SHOP_SUBCATS.find(s => s.name === n) || { color: '#888' }).color; }
+        function shopSubcatIcon(n) { return (SHOP_SUBCATS.find(s => s.name === n) || { icon: '📦' }).icon; }
+        const SUBCAT_OPTIONS = SHOP_SUBCATS.map(s => '<option value="' + s.name + '">' + s.icon + ' ' + s.name + '</option>').join('');
+
+        let shopFilterCat = 'all';
+        let expDashChart = null;
+        let editingExpId = null;
+
         function populateCatSelects() {
-            ['exp-cat', 'm-exp-cat', 'e-exp-cat'].forEach(id => {
+            ['m-exp-cat', 'e-exp-cat'].forEach(id => {
                 const sel = document.getElementById(id);
                 if (!sel) return;
                 sel.innerHTML = state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
@@ -2898,6 +2843,7 @@
             const ecSel = document.getElementById('exp-cat-sel');
             if (ecSel) ecSel.innerHTML = '<option value="all">كل الفئات</option>' + state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
         }
+
         function checkBudgetWarning(cat) {
             if (!state.budgets || !state.budgets[cat]) return;
             const limit = state.budgets[cat];
@@ -2915,64 +2861,137 @@
             }
         }
 
+        function addInvItemRow() {
+            const container = document.getElementById('inv-items-container');
+            const row = document.createElement('div');
+            row.className = 'item-row';
+            row.innerHTML = '<input class="inp" placeholder="اسم الصنف" oninput="updateInvTotal()" /><input class="inp" type="number" placeholder="1" value="1" min="0.01" step="0.01" oninput="updateInvTotal()" /><input class="inp" type="number" placeholder="0.00" min="0" step="0.01" oninput="updateInvTotal()" /><select class="inp">' + SUBCAT_OPTIONS + '</select><button class="remove-item-btn" onclick="this.closest(\'.item-row\').remove();updateInvTotal()">✕</button>';
+            container.appendChild(row);
+            updateInvTotal();
+        }
+
+        function updateInvTotal() {
+            let total = 0;
+            document.querySelectorAll('#inv-items-container .item-row').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                total += (parseFloat(inputs[1]?.value) || 0) * (parseFloat(inputs[2]?.value) || 0);
+            });
+            const el = document.getElementById('inv-total-preview');
+            if (el) el.textContent = total.toFixed(2) + ' د.أ';
+        }
+
         function addExpense() {
-            const desc = document.getElementById('exp-desc').value.trim();
-            const amount = parseFloat(document.getElementById('exp-amount').value);
-            const cat = document.getElementById('exp-cat').value;
-            const date = document.getElementById('exp-date').value || td();
-            if (!desc || isNaN(amount) || amount <= 0) { toast('أدخل البيانات'); return; }
-            state.expenses.push({ id: state.nextId++, desc, amount, cat, date });
-            saveState(); renderExpTable(); renderOverview(); toast('تمت الإضافة ✓');
-            document.getElementById('exp-desc').value = ''; document.getElementById('exp-amount').value = '';
+            const desc = document.getElementById('m-exp-desc').value.trim();
+            const date = document.getElementById('m-exp-date').value || td();
+            const cat = document.getElementById('m-exp-cat').value;
+            const payment = document.getElementById('m-exp-payment').value;
+            const note = document.getElementById('m-exp-note').value.trim();
+            
+            if (!desc) { toast('أدخل الوصف / الجهة'); return; }
+            
+            const items = [];
+            let valid = true;
+            document.querySelectorAll('#inv-items-container .item-row').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                const sel = row.querySelectorAll('select');
+                const name = inputs[0]?.value.trim();
+                const qty = parseFloat(inputs[1]?.value) || 1;
+                const price = parseFloat(inputs[2]?.value) || 0;
+                const subcat = sel[0]?.value || 'أخرى';
+                if (!name) { valid = false; return; }
+                items.push({ name, qty, price, subcat });
+            });
+            
+            if (!valid || items.length === 0) { toast('أضف صنفاً واحداً على الأقل'); return; }
+            const amount = items.reduce((s, it) => s + it.qty * it.price, 0);
+            
+            state.expenses.push({ id: state.nextId++, desc, amount, cat, date, payment, note, items });
+            saveState(); closeModal('addExpense'); renderExpTable(); renderOverview(); toast('تمت إضافة المصروف ✓');
+            
+            document.getElementById('m-exp-desc').value = '';
+            document.getElementById('m-exp-note').value = '';
+            document.getElementById('inv-items-container').innerHTML = '';
+            document.getElementById('inv-total-preview').textContent = '0.00 د.أ';
             checkBudgetWarning(cat);
         }
-        let editingExpId = null;
+
+        function delExpense(id) { 
+            state.expenses = state.expenses.filter(e => e.id !== id); 
+            saveState(); renderExpTable(); renderOverview(); toast('تم الحذف'); 
+        }
+
         function openEditExpense(id) {
-            const e = state.expenses.find(x => x.id === id);
-            if (!e) return;
+            const exp = state.expenses.find(e => e.id === id);
+            if (!exp) return;
             editingExpId = id;
-            document.getElementById('e-exp-desc').value = e.desc;
-            document.getElementById('e-exp-amount').value = e.amount;
-            document.getElementById('e-exp-cat').value = e.cat;
-            document.getElementById('e-exp-date').value = e.date;
+            document.getElementById('e-exp-desc').value = exp.desc;
+            document.getElementById('e-exp-date').value = exp.date;
+            document.getElementById('e-exp-cat').value = exp.cat;
+            document.getElementById('e-exp-payment').value = exp.payment || 'نقدي';
+            document.getElementById('e-exp-note').value = exp.note || '';
+            const container = document.getElementById('einv-items-container');
+            container.innerHTML = '';
+            (exp.items || []).forEach(it => addEInvItemRow(it));
+            updateEInvTotal();
             openModal('editExpense');
         }
+
+        function addEInvItemRow(prefill) {
+            const container = document.getElementById('einv-items-container');
+            const row = document.createElement('div');
+            row.className = 'item-row';
+            row.innerHTML = '<input class="inp" placeholder="اسم الصنف" oninput="updateEInvTotal()" /><input class="inp" type="number" placeholder="1" value="1" min="0.01" step="0.01" oninput="updateEInvTotal()" /><input class="inp" type="number" placeholder="0.00" min="0" step="0.01" oninput="updateEInvTotal()" /><select class="inp">' + SUBCAT_OPTIONS + '</select><button class="remove-item-btn" onclick="this.closest(\'.item-row\').remove();updateEInvTotal()">✕</button>';
+            const inputs = row.querySelectorAll('input');
+            const sel = row.querySelectorAll('select');
+            if (prefill) { inputs[0].value = prefill.name; inputs[1].value = prefill.qty; inputs[2].value = prefill.price; sel[0].value = prefill.subcat; }
+            container.appendChild(row);
+            updateEInvTotal();
+        }
+
+        function updateEInvTotal() {
+            let total = 0;
+            document.querySelectorAll('#einv-items-container .item-row').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                total += (parseFloat(inputs[1]?.value) || 0) * (parseFloat(inputs[2]?.value) || 0);
+            });
+            const el = document.getElementById('einv-total-preview');
+            if (el) el.textContent = total.toFixed(2) + ' د.أ';
+        }
+
         function saveEditExpense() {
-            const e = state.expenses.find(x => x.id === editingExpId);
-            if (!e) return;
+            const exp = state.expenses.find(e => e.id === editingExpId);
+            if (!exp) return;
             const desc = document.getElementById('e-exp-desc').value.trim();
-            const amount = parseFloat(document.getElementById('e-exp-amount').value);
-            const cat = document.getElementById('e-exp-cat').value;
             const date = document.getElementById('e-exp-date').value || td();
-            if (!desc || isNaN(amount) || amount <= 0) { toast('أدخل البيانات'); return; }
-            e.desc = desc; e.amount = amount; e.cat = cat; e.date = date;
-            saveState(); renderExpTable(); renderOverview(); closeModal('editExpense'); toast('تم التعديل ✓');
-        }
-        function addExpenseModal() {
-            const desc = document.getElementById('m-exp-desc').value.trim();
-            const amount = parseFloat(document.getElementById('m-exp-amount').value);
-            const cat = document.getElementById('m-exp-cat').value;
-            const date = document.getElementById('m-exp-date').value || td();
-            if (!desc || isNaN(amount) || amount <= 0) { toast('أدخل البيانات'); return; }
-            state.expenses.push({ id: state.nextId++, desc, amount, cat, date });
-            saveState(); renderExpTable(); renderOverview(); closeModal('addExpense'); toast('تمت الإضافة ✓');
-            document.getElementById('m-exp-desc').value = ''; document.getElementById('m-exp-amount').value = '';
-            checkBudgetWarning(cat);
-        }
-        function delExpense(id) { state.expenses = state.expenses.filter(e => e.id !== id); saveState(); renderExpTable(); renderOverview(); toast('تم الحذف'); }
-
-        let expSort = { col: 'date', dir: 'desc' };
-        function sortExp(col) {
-            if (expSort.col === col) {
-                expSort.dir = expSort.dir === 'asc' ? 'desc' : 'asc';
-            } else {
-                expSort.col = col;
-                expSort.dir = 'desc';
-            }
-            renderExpTable();
+            const cat = document.getElementById('e-exp-cat').value;
+            const payment = document.getElementById('e-exp-payment').value;
+            const note = document.getElementById('e-exp-note').value.trim();
+            
+            if (!desc) { toast('أدخل الوصف'); return; }
+            const items = [];
+            let valid = true;
+            document.querySelectorAll('#einv-items-container .item-row').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                const sel = row.querySelectorAll('select');
+                const name = inputs[0]?.value.trim();
+                const qty = parseFloat(inputs[1]?.value) || 1;
+                const price = parseFloat(inputs[2]?.value) || 0;
+                const subcat = sel[0]?.value || 'أخرى';
+                if (!name) { valid = false; return; }
+                items.push({ name, qty, price, subcat });
+            });
+            if (!valid || items.length === 0) { toast('أضف صنفاً واحداً على الأقل'); return; }
+            const amount = items.reduce((s, it) => s + it.qty * it.price, 0);
+            
+            exp.desc = desc; exp.date = date; exp.cat = cat; exp.payment = payment; exp.note = note; exp.items = items; exp.amount = amount;
+            
+            saveState(); closeModal('editExpense'); renderExpTable(); renderOverview(); toast('تم التعديل ✓');
         }
 
-        let expDashChart = null;
+        function setShopFilter(subcat) { shopFilterCat = subcat; renderExpTable(); }
+
+        function toggleInvoice(id) { const b = document.getElementById('inv-body-' + id); if (b) b.classList.toggle('open'); }
+
         function renderExpDash() {
             const { from, to } = getDateRange();
             const exps = state.expenses.filter(e => { const d = new Date(e.date); return d >= from && d <= to; });
@@ -2984,10 +3003,10 @@
 
             const m = document.getElementById('exp-dash-metrics');
             if (m) m.innerHTML =
-                '<div class="metric m-r"><div class="metric-lbl">\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0645\u0635\u0627\u0631\u064a\u0641</div><div class="metric-val">' + total.toFixed(0) + ' <span style="font-size:13px;color:var(--text3);font-weight:400">\u062f.\u0623</span></div><div class="metric-sub">' + exps.length + ' \u0645\u0639\u0627\u0645\u0644\u0629</div></div>' +
-                (topCat ? '<div class="metric m-a"><div class="metric-lbl">\u0627\u0644\u0623\u0643\u062b\u0631 \u0625\u0646\u0641\u0627\u0642\u0627\u064b</div><div class="metric-val" style="font-size:15px">' + topCat[0] + '</div><div class="metric-sub">' + topCat[1].toFixed(0) + ' \u062f.\u0623</div></div>' : '') +
-                (topExp ? '<div class="metric m-p"><div class="metric-lbl">\u0623\u0639\u0644\u0649 \u0645\u0635\u0631\u0648\u0641</div><div class="metric-val" style="font-size:14px">' + topExp.desc + '</div><div class="metric-sub">' + topExp.amount.toFixed(2) + ' \u062f.\u0623</div></div>' : '') +
-                '<div class="metric m-g"><div class="metric-lbl">\u0645\u062a\u0648\u0633\u0637 \u0627\u0644\u0645\u0635\u0631\u0648\u0641</div><div class="metric-val">' + (exps.length ? (total / exps.length).toFixed(1) : 0) + ' <span style="font-size:13px;color:var(--text3);font-weight:400">\u062f.\u0623</span></div></div>';
+                '<div class="metric m-r"><div class="metric-lbl">إجمالي المصاريف</div><div class="metric-val">' + total.toFixed(0) + ' <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div><div class="metric-sub">' + exps.length + ' معاملة (فاتورة)</div></div>' +
+                (topCat ? '<div class="metric m-a"><div class="metric-lbl">الأكثر إنفاقاً (فئة)</div><div class="metric-val" style="font-size:15px">' + topCat[0] + '</div><div class="metric-sub">' + topCat[1].toFixed(0) + ' د.أ</div></div>' : '') +
+                (topExp ? '<div class="metric m-p"><div class="metric-lbl">أعلى مصروف</div><div class="metric-val" style="font-size:14px">' + topExp.desc + '</div><div class="metric-sub">' + topExp.amount.toFixed(2) + ' د.أ</div></div>' : '') +
+                '<div class="metric m-g"><div class="metric-lbl">متوسط المصروف</div><div class="metric-val">' + (exps.length ? (total / exps.length).toFixed(1) : 0) + ' <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>';
 
             const catEl = document.getElementById('exp-dash-cats');
             if (catEl) {
@@ -2995,8 +3014,8 @@
                 catEl.innerHTML = Object.entries(byCat).sort((a, b) => b[1] - a[1]).map(([cat, amt]) => {
                     const pct = catTotal > 0 ? (amt / catTotal * 100) : 0;
                     const col = catColor(cat);
-                    return '<div class="shop-analysis-bar"><div class="bar-hdr"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + col + ';margin-inline-end:5px"></span>' + cat + '</span><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--text3)">' + pct.toFixed(1) + '% · ' + amt.toFixed(2) + ' \u062f.\u0623</span></div><div class="bar-bg"><div class="bar-fill" style="width:' + pct + '%;background:' + col + '"></div></div></div>';
-                }).join('') || '<div class="empty">\u0644\u0627 \u0628\u064a\u0627\u0646\u0627\u062a</div>';
+                    return '<div class="shop-analysis-bar"><div class="bar-hdr"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + col + ';margin-inline-end:5px"></span>' + cat + '</span><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--text3)">' + pct.toFixed(1) + '% · ' + amt.toFixed(2) + ' د.أ</span></div><div class="bar-bg"><div class="bar-fill" style="width:' + pct + '%;background:' + col + '"></div></div></div>';
+                }).join('') || '<div class="empty">لا بيانات</div>';
             }
 
             const now3 = new Date(); const lbls3 = []; const vals3 = [];
@@ -3008,42 +3027,39 @@
             if (expDashChart) expDashChart.destroy();
             const lineEl = document.getElementById('expDashLine');
             if (lineEl) {
-                expDashChart = new Chart(lineEl.getContext('2d'), { type: 'line', data: { labels: lbls3, datasets: [{ data: vals3, borderColor: 'rgba(248,113,113,0.8)', backgroundColor: 'rgba(248,113,113,0.08)', tension: 0.4, fill: true, pointRadius: 3, pointBackgroundColor: 'rgba(248,113,113,0.8)' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.raw.toFixed(2) + ' \u062f.\u0623' } } }, scales: { x: { grid: { display: false }, ticks: { color: '#55545f', font: { size: 10 } } }, y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#55545f', font: { size: 10 }, callback: v => v + '\u062f.\u0623' } } } } });
+                expDashChart = new Chart(lineEl.getContext('2d'), { type: 'line', data: { labels: lbls3, datasets: [{ data: vals3, borderColor: 'rgba(248,113,113,0.8)', backgroundColor: 'rgba(248,113,113,0.08)', tension: 0.4, fill: true, pointRadius: 3, pointBackgroundColor: 'rgba(248,113,113,0.8)' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.raw.toFixed(2) + ' د.أ' } } }, scales: { x: { grid: { display: false }, ticks: { color: '#55545f', font: { size: 10 } } }, y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#55545f', font: { size: 10 }, callback: v => v + 'د.أ' } } } } });
             }
         }
 
         function renderExpTable() {
             renderExpDash();
             const q = (document.getElementById('exp-search') || {}).value || '';
-            const rows = state.expenses.filter(e => !q || (e.desc + e.cat).includes(q));
-
-            rows.sort((a, b) => {
-                let valA = a[expSort.col];
-                let valB = b[expSort.col];
-                if (expSort.col === 'date') {
-                    valA = new Date(valA).getTime();
-                    valB = new Date(valB).getTime();
-                } else if (expSort.col === 'amount') {
-                    valA = parseFloat(valA);
-                    valB = parseFloat(valB);
-                } else {
-                    valA = (valA || '').toString().toLowerCase();
-                    valB = (valB || '').toString().toLowerCase();
-                }
-                if (valA < valB) return expSort.dir === 'asc' ? -1 : 1;
-                if (valA > valB) return expSort.dir === 'asc' ? 1 : -1;
-                return 0;
+            const { from, to } = getDateRange();
+            
+            let invoices = state.expenses.filter(e => {
+                const d = new Date(e.date); 
+                return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note||'')).includes(q));
             });
 
-            const thStr = (col, label) => {
-                const arrow = expSort.col === col ? (expSort.dir === 'asc' ? ' ⏶' : ' ⏷') : '';
-                return `<th onclick="sortExp('${col}')" style="cursor:pointer;user-select:none" title="ترتيب حسب ${label}">${label}<span style="color:var(--accent2);font-size:10px">${arrow}</span></th>`;
-            };
+            const allSubcats = [...new Set(invoices.flatMap(inv => (inv.items || []).map(it => it.subcat)))];
+            document.getElementById('shop-tabs').innerHTML =
+                '<span class="shop-tab ' + (shopFilterCat === 'all' ? 'active' : '') + '" onclick="setShopFilter(\'all\')">الكل <span class="tab-amt">' + invoices.length + '</span></span>' +
+                allSubcats.map(sub => {
+                    const subAmt = invoices.reduce((s, inv) => s + (inv.items || []).filter(it => it.subcat === sub).reduce((ss, it) => ss + it.qty * it.price, 0), 0);
+                    return '<span class="shop-tab ' + (shopFilterCat === sub ? 'active' : '') + '" onclick="setShopFilter(\'' + sub + '\')">' + shopSubcatIcon(sub) + ' ' + sub + ' <span class="tab-amt">' + subAmt.toFixed(0) + ' د.أ</span></span>';
+                }).join('');
 
-            document.getElementById('exp-table').innerHTML = rows.length ? `
-        <table><thead><tr>${thStr('desc', 'الوصف')}${thStr('cat', 'الفئة')}${thStr('amount', 'المبلغ')}${thStr('date', 'التاريخ')}<th></th></tr></thead><tbody>
-        ${rows.map(e => `<tr><td class="td-main">${e.desc}</td><td><span class="badge" style="background:${catColor(e.cat)}22;color:${catColor(e.cat)}">${e.cat}</span></td><td class="td-mono">${e.amount.toFixed(2)} د.أ</td><td class="td-mono" style="font-size:11px;color:var(--text3)">${e.date}</td><td style="white-space:nowrap"><button class="del-btn" style="color:var(--accent2);margin-inline-end:6px" onclick="openEditExpense(${e.id})" title="تعديل">✎</button><button class="del-btn" onclick="delExpense(${e.id})" title="حذف">✕</button></td></tr>`).join('')}
-        </tbody></table>` : '<div class="empty">لا مصاريف — أضف من الأعلى</div>';
+            const filtered = (shopFilterCat === 'all' ? invoices : invoices.filter(inv => (inv.items || []).some(it => it.subcat === shopFilterCat))).sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            document.getElementById('exp-table').innerHTML = filtered.length ? filtered.map(inv => {
+                const items2show = shopFilterCat === 'all' ? (inv.items || []) : (inv.items || []).filter(it => it.subcat === shopFilterCat);
+                const displayTotal = items2show.reduce((s, it) => s + it.qty * it.price, 0);
+                const itemsHtml = items2show.map(it => {
+                    const col = shopSubcatColor(it.subcat);
+                    return '<div class="inv-item-row"><div class="inv-subcat-dot" style="background:' + col + '"></div><span class="inv-item-name">' + it.name + '</span><span class="inv-item-qty">×' + it.qty + '</span><span class="inv-subcat-badge" style="background:' + col + '22;color:' + col + '">' + it.subcat + '</span><span class="inv-item-price">' + (it.qty * it.price).toFixed(2) + ' د.أ</span></div>';
+                }).join('');
+                return '<div class="invoice-card"><div class="invoice-hdr" onclick="toggleInvoice(' + inv.id + ')"><div class="invoice-icon" style="background:'+catColor(inv.cat)+'22;color:'+catColor(inv.cat)+'">📄</div><div class="invoice-info"><div class="invoice-title">' + inv.desc + '</div><div class="invoice-meta">' + inv.date + ' · ' + inv.cat + ' · ' + (inv.payment||'نقدي') + (inv.note ? ' · ' + inv.note : '') + ' · ' + (inv.items || []).length + ' صنف</div></div><div class="invoice-total">' + (shopFilterCat === 'all' ? inv.amount.toFixed(2) : displayTotal.toFixed(2)) + ' د.أ</div><button class="del-btn" style="color:var(--accent2);margin-inline-end:4px" onclick="event.stopPropagation();openEditExpense(' + inv.id + ')" title="تعديل">✎</button><button class="del-btn" onclick="event.stopPropagation();delExpense(' + inv.id + ')" title="حذف">✕</button></div><div class="invoice-body" id="inv-body-' + inv.id + '">' + itemsHtml + '<div style="display:flex;justify-content:space-between;padding-top:8px;margin-top:4px;border-top:1px solid var(--border)"><span style="font-size:11px;color:var(--text3)">إجمالي المصروف</span><span style="font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;color:var(--red)">' + inv.amount.toFixed(2) + ' د.أ</span></div></div></div>';
+            }).join('') : '<div class="empty">لا مصاريف في هذه الفترة — أضف مصروف جديد</div>';
         }
 
         // ═══════════════════════════════════════
@@ -3475,248 +3491,6 @@
         // ═══════════════════════════════════════
         //  INIT
         // ═══════════════════════════════════════
-        // ═══════════════════════════════════════
-        //  SHOPPING / INVOICES
-        // ═══════════════════════════════════════
-        const SHOP_SUBCATS = [
-            { name: 'منظفات', color: '#22d3ee', icon: '🧹' },
-            { name: 'خضار وفاكهة', color: '#34d399', icon: '🥦' },
-            { name: 'تموينية', color: '#fb923c', icon: '🛒' },
-            { name: 'ألبان وأجبان', color: '#fbbf24', icon: '🧀' },
-            { name: 'لحوم ودجاج', color: '#f87171', icon: '🥩' },
-            { name: 'مخبوزات', color: '#a78bfa', icon: '🍞' },
-            { name: 'مجمدات', color: '#818cf8', icon: '❄️' },
-            { name: 'عناية شخصية', color: '#f472b6', icon: '🧴' },
-            { name: 'أخرى', color: '#64748b', icon: '📦' },
-        ];
-        function shopSubcatColor(n) { return (SHOP_SUBCATS.find(s => s.name === n) || { color: '#888' }).color; }
-        function shopSubcatIcon(n) { return (SHOP_SUBCATS.find(s => s.name === n) || { icon: '📦' }).icon; }
-        let shopFilterCat = 'all';
-        let shopChart = null;
-
-        function renderShopping() {
-            const badge = document.getElementById('shopPeriodBadge');
-            if (badge) badge.textContent = periodLabel();
-            const { from, to } = getDateRange();
-            const invoices = state.shopping.filter(inv => { const d = new Date(inv.date); return d >= from && d <= to; });
-            const totalAmt = invoices.reduce((s, inv) => s + inv.total, 0);
-            const totalItems = invoices.reduce((s, inv) => s + (inv.items ? inv.items.length : 0), 0);
-            const avgInvoice = invoices.length ? totalAmt / invoices.length : 0;
-            const bySub = {};
-            invoices.forEach(inv => (inv.items || []).forEach(it => { bySub[it.subcat] = (bySub[it.subcat] || 0) + (it.qty * it.price); }));
-            const topSub = Object.entries(bySub).sort((a, b) => b[1] - a[1])[0];
-
-            document.getElementById('shop-metrics').innerHTML = `
-            <div class="metric m-r"><div class="metric-lbl">إجمالي التسوق</div><div class="metric-val">${totalAmt.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div><div class="metric-sub">${invoices.length} فاتورة</div></div>
-            <div class="metric m-a"><div class="metric-lbl">متوسط الفاتورة</div><div class="metric-val">${avgInvoice.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
-            <div class="metric m-p"><div class="metric-lbl">عدد الأصناف</div><div class="metric-val">${totalItems}</div></div>
-            ${topSub ? '<div class="metric m-c"><div class="metric-lbl">الأكثر إنفاقاً</div><div class="metric-val" style="font-size:15px">' + topSub[0] + '</div><div class="metric-sub">' + topSub[1].toFixed(0) + ' د.أ</div></div>' : ''}
-          `;
-
-            const subTotal = Object.values(bySub).reduce((s, v) => s + v, 0);
-            document.getElementById('shop-subcat-analysis').innerHTML = Object.entries(bySub).sort((a, b) => b[1] - a[1]).length
-                ? Object.entries(bySub).sort((a, b) => b[1] - a[1]).map(([sub, amt]) => {
-                    const pct = subTotal > 0 ? (amt / subTotal * 100) : 0;
-                    const col = shopSubcatColor(sub);
-                    return '<div class="shop-analysis-bar"><div class="bar-hdr"><span>' + shopSubcatIcon(sub) + ' ' + sub + '</span><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--text3)">' + pct.toFixed(1) + '% · ' + amt.toFixed(2) + ' د.أ</span></div><div class="bar-bg"><div class="bar-fill" style="width:' + pct + '%;background:' + col + '"></div></div></div>';
-                }).join('')
-                : '<div class="empty">لا بيانات في هذه الفترة</div>';
-
-            const now2 = new Date(); const lbls2 = []; const vals2 = [];
-            for (let i = 11; i >= 0; i--) {
-                const d = new Date(now2.getFullYear(), now2.getMonth() - i, 1);
-                lbls2.push(MONTHS_SHORT[d.getMonth()]);
-                vals2.push(state.shopping.filter(inv => { const ed = new Date(inv.date); return ed.getMonth() === d.getMonth() && ed.getFullYear() === d.getFullYear(); }).reduce((s, inv) => s + inv.total, 0));
-            }
-            if (shopChart) shopChart.destroy();
-            const ctx2 = document.getElementById('shopLineChart').getContext('2d');
-            shopChart = new Chart(ctx2, { type: 'bar', data: { labels: lbls2, datasets: [{ data: vals2, backgroundColor: 'rgba(124,109,250,0.6)', borderRadius: 4, borderSkipped: false }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.raw.toFixed(2) + ' د.أ' } } }, scales: { x: { grid: { display: false }, ticks: { color: '#55545f', font: { size: 10 } } }, y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#55545f', font: { size: 10 }, callback: v => v + 'د.أ' } } } } });
-
-            const allSubcats = [...new Set(state.shopping.flatMap(inv => (inv.items || []).map(it => it.subcat)))];
-            document.getElementById('shop-tabs').innerHTML =
-                '<span class="shop-tab ' + (shopFilterCat === 'all' ? 'active' : '') + '" onclick="setShopFilter(\'all\')">الكل <span class="tab-amt">' + invoices.length + '</span></span>' +
-                allSubcats.map(sub => {
-                    const subAmt = invoices.reduce((s, inv) => s + (inv.items || []).filter(it => it.subcat === sub).reduce((ss, it) => ss + it.qty * it.price, 0), 0);
-                    return '<span class="shop-tab ' + (shopFilterCat === sub ? 'active' : '') + '" onclick="setShopFilter(\'' + sub + '\')">' + shopSubcatIcon(sub) + ' ' + sub + ' <span class="tab-amt">' + subAmt.toFixed(0) + ' د.أ</span></span>';
-                }).join('');
-
-            const filtered = (shopFilterCat === 'all' ? invoices : invoices.filter(inv => (inv.items || []).some(it => it.subcat === shopFilterCat))).sort((a, b) => new Date(b.date) - new Date(a.date));
-            document.getElementById('shop-invoice-list').innerHTML = filtered.length ? filtered.map(inv => renderInvoiceCard(inv)).join('') : '<div class="empty">لا فواتير في هذه الفترة</div>';
-        }
-
-        function setShopFilter(cat) { shopFilterCat = cat; renderShopping(); }
-
-        function importExpensesToShopping() {
-            // Find expenses with category تسوق or مصاريف شهرية that haven't been imported yet
-            const shopCats = ['تسوق', 'بقالة', 'سوبرماركت'];
-            const alreadyImported = new Set((state.shopping || []).map(inv => inv._importedFromId).filter(Boolean));
-            const toImport = state.expenses.filter(e =>
-                (shopCats.includes(e.cat) || e.cat.includes('تسوق')) && !alreadyImported.has(e.id)
-            );
-            if (toImport.length === 0) {
-                toast('لا توجد مصاريف تسوق جديدة للاستيراد');
-                return;
-            }
-            const confirm = window.confirm(
-                'سيتم استيراد ' + toImport.length + ' مصروف من المصاريف اليومية إلى قائمة التسوق.\n\nكل مصروف سيتحول إلى فاتورة منفردة.\n\nهل تريد المتابعة؟'
-            );
-            if (!confirm) return;
-            toImport.forEach(e => {
-                state.shopping.push({
-                    id: state.nextId++,
-                    store: e.desc,
-                    date: e.date,
-                    payment: 'نقدي',
-                    note: 'مستورد من: ' + e.cat,
-                    _importedFromId: e.id,
-                    items: [{ name: e.desc, qty: 1, price: e.amount, subcat: 'أخرى' }],
-                    total: e.amount
-                });
-            });
-            saveState();
-            renderShopping();
-            toast('✓ تم استيراد ' + toImport.length + ' مصروف بنجاح');
-        }
-
-        function renderInvoiceCard(inv) {
-            const items2show = shopFilterCat === 'all' ? (inv.items || []) : (inv.items || []).filter(it => it.subcat === shopFilterCat);
-            const displayTotal = items2show.reduce((s, it) => s + it.qty * it.price, 0);
-            const itemsHtml = items2show.map(it => {
-                const col = shopSubcatColor(it.subcat);
-                return '<div class="inv-item-row"><div class="inv-subcat-dot" style="background:' + col + '"></div><span class="inv-item-name">' + it.name + '</span><span class="inv-item-qty">×' + it.qty + '</span><span class="inv-subcat-badge" style="background:' + col + '22;color:' + col + '">' + it.subcat + '</span><span class="inv-item-price">' + (it.qty * it.price).toFixed(2) + ' د.أ</span></div>';
-            }).join('');
-            return '<div class="invoice-card"><div class="invoice-hdr" onclick="toggleInvoice(' + inv.id + ')"><div class="invoice-icon">🛒</div><div class="invoice-info"><div class="invoice-title">' + inv.store + '</div><div class="invoice-meta">' + inv.date + ' · ' + inv.payment + (inv.note ? ' · ' + inv.note : '') + ' · ' + (inv.items || []).length + ' صنف</div></div><div class="invoice-total">' + (shopFilterCat === 'all' ? inv.total.toFixed(2) : displayTotal.toFixed(2)) + ' د.أ</div><button class="del-btn" style="color:var(--accent2);margin-inline-end:4px" onclick="event.stopPropagation();openEditInvoice(' + inv.id + ')" title="تعديل">✎</button><button class="del-btn" onclick="event.stopPropagation();delInvoice(' + inv.id + ')" title="حذف">✕</button></div><div class="invoice-body" id="inv-body-' + inv.id + '">' + itemsHtml + '<div style="display:flex;justify-content:space-between;padding-top:8px;margin-top:4px;border-top:1px solid var(--border)"><span style="font-size:11px;color:var(--text3)">إجمالي الفاتورة</span><span style="font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;color:var(--red)">' + inv.total.toFixed(2) + ' د.أ</span></div></div></div>';
-        }
-
-        function toggleInvoice(id) { const b = document.getElementById('inv-body-' + id); if (b) b.classList.toggle('open'); }
-        function delInvoice(id) {
-            const inv = state.shopping.find(i => i.id === id);
-            if (inv && inv._expenseId) state.expenses = state.expenses.filter(e => e.id !== inv._expenseId);
-            state.shopping = state.shopping.filter(i => i.id !== id);
-            saveState(); renderShopping(); renderExpTable(); renderOverview(); toast('تم الحذف');
-        }
-
-        let editingInvId = null;
-        function openEditInvoice(id) {
-            const inv = state.shopping.find(i => i.id === id);
-            if (!inv) return;
-            editingInvId = id;
-            document.getElementById('einv-store').value = inv.store;
-            document.getElementById('einv-date').value = inv.date;
-            document.getElementById('einv-payment').value = inv.payment;
-            document.getElementById('einv-note').value = inv.note || '';
-            const container = document.getElementById('einv-items-container');
-            container.innerHTML = '';
-            (inv.items || []).forEach(it => addEInvItemRow(it));
-            updateEInvTotal();
-            openModal('editInvoice');
-        }
-        function addEInvItemRow(prefill) {
-            const container = document.getElementById('einv-items-container');
-            const row = document.createElement('div');
-            row.className = 'item-row';
-            row.innerHTML = '<input class="inp" placeholder="اسم الصنف" oninput="updateEInvTotal()" /><input class="inp" type="number" placeholder="1" value="1" min="0.01" step="0.01" oninput="updateEInvTotal()" /><input class="inp" type="number" placeholder="0.00" min="0" step="0.01" oninput="updateEInvTotal()" /><select class="inp">' + SUBCAT_OPTIONS + '</select><button class="remove-item-btn" onclick="this.closest(\'.item-row\').remove();updateEInvTotal()">✕</button>';
-            const inputs = row.querySelectorAll('input');
-            const sel = row.querySelectorAll('select');
-            if (prefill) { inputs[0].value = prefill.name; inputs[1].value = prefill.qty; inputs[2].value = prefill.price; sel[0].value = prefill.subcat; }
-            container.appendChild(row);
-            updateEInvTotal();
-        }
-        function updateEInvTotal() {
-            let total = 0;
-            document.querySelectorAll('#einv-items-container .item-row').forEach(row => {
-                const inputs = row.querySelectorAll('input');
-                total += (parseFloat(inputs[1]?.value) || 0) * (parseFloat(inputs[2]?.value) || 0);
-            });
-            const el = document.getElementById('einv-total-preview');
-            if (el) el.textContent = total.toFixed(2) + ' د.أ';
-        }
-        function saveEditInvoice() {
-            const inv = state.shopping.find(i => i.id === editingInvId);
-            if (!inv) return;
-            const store = document.getElementById('einv-store').value.trim();
-            const date = document.getElementById('einv-date').value || td();
-            const payment = document.getElementById('einv-payment').value;
-            const note = document.getElementById('einv-note').value.trim();
-            if (!store) { toast('أدخل اسم المحل'); return; }
-            const items = [];
-            let valid = true;
-            document.querySelectorAll('#einv-items-container .item-row').forEach(row => {
-                const inputs = row.querySelectorAll('input');
-                const sel = row.querySelectorAll('select');
-                const name = inputs[0]?.value.trim();
-                const qty = parseFloat(inputs[1]?.value) || 1;
-                const price = parseFloat(inputs[2]?.value) || 0;
-                const subcat = sel[0]?.value || 'أخرى';
-                if (!name) { valid = false; return; }
-                items.push({ name, qty, price, subcat });
-            });
-            if (!valid || items.length === 0) { toast('أضف صنفاً واحداً على الأقل'); return; }
-            const total = items.reduce((s, it) => s + it.qty * it.price, 0);
-            inv.store = store; inv.date = date; inv.payment = payment; inv.note = note; inv.items = items; inv.total = total;
-            // sync linked expense
-            if (inv._expenseId) {
-                const exp = state.expenses.find(e => e.id === inv._expenseId);
-                if (exp) { exp.desc = store; exp.amount = total; exp.date = date; }
-            }
-            saveState(); closeModal('editInvoice'); renderShopping(); renderExpTable(); renderOverview(); toast('تم التعديل ✓');
-        }
-
-        const SUBCAT_OPTIONS = SHOP_SUBCATS.map(s => '<option value="' + s.name + '">' + s.icon + ' ' + s.name + '</option>').join('');
-
-        function addInvItemRow() {
-            const container = document.getElementById('inv-items-container');
-            const row = document.createElement('div');
-            row.className = 'item-row';
-            row.innerHTML = '<input class="inp" placeholder="اسم الصنف" oninput="updateInvTotal()" /><input class="inp" type="number" placeholder="1" value="1" min="0.01" step="0.01" oninput="updateInvTotal()" /><input class="inp" type="number" placeholder="0.00" min="0" step="0.01" oninput="updateInvTotal()" /><select class="inp">' + SUBCAT_OPTIONS + '</select><button class="remove-item-btn" onclick="this.closest(\'.item-row\').remove();updateInvTotal()">✕</button>';
-            container.appendChild(row);
-            updateInvTotal();
-        }
-
-        function updateInvTotal() {
-            let total = 0;
-            document.querySelectorAll('#inv-items-container .item-row').forEach(row => {
-                const inputs = row.querySelectorAll('input');
-                total += (parseFloat(inputs[1]?.value) || 0) * (parseFloat(inputs[2]?.value) || 0);
-            });
-            const el = document.getElementById('inv-total-preview');
-            if (el) el.textContent = total.toFixed(2) + ' د.أ';
-        }
-
-        function saveInvoice() {
-            const store = document.getElementById('inv-store').value.trim();
-            const date = document.getElementById('inv-date').value || td();
-            const payment = document.getElementById('inv-payment').value;
-            const note = document.getElementById('inv-note').value.trim();
-            if (!store) { toast('أدخل اسم المحل'); return; }
-            const items = [];
-            let valid = true;
-            document.querySelectorAll('#inv-items-container .item-row').forEach(row => {
-                const inputs = row.querySelectorAll('input');
-                const sel = row.querySelectorAll('select');
-                const name = inputs[0]?.value.trim();
-                const qty = parseFloat(inputs[1]?.value) || 1;
-                const price = parseFloat(inputs[2]?.value) || 0;
-                const subcat = sel[0]?.value || 'أخرى';
-                if (!name) { valid = false; return; }
-                items.push({ name, qty, price, subcat });
-            });
-            if (!valid || items.length === 0) { toast('أضف صنفاً واحداً على الأقل'); return; }
-            const total = items.reduce((s, it) => s + it.qty * it.price, 0);
-            const newInv = { id: state.nextId++, store, date, payment, note, items, total };
-            // Auto-sync: add matching expense entry
-            const expEntry = { id: state.nextId++, desc: store + ' (تسوق)', amount: total, cat: 'تسوق', date };
-            newInv._expenseId = expEntry.id;
-            state.shopping.push(newInv);
-            state.expenses.push(expEntry);
-            saveState(); closeModal('addInvoice'); renderShopping(); renderExpTable(); renderOverview(); toast('تم حفظ الفاتورة ✓');
-            document.getElementById('inv-store').value = '';
-            document.getElementById('inv-note').value = '';
-            document.getElementById('inv-items-container').innerHTML = '';
-            document.getElementById('inv-total-preview').textContent = '0.00 د.أ';
-        }
-
-
         async function initApp() {
             await loadState();
             initPeriodSelects();
