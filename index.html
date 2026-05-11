@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مصاريفي — لوحة المالية الشخصية</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -298,6 +296,50 @@
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 10px;
             margin-bottom: 18px
+        }
+
+        /* Top Dashboard Grid */
+        .top-dash-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 14px;
+            margin-bottom: 18px;
+            align-items: stretch;
+        }
+        @media(max-width:900px) {
+            .top-dash-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .circ-prog-wrap {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        .circ-prog-wrap svg {
+            position: absolute;
+            top: 0; left: 0;
+            transform: rotate(-90deg);
+        }
+        .circ-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        .circ-val {
+            font-size: 22px;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+        .circ-lbl {
+            font-size: 10px;
+            color: var(--text3);
+            margin-top: -2px;
         }
 
         .metric {
@@ -1537,7 +1579,12 @@
                     <button class="btn btn-primary" onclick="openModal('addExpense')">+ مصروف جديد</button>
                 </div>
             </div>
-            <div class="metrics" id="ov-metrics"></div>
+            
+            <div class="top-dash-grid">
+                <div class="card" id="salary-dash"></div>
+                <div class="metrics" id="ov-metrics" style="margin-bottom:0; align-content:start;"></div>
+            </div>
+            
             <div class="grid-2">
                 <div class="card">
                     <div class="card-title">توزيع المصاريف</div>
@@ -1915,6 +1962,38 @@
         </div>
     </div>
 
+    <!-- Edit Income Source -->
+    <div class="modal-ov" id="modal-editIncome">
+        <div class="modal">
+            <div class="modal-title">تعديل مصدر دخل ثابت</div>
+            <div class="modal-body">
+                <div class="field">
+                    <label>اسم المصدر</label><input class="inp" id="e-inc-name" autocomplete="off" />
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                    <div class="field">
+                        <label>المبلغ الشهري (د.أ)</label><input class="inp" type="number" id="e-inc-amount" step="0.01" />
+                    </div>
+                    <div class="field">
+                        <label>النوع</label>
+                        <select class="inp" id="e-inc-type">
+                            <option value="salary">راتب ثابت</option>
+                            <option value="freelance_fixed">فري لانس ثابت</option>
+                            <option value="rent">إيجار</option>
+                            <option value="investment">استثمار</option>
+                            <option value="other">أخرى</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field"><label>تاريخ البداية</label><input class="inp" type="date" id="e-inc-start" /></div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn" onclick="closeModal('editIncome')">إلغاء</button>
+                <button class="btn btn-primary" onclick="saveEditIncome()">حفظ التعديل</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Add Subscription -->
     <div class="modal-ov" id="modal-addSub">
         <div class="modal">
@@ -2015,13 +2094,26 @@
         <div class="modal">
             <div class="modal-title">✎ تعديل الاستقطاعات الثابتة</div>
             <div class="modal-body">
+                <div style="font-size:12px; font-weight:600; color:var(--accent2); margin-bottom:4px;">الضمان الاجتماعي</div>
                 <div class="field">
-                    <label>الضمان الاجتماعي (شهرياً)</label>
-                    <input class="inp" type="number" id="m-fixed-social" placeholder="0.00" step="0.01" />
+                    <label>المبلغ (شهرياً)</label>
+                    <input class="inp" type="number" id="m-fixed-social-amt" placeholder="0.00" step="0.01" />
                 </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                    <div class="field"><label>من تاريخ</label><input class="inp" type="date" id="m-fixed-social-start" /></div>
+                    <div class="field"><label>إلى تاريخ (اختياري)</label><input class="inp" type="date" id="m-fixed-social-end" /></div>
+                </div>
+                
+                <div class="divider" style="margin:12px 0;"></div>
+
+                <div style="font-size:12px; font-weight:600; color:var(--pink); margin-bottom:4px;">التأمين الصحي</div>
                 <div class="field">
-                    <label>التأمين الصحي (شهرياً)</label>
-                    <input class="inp" type="number" id="m-fixed-health" placeholder="0.00" step="0.01" />
+                    <label>المبلغ (شهرياً)</label>
+                    <input class="inp" type="number" id="m-fixed-health-amt" placeholder="0.00" step="0.01" />
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                    <div class="field"><label>من تاريخ</label><input class="inp" type="date" id="m-fixed-health-start" /></div>
+                    <div class="field"><label>إلى تاريخ (اختياري)</label><input class="inp" type="date" id="m-fixed-health-end" /></div>
                 </div>
             </div>
             <div class="modal-actions">
@@ -2363,8 +2455,24 @@
                 if (p.budgets) state.budgets = p.budgets;
                 if (p.periodMode) state.periodMode = p.periodMode;
                 if (p.periodMonth !== undefined) state.periodMonth = p.periodMonth;
-                if (p.fixedSubs) state.fixedSubs = p.fixedSubs;
                 state.periodYear = p.periodYear || new Date().getFullYear();
+
+                // Migrate fixedSubs to new object structure with dates
+                if (p.fixedSubs) {
+                    if (typeof p.fixedSubs.social === 'number' || typeof p.fixedSubs.health === 'number') {
+                        state.fixedSubs = {
+                            social: { amount: p.fixedSubs.social || 0, start: td(), end: '' },
+                            health: { amount: p.fixedSubs.health || 0, start: td(), end: '' }
+                        };
+                    } else {
+                        state.fixedSubs = p.fixedSubs;
+                    }
+                } else {
+                    state.fixedSubs = {
+                        social: { amount: 0, start: td(), end: '' },
+                        health: { amount: 0, start: td(), end: '' }
+                    };
+                }
 
                 let maxId = 0;
                 const seenIds = new Set();
@@ -2601,6 +2709,31 @@
         <div class="metric m-p"><div class="metric-lbl">أقساط القروض</div><div class="metric-val">${loanMonthly.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
         <div class="metric ${net >= 0 ? 'm-g' : 'm-r'}"><div class="metric-lbl">الرصيد الصافي</div><div class="metric-val ${net >= 0 ? 'metric-pos' : 'metric-neg'}">${net.toFixed(0)} <span style="font-size:13px;font-weight:400">د.أ</span></div><div class="metric-sub">${net >= 0 ? '✓ وفر' : '⚠ عجز'}</div></div>
       `;
+
+            // Render Salary Dashboard (Mini Circular Gauge)
+            const spentPct = inc.total > 0 ? (totalAllExp / inc.total) * 100 : 0;
+            const safePct = Math.min(spentPct, 100);
+            const dashCol = spentPct > 90 ? 'var(--red)' : spentPct > 70 ? 'var(--orange)' : 'var(--green)';
+            const radius = 52;
+            const circumference = 2 * Math.PI * radius;
+            const offset = circumference - (safePct / 100) * circumference;
+
+            document.getElementById('salary-dash').innerHTML = `
+                <div class="card-title" style="margin-bottom:20px;">معدل الاستهلاك من الدخل</div>
+                <div style="display:flex; justify-content:center; margin-bottom:10px;">
+                    <div class="circ-prog-wrap">
+                        <svg width="120" height="120" viewBox="0 0 120 120">
+                            <circle cx="60" cy="60" r="${radius}" fill="none" stroke="var(--surface3)" stroke-width="8" />
+                            <circle cx="60" cy="60" r="${radius}" fill="none" stroke="${dashCol}" stroke-width="8" stroke-dasharray="${circumference}" stroke-dashoffset="${offset}" stroke-linecap="round" style="transition: stroke-dashoffset 1s ease-in-out;" />
+                        </svg>
+                        <div class="circ-content">
+                            <div class="circ-val">${spentPct.toFixed(1)}%</div>
+                            <div class="circ-lbl" style="color:${dashCol}">مستهلك</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
             renderDonut(exps);
             renderBarCompare(inc, totalExp, subMonthly, loanMonthly, 0);
             renderBudgetBars(exps);
@@ -2634,8 +2767,8 @@
                 byCat[cat] = (byCat[cat] || 0) + amt;
             });
             if (state.fixedSubs) {
-                if (state.fixedSubs.social) { const c = normCat('الضمان الاجتماعي'); byCat[c] = (byCat[c] || 0) + state.fixedSubs.social; }
-                if (state.fixedSubs.health) { const c = normCat('التأمين الصحي'); byCat[c] = (byCat[c] || 0) + state.fixedSubs.health; }
+                if (state.fixedSubs.social && state.fixedSubs.social.amount) { const c = normCat('الضمان الاجتماعي'); byCat[c] = (byCat[c] || 0) + state.fixedSubs.social.amount; }
+                if (state.fixedSubs.health && state.fixedSubs.health.amount) { const c = normCat('التأمين الصحي'); byCat[c] = (byCat[c] || 0) + state.fixedSubs.health.amount; }
             }
             if (state.loans) state.loans.forEach(l => {
                 byCat['ديون'] = (byCat['ديون'] || 0) + l.monthly;
@@ -2647,8 +2780,31 @@
             if (charts.donut) charts.donut.destroy();
             const ctx = document.getElementById('donutChart').getContext('2d');
             charts.donut = new Chart(ctx, { type: 'doughnut', data: { labels: cats, datasets: [{ data: vals, backgroundColor: cats.map(c => catColor(c)), borderWidth: 0, hoverOffset: 4 }] }, options: { responsive: true, maintainAspectRatio: true, cutout: '70%', plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ' ' + c.label + ': ' + c.raw.toFixed(2) + ' د.أ' } } } } });
-            document.getElementById('legend').innerHTML = cats.length ? cats.map(c => `
-        <div class="leg"><div class="leg-left"><div class="leg-dot" style="background:${catColor(c)}"></div><span>${c}</span><span class="leg-pct">${total > 0 ? (byCat[c] / total * 100).toFixed(1) : 0}%</span></div><span class="leg-val">${byCat[c].toFixed(2)}</span></div>`).join('') : '<div class="empty">لا توجد بيانات</div>';
+            
+            let legendHtml = '';
+            if (cats.length) {
+                legendHtml += `<div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text); border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:8px; font-weight:600;">
+                    <span style="flex:1; text-align:left">المبلغ</span>
+                    <span style="flex:1; text-align:center">النسبة</span>
+                    <span style="flex:1; text-align:right">الفئة</span>
+                </div>`;
+                legendHtml += cats.map(c => `
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; padding:6px 0;">
+                    <span style="flex:1; text-align:left; font-family:'JetBrains Mono',monospace; font-weight:600; color:var(--text)">
+                        ${byCat[c].toFixed(2)}
+                    </span>
+                    <span style="flex:1; text-align:center; font-family:'JetBrains Mono',monospace; color:var(--text)">
+                        ${total > 0 ? (byCat[c] / total * 100).toFixed(1) : 0}%
+                    </span>
+                    <div style="display:flex; align-items:center; justify-content:flex-end; gap:8px; flex:1; color:var(--text2)">
+                        <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:80px;" title="${c}">${c}</span>
+                        <div class="leg-dot" style="background:${catColor(c)}; width:8px; height:8px; border-radius:50%; flex-shrink:0;"></div>
+                    </div>
+                </div>`).join('');
+            } else {
+                legendHtml = '<div class="empty">لا توجد بيانات</div>';
+            }
+            document.getElementById('legend').innerHTML = legendHtml;
         }
         function renderBarCompare(inc, exp, subs, loans, shop) {
             if (charts.bar) charts.bar.destroy();
@@ -2702,7 +2858,7 @@
                 return s;
             }, 0);
             if (state.fixedSubs) {
-                t += (state.fixedSubs.social || 0) + (state.fixedSubs.health || 0);
+                t += (state.fixedSubs.social?.amount || 0) + (state.fixedSubs.health?.amount || 0);
             }
             return t;
         }
@@ -2812,7 +2968,10 @@
             <div class="income-source-amt">+${src.amount.toFixed(2)} د.أ</div>
             <div style="font-size:10px;color:var(--text3)">شهرياً</div>
           </div>
-          <button class="del-btn" onclick="delIncomeSource(${src.id})">✕</button>
+          <div style="display:flex;gap:4px;margin-right:8px;">
+            <button class="del-btn" style="color:var(--accent2);" onclick="openEditIncome(${src.id})" title="تعديل">✎</button>
+            <button class="del-btn" onclick="delIncomeSource(${src.id})" title="حذف">✕</button>
+          </div>
         </div>`).join('') : '<div class="empty">لا مصادر دخل ثابتة — أضف من الأعلى</div>';
             // deductions
             const dedsEl = document.getElementById('income-deductions-list');
@@ -2857,6 +3016,36 @@
             state.incomeSources.push({ id: state.nextId++, name, amount, type, start });
             saveState(); closeModal('addIncome'); renderIncome(); renderOverview(); toast('تم إضافة مصدر الدخل ✓');
             document.getElementById('m-inc-name').value = ''; document.getElementById('m-inc-amount').value = '';
+        }
+        
+        function editMainSalary() {
+            const mainInc = state.incomeSources.find(i => i.type === 'salary') || state.incomeSources[0];
+            if (mainInc) {
+                openEditIncome(mainInc.id);
+            } else {
+                openModal('addIncome');
+            }
+        }
+        
+        let editingIncId = null;
+        function openEditIncome(id) {
+            const inc = state.incomeSources.find(i => i.id === id);
+            if (!inc) return;
+            editingIncId = id;
+            document.getElementById('e-inc-name').value = inc.name;
+            document.getElementById('e-inc-amount').value = inc.amount;
+            document.getElementById('e-inc-type').value = inc.type;
+            document.getElementById('e-inc-start').value = inc.start;
+            openModal('editIncome');
+        }
+        function saveEditIncome() {
+            const inc = state.incomeSources.find(i => i.id === editingIncId);
+            if (!inc) return;
+            inc.name = document.getElementById('e-inc-name').value.trim();
+            inc.amount = parseFloat(document.getElementById('e-inc-amount').value) || 0;
+            inc.type = document.getElementById('e-inc-type').value;
+            inc.start = document.getElementById('e-inc-start').value;
+            saveState(); closeModal('editIncome'); renderIncome(); renderOverview(); toast('تم التعديل ✓');
         }
         function delIncomeSource(id) { state.incomeSources = state.incomeSources.filter(s => s.id !== id); saveState(); renderIncome(); renderOverview(); toast('تم الحذف'); }
         function addDeduction() {
@@ -3119,7 +3308,7 @@
                 t += amt;
                 win.document.write('<tr><td>' + e.date + '</td><td>' + e.desc + '</td><td>' + e.cat + '</td><td>' + (e.payment || 'نقدي') + '</td><td>' + amt.toFixed(2) + ' د.أ</td></tr>');
             });
-            win.document.write('</tbody><tfoot><tr><th colspan="4">الإجمالي</th><th>' + t.toFixed(2) + ' د.أ</th></tr></tfoot></table><script>window.print();<\\/script></body></html>');
+            win.document.write('</tbody><tfoot><tr><th colspan="4">الإجمالي</th><th>' + t.toFixed(2) + ' د.أ</th></tr></tfoot></table><script>window.print();<\/script></body></html>');
             win.document.close();
         }
 
@@ -3180,7 +3369,7 @@
         </tfoot>
     </table>`);
             if (inv.note) win.document.write('<p style="margin-top:20px"><b>ملاحظات:</b> ' + inv.note + '</p>');
-            win.document.write('<script>window.print();<\\/script></body></html>');
+            win.document.write('<script>window.print();<\/script></body></html>');
             win.document.close();
         }
 
@@ -3264,32 +3453,59 @@
             renderSubs(); renderOverview(); toast('تم الحذف');
         }
         function updateFixedSubs() {
-            if (!state.fixedSubs) state.fixedSubs = { social: 0, health: 0 };
-            state.fixedSubs.social = parseFloat(document.getElementById('m-fixed-social').value) || 0;
-            state.fixedSubs.health = parseFloat(document.getElementById('m-fixed-health').value) || 0;
+            if (!state.fixedSubs || typeof state.fixedSubs.social !== 'object') {
+                state.fixedSubs = { social: { amount: 0, start: '', end: '' }, health: { amount: 0, start: '', end: '' } };
+            }
+            state.fixedSubs.social.amount = parseFloat(document.getElementById('m-fixed-social-amt').value) || 0;
+            state.fixedSubs.social.start = document.getElementById('m-fixed-social-start').value;
+            state.fixedSubs.social.end = document.getElementById('m-fixed-social-end').value;
+
+            state.fixedSubs.health.amount = parseFloat(document.getElementById('m-fixed-health-amt').value) || 0;
+            state.fixedSubs.health.start = document.getElementById('m-fixed-health-start').value;
+            state.fixedSubs.health.end = document.getElementById('m-fixed-health-end').value;
+
             saveState(); closeModal('editFixedDeds'); renderSubs(); renderOverview(); toast('تم التحديث ✓');
         }
         function renderSubs() {
-            if (!state.fixedSubs) state.fixedSubs = { social: 0, health: 0 };
+            if (!state.fixedSubs || typeof state.fixedSubs.social !== 'object') {
+                state.fixedSubs = { social: { amount: 0, start: td(), end: '' }, health: { amount: 0, start: td(), end: '' } };
+            }
             const fL = document.getElementById('fixed-deds-list');
             if (fL) {
+                const sDate = state.fixedSubs.social.start ? `من: ${state.fixedSubs.social.start}` : '';
+                const sEnd = state.fixedSubs.social.end ? ` إلى: ${state.fixedSubs.social.end}` : ' (مستمر)';
+                const hDate = state.fixedSubs.health.start ? `من: ${state.fixedSubs.health.start}` : '';
+                const hEnd = state.fixedSubs.health.end ? ` إلى: ${state.fixedSubs.health.end}` : ' (مستمر)';
+
                 fL.innerHTML = `
             <div class="sub-item">
                 <div class="sub-icon" style="background:rgba(52,211,153,0.15)">🛡️</div>
-                <div class="sub-info"><div class="sub-name">الضمان الاجتماعي</div><div class="sub-meta">اقتطاع ثابت</div></div>
-                <div class="sub-amt" style="text-align:left">${state.fixedSubs.social.toFixed(2)} د.أ</div>
+                <div class="sub-info">
+                    <div class="sub-name">الضمان الاجتماعي</div>
+                    <div class="sub-meta" style="font-family:'JetBrains Mono',monospace">${sDate}${sEnd}</div>
+                </div>
+                <div class="sub-amt" style="text-align:left">${state.fixedSubs.social.amount.toFixed(2)} د.أ</div>
             </div>
             <div class="sub-item">
                 <div class="sub-icon" style="background:rgba(239,68,68,0.15)">🏥</div>
-                <div class="sub-info"><div class="sub-name">التأمين الصحي</div><div class="sub-meta">اقتطاع ثابت</div></div>
-                <div class="sub-amt" style="text-align:left">${state.fixedSubs.health.toFixed(2)} د.أ</div>
+                <div class="sub-info">
+                    <div class="sub-name">التأمين الصحي</div>
+                    <div class="sub-meta" style="font-family:'JetBrains Mono',monospace">${hDate}${hEnd}</div>
+                </div>
+                <div class="sub-amt" style="text-align:left">${state.fixedSubs.health.amount.toFixed(2)} د.أ</div>
             </div>
             `;
             }
-            const socEl = document.getElementById('m-fixed-social');
-            if (socEl) socEl.value = state.fixedSubs.social;
-            const helEl = document.getElementById('m-fixed-health');
-            if (helEl) helEl.value = state.fixedSubs.health;
+            const socAmtEl = document.getElementById('m-fixed-social-amt');
+            if (socAmtEl) {
+                socAmtEl.value = state.fixedSubs.social.amount;
+                document.getElementById('m-fixed-social-start').value = state.fixedSubs.social.start;
+                document.getElementById('m-fixed-social-end').value = state.fixedSubs.social.end;
+                
+                document.getElementById('m-fixed-health-amt').value = state.fixedSubs.health.amount;
+                document.getElementById('m-fixed-health-start').value = state.fixedSubs.health.start;
+                document.getElementById('m-fixed-health-end').value = state.fixedSubs.health.end;
+            }
 
             const monthly = calcSubMonthly();
             const daily = state.subscriptions.filter(s => s.freq === 'daily').reduce((s, x) => s + x.amount, 0);
