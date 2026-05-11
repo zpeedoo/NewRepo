@@ -298,6 +298,21 @@
             margin-bottom: 18px
         }
 
+        /* Grid 4 for Dashboards */
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        @media(max-width:1200px) {
+            .grid-4 { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media(max-width:600px) {
+            .grid-4 { grid-template-columns: 1fr; }
+        }
+
         .circ-prog-wrap {
             position: relative;
             width: 120px;
@@ -318,10 +333,11 @@
             text-align: center;
         }
         .circ-val {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 600;
             color: #fff;
             letter-spacing: -0.5px;
+            font-family: 'JetBrains Mono', monospace;
         }
         .circ-lbl {
             font-size: 10px;
@@ -449,49 +465,15 @@
         }
 
         .donut-total {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
-            letter-spacing: -0.5px
+            letter-spacing: -0.5px;
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .donut-lbl {
             font-size: 10px;
             color: var(--text3);
-            font-family: 'JetBrains Mono', monospace
-        }
-
-        .leg {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 12px
-        }
-
-        .leg-left {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            color: var(--text2)
-        }
-
-        .leg-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0
-        }
-
-        .leg-pct {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            color: var(--text3);
-            margin-right: 2px
-        }
-
-        .leg-val {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            color: var(--text)
         }
 
         /* Budget bars */
@@ -512,6 +494,13 @@
             display: flex;
             align-items: center;
             gap: 6px
+        }
+        
+        .leg-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0
         }
 
         .bbar-nums {
@@ -1562,41 +1551,16 @@
             
             <div class="metrics" id="ov-metrics"></div>
             
-            <div class="grid-2" style="margin-bottom: 14px;">
-                <div class="card" id="salary-dash" style="display:flex; flex-direction:column; justify-content:center;"></div>
-                <div class="card" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                    <div class="card-title" style="align-self:flex-start; margin-bottom:20px; width:100%; text-align:right;">توزيع المصاريف</div>
-                    <div class="donut-wrap">
-                        <canvas id="donutChart" role="img" aria-label="توزيع المصاريف حسب الفئة"></canvas>
-                        <div class="donut-center">
-                            <div class="donut-total" id="donutTotal">0</div>
-                            <div class="donut-lbl">إجمالي</div>
-                        </div>
-                    </div>
-                </div>
+            <!-- 4 Mini Dashboards -->
+            <div class="grid-4" id="mini-dashboards" style="margin-bottom: 14px;">
+                <!-- Content injected via JS -->
             </div>
             
-            <div class="grid-2">
-                <div class="card">
-                    <div class="card-title">الميزانية vs الإنفاق</div>
-                    <div id="budgetBars"></div>
-                </div>
-                <div class="card">
-                    <div class="card-title">المصاريف الشهرية (12 شهر)</div>
-                    <div style="position:relative;height:180px">
-                        <canvas id="lineChart" role="img" aria-label="المصاريف الشهرية"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid-2">
-                <div class="card" id="ov-subs-card">
-                    <div class="card-title">الاشتراكات النشطة</div>
-                    <div id="ov-subs"></div>
-                </div>
-                <div class="card">
-                    <div class="card-title">القروض</div>
-                    <div id="ov-loans"></div>
+            <!-- Charts Section -->
+            <div class="card" style="margin-bottom:16px">
+                <div class="card-title">المصاريف الشهرية (12 شهر)</div>
+                <div style="position:relative;height:220px">
+                    <canvas id="lineChart" role="img" aria-label="المصاريف الشهرية"></canvas>
                 </div>
             </div>
         </div>
@@ -1770,12 +1734,12 @@
             </div>
             <div class="grid-2">
                 <div class="card">
-                    <div class="card-title">تحديد الميزانية لكل فئة</div>
-                    <div id="budget-form"></div>
+                    <div class="card-title">الحالة الحالية للميزانية</div>
+                    <div id="budget-overview"></div>
                 </div>
                 <div class="card">
-                    <div class="card-title">الحالة الحالية</div>
-                    <div id="budget-overview"></div>
+                    <div class="card-title">تحديد الميزانية لكل فئة</div>
+                    <div id="budget-form"></div>
                 </div>
             </div>
         </div>
@@ -2672,7 +2636,20 @@
             const totalAll = totalExp; const totalShop = 0;
             const inc = monthlyIncome();
             const subMonthly = calcSubMonthly();
-            const loanMonthly = state.loans.reduce((s, l) => s + l.monthly, 0);
+            
+            // Calculate Loans metrics
+            let totalLoanAmt = 0;
+            let totalLoanRem = 0;
+            let loanMonthly = 0;
+            state.loans.forEach(l => {
+                totalLoanAmt += l.total;
+                totalLoanRem += l.remaining;
+                loanMonthly += l.monthly;
+            });
+            const paidLoan = Math.max(0, totalLoanAmt - totalLoanRem);
+            const loanPct = totalLoanAmt > 0 ? (paidLoan / totalLoanAmt) * 100 : 0;
+            const loanCol = loanPct === 100 ? 'var(--green)' : 'var(--accent)';
+            
             const totalAllExp = totalExp + subMonthly + loanMonthly;
             const net = inc.total - totalAllExp;
 
@@ -2683,36 +2660,86 @@
         <div class="metric ${net >= 0 ? 'm-g' : 'm-r'}"><div class="metric-lbl">الرصيد الصافي</div><div class="metric-val ${net >= 0 ? 'metric-pos' : 'metric-neg'}">${net.toFixed(0)} <span style="font-size:13px;font-weight:400">د.أ</span></div><div class="metric-sub">${net >= 0 ? '✓ وفر' : '⚠ عجز'}</div></div>
       `;
 
-            // Render Salary Dashboard (Mini Circular Gauge)
+            // Common SVGs details for circular progress
+            const radius = 52;
+            const circumference = 2 * Math.PI * radius;
+
+            // 1. Render Salary Dashboard (Mini Circular Gauge)
             const spentPct = inc.total > 0 ? (totalAllExp / inc.total) * 100 : 0;
             const safePct = Math.min(spentPct, 100);
             const dashCol = spentPct > 90 ? 'var(--red)' : spentPct > 70 ? 'var(--orange)' : 'var(--green)';
-            const radius = 52;
-            const circumference = 2 * Math.PI * radius;
-            const offset = circumference - (safePct / 100) * circumference;
+            const offsetCons = circumference - (safePct / 100) * circumference;
+            
+            // 2. Render Loan Dashbaord
+            const offsetLoan = circumference - (loanPct / 100) * circumference;
 
-            document.getElementById('salary-dash').innerHTML = `
-                <div class="card-title" style="margin-bottom:20px; text-align:right;">معدل الاستهلاك من الدخل</div>
-                <div style="display:flex; justify-content:center; align-items:center; height:120px;">
-                    <div class="circ-prog-wrap">
-                        <svg width="120" height="120" viewBox="0 0 120 120">
-                            <circle cx="60" cy="60" r="${radius}" fill="none" stroke="var(--surface3)" stroke-width="8" />
-                            <circle cx="60" cy="60" r="${radius}" fill="none" stroke="${dashCol}" stroke-width="8" stroke-dasharray="${circumference}" stroke-dashoffset="${offset}" stroke-linecap="round" style="transition: stroke-dashoffset 1s ease-in-out;" />
-                        </svg>
-                        <div class="circ-content">
-                            <div class="circ-val">${spentPct.toFixed(1)}%</div>
-                            <div class="circ-lbl" style="color:${dashCol}">مستهلك</div>
+            document.getElementById('mini-dashboards').innerHTML = `
+                <!-- Dashboard 1: Consumption -->
+                <div class="card" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                    <div class="card-title" style="margin-bottom:20px; text-align:center;">معدل الاستهلاك من الدخل</div>
+                    <div style="display:flex; justify-content:center; align-items:center; height:120px;">
+                        <div class="circ-prog-wrap">
+                            <svg width="120" height="120" viewBox="0 0 120 120">
+                                <circle cx="60" cy="60" r="${radius}" fill="none" stroke="var(--surface3)" stroke-width="8" />
+                                <circle cx="60" cy="60" r="${radius}" fill="none" stroke="${dashCol}" stroke-width="8" stroke-dasharray="${circumference}" stroke-dashoffset="${offsetCons}" stroke-linecap="round" style="transition: stroke-dashoffset 1s ease-in-out;" />
+                            </svg>
+                            <div class="circ-content">
+                                <div class="circ-val">${spentPct.toFixed(1)}%</div>
+                                <div class="circ-lbl" style="color:${dashCol}">مستهلك</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard 2: Expense Distribution -->
+                <div class="card" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                    <div class="card-title" style="margin-bottom:20px; text-align:center;">توزيع المصاريف</div>
+                    <div class="donut-wrap">
+                        <canvas id="donutChart" role="img" aria-label="توزيع المصاريف حسب الفئة"></canvas>
+                        <div class="donut-center">
+                            <div class="donut-total" id="donutTotal">0</div>
+                            <div class="donut-lbl">إجمالي</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard 3: Loans -->
+                <div class="card" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                    <div class="card-title" style="margin-bottom:20px; text-align:center;">سداد القروض</div>
+                    <div style="display:flex; justify-content:center; align-items:center; height:120px;">
+                        <div class="circ-prog-wrap">
+                            <svg width="120" height="120" viewBox="0 0 120 120">
+                                <circle cx="60" cy="60" r="${radius}" fill="none" stroke="var(--surface3)" stroke-width="8" />
+                                <circle cx="60" cy="60" r="${radius}" fill="none" stroke="${loanCol}" stroke-width="8" stroke-dasharray="${circumference}" stroke-dashoffset="${offsetLoan}" stroke-linecap="round" style="transition: stroke-dashoffset 1s ease-in-out;" />
+                            </svg>
+                            <div class="circ-content">
+                                <div class="circ-val">${loanPct.toFixed(1)}%</div>
+                                <div class="circ-lbl" style="color:${loanCol}">مسدد</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard 4: Subscriptions -->
+                <div class="card" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                    <div class="card-title" style="margin-bottom:20px; text-align:center;">الاشتراكات الشهرية</div>
+                    <div style="display:flex; justify-content:center; align-items:center; height:120px;">
+                        <div class="circ-prog-wrap">
+                            <svg width="120" height="120" viewBox="0 0 120 120">
+                                <circle cx="60" cy="60" r="${radius}" fill="none" stroke="var(--accent2)" stroke-width="8" stroke-dasharray="4 6" opacity="0.3" />
+                                <circle cx="60" cy="60" r="${radius}" fill="none" stroke="var(--accent2)" stroke-width="2" />
+                            </svg>
+                            <div class="circ-content">
+                                <div class="circ-val">${subMonthly.toFixed(0)}</div>
+                                <div class="circ-lbl" style="color:var(--accent2)">د.أ / شهر</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             `;
 
             renderDonut(exps);
-            renderBudgetBars(exps);
             renderLine();
-            renderOvSubs();
-            renderOvLoans();
-
         }
         function normCat(name) {
             const v = (name || '').toString().trim();
@@ -2748,7 +2775,7 @@
             const cats = Object.keys(byCat).sort((a, b) => byCat[b] - byCat[a]);
             const vals = cats.map(c => byCat[c]);
             const total = vals.reduce((s, v) => s + v, 0);
-            document.getElementById('donutTotal').textContent = total.toFixed(0) + ' د.أ';
+            document.getElementById('donutTotal').textContent = total.toFixed(0);
             if (charts.donut) charts.donut.destroy();
             const ctx = document.getElementById('donutChart').getContext('2d');
             charts.donut = new Chart(ctx, { 
@@ -2773,34 +2800,6 @@
                 } 
             });
         }
-        function renderBudgetBars(exps, shopInvoices) {
-            const byCat = {};
-            exps.forEach(e => {
-                const cat = normCat(e.cat);
-                byCat[cat] = (byCat[cat] || 0) + e.amount;
-            });
-            // Add shopping total under 'تسوق' budget category
-            if (shopInvoices && shopInvoices.length) {
-                const shopTotal = shopInvoices.reduce((s, inv) => s + inv.total, 0);
-                byCat['تسوق'] = (byCat['تسوق'] || 0) + shopTotal;
-            }
-            const budgetKeys = Object.keys(state.budgets || {}).map(normCat);
-            const spentKeys = Object.keys(byCat).map(normCat);
-            const keys = [...new Set([...budgetKeys, ...spentKeys])].sort((a, b) => (byCat[b] || 0) - (byCat[a] || 0));
-            if (!keys.length) { document.getElementById('budgetBars').innerHTML = '<div class="empty">لا توجد بيانات مصاريف</div>'; return; }
-            const maxSpent = Math.max(...keys.map(k => byCat[k] || 0), 1);
-            document.getElementById('budgetBars').innerHTML = keys.map(cat => {
-                const spent = byCat[cat] || 0;
-                const bud = parseFloat(state.budgets[cat]);
-                const hasBudget = !isNaN(bud) && bud > 0;
-                const pct = hasBudget ? Math.min(spent / bud * 100, 100) : (spent / maxSpent * 100);
-                const over = hasBudget && spent > bud;
-                const warn = hasBudget && pct > 75 && !over;
-                const col = over ? 'var(--red)' : warn ? 'var(--amber)' : catColor(cat);
-                const nums = hasBudget ? `${spent.toFixed(0)} / ${bud.toFixed(0)} د.أ` : `${spent.toFixed(0)} د.أ`;
-                return `<div class="bbar"><div class="bbar-hdr"><div class="bbar-name"><div class="leg-dot" style="background:${catColor(cat)}"></div>${cat}</div><div class="bbar-nums ${over ? 'over' : warn ? 'warn' : ''}">${nums}</div></div><div class="bbar-bg"><div class="bbar-fill" style="width:${pct}%;background:${col}"></div></div></div>`;
-            }).join('');
-        }
         function renderLine() {
             const now = new Date(); const labels = []; const vals = [];
             for (let i = 11; i >= 0; i--) {
@@ -2823,35 +2822,6 @@
                 t += (state.fixedSubs.social?.amount || 0) + (state.fixedSubs.health?.amount || 0);
             }
             return t;
-        }
-        function renderOvSubs() {
-            const top = state.subscriptions.slice(0, 4);
-            document.getElementById('ov-subs').innerHTML = top.length ? top.map(s => `
-        <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:16px">${s.icon || '📦'}</span>
-          <span style="flex:1;font-size:12px;color:var(--text)">${s.name}</span>
-          <span class="freq-badge freq-${s.freq[0]}">${s.freq === 'daily' ? 'يومي' : s.freq === 'monthly' ? 'شهري' : 'سنوي'}</span>
-          <span class="td-mono" style="font-size:11px">${s.amount} د.أ</span>
-        </div>`).join('') : '<div class="empty">لا اشتراكات</div>';
-        }
-        function renderOvLoans() {
-            document.getElementById('ov-loans').innerHTML = state.loans.length ? state.loans.map(l => {
-                const pct = ((l.total - l.remaining) / l.total * 100);
-                return `<div style="margin-bottom:10px">
-          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>${l.name}</span><span class="td-mono" style="color:var(--amber)">${l.remaining.toFixed(0)} د.أ متبقي</span></div>
-          <div style="font-size:10px; color:var(--text3); margin-bottom:4px">${l.start} → ${l.end}</div>
-          <div class="progress-bg"><div class="progress-fill" style="width:${pct}%;background:var(--green)"></div></div>
-        </div>`;
-            }).join('') : '<div class="empty">لا قروض</div>';
-        }
-        function renderOvMaint() {
-            const urgent = state.maintenance.filter(m => m.status !== 'done' && (m.priority === 'urgent' || m.priority === 'high'));
-            document.getElementById('ov-maint').innerHTML = urgent.length ? urgent.map(m => `
-        <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)">
-          <div class="maint-urgency" style="background:${m.priority === 'urgent' ? 'var(--red)' : 'var(--orange)'}"></div>
-          <span style="flex:1;font-size:12px;color:var(--text)">${m.desc}</span>
-          <span class="td-mono" style="font-size:11px">${m.cost} د.أ</span>
-        </div>`).join('') : '<div class="empty" style="padding:1rem;font-size:12px">لا صيانة عاجلة 👍</div>';
         }
 
         // ═══════════════════════════════════════
