@@ -1598,11 +1598,7 @@
                     <div class="legend" id="legend"></div>
                 </div>
                 <div class="card">
-                    <div class="card-title">الدخل مقابل المصاريف</div>
-                    <div style="position:relative;height:180px;margin-bottom:14px">
-                        <canvas id="barCompare" role="img" aria-label="مقارنة الدخل والمصاريف"></canvas>
-                    </div>
-                    <div class="card-title" style="margin-top:14px">الميزانية vs الإنفاق</div>
+                    <div class="card-title">الميزانية vs الإنفاق</div>
                     <div id="budgetBars"></div>
                 </div>
             </div>
@@ -2691,7 +2687,7 @@
         // ═══════════════════════════════════════
         //  OVERVIEW
         // ═══════════════════════════════════════
-        let charts = { donut: null, bar: null, line: null, stmtLine: null };
+        let charts = { donut: null, line: null, stmtLine: null };
         function renderOverview() {
             document.getElementById('periodBadge').textContent = periodLabel();
             const exps = state.expenses.filter(e => inRange(e.date));
@@ -2735,7 +2731,6 @@
             `;
 
             renderDonut(exps);
-            renderBarCompare(inc, totalExp, subMonthly, loanMonthly, 0);
             renderBudgetBars(exps);
             renderLine();
             renderOvSubs();
@@ -2805,11 +2800,6 @@
                 legendHtml = '<div class="empty">لا توجد بيانات</div>';
             }
             document.getElementById('legend').innerHTML = legendHtml;
-        }
-        function renderBarCompare(inc, exp, subs, loans, shop) {
-            if (charts.bar) charts.bar.destroy();
-            const ctx = document.getElementById('barCompare').getContext('2d');
-            charts.bar = new Chart(ctx, { type: 'bar', data: { labels: ['الدخل', 'مصاريف', 'تسوق', 'اشتراكات', 'قروض'], datasets: [{ data: [inc.total, exp, shop || 0, subs, loans], backgroundColor: ['rgba(52,211,153,0.7)', 'rgba(248,113,113,0.7)', 'rgba(244,114,182,0.7)', 'rgba(124,109,250,0.7)', 'rgba(251,191,36,0.7)'], borderRadius: 4, borderSkipped: false }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.raw.toFixed(2) + ' د.أ' } } }, scales: { x: { grid: { display: false }, ticks: { color: '#55545f', font: { size: 10 } } }, y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#55545f', font: { size: 10 }, callback: v => v + 'د.أ' } } } } });
         }
         function renderBudgetBars(exps, shopInvoices) {
             const byCat = {};
