@@ -2363,6 +2363,7 @@
                 if (p.budgets) state.budgets = p.budgets;
                 if (p.periodMode) state.periodMode = p.periodMode;
                 if (p.periodMonth !== undefined) state.periodMonth = p.periodMonth;
+                if (p.fixedSubs) state.fixedSubs = p.fixedSubs;
                 state.periodYear = p.periodYear || new Date().getFullYear();
 
                 let maxId = 0;
@@ -2435,20 +2436,28 @@
             };
 
             let needsSave = false;
-            try {
-                const snapshot = await db.ref('state').once('value');
-                const p = snapshot.val();
-                if (p) needsSave = processLoadedState(p);
-            } catch (err) {
-                console.error("Firebase not reachable, falling back to localStorage.", err);
-                const s = localStorage.getItem('mwsarify_v3');
-                if (s) {
-                    try {
-                        const p = JSON.parse(s);
-                        needsSave = processLoadedState(p);
-                    } catch (e) { }
-                }
+            const s = localStorage.getItem('mwsarify_v3');
+            if (s) {
+                try {
+                    const p = JSON.parse(s);
+                    needsSave = processLoadedState(p);
+                } catch (e) { }
             }
+
+            db.ref('state').once('value').then(snapshot => {
+                const p = snapshot.val();
+                if (p) {
+                    processLoadedState(p);
+                    const active = document.querySelector('.page.active');
+                    if (active) {
+                        const id = active.id.replace('page-', '');
+                        const renders = { overview: renderOverview, statement: renderStatement, income: renderIncome, transactions: renderExpTable, subscriptions: renderSubs, loans: renderLoans, budget: renderBudget, categories: renderCategories, export: renderExport };
+                        if (renders[id]) renders[id]();
+                    }
+                }
+            }).catch(err => {
+                console.error("Firebase fetch error", err);
+            });
 
             // ALWAYS ensure the new default categories exist, regardless of data source
             const newCats = [{ name: 'سيارة', color: '#fb7185' }, { name: 'إيجار', color: '#818cf8' }, { name: 'ديون', color: '#facc15' }, { name: 'المصاريف الشهرية', color: '#f43f5e' }, { name: 'مصاريف السيارة', color: '#ef4444' }, { name: 'مصاريف المدارس', color: '#3b82f6' }, { name: 'الحارس', color: '#8b5cf6' }, { name: 'اخرى', color: '#64748b' }, { name: 'أخرى', color: '#888' }];
@@ -2615,7 +2624,7 @@
             // Add shopping as subcategories in donut
             if (shopInvoices && shopInvoices.length) {
                 shopInvoices.forEach(inv => (inv.items || []).forEach(it => {
-                    const key = '🛒 ' + it.subcat;
+                    const key = normCat(it.subcat);
                     byCat[key] = (byCat[key] || 0) + it.qty * it.price;
                 }));
             }
@@ -2875,29 +2884,21 @@
         //  EXPENSES (DETAILED)
         // ═══════════════════════════════════════
         function shopSubcatColor(n) { return catColor(n); }
-        function shopSubcatIcon(n) { return '🔹'; }
-        let SUBCAT_OPTIONS = '';
+        function shopSubcatIcon(n) { return '🏷️'; }
+        function getCatOptions() { return state.categories.map(c => '<option value="' + c.name + '">' + c.name + '</option>').join(''); }
 
         let shopFilterCat = 'all';
         let expDashChart = null;
         let editingExpId = null;
 
         function populateCatSelects() {
-            const catOptions = state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
             ['m-exp-cat', 'e-exp-cat', 'm-sub-cat', 'e-sub-cat'].forEach(id => {
                 const sel = document.getElementById(id);
                 if (!sel) return;
-                sel.innerHTML = catOptions;
+                sel.innerHTML = state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
             });
             const ecSel = document.getElementById('exp-cat-sel');
-            if (ecSel) ecSel.innerHTML = '<option value="all">كل الفئات</option>' + catOptions;
-            SUBCAT_OPTIONS = catOptions;
-            document.querySelectorAll('#inv-items-container select, #einv-items-container select').forEach(sel => {
-                const val = sel.value;
-                sel.innerHTML = SUBCAT_OPTIONS;
-                sel.value = val;
-            });
-            renderShopTabs();
+            if (ecSel) ecSel.innerHTML = '<option value="all">كل الفئات</option>' + state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
         }
 
         function checkBudgetWarning(cat) {
@@ -2921,7 +2922,7 @@
             const container = document.getElementById('inv-items-container');
             const row = document.createElement('div');
             row.className = 'item-row';
-            row.innerHTML = '<input class="inp" placeholder="اسم الصنف" oninput="updateInvTotal()" /><input class="inp" type="number" placeholder="1" value="1" min="0.01" step="0.01" oninput="updateInvTotal()" /><input class="inp" type="number" placeholder="0.00" min="0" step="0.01" oninput="updateInvTotal()" /><select class="inp">' + SUBCAT_OPTIONS + '</select><button class="remove-item-btn" onclick="this.closest(\'.item-row\').remove();updateInvTotal()">✕</button>';
+            row.innerHTML = '<input class="inp" placeholder="اسم الصنف" oninput="updateInvTotal()" /><input class="inp" type="number" placeholder="1" value="1" min="0.01" step="0.01" oninput="updateInvTotal()" /><input class="inp" type="number" placeholder="0.00" min="0" step="0.01" oninput="updateInvTotal()" /><select class="inp">' + getCatOptions() + '</select><button class="remove-item-btn" onclick="this.closest(\'.item-row\').remove();updateInvTotal()">✕</button>';
             container.appendChild(row);
             updateInvTotal();
         }
@@ -2996,7 +2997,7 @@
             const container = document.getElementById('einv-items-container');
             const row = document.createElement('div');
             row.className = 'item-row';
-            row.innerHTML = '<input class="inp" placeholder="اسم الصنف" oninput="updateEInvTotal()" /><input class="inp" type="number" placeholder="1" value="1" min="0.01" step="0.01" oninput="updateEInvTotal()" /><input class="inp" type="number" placeholder="0.00" min="0" step="0.01" oninput="updateEInvTotal()" /><select class="inp">' + SUBCAT_OPTIONS + '</select><button class="remove-item-btn" onclick="this.closest(\'.item-row\').remove();updateEInvTotal()">✕</button>';
+            row.innerHTML = '<input class="inp" placeholder="اسم الصنف" oninput="updateEInvTotal()" /><input class="inp" type="number" placeholder="1" value="1" min="0.01" step="0.01" oninput="updateEInvTotal()" /><input class="inp" type="number" placeholder="0.00" min="0" step="0.01" oninput="updateEInvTotal()" /><select class="inp">' + getCatOptions() + '</select><button class="remove-item-btn" onclick="this.closest(\'.item-row\').remove();updateEInvTotal()">✕</button>';
             const inputs = row.querySelectorAll('input');
             const sel = row.querySelectorAll('select');
             if (prefill) { inputs[0].value = prefill.name; inputs[1].value = prefill.qty; inputs[2].value = prefill.price; sel[0].value = prefill.subcat; }
@@ -3067,10 +3068,6 @@
                 const c = normCat(s.cat);
                 byCat[c] = (byCat[c] || 0) + amt;
             });
-            if (state.fixedSubs) {
-                if (state.fixedSubs.social) { const c = normCat('الضمان الاجتماعي'); byCat[c] = (byCat[c] || 0) + state.fixedSubs.social; }
-                if (state.fixedSubs.health) { const c = normCat('التأمين الصحي'); byCat[c] = (byCat[c] || 0) + state.fixedSubs.health; }
-            }
             if (state.loans) state.loans.forEach(l => {
                 byCat['ديون'] = (byCat['ديون'] || 0) + l.monthly;
             });
@@ -3538,7 +3535,7 @@
             renderOverview(); toast('تم تسجيل الدفعة ✓');
         } function renderLoans() {
             const
-            totalRem = state.loans.reduce((s, l) => s + l.remaining, 0);
+                totalRem = state.loans.reduce((s, l) => s + l.remaining, 0);
             const totalMonth = state.loans.reduce((s, l) => s + l.monthly, 0);
             document.getElementById('loan-metrics').innerHTML = `
             <div class="metric m-r">
