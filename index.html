@@ -1463,13 +1463,7 @@
             </svg>
             الاشتراكات
         </div>
-        <div class="nav-item" data-page="maintenance" onclick="goPage(this)">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
-                <path
-                    d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 01-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 01.872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 012.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 012.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 01.872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 01-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 01-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 110-5.86 2.929 2.929 0 010 5.858z" />
-            </svg>
-            الصيانة
-        </div>
+
         <div class="nav-item" data-page="loans" onclick="goPage(this)">
             <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
                 <path
@@ -1571,7 +1565,7 @@
                     <canvas id="lineChart" role="img" aria-label="المصاريف الشهرية"></canvas>
                 </div>
             </div>
-            <div class="grid-3">
+            <div class="grid-2">
                 <div class="card" id="ov-subs-card">
                     <div class="card-title">الاشتراكات النشطة</div>
                     <div id="ov-subs"></div>
@@ -1579,10 +1573,6 @@
                 <div class="card">
                     <div class="card-title">القروض</div>
                     <div id="ov-loans"></div>
-                </div>
-                <div class="card">
-                    <div class="card-title">صيانة قادمة</div>
-                    <div id="ov-maint"></div>
                 </div>
             </div>
         </div>
@@ -1714,6 +1704,13 @@
                 </button>
             </div>
             <div class="metrics" id="sub-metrics"></div>
+            <div class="card" style="margin-bottom:14px">
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <div class="card-title">الاستقطاعات الثابتة (شهرياً)</div>
+                    <button class="btn btn-sm" onclick="openModal('editFixedDeds')">✎ تعديل</button>
+                </div>
+                <div id="fixed-deds-list"></div>
+            </div>
             <div class="grid-3" id="sub-list-grid">
                 <div class="card">
                     <div class="card-title">يومية</div>
@@ -1730,32 +1727,9 @@
             </div>
         </div>
 
-        <!-- ── MAINTENANCE PAGE ── -->
-        <div class="page" id="page-maintenance">
-            <div class="topbar">
-                <div class="page-title">الصيانة</div><button class="btn btn-primary" onclick="openModal('addMaint')">
-                    + إضافة
-                    صيانة
-                </button>
-            </div>
-            <div class="metrics" id="maint-metrics"></div>
-            <div class="grid-2">
-                <div class="card">
-                    <div class="card-title">مهمة / عاجلة</div>
-                    <div id="maint-urgent"></div>
-                </div>
-                <div class="card">
-                    <div class="card-title">مجدولة</div>
-                    <div id="maint-scheduled"></div>
-                </div>
-            </div>
-            <div class="table-card" style="margin-top:14px">
-                <div class="table-hdr">
-                    <div class="table-title">السجل الكامل للصيانة</div>
-                </div>
-                <div id="maint-table"></div>
-            </div>
-        </div>
+
+
+
 
         <!-- ── LOANS PAGE ── -->
         <div class="page" id="page-loans">
@@ -1971,14 +1945,7 @@
                     </div>
                     <div class="field">
                         <label>الفئة</label>
-                        <select class="inp" id="m-sub-cat">
-                            <option value="ترفيه">ترفيه</option>
-                            <option value="تعليم">تعليم</option>
-                            <option value="عمل">عمل</option>
-                            <option value="صحة">صحة</option>
-                            <option value="خدمات">خدمات</option>
-                            <option value="أخرى">أخرى</option>
-                        </select>
+                        <select class="inp" id="m-sub-cat"></select>
                     </div>
                 </div>
                 <div class="field">
@@ -1997,64 +1964,69 @@
         </div>
     </div>
 
-    <!-- Add Maintenance -->
-    <div class="modal-ov" id="modal-addMaint">
+    <!-- Edit Subscription -->
+    <div class="modal-ov" id="modal-editSub">
         <div class="modal">
-            <div class="modal-title">إضافة صيانة</div>
+            <div class="modal-title">تعديل اشتراك</div>
             <div class="modal-body">
-                <div class="field">
-                    <label>الوصف</label><input class="inp" id="m-maint-desc"
-                        placeholder="مثال: صيانة سيارة، تصليح تكييف" list="list-m-maint-desc"
-                        autocomplete="off" /><datalist id="list-m-maint-desc"></datalist>
-                </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
                     <div class="field">
-                        <label>التكلفة المتوقعة (د.أ)</label><input class="inp" type="number" id="m-maint-cost"
-                            placeholder="0.00" step="0.01" />
+                        <label>الاسم</label><input class="inp" id="e-sub-name" autocomplete="off" />
                     </div>
                     <div class="field">
-                        <label>الأولوية</label>
-                        <select class="inp" id="m-maint-priority">
-                            <option value="urgent">عاجل 🔴</option>
-                            <option value="high">مهم 🟠</option>
-                            <option value="medium" selected>متوسط 🟡</option>
-                            <option value="low">منخفض 🟢</option>
+                        <label>الإيموجي / الأيقونة</label><input class="inp" id="e-sub-icon" maxlength="2" />
+                    </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+                    <div class="field">
+                        <label>المبلغ (د.أ)</label><input class="inp" type="number" id="e-sub-amount" step="0.01" />
+                    </div>
+                    <div class="field">
+                        <label>الدورية</label>
+                        <select class="inp" id="e-sub-freq">
+                            <option value="daily">يومي</option>
+                            <option value="monthly">شهري</option>
+                            <option value="yearly">سنوي</option>
                         </select>
                     </div>
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
                     <div class="field">
                         <label>الفئة</label>
-                        <select class="inp" id="m-maint-cat">
-                            <option>سيارة</option>
-                            <option>بيت</option>
-                            <option>أجهزة</option>
-                            <option>صحة</option>
-                            <option>عمل</option>
-                            <option>أخرى</option>
-                        </select>
-                    </div>
-                    <div class="field">
-                        <label>التاريخ المجدول</label><input class="inp" type="date" id="m-maint-date" />
+                        <select class="inp" id="e-sub-cat"></select>
                     </div>
                 </div>
                 <div class="field">
-                    <label>الحالة</label>
-                    <select class="inp" id="m-maint-status">
-                        <option value="pending">قيد الانتظار</option>
-                        <option value="scheduled">مجدولة</option>
-                        <option value="done">منجزة</option>
-                    </select>
+                    <label>تاريخ التجديد القادم</label><input class="inp" type="date" id="e-sub-next" />
                 </div>
                 <div class="field">
-                    <label>ملاحظة</label><input class="inp" id="m-maint-note" placeholder="تفاصيل إضافية" />
+                    <label>ملاحظة (اختياري)</label><input class="inp" id="e-sub-note" />
                 </div>
             </div>
             <div class="modal-actions">
-                <button class="btn" onclick="closeModal('addMaint')">إلغاء</button><button class="btn btn-primary"
-                    onclick="addMaintenance()">
-                    إضافة
+                <button class="btn" onclick="closeModal('editSub')">إلغاء</button><button class="btn btn-primary"
+                    onclick="saveEditSub()">
+                    حفظ التعديل
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Fixed Deductions -->
+    <div class="modal-ov" id="modal-editFixedDeds">
+        <div class="modal">
+            <div class="modal-title">✎ تعديل الاستقطاعات الثابتة</div>
+            <div class="modal-body">
+                <div class="field">
+                    <label>الضمان الاجتماعي (شهرياً)</label>
+                    <input class="inp" type="number" id="m-fixed-social" placeholder="0.00" step="0.01" />
+                </div>
+                <div class="field">
+                    <label>التأمين الصحي (شهرياً)</label>
+                    <input class="inp" type="number" id="m-fixed-health" placeholder="0.00" step="0.01" />
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn" onclick="closeModal('editFixedDeds')">إلغاء</button>
+                <button class="btn btn-primary" onclick="updateFixedSubs()">حفظ</button>
             </div>
         </div>
     </div>
@@ -2545,7 +2517,7 @@
             document.querySelectorAll(`.nav-item[data-page="${name}"], .bnav-item[data-page="${name}"]`).forEach(n => n.classList.add('active'));
 
             document.getElementById('page-' + name).classList.add('active');
-            const renders = { overview: renderOverview, statement: renderStatement, income: renderIncome, transactions: renderExpTable, subscriptions: renderSubs, maintenance: renderMaint, loans: renderLoans, budget: renderBudget, categories: renderCategories, export: renderExport };
+            const renders = { overview: renderOverview, statement: renderStatement, income: renderIncome, transactions: renderExpTable, subscriptions: renderSubs, loans: renderLoans, budget: renderBudget, categories: renderCategories, export: renderExport };
             if (renders[name]) renders[name]();
         }
         function updatePeriod() {
@@ -2568,7 +2540,7 @@
             const active = document.querySelector('.page.active');
             if (!active) return;
             const id = active.id.replace('page-', '');
-            const renders = { overview: renderOverview, statement: renderStatement, income: renderIncome, transactions: renderExpTable, subscriptions: renderSubs, maintenance: renderMaint, loans: renderLoans, budget: renderBudget };
+            const renders = { overview: renderOverview, statement: renderStatement, income: renderIncome, transactions: renderExpTable, subscriptions: renderSubs, loans: renderLoans, budget: renderBudget };
             if (renders[id]) renders[id]();
         }
         function initPeriodSelects() {
@@ -2595,7 +2567,7 @@
                     sel.appendChild(o);
                 }
             });
-            document.getElementById('stmtFromMonth').value = 0;
+            document.getElementById('stmtFromMonth').value = now.getMonth();
             document.getElementById('stmtToMonth').value = now.getMonth();
         }
 
@@ -2611,10 +2583,11 @@
             const inc = monthlyIncome();
             const subMonthly = calcSubMonthly();
             const loanMonthly = state.loans.reduce((s, l) => s + l.monthly, 0);
-            const net = inc.total - totalAll - subMonthly - loanMonthly;
+            const totalAllExp = totalExp + subMonthly + loanMonthly;
+            const net = inc.total - totalAllExp;
 
             document.getElementById('ov-metrics').innerHTML = `
-        <div class="metric m-r"><div class="metric-lbl">المصاريف الكلية</div><div class="metric-val">${totalExp.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div><div class="metric-sub">${exps.length} معاملة</div></div>
+        <div class="metric m-r"><div class="metric-lbl">المصاريف الكلية</div><div class="metric-val">${totalAllExp.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div><div class="metric-sub">شاملة الاشتراكات والقروض</div></div>
         <div class="metric m-a"><div class="metric-lbl">الاشتراكات/شهر</div><div class="metric-val">${subMonthly.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
         <div class="metric m-p"><div class="metric-lbl">أقساط القروض</div><div class="metric-val">${loanMonthly.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
         <div class="metric ${net >= 0 ? 'm-g' : 'm-r'}"><div class="metric-lbl">الرصيد الصافي</div><div class="metric-val ${net >= 0 ? 'metric-pos' : 'metric-neg'}">${net.toFixed(0)} <span style="font-size:13px;font-weight:400">د.أ</span></div><div class="metric-sub">${net >= 0 ? '✓ وفر' : '⚠ عجز'}</div></div>
@@ -2625,11 +2598,12 @@
             renderLine();
             renderOvSubs();
             renderOvLoans();
-            renderOvMaint();
+
         }
         function normCat(name) {
             const v = (name || '').toString().trim();
-            return v || 'غير مصنفة';
+            if (v === 'undefined' || v === 'null' || !v || v === 'غير مصنفة') return 'أخرى';
+            return v;
         }
         function catColor(name) { return (state.categories.find(c => c.name === name) || { color: '#888' }).color }
         function renderDonut(exps, shopInvoices) {
@@ -2650,6 +2624,10 @@
                 const cat = normCat(s.cat);
                 byCat[cat] = (byCat[cat] || 0) + amt;
             });
+            if (state.fixedSubs) {
+                if (state.fixedSubs.social) { const c = normCat('الضمان الاجتماعي'); byCat[c] = (byCat[c] || 0) + state.fixedSubs.social; }
+                if (state.fixedSubs.health) { const c = normCat('التأمين الصحي'); byCat[c] = (byCat[c] || 0) + state.fixedSubs.health; }
+            }
             if (state.loans) state.loans.forEach(l => {
                 byCat['ديون'] = (byCat['ديون'] || 0) + l.monthly;
             });
@@ -2708,12 +2686,16 @@
             charts.line = new Chart(ctx, { type: 'line', data: { labels, datasets: [{ data: vals, borderColor: '#7c6dfa', backgroundColor: 'rgba(124,109,250,0.1)', tension: 0.4, pointBackgroundColor: '#7c6dfa', pointRadius: 3, fill: true, borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.raw.toFixed(2) + ' د.أ' } } }, scales: { x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#55545f', font: { size: 10 } } }, y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#55545f', font: { size: 10 }, callback: v => v + 'د.أ' } } } } });
         }
         function calcSubMonthly() {
-            return state.subscriptions.reduce((s, sub) => {
+            let t = state.subscriptions.reduce((s, sub) => {
                 if (sub.freq === 'daily') return s + sub.amount * 30;
                 if (sub.freq === 'monthly') return s + sub.amount;
                 if (sub.freq === 'yearly') return s + sub.amount / 12;
                 return s;
             }, 0);
+            if (state.fixedSubs) {
+                t += (state.fixedSubs.social || 0) + (state.fixedSubs.health || 0);
+            }
+            return t;
         }
         function renderOvSubs() {
             const top = state.subscriptions.slice(0, 4);
@@ -2730,6 +2712,7 @@
                 const pct = ((l.total - l.remaining) / l.total * 100);
                 return `<div style="margin-bottom:10px">
           <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>${l.name}</span><span class="td-mono" style="color:var(--amber)">${l.remaining.toFixed(0)} د.أ متبقي</span></div>
+          <div style="font-size:10px; color:var(--text3); margin-bottom:4px">${l.start} → ${l.end}</div>
           <div class="progress-bg"><div class="progress-fill" style="width:${pct}%;background:var(--green)"></div></div>
         </div>`;
             }).join('') : '<div class="empty">لا قروض</div>';
@@ -2891,45 +2874,30 @@
         // ═══════════════════════════════════════
         //  EXPENSES (DETAILED)
         // ═══════════════════════════════════════
-        const SHOP_SUBCATS = [
-            { name: 'منظفات', color: '#22d3ee', icon: '🧹' },
-            { name: 'خضار وفاكهة', color: '#34d399', icon: '🥦' },
-            { name: 'تموينية', color: '#fb923c', icon: '🛒' },
-            { name: 'ألبان وأجبان', color: '#fbbf24', icon: '🧀' },
-            { name: 'لحوم ودجاج', color: '#f87171', icon: '🥩' },
-            { name: 'مخبوزات', color: '#a78bfa', icon: '🍞' },
-            { name: 'مجمدات', color: '#818cf8', icon: '❄️' },
-            { name: 'عناية شخصية', color: '#f472b6', icon: '🧴' },
-            { name: 'عام', color: '#3b82f6', icon: '🔹' },
-            { name: 'خضروات', color: '#34d399', icon: '🥦' },
-            { name: 'فواتير', color: '#34d399', icon: '💧' },
-            { name: 'أخرى', color: '#64748b', icon: '📦' },
-            { name: 'طبية', color: '#34d399', icon: '💊' },
-            { name: 'سيارة', color: '#34d399', icon: '🚗' },
-            { name: 'مواصلات', color: '#34d399', icon: '🚗' },
-            { name: 'مصروفات شهرية', color: '#34d399', icon: '' },
-            { name: 'مطاعم', color: '#34d399', icon: '' },
-            { name: 'ديون', color: '#34d399', icon: '💰' },
-            { name: 'أقساط', color: '#34d399', icon: '💳' },
-
-
-        ];
-        function shopSubcatColor(n) { return (SHOP_SUBCATS.find(s => s.name === n) || { color: '#888' }).color; }
-        function shopSubcatIcon(n) { return (SHOP_SUBCATS.find(s => s.name === n) || { icon: '📦' }).icon; }
-        const SUBCAT_OPTIONS = SHOP_SUBCATS.map(s => '<option value="' + s.name + '">' + s.icon + ' ' + s.name + '</option>').join('');
+        function shopSubcatColor(n) { return catColor(n); }
+        function shopSubcatIcon(n) { return '🔹'; }
+        let SUBCAT_OPTIONS = '';
 
         let shopFilterCat = 'all';
         let expDashChart = null;
         let editingExpId = null;
 
         function populateCatSelects() {
-            ['m-exp-cat', 'e-exp-cat'].forEach(id => {
+            const catOptions = state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+            ['m-exp-cat', 'e-exp-cat', 'm-sub-cat', 'e-sub-cat'].forEach(id => {
                 const sel = document.getElementById(id);
                 if (!sel) return;
-                sel.innerHTML = state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+                sel.innerHTML = catOptions;
             });
             const ecSel = document.getElementById('exp-cat-sel');
-            if (ecSel) ecSel.innerHTML = '<option value="all">كل الفئات</option>' + state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+            if (ecSel) ecSel.innerHTML = '<option value="all">كل الفئات</option>' + catOptions;
+            SUBCAT_OPTIONS = catOptions;
+            document.querySelectorAll('#inv-items-container select, #einv-items-container select').forEach(sel => {
+                const val = sel.value;
+                sel.innerHTML = SUBCAT_OPTIONS;
+                sel.value = val;
+            });
+            renderShopTabs();
         }
 
         function checkBudgetWarning(cat) {
@@ -3084,24 +3052,40 @@
             const { from, to } = getDateRange();
             const exps = state.expenses.filter(e => { const d = new Date(e.date); return d >= from && d <= to; });
             const total = exps.reduce((s, e) => s + e.amount, 0);
+            const subMonthly = calcSubMonthly();
+            const loanMonthly = state.loans ? state.loans.reduce((s, l) => s + l.monthly, 0) : 0;
+            const overallTotal = total + subMonthly + loanMonthly;
+
             const topExp = exps.slice().sort((a, b) => b.amount - a.amount)[0];
             const byCat = {};
-            exps.forEach(e => { byCat[e.cat] = (byCat[e.cat] || 0) + e.amount; });
-            const topCat = Object.entries(byCat).sort((a, b) => b[1] - a[1])[0];
+            exps.forEach(e => {
+                const c = normCat(e.cat);
+                byCat[c] = (byCat[c] || 0) + e.amount;
+            });
+            if (state.subscriptions) state.subscriptions.forEach(s => {
+                const amt = s.freq === 'daily' ? s.amount * 30 : s.freq === 'yearly' ? s.amount / 12 : s.amount;
+                const c = normCat(s.cat);
+                byCat[c] = (byCat[c] || 0) + amt;
+            });
+            if (state.fixedSubs) {
+                if (state.fixedSubs.social) { const c = normCat('الضمان الاجتماعي'); byCat[c] = (byCat[c] || 0) + state.fixedSubs.social; }
+                if (state.fixedSubs.health) { const c = normCat('التأمين الصحي'); byCat[c] = (byCat[c] || 0) + state.fixedSubs.health; }
+            }
+            if (state.loans) state.loans.forEach(l => {
+                byCat['ديون'] = (byCat['ديون'] || 0) + l.monthly;
+            });
 
             const m = document.getElementById('exp-dash-metrics');
             if (m) m.innerHTML =
-                '<div class="metric m-r"><div class="metric-lbl">إجمالي المصاريف</div><div class="metric-val">' + total.toFixed(0) + ' <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div><div class="metric-sub">' + exps.length + ' معاملة (فاتورة)</div></div>' +
-                (topCat ? '<div class="metric m-a"><div class="metric-lbl">الأكثر إنفاقاً (فئة)</div><div class="metric-val" style="font-size:15px">' + topCat[0] + '</div><div class="metric-sub">' + topCat[1].toFixed(0) + ' د.أ</div></div>' : '') +
+                '<div class="metric m-r"><div class="metric-lbl">إجمالي المصاريف</div><div class="metric-val">' + overallTotal.toFixed(0) + ' <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div><div class="metric-sub">شاملة الاشتراكات والقروض</div></div>' +
                 (topExp ? '<div class="metric m-p"><div class="metric-lbl">أعلى مصروف</div><div class="metric-val" style="font-size:14px">' + topExp.desc + '</div><div class="metric-sub">' + topExp.amount.toFixed(2) + ' د.أ</div></div>' : '') +
-                '<div class="metric m-g"><div class="metric-lbl">متوسط المصروف</div><div class="metric-val">' + (exps.length ? (total / exps.length).toFixed(1) : 0) + ' <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>';
+                '<div class="metric m-g"><div class="metric-lbl">متوسط المصروف</div><div class="metric-val">' + (exps.length ? (overallTotal / (exps.length + (state.subscriptions ? state.subscriptions.length : 0) + (state.loans ? state.loans.length : 0))).toFixed(1) : 0) + ' <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>';
 
             const catEl = document.getElementById('exp-dash-cats');
             if (catEl) {
                 const totalInc = monthlyIncome().total;
-                const catTotal = totalInc > 0 ? totalInc : Object.values(byCat).reduce((s, v) => s + v, 0);
                 catEl.innerHTML = Object.entries(byCat).sort((a, b) => b[1] - a[1]).map(([cat, amt]) => {
-                    const pct = catTotal > 0 ? (amt / catTotal * 100) : 0;
+                    const pct = totalInc > 0 ? (amt / totalInc * 100) : 0;
                     const col = catColor(cat);
                     return '<div class="shop-analysis-bar"><div class="bar-hdr"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + col + ';margin-inline-end:5px"></span>' + cat + '</span><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--text3)">' + pct.toFixed(1) + '% · ' + amt.toFixed(2) + ' د.أ</span></div><div class="bar-bg"><div class="bar-fill" style="width:' + Math.min(pct, 100) + '%;background:' + col + '"></div></div></div>';
                 }).join('') || '<div class="empty">لا بيانات</div>';
@@ -3142,15 +3126,15 @@
             win.document.close();
         }
 
-function printInvoice(id) {
-const inv = state.expenses.find(e => e.id === id);
-if(!inv) return;
-const items2show = shopFilterCat === 'all' ? (inv.items || []) : (inv.items || []).filter(it => it.subcat ===
-shopFilterCat);
-const total = shopFilterCat === 'all' ? inv.amount : items2show.reduce((s, it) => s + it.qty * it.price, 0);
+        function printInvoice(id) {
+            const inv = state.expenses.find(e => e.id === id);
+            if (!inv) return;
+            const items2show = shopFilterCat === 'all' ? (inv.items || []) : (inv.items || []).filter(it => it.subcat ===
+                shopFilterCat);
+            const total = shopFilterCat === 'all' ? inv.amount : items2show.reduce((s, it) => s + it.qty * it.price, 0);
 
-const win = window.open('', '_blank');
-win.document.write(`<html dir="rtl">
+            const win = window.open('', '_blank');
+            win.document.write(`<html dir="rtl">
 <head>
     <title>فاتورة: ${inv.desc}</title>
     <style>
@@ -3162,7 +3146,7 @@ win.document.write(`<html dir="rtl">
     </style>
 </head>
 <body>`);
-    win.document.write(`<div class="hdr">
+            win.document.write(`<div class="hdr">
         <div>
             <h2>${inv.desc}</h2>
             <div>الفئة: ${inv.cat} | الدفع: ${inv.payment || 'نقدي'}</div>
@@ -3171,8 +3155,8 @@ win.document.write(`<html dir="rtl">
             <h3>${inv.date}</h3>
         </div>
     </div>`);
-    if(shopFilterCat !== 'all') win.document.write('<p><b>مفلترة حسب:</b> ' + shopFilterCat + '</p>');
-    win.document.write(`<table>
+            if (shopFilterCat !== 'all') win.document.write('<p><b>مفلترة حسب:</b> ' + shopFilterCat + '</p>');
+            win.document.write(`<table>
         <thead>
             <tr>
                 <th>الصنف</th>
@@ -3183,11 +3167,11 @@ win.document.write(`<html dir="rtl">
         </thead>
         <tbody>`);
             items2show.forEach(it => {
-            win.document.write(`<tr>
+                win.document.write(`<tr>
                 <td>${it.name}</td>
                 <td>${it.qty}</td>
                 <td>${it.price.toFixed(2)}</td>
-                <td>${(it.qty*it.price).toFixed(2)} د.أ</td>
+                <td>${(it.qty * it.price).toFixed(2)} د.أ</td>
             </tr>`);
             });
             win.document.write(`</tbody>
@@ -3198,43 +3182,45 @@ win.document.write(`<html dir="rtl">
             </tr>
         </tfoot>
     </table>`);
-    if(inv.note) win.document.write('<p style="margin-top:20px"><b>ملاحظات:</b> '+inv.note+'</p>');
-    win.document.write('<script>window.print();<\\/script></body></html>');
-win.document.close();
-}
+            if (inv.note) win.document.write('<p style="margin-top:20px"><b>ملاحظات:</b> ' + inv.note + '</p>');
+            win.document.write('<script>window.print();<\\/script></body></html>');
+            win.document.close();
+        }
 
-function renderExpTable() {
-renderExpDash();
-const q = (document.getElementById('exp-search') || {}).value || '';
-const { from, to } = getDateRange();
+        function renderExpTable() {
+            renderExpDash();
+            const q = (document.getElementById('exp-search') || {}).value || '';
+            const { from, to } = getDateRange();
 
-let invoices = state.expenses.filter(e => {
-const d = new Date(e.date);
-return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '' )).includes(q)); }); const allSubcats=[...new
-    Set(invoices.flatMap(inv=> (inv.items || []).map(it => it.subcat)))];
-    document.getElementById('shop-tabs').innerHTML =
-    `<span class="shop-tab ${shopFilterCat === 'all' ? 'active' : ''}" onclick="setShopFilter('all')">الكل <span class="tab-amt">${invoices.length}</span></span>` +
-    allSubcats.map(sub => {
-    const subAmt = invoices.reduce((s, inv) => s + (inv.items || []).filter(it => it.subcat === sub).reduce((ss, it) =>
-    ss + it.qty * it.price, 0), 0);
-    return `<span class="shop-tab ${shopFilterCat === sub ? 'active' : ''}" onclick="setShopFilter('${sub}')">${shopSubcatIcon(sub)} ${sub} <span class="tab-amt">${subAmt.toFixed(0)} د.أ</span></span>`;
-    }).join('');
+            let invoices = state.expenses.filter(e => {
+                const d = new Date(e.date);
+                return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '')).includes(q));
+            }); const allSubcats = [...new
+                Set(invoices.flatMap(inv => (inv.items || []).map(it => it.subcat)))];
+            const allAmt = invoices.reduce((s, inv) => s + inv.amount, 0);
+            document.getElementById('shop-tabs').innerHTML =
+                `<span class="shop-tab ${shopFilterCat === 'all' ? 'active' : ''}" onclick="setShopFilter('all')">الكل <span class="tab-amt">${allAmt.toFixed(0)} د.أ</span></span>` +
+                allSubcats.map(sub => {
+                    const subAmt = invoices.reduce((s, inv) => s + (inv.items || []).filter(it => it.subcat === sub).reduce((ss, it) =>
+                        ss + it.qty * it.price, 0), 0);
+                    return `<span class="shop-tab ${shopFilterCat === sub ? 'active' : ''}" onclick="setShopFilter('${sub}')">${shopSubcatIcon(sub)} ${sub} <span class="tab-amt">${subAmt.toFixed(0)} د.أ</span></span>`;
+                }).join('');
 
-    const filtered = (shopFilterCat === 'all' ? invoices : invoices.filter(inv => (inv.items || []).some(it => it.subcat
-    === shopFilterCat))).sort((a, b) => new Date(b.date) - new Date(a.date));
+            const filtered = (shopFilterCat === 'all' ? invoices : invoices.filter(inv => (inv.items || []).some(it => it.subcat
+                === shopFilterCat))).sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    document.getElementById('exp-table').innerHTML = filtered.length ? filtered.map(inv => {
-    const items2show = shopFilterCat === 'all' ? (inv.items || []) : (inv.items || []).filter(it => it.subcat ===
-    shopFilterCat);
-    const displayTotal = items2show.reduce((s, it) => s + it.qty * it.price, 0);
-    const itemsHtml = items2show.map(it => {
-    const col = shopSubcatColor(it.subcat);
-    return `<div class="inv-item-row">
+            document.getElementById('exp-table').innerHTML = filtered.length ? filtered.map(inv => {
+                const items2show = shopFilterCat === 'all' ? (inv.items || []) : (inv.items || []).filter(it => it.subcat ===
+                    shopFilterCat);
+                const displayTotal = items2show.reduce((s, it) => s + it.qty * it.price, 0);
+                const itemsHtml = items2show.map(it => {
+                    const col = shopSubcatColor(it.subcat);
+                    return `<div class="inv-item-row">
         <div class="inv-subcat-dot" style="background:${col}"></div><span class="inv-item-name">${it.name}</span><span class="inv-item-qty">×${it.qty}</span><span class="inv-subcat-badge"
             style="background:${col}22;color:${col}">${it.subcat}</span><span class="inv-item-price">${(it.qty * it.price).toFixed(2)} د.أ</span>
     </div>`;
-    }).join('');
-    return `<div class="invoice-card">
+                }).join('');
+                return `<div class="invoice-card">
         <div class="invoice-hdr" onclick="toggleInvoice(${inv.id})">
             <div class="invoice-icon" style="background:${catColor(inv.cat)}22;color:${catColor(inv.cat)}">📄
             </div>
@@ -3250,37 +3236,69 @@ return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '' )).include
         </div>
         <div class="invoice-body" id="inv-body-${inv.id}">${itemsHtml}<div
                 style="display:flex;justify-content:space-between;padding-top:8px;margin-top:4px;border-top:1px solid var(--border)">
-                <span style="font-size:11px;color:var(--text3)">إجمالي المصروف</span><span
-                    style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--red)">${inv.amount.toFixed(2)} د.أ</span></div>
+                <span style="font-size:11px;color:var(--text3)">${shopFilterCat === 'all' ? 'إجمالي الفاتورة' : 'إجمالي الأصناف المحددة'}</span><span
+                    style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--red)">${(shopFilterCat === 'all' ? inv.amount : displayTotal).toFixed(2)} د.أ</span></div>
+                ${(shopFilterCat !== 'all' && (inv.items || []).length > items2show.length) ? `<button class="btn btn-sm btn-primary" style="width:100%; justify-content:center; margin-top:12px;" onclick="event.stopPropagation(); setShopFilter('all'); setTimeout(() => { const b = document.getElementById('inv-body-${inv.id}'); if(b){ b.classList.add('open'); b.parentElement.scrollIntoView({behavior:'smooth', block:'center'}); } }, 50);">عرض الفاتورة كاملة (${inv.amount.toFixed(2)} د.أ)</button>` : ''}
         </div>
     </div>`;
-    }).join('') : '<div class="empty">لا مصاريف في هذه الفترة — أضف مصروف جديد</div>';
-    }
-
-    // ═══════════════════════════════════════
-    // SUBSCRIPTIONS
-    // ═══════════════════════════════════════
-    function addSubscription() {
-    const name = document.getElementById('m-sub-name').value.trim();
-    const icon = document.getElementById('m-sub-icon').value || '📦';
-    const amount = parseFloat(document.getElementById('m-sub-amount').value);
-    const freq = document.getElementById('m-sub-freq').value;
-    const cat = document.getElementById('m-sub-cat').value;
-    const next = document.getElementById('m-sub-next').value || td();
-    const note = document.getElementById('m-sub-note').value;
-    if (!name || isNaN(amount) || amount <= 0) { toast('أدخل البيانات'); return; } state.subscriptions.push({ id:
-        state.nextId++, name, icon, amount, freq, cat, next, note }); saveState(); closeModal('addSub'); renderSubs();
-        renderOverview(); toast('تمت الإضافة ✓'); ['m-sub-name', 'm-sub-icon' , 'm-sub-amount' , 'm-sub-next'
-        , 'm-sub-note' ].forEach(id=> document.getElementById(id).value = '');
+            }).join('') : '<div class="empty">لا مصاريف في هذه الفترة — أضف مصروف جديد</div>';
         }
-        function delSub(id) { state.subscriptions = state.subscriptions.filter(s => s.id !== id); saveState();
-        renderSubs(); renderOverview(); toast('تم الحذف'); }
+
+        // ═══════════════════════════════════════
+        // SUBSCRIPTIONS
+        // ═══════════════════════════════════════
+        function addSubscription() {
+            const name = document.getElementById('m-sub-name').value.trim();
+            const icon = document.getElementById('m-sub-icon').value || '📦';
+            const amount = parseFloat(document.getElementById('m-sub-amount').value);
+            const freq = document.getElementById('m-sub-freq').value;
+            const cat = document.getElementById('m-sub-cat').value;
+            const next = document.getElementById('m-sub-next').value || td();
+            const note = document.getElementById('m-sub-note').value;
+            if (!name || isNaN(amount) || amount <= 0) { toast('أدخل البيانات'); return; } state.subscriptions.push({
+                id:
+                    state.nextId++, name, icon, amount, freq, cat, next, note
+            }); saveState(); closeModal('addSub'); renderSubs();
+            renderOverview(); toast('تمت الإضافة ✓');['m-sub-name', 'm-sub-icon', 'm-sub-amount', 'm-sub-next'
+                , 'm-sub-note'].forEach(id => document.getElementById(id).value = '');
+        }
+        function delSub(id) {
+            state.subscriptions = state.subscriptions.filter(s => s.id !== id); saveState();
+            renderSubs(); renderOverview(); toast('تم الحذف');
+        }
+        function updateFixedSubs() {
+            if (!state.fixedSubs) state.fixedSubs = { social: 0, health: 0 };
+            state.fixedSubs.social = parseFloat(document.getElementById('m-fixed-social').value) || 0;
+            state.fixedSubs.health = parseFloat(document.getElementById('m-fixed-health').value) || 0;
+            saveState(); closeModal('editFixedDeds'); renderSubs(); renderOverview(); toast('تم التحديث ✓');
+        }
         function renderSubs() {
-        const monthly = calcSubMonthly();
-        const daily = state.subscriptions.filter(s => s.freq === 'daily').reduce((s, x) => s + x.amount, 0);
-        const mOnly = state.subscriptions.filter(s => s.freq === 'monthly').reduce((s, x) => s + x.amount, 0);
-        const yearly = state.subscriptions.filter(s => s.freq === 'yearly').reduce((s, x) => s + x.amount, 0);
-        document.getElementById('sub-metrics').innerHTML = `
+            if (!state.fixedSubs) state.fixedSubs = { social: 0, health: 0 };
+            const fL = document.getElementById('fixed-deds-list');
+            if (fL) {
+                fL.innerHTML = `
+            <div class="sub-item">
+                <div class="sub-icon" style="background:rgba(52,211,153,0.15)">🛡️</div>
+                <div class="sub-info"><div class="sub-name">الضمان الاجتماعي</div><div class="sub-meta">اقتطاع ثابت</div></div>
+                <div class="sub-amt" style="text-align:left">${state.fixedSubs.social.toFixed(2)} د.أ</div>
+            </div>
+            <div class="sub-item">
+                <div class="sub-icon" style="background:rgba(239,68,68,0.15)">🏥</div>
+                <div class="sub-info"><div class="sub-name">التأمين الصحي</div><div class="sub-meta">اقتطاع ثابت</div></div>
+                <div class="sub-amt" style="text-align:left">${state.fixedSubs.health.toFixed(2)} د.أ</div>
+            </div>
+            `;
+            }
+            const socEl = document.getElementById('m-fixed-social');
+            if (socEl) socEl.value = state.fixedSubs.social;
+            const helEl = document.getElementById('m-fixed-health');
+            if (helEl) helEl.value = state.fixedSubs.health;
+
+            const monthly = calcSubMonthly();
+            const daily = state.subscriptions.filter(s => s.freq === 'daily').reduce((s, x) => s + x.amount, 0);
+            const mOnly = state.subscriptions.filter(s => s.freq === 'monthly').reduce((s, x) => s + x.amount, 0);
+            const yearly = state.subscriptions.filter(s => s.freq === 'yearly').reduce((s, x) => s + x.amount, 0);
+            document.getElementById('sub-metrics').innerHTML = `
         <div class="metric m-r">
             <div class="metric-lbl">يومي (شهرياً)</div>
             <div class="metric-val">${(daily * 30).toFixed(0)} <span
@@ -3302,10 +3320,10 @@ return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '' )).include
                     style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div>
         </div>
         `;
-        ['daily', 'monthly', 'yearly'].forEach(freq => {
-        const list = state.subscriptions.filter(s => s.freq === freq);
-        const freqLabel = { daily: 'يومي', monthly: 'شهري', yearly: 'سنوي' };
-        document.getElementById('subs-' + freq).innerHTML = list.length ? list.map(s => `
+            ['daily', 'monthly', 'yearly'].forEach(freq => {
+                const list = state.subscriptions.filter(s => s.freq === freq);
+                const freqLabel = { daily: 'يومي', monthly: 'شهري', yearly: 'سنوي' };
+                document.getElementById('subs-' + freq).innerHTML = list.length ? list.map(s => `
         <div class="sub-item">
             <div class="sub-icon" style="background:rgba(124,109,250,0.15)">${s.icon || '📦'}</div>
             <div class="sub-info">
@@ -3314,41 +3332,79 @@ return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '' )).include
             </div>
             <div style="text-align:left">
                 <div class="sub-amt">${s.amount} د.أ</div>
-                <div class="sub-next">تجديد: ${s.next}</div>
+                <div class="sub-next" style="font-size:13px; font-weight:600; color:var(--text); margin-top:2px;">تجديد: ${s.next}</div>
             </div>
-            <button class="del-btn" onclick="delSub(${s.id})">✕</button>
+            <div style="display:flex;gap:4px;">
+                <button class="del-btn" style="color:var(--accent2);" onclick="openEditSub(${s.id})" title="تعديل">✎</button>
+                <button class="del-btn" onclick="delSub(${s.id})">✕</button>
+            </div>
         </div>`).join('') : `<div class="empty">لا اشتراكات ${freqLabel[freq]}ة</div>`;
-        });
+            });
+        }
+
+        // ═══════════════════════════════════════
+        // EDIT SUBSCRIPTION
+        // ═══════════════════════════════════════
+        let editingSubId = null;
+        function openEditSub(id) {
+            const s = state.subscriptions.find(x => x.id === id);
+            if (!s) return;
+            editingSubId = id;
+            document.getElementById('e-sub-name').value = s.name;
+            document.getElementById('e-sub-icon').value = s.icon || '📦';
+            document.getElementById('e-sub-amount').value = s.amount;
+            document.getElementById('e-sub-freq').value = s.freq;
+            document.getElementById('e-sub-cat').value = s.cat || 'أخرى';
+            document.getElementById('e-sub-next').value = s.next;
+            document.getElementById('e-sub-note').value = s.note || '';
+            openModal('editSub');
+        }
+        function saveEditSub() {
+            const s = state.subscriptions.find(x => x.id === editingSubId);
+            if (!s) return;
+            s.name = document.getElementById('e-sub-name').value.trim();
+            s.icon = document.getElementById('e-sub-icon').value || '📦';
+            s.amount = parseFloat(document.getElementById('e-sub-amount').value) || 0;
+            s.freq = document.getElementById('e-sub-freq').value;
+            s.cat = document.getElementById('e-sub-cat').value;
+            s.next = document.getElementById('e-sub-next').value;
+            s.note = document.getElementById('e-sub-note').value;
+            saveState(); closeModal('editSub'); renderSubs(); renderOverview(); toast('تم تعديل الاشتراك ✓');
         }
 
         // ═══════════════════════════════════════
         // MAINTENANCE
         // ═══════════════════════════════════════
-        const PRIO_COLORS = { urgent: 'var(--red)', high: 'var(--orange)', medium: 'var(--amber)', low: 'var(--green)'
-        };
+        const PRIO_COLORS = { urgent: 'var(--red)', high: 'var(--orange)', medium: 'var(--amber)', low: 'var(--green)' };
         const PRIO_LABELS = { urgent: 'عاجل', high: 'مهم', medium: 'متوسط', low: 'منخفض' };
         const STATUS_LABELS = { pending: 'قيد الانتظار', scheduled: 'مجدولة', done: 'منجزة' };
         function addMaintenance() {
-        const desc = document.getElementById('m-maint-desc').value.trim();
-        const cost = parseFloat(document.getElementById('m-maint-cost').value) || 0;
-        const priority = document.getElementById('m-maint-priority').value;
-        const cat = document.getElementById('m-maint-cat').value;
-        const date = document.getElementById('m-maint-date').value || td();
-        const status = document.getElementById('m-maint-status').value;
-        const note = document.getElementById('m-maint-note').value;
-        if (!desc) { toast('أدخل الوصف'); return; }
-        state.maintenance.push({ id: state.nextId++, desc, cost, priority, cat, date, status, note });
-        saveState(); closeModal('addMaint'); renderMaint(); renderOverview(); toast('تمت الإضافة ✓');
-        ['m-maint-desc', 'm-maint-cost', 'm-maint-note'].forEach(id => document.getElementById(id).value = '');
+            const desc = document.getElementById('m-maint-desc').value.trim();
+            const cost = parseFloat(document.getElementById('m-maint-cost').value) || 0;
+            const priority = document.getElementById('m-maint-priority').value;
+            const cat = document.getElementById('m-maint-cat').value;
+            const date = document.getElementById('m-maint-date').value || td();
+            const status = document.getElementById('m-maint-status').value;
+            const note = document.getElementById('m-maint-note').value;
+            if (!desc) { toast('أدخل الوصف'); return; }
+            state.maintenance.push({ id: state.nextId++, desc, cost, priority, cat, date, status, note });
+            saveState(); closeModal('addMaint'); renderMaint(); renderOverview(); toast('تمت الإضافة ✓');
+            ['m-maint-desc', 'm-maint-cost', 'm-maint-note'].forEach(id => document.getElementById(id).value = '');
         }
-        function delMaint(id) { state.maintenance = state.maintenance.filter(m => m.id !== id); saveState();
-        renderMaint(); renderOverview(); }
-        function doneMaint(id) { const m = state.maintenance.find(x => x.id === id); if (m) { m.status = 'done';
-        saveState(); renderMaint(); renderOverview(); toast('تم تحديد الصيانة كمنجزة ✓'); } }
+        function delMaint(id) {
+            state.maintenance = state.maintenance.filter(m => m.id !== id); saveState();
+            renderMaint(); renderOverview();
+        }
+        function doneMaint(id) {
+            const m = state.maintenance.find(x => x.id === id); if (m) {
+                m.status = 'done';
+                saveState(); renderMaint(); renderOverview(); toast('تم تحديد الصيانة كمنجزة ✓');
+            }
+        }
         function renderMaint() {
-        const totalCost = state.maintenance.filter(m => m.status !== 'done').reduce((s, m) => s + m.cost, 0);
-        const pending = state.maintenance.filter(m => m.status !== 'done');
-        document.getElementById('maint-metrics').innerHTML = `
+            const totalCost = state.maintenance.filter(m => m.status !== 'done').reduce((s, m) => s + m.cost, 0);
+            const pending = state.maintenance.filter(m => m.status !== 'done');
+            document.getElementById('maint-metrics').innerHTML = `
         <div class="metric m-r">
             <div class="metric-lbl">عاجل / مهم</div>
             <div class="metric-val">${state.maintenance.filter(m => m.status !== 'done' && (m.priority === 'urgent' ||
@@ -3368,12 +3424,12 @@ return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '' )).include
             <div class="metric-val">${state.maintenance.length}</div>
         </div>
         `;
-        const urgent = state.maintenance.filter(m => m.status !== 'done' && (m.priority === 'urgent' || m.priority ===
-        'high'));
-        const scheduled = state.maintenance.filter(m => m.status !== 'done' && m.priority !== 'urgent' && m.priority !==
-        'high');
-        const renderList = (arr, el) => {
-        document.getElementById(el).innerHTML = arr.length ? arr.map(m => `
+            const urgent = state.maintenance.filter(m => m.status !== 'done' && (m.priority === 'urgent' || m.priority ===
+                'high'));
+            const scheduled = state.maintenance.filter(m => m.status !== 'done' && m.priority !== 'urgent' && m.priority !==
+                'high');
+            const renderList = (arr, el) => {
+                document.getElementById(el).innerHTML = arr.length ? arr.map(m => `
         <div class="maint-item">
             <div class="maint-urgency" style="background:${PRIO_COLORS[m.priority]}"></div>
             <div class="maint-info">
@@ -3387,11 +3443,11 @@ return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '' )).include
             <button class="btn btn-sm btn-green" onclick="doneMaint(${m.id})" style="margin-left:4px">✓</button>
             <button class="del-btn" onclick="delMaint(${m.id})">✕</button>
         </div>`).join('') : '<div class="empty">لا بنود</div>';
-        };
-        renderList(urgent, 'maint-urgent');
-        renderList(scheduled, 'maint-scheduled');
-        const all = state.maintenance.sort((a, b) => new Date(b.date) - new Date(a.date));
-        document.getElementById('maint-table').innerHTML = all.length ? `
+            };
+            renderList(urgent, 'maint-urgent');
+            renderList(scheduled, 'maint-scheduled');
+            const all = state.maintenance.sort((a, b) => new Date(b.date) - new Date(a.date));
+            document.getElementById('maint-table').innerHTML = all.length ? `
         <table>
             <thead>
                 <tr>
@@ -3424,61 +3480,65 @@ return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '' )).include
         // ═══════════════════════════════════════
         const LOAN_TYPES = { bank: 'بنكي', personal: 'شخصي', car: 'سيارة', home: 'منزل', other: 'أخرى' };
         function addLoan() {
-        const name = document.getElementById('m-loan-name').value.trim();
-        const total = parseFloat(document.getElementById('m-loan-total').value);
-        const remaining = parseFloat(document.getElementById('m-loan-remaining').value);
-        const monthly = parseFloat(document.getElementById('m-loan-monthly').value);
-        const interest = parseFloat(document.getElementById('m-loan-interest').value) || 0;
-        const start = document.getElementById('m-loan-start').value || td();
-        const end = document.getElementById('m-loan-end').value || td();
-        const type = document.getElementById('m-loan-type').value;
-        if (!name || isNaN(total) || isNaN(remaining) || isNaN(monthly)) { toast('يرجى ملء الحقول المطلوبة'); return; }
-        state.loans.push({ id: state.nextId++, name, total, remaining, monthly, interest, start, end, type });
-        saveState(); closeModal('addLoan'); renderLoans(); renderOverview(); toast('تمت الإضافة ✓');
-        ['m-loan-name', 'm-loan-total', 'm-loan-remaining', 'm-loan-monthly', 'm-loan-interest', 'm-loan-start',
-        'm-loan-end'].forEach(id => document.getElementById(id).value = '');
+            const name = document.getElementById('m-loan-name').value.trim();
+            const total = parseFloat(document.getElementById('m-loan-total').value);
+            const remaining = parseFloat(document.getElementById('m-loan-remaining').value);
+            const monthly = parseFloat(document.getElementById('m-loan-monthly').value);
+            const interest = parseFloat(document.getElementById('m-loan-interest').value) || 0;
+            const start = document.getElementById('m-loan-start').value || td();
+            const end = document.getElementById('m-loan-end').value || td();
+            const type = document.getElementById('m-loan-type').value;
+            if (!name || isNaN(total) || isNaN(remaining) || isNaN(monthly)) { toast('يرجى ملء الحقول المطلوبة'); return; }
+            state.loans.push({ id: state.nextId++, name, total, remaining, monthly, interest, start, end, type });
+            saveState(); closeModal('addLoan'); renderLoans(); renderOverview(); toast('تمت الإضافة ✓');
+            ['m-loan-name', 'm-loan-total', 'm-loan-remaining', 'm-loan-monthly', 'm-loan-interest', 'm-loan-start',
+                'm-loan-end'].forEach(id => document.getElementById(id).value = '');
         }
-        function delLoan(id) { state.loans = state.loans.filter(l => l.id !== id); saveState(); renderLoans();
-        renderOverview(); }
+        function delLoan(id) {
+            state.loans = state.loans.filter(l => l.id !== id); saveState(); renderLoans();
+            renderOverview();
+        }
         let editingLoanId = null;
         function openEditLoan(id) {
-        const l = state.loans.find(x => x.id === id);
-        if (!l) return;
-        editingLoanId = id;
-        document.getElementById('e-loan-name').value = l.name;
-        document.getElementById('e-loan-total').value = l.total;
-        document.getElementById('e-loan-remaining').value = l.remaining;
-        document.getElementById('e-loan-monthly').value = l.monthly;
-        document.getElementById('e-loan-interest').value = l.interest;
-        document.getElementById('e-loan-start').value = l.start;
-        document.getElementById('e-loan-end').value = l.end;
-        document.getElementById('e-loan-type').value = l.type;
-        openModal('editLoan');
+            const l = state.loans.find(x => x.id === id);
+            if (!l) return;
+            editingLoanId = id;
+            document.getElementById('e-loan-name').value = l.name;
+            document.getElementById('e-loan-total').value = l.total;
+            document.getElementById('e-loan-remaining').value = l.remaining;
+            document.getElementById('e-loan-monthly').value = l.monthly;
+            document.getElementById('e-loan-interest').value = l.interest;
+            document.getElementById('e-loan-start').value = l.start;
+            document.getElementById('e-loan-end').value = l.end;
+            document.getElementById('e-loan-type').value = l.type;
+            openModal('editLoan');
         }
         function saveEditLoan() {
-        const l = state.loans.find(x => x.id === editingLoanId);
-        if (!l) return;
-        const name = document.getElementById('e-loan-name').value.trim();
-        const total = parseFloat(document.getElementById('e-loan-total').value);
-        const remaining = parseFloat(document.getElementById('e-loan-remaining').value);
-        const monthly = parseFloat(document.getElementById('e-loan-monthly').value);
-        const interest = parseFloat(document.getElementById('e-loan-interest').value) || 0;
-        const start = document.getElementById('e-loan-start').value || td();
-        const end = document.getElementById('e-loan-end').value || td();
-        const type = document.getElementById('e-loan-type').value;
-        if (!name || isNaN(total) || isNaN(remaining) || isNaN(monthly)) { toast('يرجى ملء الحقول المطلوبة'); return; }
-        l.name = name; l.total = total; l.remaining = remaining; l.monthly = monthly; l.interest = interest; l.start =
-        start; l.end = end; l.type = type;
-        saveState(); closeModal('editLoan'); renderLoans(); renderOverview(); toast('تم التعديل ✓');
+            const l = state.loans.find(x => x.id === editingLoanId);
+            if (!l) return;
+            const name = document.getElementById('e-loan-name').value.trim();
+            const total = parseFloat(document.getElementById('e-loan-total').value);
+            const remaining = parseFloat(document.getElementById('e-loan-remaining').value);
+            const monthly = parseFloat(document.getElementById('e-loan-monthly').value);
+            const interest = parseFloat(document.getElementById('e-loan-interest').value) || 0;
+            const start = document.getElementById('e-loan-start').value || td();
+            const end = document.getElementById('e-loan-end').value || td();
+            const type = document.getElementById('e-loan-type').value;
+            if (!name || isNaN(total) || isNaN(remaining) || isNaN(monthly)) { toast('يرجى ملء الحقول المطلوبة'); return; }
+            l.name = name; l.total = total; l.remaining = remaining; l.monthly = monthly; l.interest = interest; l.start =
+                start; l.end = end; l.type = type;
+            saveState(); closeModal('editLoan'); renderLoans(); renderOverview(); toast('تم التعديل ✓');
         }
         function payLoan(id) {
-        const l = state.loans.find(x => x.id === id);
-        if (!l) return;
-        const pay = prompt('أدخل مبلغ الدفعة (د.أ):');
-        const amt = parseFloat(pay);
-        if (isNaN(amt) || amt <= 0) return; l.remaining=Math.max(0, l.remaining - amt); saveState(); renderLoans();
-            renderOverview(); toast('تم تسجيل الدفعة ✓'); } function renderLoans() { const
-            totalRem=state.loans.reduce((s, l)=> s + l.remaining, 0);
+            const l = state.loans.find(x => x.id === id);
+            if (!l) return;
+            const pay = prompt('أدخل مبلغ الدفعة (د.أ):');
+            const amt = parseFloat(pay);
+            if (isNaN(amt) || amt <= 0) return; l.remaining = Math.max(0, l.remaining - amt); saveState(); renderLoans();
+            renderOverview(); toast('تم تسجيل الدفعة ✓');
+        } function renderLoans() {
+            const
+            totalRem = state.loans.reduce((s, l) => s + l.remaining, 0);
             const totalMonth = state.loans.reduce((s, l) => s + l.monthly, 0);
             document.getElementById('loan-metrics').innerHTML = `
             <div class="metric m-r">
@@ -3497,10 +3557,10 @@ return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '' )).include
             </div>
             `;
             document.getElementById('loan-list').innerHTML = state.loans.length ? state.loans.map(l => {
-            const paid = l.total - l.remaining;
-            const pct = Math.min(paid / l.total * 100, 100);
-            const mLeft = l.monthly > 0 ? Math.ceil(l.remaining / l.monthly) : 0;
-            return `<div class="loan-card">
+                const paid = l.total - l.remaining;
+                const pct = Math.min(paid / l.total * 100, 100);
+                const mLeft = l.monthly > 0 ? Math.ceil(l.remaining / l.monthly) : 0;
+                return `<div class="loan-card">
                 <div class="loan-hdr">
                     <div>
                         <div class="loan-name">${l.name}</div>
@@ -3542,12 +3602,12 @@ return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '' )).include
                 </div>
             </div>`;
             }).join('') : '<div class="empty" style="padding:3rem">لا قروض مسجلة — أضف من الأعلى</div>';
-            }
+        }
 
-            // ═══════════════════════════════════════
-            // BUDGET
-            // ═══════════════════════════════════════
-            function renderBudget() {
+        // ═══════════════════════════════════════
+        // BUDGET
+        // ═══════════════════════════════════════
+        function renderBudget() {
             const exps = state.expenses.filter(e => inRange(e.date));
             const byCat = {};
             exps.forEach(e => byCat[e.cat] = (byCat[e.cat] || 0) + e.amount);
@@ -3578,11 +3638,11 @@ return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '' )).include
                 <div class="stmt-box-val ${net >= 0 ? 'metric-pos' : 'metric-neg'}">${net.toFixed(2)} د.أ</div>
             </div>
             ${Object.keys(state.budgets).map(cat => {
-            const spent = byCat[cat] || 0; const bud = state.budgets[cat];
-            const pct = Math.min(spent / bud * 100, 100);
-            const over = spent > bud; const warn = pct > 75 && !over;
-            const col = over ? 'var(--red)' : warn ? 'var(--amber)' : catColor(cat);
-            return `<div class="bbar">
+                const spent = byCat[cat] || 0; const bud = state.budgets[cat];
+                const pct = Math.min(spent / bud * 100, 100);
+                const over = spent > bud; const warn = pct > 75 && !over;
+                const col = over ? 'var(--red)' : warn ? 'var(--amber)' : catColor(cat);
+                return `<div class="bbar">
                 <div class="bbar-hdr">
                     <div class="bbar-name">
                         <div class="leg-dot" style="background:${catColor(cat)}"></div>${cat}
@@ -3594,14 +3654,16 @@ return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '' )).include
                 </div>
             </div>`;
             }).join('')}`;
-            }
-            function updateBudget(cat, val) { const v = parseFloat(val); if (!isNaN(v) && v > 0) state.budgets[cat] = v;
-            else delete state.budgets[cat]; saveState(); }
+        }
+        function updateBudget(cat, val) {
+            const v = parseFloat(val); if (!isNaN(v) && v > 0) state.budgets[cat] = v;
+            else delete state.budgets[cat]; saveState();
+        }
 
-            // ═══════════════════════════════════════
-            // CATEGORIES
-            // ═══════════════════════════════════════
-            function renderCategories() {
+        // ═══════════════════════════════════════
+        // CATEGORIES
+        // ═══════════════════════════════════════
+        function renderCategories() {
             const byCat = {};
             state.expenses.forEach(e => byCat[e.cat] = (byCat[e.cat] || 0) + 1);
             document.getElementById('cats-grid').innerHTML = state.categories.map((c, i) => `
@@ -3610,13 +3672,13 @@ return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '' )).include
                 <div class="leg-dot" style="background:${c.color};width:10px;height:10px"></div>
                 <span style="font-size:13px;flex:1">${c.name}</span>
                 <span style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">${byCat[c.name]
-                    || 0}</span>
+                || 0}</span>
                 <button class="del-btn" style="color:var(--accent2)" onclick="openEditCat('${c.name}')"
                     title="تعديل">✎</button>
                 ${i >= 9 ? `<button class="del-btn" onclick="delCat('${c.name}')">✕</button>` : ''}
             </div>`).join('');
-            }
-            function addCategory() {
+        }
+        function addCategory() {
             const name = document.getElementById('new-cat-name').value.trim();
             const color = document.getElementById('new-cat-color').value;
             if (!name) { toast('أدخل اسم الفئة'); return; }
@@ -3624,25 +3686,25 @@ return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '' )).include
             state.categories.push({ name, color });
             saveState(); populateCatSelects(); renderCategories(); toast('تمت الإضافة ✓');
             document.getElementById('new-cat-name').value = '';
-            }
-            function delCat(name) {
+        }
+        function delCat(name) {
             if (state.expenses.find(e => e.cat === name)) { toast('لا يمكن حذف فئة بها مصاريف'); return; }
             state.categories = state.categories.filter(c => c.name !== name);
             delete state.budgets[name];
             saveState(); populateCatSelects(); renderCategories();
-            }
+        }
 
-            let editingCatName = null;
-            function openEditCat(name) {
+        let editingCatName = null;
+        function openEditCat(name) {
             const c = state.categories.find(x => x.name === name);
             if (!c) return;
             editingCatName = name;
             document.getElementById('e-cat-name').value = c.name;
             document.getElementById('e-cat-color').value = c.color;
             openModal('editCat');
-            }
+        }
 
-            function saveEditCat() {
+        function saveEditCat() {
             const c = state.categories.find(x => x.name === editingCatName);
             if (!c) return;
             const newName = document.getElementById('e-cat-name').value.trim();
@@ -3650,15 +3712,16 @@ return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '' )).include
             if (!newName) { toast('أدخل اسم الفئة'); return; }
 
             if (newName !== editingCatName) {
-            if (state.categories.find(x => x.name === newName)) { toast('الاسم موجود مسبقاً'); return; }
-            state.expenses.forEach(e => { if (e.cat === editingCatName) e.cat = newName; });
-            if (state.subscriptions) state.subscriptions.forEach(s => { if (s.cat === editingCatName) s.cat = newName;
-            });
-            if (state.maintenance) state.maintenance.forEach(m => { if (m.cat === editingCatName) m.cat = newName; });
-            if (state.budgets && state.budgets[editingCatName] !== undefined) {
-            state.budgets[newName] = state.budgets[editingCatName];
-            delete state.budgets[editingCatName];
-            }
+                if (state.categories.find(x => x.name === newName)) { toast('الاسم موجود مسبقاً'); return; }
+                state.expenses.forEach(e => { if (e.cat === editingCatName) e.cat = newName; });
+                if (state.subscriptions) state.subscriptions.forEach(s => {
+                    if (s.cat === editingCatName) s.cat = newName;
+                });
+                if (state.maintenance) state.maintenance.forEach(m => { if (m.cat === editingCatName) m.cat = newName; });
+                if (state.budgets && state.budgets[editingCatName] !== undefined) {
+                    state.budgets[newName] = state.budgets[editingCatName];
+                    delete state.budgets[editingCatName];
+                }
             }
             c.name = newName;
             c.color = newColor;
@@ -3674,47 +3737,51 @@ return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '' )).include
 
             closeModal('editCat');
             toast('تم التعديل ✓');
-            }
+        }
 
-            // ═══════════════════════════════════════
-            // EXPORT
-            // ═══════════════════════════════════════
-            function getExpData() {
+        // ═══════════════════════════════════════
+        // EXPORT
+        // ═══════════════════════════════════════
+        function getExpData() {
             const p = document.getElementById('exp-period-sel')?.value || 'all';
             const cat = document.getElementById('exp-cat-sel')?.value || 'all';
             return state.expenses.filter(e => {
-            const d = new Date(e.date); const now = new Date();
-            if (p === 'month' && (d.getMonth() !== state.periodMonth || d.getFullYear() !== state.periodYear)) return
-            false;
-            if (p === 'year' && d.getFullYear() !== state.periodYear) return false;
-            if (cat !== 'all' && e.cat !== cat) return false;
-            return true;
+                const d = new Date(e.date); const now = new Date();
+                if (p === 'month' && (d.getMonth() !== state.periodMonth || d.getFullYear() !== state.periodYear)) return
+                false;
+                if (p === 'year' && d.getFullYear() !== state.periodYear) return false;
+                if (cat !== 'all' && e.cat !== cat) return false;
+                return true;
             });
-            }
-            function renderExport() {
+        }
+        function renderExport() {
             populateCatSelects();
             const data = getExpData();
             const el = document.getElementById('exp-stats');
             if (el) el.textContent = `${data.length} معاملة — إجمالي: ${data.reduce((s, e) => s + e.amount,
-            0).toFixed(2)} د.أ`;
-            }
-            document.addEventListener('change', e => { if (['exp-period-sel', 'exp-cat-sel'].includes(e.target.id))
-            renderExport(); });
-            function dl(content, filename, type) { const a = document.createElement('a'); a.href =
-            URL.createObjectURL(new Blob([content], { type })); a.download = filename; a.click(); }
-            function exportCSV() {
+                0).toFixed(2)} د.أ`;
+        }
+        document.addEventListener('change', e => {
+            if (['exp-period-sel', 'exp-cat-sel'].includes(e.target.id))
+                renderExport();
+        });
+        function dl(content, filename, type) {
+            const a = document.createElement('a'); a.href =
+                URL.createObjectURL(new Blob([content], { type })); a.download = filename; a.click();
+        }
+        function exportCSV() {
             const rows = [['التاريخ', 'الوصف', 'الفئة', 'المبلغ'], ...getExpData().map(e => [e.date, e.desc, e.cat,
             e.amount])];
             dl('\uFEFF' + rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n'), 'مصاريف.csv',
-            'text/csv;charset=utf-8');
+                'text/csv;charset=utf-8');
             toast('تم تصدير CSV ✓');
-            }
-            function exportJSON() {
+        }
+        function exportJSON() {
             dl(JSON.stringify({ ...state, exportDate: new Date().toISOString() }, null, 2), 'مصاريفي-backup.json',
-            'application/json');
+                'application/json');
             toast('تم تصدير JSON ✓');
-            }
-            function exportHTML() {
+        }
+        function exportHTML() {
             const data = getExpData(); const total = data.reduce((s, e) => s + e.amount, 0);
             const byCat = {}; data.forEach(e => byCat[e.cat] = (byCat[e.cat] || 0) + e.amount);
             const inc = monthlyIncome();
@@ -3853,109 +3920,114 @@ return d >= from && d <= to && (!q || (e.desc + e.cat + (e.note || '' )).include
 
             </html>`;
             dl(html, 'تقرير-المصاريف.html', 'text/html;charset=utf-8'); toast('تم تصدير التقرير ✓');
-            }
-            function handleImport(event) {
+        }
+        function handleImport(event) {
             const file = event.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = e => {
-            try {
-            const data = JSON.parse(e.target.result);
-            if (data.expenses) state.expenses = [...state.expenses, ...data.expenses.filter(ne =>
-            !state.expenses.find(oe => oe.id === ne.id))];
-            if (data.categories) data.categories.forEach(c => { if (!state.categories.find(ec => ec.name === c.name))
-            state.categories.push(c); });
-            if (data.budgets) Object.assign(state.budgets, data.budgets);
-            if (data.incomeSources) state.incomeSources = [...state.incomeSources, ...(data.incomeSources ||
-            []).filter(n => !state.incomeSources.find(o => o.id === n.id))];
-            if (data.freelanceLog) state.freelanceLog = [...state.freelanceLog, ...(data.freelanceLog || []).filter(n =>
-            !state.freelanceLog.find(o => o.id === n.id))];
-            if (data.subscriptions) state.subscriptions = [...state.subscriptions, ...(data.subscriptions ||
-            []).filter(n => !state.subscriptions.find(o => o.id === n.id))];
-            if (data.loans) state.loans = [...state.loans, ...(data.loans || []).filter(n => !state.loans.find(o => o.id
-            === n.id))];
-            if (data.maintenance) state.maintenance = [...state.maintenance, ...(data.maintenance || []).filter(n =>
-            !state.maintenance.find(o => o.id === n.id))];
-            if (data.incomeDeductions) state.incomeDeductions = [...(state.incomeDeductions||[]),
-            ...(data.incomeDeductions || []).filter(n => !(state.incomeDeductions||[]).find(o => o.id === n.id))];
-            saveState(); populateCatSelects(); renderOverview(); toast('تم الاستيراد بنجاح ✓');
-            } catch { toast('خطأ في قراءة الملف'); }
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.expenses) state.expenses = [...state.expenses, ...data.expenses.filter(ne =>
+                        !state.expenses.find(oe => oe.id === ne.id))];
+                    if (data.categories) data.categories.forEach(c => {
+                        if (!state.categories.find(ec => ec.name === c.name))
+                            state.categories.push(c);
+                    });
+                    if (data.budgets) Object.assign(state.budgets, data.budgets);
+                    if (data.incomeSources) state.incomeSources = [...state.incomeSources, ...(data.incomeSources ||
+                        []).filter(n => !state.incomeSources.find(o => o.id === n.id))];
+                    if (data.freelanceLog) state.freelanceLog = [...state.freelanceLog, ...(data.freelanceLog || []).filter(n =>
+                        !state.freelanceLog.find(o => o.id === n.id))];
+                    if (data.subscriptions) state.subscriptions = [...state.subscriptions, ...(data.subscriptions ||
+                        []).filter(n => !state.subscriptions.find(o => o.id === n.id))];
+                    if (data.loans) state.loans = [...state.loans, ...(data.loans || []).filter(n => !state.loans.find(o => o.id
+                        === n.id))];
+                    if (data.maintenance) state.maintenance = [...state.maintenance, ...(data.maintenance || []).filter(n =>
+                        !state.maintenance.find(o => o.id === n.id))];
+                    if (data.incomeDeductions) state.incomeDeductions = [...(state.incomeDeductions || []),
+                    ...(data.incomeDeductions || []).filter(n => !(state.incomeDeductions || []).find(o => o.id === n.id))];
+                    saveState(); populateCatSelects(); renderOverview(); toast('تم الاستيراد بنجاح ✓');
+                } catch { toast('خطأ في قراءة الملف'); }
             };
             reader.readAsText(file);
-            }
+        }
 
-            // ═══════════════════════════════════════
-            // MODALS + TOAST
-            // ═══════════════════════════════════════
-            function openModal(name) {
+        // ═══════════════════════════════════════
+        // MODALS + TOAST
+        // ═══════════════════════════════════════
+        function openModal(name) {
             if (name === 'addExpense') { document.getElementById('m-exp-date').value = td(); }
             if (name === 'addIncome') { document.getElementById('m-inc-start').value = td(); }
             if (name === 'addSub') { document.getElementById('m-sub-next').value = td(); }
             if (name === 'addMaint') { document.getElementById('m-maint-date').value = td(); }
             if (name === 'addLoan') { document.getElementById('m-loan-start').value = td(); }
             if (name === 'addInvoice') {
-            document.getElementById('inv-date').value = td();
-            if (document.getElementById('inv-items-container').children.length === 0) addInvItemRow();
+                document.getElementById('inv-date').value = td();
+                if (document.getElementById('inv-items-container').children.length === 0) addInvItemRow();
             }
             document.getElementById('modal-' + name).classList.add('open');
-            }
-            function closeModal(name) { document.getElementById('modal-' + name).classList.remove('open'); }
-            document.querySelectorAll('.modal-ov').forEach(mo => mo.addEventListener('click', e => { if (e.target ===
-            mo) mo.classList.remove('open'); }));
-            let toastT;
-            function toast(msg) {
+        }
+        function closeModal(name) { document.getElementById('modal-' + name).classList.remove('open'); }
+        document.querySelectorAll('.modal-ov').forEach(mo => mo.addEventListener('click', e => {
+            if (e.target ===
+                mo) mo.classList.remove('open');
+        }));
+        let toastT;
+        function toast(msg) {
             clearTimeout(toastT);
             document.getElementById('toast-msg').textContent = msg;
             document.getElementById('toast').classList.add('show');
             toastT = setTimeout(() => document.getElementById('toast').classList.remove('show'), 2800);
-            }
+        }
 
-            function updateDatalists() {
+        function updateDatalists() {
             const exps = [...new Set(state.expenses.map(e => e.desc))];
             const listExp = exps.map(x => '<option value="' + x + '">').join('');
-                if (document.getElementById('list-exp-desc')) document.getElementById('list-exp-desc').innerHTML =
+            if (document.getElementById('list-exp-desc')) document.getElementById('list-exp-desc').innerHTML =
                 listExp;
-                if (document.getElementById('list-m-exp-desc')) document.getElementById('list-m-exp-desc').innerHTML =
+            if (document.getElementById('list-m-exp-desc')) document.getElementById('list-m-exp-desc').innerHTML =
                 listExp;
 
-                const fls = [...new Set(state.freelanceLog.map(f => f.desc))];
-                if (document.getElementById('list-fl-desc')) document.getElementById('list-fl-desc').innerHTML =
+            const fls = [...new Set(state.freelanceLog.map(f => f.desc))];
+            if (document.getElementById('list-fl-desc')) document.getElementById('list-fl-desc').innerHTML =
                 fls.map(x => '<option value="' + x + '">').join('');
 
-                const incs = [...new Set(state.incomeSources.map(i => i.name))];
-                if (document.getElementById('list-m-inc-name')) document.getElementById('list-m-inc-name').innerHTML =
+            const incs = [...new Set(state.incomeSources.map(i => i.name))];
+            if (document.getElementById('list-m-inc-name')) document.getElementById('list-m-inc-name').innerHTML =
                 incs.map(x => '<option value="' + x + '">').join('');
 
-                const subs = [...new Set(state.subscriptions.map(s => s.name))];
-                if (document.getElementById('list-m-sub-name')) document.getElementById('list-m-sub-name').innerHTML =
+            const subs = [...new Set(state.subscriptions.map(s => s.name))];
+            if (document.getElementById('list-m-sub-name')) document.getElementById('list-m-sub-name').innerHTML =
                 subs.map(x => '<option value="' + x + '">').join('');
 
-                const maints = [...new Set(state.maintenance.map(m => m.desc))];
-                if (document.getElementById('list-m-maint-desc')) document.getElementById('list-m-maint-desc').innerHTML
+            const maints = [...new Set(state.maintenance.map(m => m.desc))];
+            if (document.getElementById('list-m-maint-desc')) document.getElementById('list-m-maint-desc').innerHTML
                 = maints.map(x => '<option value="' + x + '">').join('');
 
-                const loans = [...new Set(state.loans.map(l => l.name))];
-                if (document.getElementById('list-m-loan-name')) document.getElementById('list-m-loan-name').innerHTML =
+            const loans = [...new Set(state.loans.map(l => l.name))];
+            if (document.getElementById('list-m-loan-name')) document.getElementById('list-m-loan-name').innerHTML =
                 loans.map(x => '<option value="' + x + '">').join('');
-                }
+        }
 
-                // ═══════════════════════════════════════
-                // INIT
-                // ═══════════════════════════════════════
-                async function initApp() {
-                await loadState();
-                initPeriodSelects();
-                state.periodMode = 'all';
-                syncPeriodChips();
-                document.getElementById('exp-date').value = td();
-                document.getElementById('fl-date').value = td();
-                populateCatSelects();
-                updateDatalists();
-                const overviewNav = document.querySelector('.nav-item[data-page="overview"]');
-                if (overviewNav) goPage(overviewNav);
-                else renderOverview();
-                }
-                initApp();
-                </script>
-                </body>
+        // ═══════════════════════════════════════
+        // INIT
+        // ═══════════════════════════════════════
+        async function initApp() {
+            await loadState();
+            initPeriodSelects();
+            state.periodMode = 'all';
+            syncPeriodChips();
+            if (document.getElementById('exp-date')) document.getElementById('exp-date').value = td();
+            if (document.getElementById('m-exp-date')) document.getElementById('m-exp-date').value = td();
+            document.getElementById('fl-date').value = td();
+            populateCatSelects();
+            updateDatalists();
+            const overviewNav = document.querySelector('.nav-item[data-page="overview"]');
+            if (overviewNav) goPage(overviewNav);
+            else renderOverview();
+        }
+        initApp();
+    </script>
+</body>
 
-                </html>
+</html>
