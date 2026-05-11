@@ -298,19 +298,6 @@
             margin-bottom: 18px
         }
 
-        /* Top Dashboard Grid */
-        .top-dash-grid {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 14px;
-            margin-bottom: 18px;
-            align-items: stretch;
-        }
-        @media(max-width:900px) {
-            .top-dash-grid {
-                grid-template-columns: 1fr;
-            }
-        }
         .circ-prog-wrap {
             position: relative;
             width: 120px;
@@ -447,9 +434,9 @@
         /* Donut */
         .donut-wrap {
             position: relative;
-            width: 180px;
-            height: 180px;
-            margin: 0 auto 14px
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
         }
 
         .donut-center {
@@ -462,7 +449,7 @@
         }
 
         .donut-total {
-            font-size: 17px;
+            font-size: 14px;
             font-weight: 600;
             letter-spacing: -0.5px
         }
@@ -471,12 +458,6 @@
             font-size: 10px;
             color: var(--text3);
             font-family: 'JetBrains Mono', monospace
-        }
-
-        .legend {
-            display: flex;
-            flex-direction: column;
-            gap: 5px
         }
 
         .leg {
@@ -1213,7 +1194,6 @@
                 padding: 16px 16px 80px;
             }
 
-            /* padding-bottom to clear bottom-nav */
             .metrics {
                 grid-template-columns: repeat(2, 1fr)
             }
@@ -1580,14 +1560,12 @@
                 </div>
             </div>
             
-            <div class="top-dash-grid">
-                <div class="card" id="salary-dash"></div>
-                <div class="metrics" id="ov-metrics" style="margin-bottom:0; align-content:start;"></div>
-            </div>
+            <div class="metrics" id="ov-metrics"></div>
             
-            <div class="grid-2">
-                <div class="card">
-                    <div class="card-title">توزيع المصاريف</div>
+            <div class="grid-2" style="margin-bottom: 14px;">
+                <div class="card" id="salary-dash" style="display:flex; flex-direction:column; justify-content:center;"></div>
+                <div class="card" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                    <div class="card-title" style="align-self:flex-start; margin-bottom:20px; width:100%; text-align:right;">توزيع المصاريف</div>
                     <div class="donut-wrap">
                         <canvas id="donutChart" role="img" aria-label="توزيع المصاريف حسب الفئة"></canvas>
                         <div class="donut-center">
@@ -1595,19 +1573,22 @@
                             <div class="donut-lbl">إجمالي</div>
                         </div>
                     </div>
-                    <div class="legend" id="legend"></div>
                 </div>
+            </div>
+            
+            <div class="grid-2">
                 <div class="card">
                     <div class="card-title">الميزانية vs الإنفاق</div>
                     <div id="budgetBars"></div>
                 </div>
-            </div>
-            <div class="card" style="margin-bottom:16px">
-                <div class="card-title">المصاريف الشهرية (12 شهر)</div>
-                <div style="position:relative;height:180px">
-                    <canvas id="lineChart" role="img" aria-label="المصاريف الشهرية"></canvas>
+                <div class="card">
+                    <div class="card-title">المصاريف الشهرية (12 شهر)</div>
+                    <div style="position:relative;height:180px">
+                        <canvas id="lineChart" role="img" aria-label="المصاريف الشهرية"></canvas>
+                    </div>
                 </div>
             </div>
+
             <div class="grid-2">
                 <div class="card" id="ov-subs-card">
                     <div class="card-title">الاشتراكات النشطة</div>
@@ -1769,10 +1750,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
 
         <!-- ── LOANS PAGE ── -->
         <div class="page" id="page-loans">
@@ -2715,8 +2692,8 @@
             const offset = circumference - (safePct / 100) * circumference;
 
             document.getElementById('salary-dash').innerHTML = `
-                <div class="card-title" style="margin-bottom:20px;">معدل الاستهلاك من الدخل</div>
-                <div style="display:flex; justify-content:center; margin-bottom:10px;">
+                <div class="card-title" style="margin-bottom:20px; text-align:right;">معدل الاستهلاك من الدخل</div>
+                <div style="display:flex; justify-content:center; align-items:center; height:120px;">
                     <div class="circ-prog-wrap">
                         <svg width="120" height="120" viewBox="0 0 120 120">
                             <circle cx="60" cy="60" r="${radius}" fill="none" stroke="var(--surface3)" stroke-width="8" />
@@ -2774,32 +2751,27 @@
             document.getElementById('donutTotal').textContent = total.toFixed(0) + ' د.أ';
             if (charts.donut) charts.donut.destroy();
             const ctx = document.getElementById('donutChart').getContext('2d');
-            charts.donut = new Chart(ctx, { type: 'doughnut', data: { labels: cats, datasets: [{ data: vals, backgroundColor: cats.map(c => catColor(c)), borderWidth: 0, hoverOffset: 4 }] }, options: { responsive: true, maintainAspectRatio: true, cutout: '70%', plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ' ' + c.label + ': ' + c.raw.toFixed(2) + ' د.أ' } } } } });
-            
-            let legendHtml = '';
-            if (cats.length) {
-                legendHtml += `<div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text); border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:8px; font-weight:600;">
-                    <span style="flex:1; text-align:left">المبلغ</span>
-                    <span style="flex:1; text-align:center">النسبة</span>
-                    <span style="flex:1; text-align:right">الفئة</span>
-                </div>`;
-                legendHtml += cats.map(c => `
-                <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; padding:6px 0;">
-                    <span style="flex:1; text-align:left; font-family:'JetBrains Mono',monospace; font-weight:600; color:var(--text)">
-                        ${byCat[c].toFixed(2)}
-                    </span>
-                    <span style="flex:1; text-align:center; font-family:'JetBrains Mono',monospace; color:var(--text)">
-                        ${total > 0 ? (byCat[c] / total * 100).toFixed(1) : 0}%
-                    </span>
-                    <div style="display:flex; align-items:center; justify-content:flex-end; gap:8px; flex:1; color:var(--text2)">
-                        <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:80px;" title="${c}">${c}</span>
-                        <div class="leg-dot" style="background:${catColor(c)}; width:8px; height:8px; border-radius:50%; flex-shrink:0;"></div>
-                    </div>
-                </div>`).join('');
-            } else {
-                legendHtml = '<div class="empty">لا توجد بيانات</div>';
-            }
-            document.getElementById('legend').innerHTML = legendHtml;
+            charts.donut = new Chart(ctx, { 
+                type: 'doughnut', 
+                data: { 
+                    labels: cats, 
+                    datasets: [{ 
+                        data: vals, 
+                        backgroundColor: cats.map(c => catColor(c)), 
+                        borderWidth: 0, 
+                        hoverOffset: 4 
+                    }] 
+                }, 
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    cutout: '82%', 
+                    plugins: { 
+                        legend: { display: false }, 
+                        tooltip: { callbacks: { label: c => ' ' + c.label + ': ' + c.raw.toFixed(2) + ' د.أ' } } 
+                    } 
+                } 
+            });
         }
         function renderBudgetBars(exps, shopInvoices) {
             const byCat = {};
