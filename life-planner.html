@@ -514,6 +514,8 @@
         'auth/invalid-email': 'البريد الإلكتروني غير صالح.',
         'auth/user-not-found': 'لا يوجد حساب بهذا الإيميل.',
         'auth/wrong-password': 'كلمة المرور خاطئة.',
+        'auth/invalid-login-credentials': 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
+        'auth/invalid-credential': 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
         'auth/email-already-in-use': 'هذا الإيميل مستخدم مسبقاً لحساب آخر.',
         'auth/weak-password': 'كلمة المرور ضعيفة (6 أحرف على الأقل).',
         'auth/missing-email': 'يرجى إدخال البريد الإلكتروني.',
@@ -1191,6 +1193,7 @@
                 <button class="btn btn-dark" style="padding:8px 16px;" onclick="quickAddPagesInline(${b.id})" title="إضافة" ${isDone? 'disabled':''}>+</button>
             </div>
             <div style="display:flex; gap:6px;">
+              <button class="btn" style="background:var(--zaha); color:white; padding:0 12px; border-radius:8px; font-size:12px; box-shadow:none; height:32px; display:flex; align-items:center; gap:4px;" onclick="window.open('100m_reader.html', '_blank')">قراءة 📖</button>
               <button class="del-btn" onclick="openModal('book', ${b.id})">✎</button>
               <button class="del-btn" onclick="delBook(${b.id})">✕</button>
             </div>
