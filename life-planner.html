@@ -28,7 +28,7 @@
       --primary: #e65c4f; 
       --primary-light: #fbeae8;
       --black: #111111;
-      --zaha: #4f46e5; /* Distinct color for Zaha */
+      --zaha: #4f46e5;
       --zaha-light: #e0e7ff;
       --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
       --r: 24px;
@@ -49,10 +49,9 @@
     .nav-item:hover { background: var(--surface2); color: var(--black); }
     .nav-item.active { background: var(--primary-light); color: var(--primary); }
 
-    /* Bottom Nav (Mobile) - UPDATED FOR SCROLLING */
-    .bnav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-top: 1px solid var(--border); z-index: 100; padding: 8px 12px; padding-bottom: max(8px, env(safe-area-inset-bottom)); box-shadow: 0 -5px 20px rgba(0,0,0,0.05); overflow-x: auto; flex-wrap: nowrap; gap: 6px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-    .bnav::-webkit-scrollbar { display: none; }
-    .bnav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text2); padding: 8px 6px; font-size: 20px; cursor: pointer; transition: 0.2s; flex-shrink: 0; min-width: 65px; border-radius: var(--r-sm); }
+    /* Bottom Nav (Mobile) - UPDATED to show all icons evenly without scrolling */
+    .bnav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-top: 1px solid var(--border); z-index: 100; justify-content: space-around; align-items: center; padding: 8px 4px; padding-bottom: max(8px, env(safe-area-inset-bottom)); box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
+    .bnav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text2); padding: 8px 2px; font-size: 20px; cursor: pointer; transition: 0.2s; border-radius: var(--r-sm); }
     .bnav-item span { display: block; font-size: 10px; font-weight: 700; margin-top: 6px; }
     .bnav-item.active { color: var(--primary); background: var(--primary-light); transform: translateY(-2px); }
 
@@ -186,7 +185,6 @@
     </div>
     <div class="nav-item active" data-page="dash" onclick="goPage(this)">📊 الملخص العام</div>
     <div class="nav-item" data-page="daily" onclick="goPage(this)">☀️ عاداتي اليومية</div>
-    <div class="nav-item" data-page="tasks" onclick="goPage(this)">📋 قائمة المهام</div>
     <div class="nav-item" data-page="goals" onclick="goPage(this)">🏆 أهداف السنة</div>
     <div class="nav-item" data-page="books" onclick="goPage(this)">📚 مكتبتي</div>
     <div class="nav-item" data-page="zaha" onclick="goPage(this)">🏛️ مركز زها</div>
@@ -271,22 +269,13 @@
     <!-- Daily Habits -->
     <div class="page" id="page-daily">
       <div class="add-bar">
-        <div style="font-weight:800; font-size:16px">المهام والعادات المجدولة لليوم</div>
+        <div style="font-weight:800; font-size:16px">العادات المجدولة</div>
         <button class="btn btn-dark btn-circle" onclick="openModal('habit')" title="إضافة عادة">+</button>
       </div>
       <div id="habit-list"></div>
 
       <h2 style="margin-top: 40px; border-top: 2px solid var(--border); padding-top: 30px;">إحصائيات وتقييم العادات 📊</h2>
       <div id="habit-stats"></div>
-    </div>
-
-    <!-- Tasks -->
-    <div class="page" id="page-tasks">
-      <div class="add-bar">
-        <div style="font-weight:800; font-size:16px">قائمة المهام الشاملة</div>
-        <button class="btn btn-dark" onclick="openModal('task')">+ إضافة مهمة</button>
-      </div>
-      <div id="tasks-list"></div>
     </div>
 
     <!-- Goals -->
@@ -307,7 +296,7 @@
       <div id="books-list"></div>
     </div>
 
-    <!-- ZAHA CENTER (NEW SECTION) -->
+    <!-- ZAHA CENTER -->
     <div class="page" id="page-zaha">
       <div class="add-bar" style="border-color: var(--zaha-light); box-shadow: 0 10px 30px -10px rgba(79, 70, 229, 0.15);">
         <div style="font-weight:800; font-size:16px; color: var(--zaha)">سجل حصص مركز زها 🏛️</div>
@@ -342,8 +331,8 @@
         <div class="field"><label>البداية</label><input type="date" class="inp" id="m-hab-start" /></div>
         <div class="field"><label>النهاية (اختياري)</label><input type="date" class="inp" id="m-hab-end" /></div>
       </div>
-      <div class="field"><label>ارتباط بهدف (اختياري)</label><select class="sel" id="m-hab-goal" style="width:100%"></select></div>
-      <div class="field"><label>ارتباط بكتاب (اختياري)</label><select class="sel" id="m-hab-book" style="width:100%"></select></div>
+      <div class="field"><label>ارتباط بهدف (تحديث تلقائي للنسبة)</label><select class="sel" id="m-hab-goal" style="width:100%"></select></div>
+      <div class="field"><label>ارتباط بكتاب (لإضافة صفحات عند الإنجاز)</label><select class="sel" id="m-hab-book" style="width:100%"></select></div>
       <div class="field"><label>نظام التكرار</label>
         <select class="sel" id="m-hab-freq" style="width:100%" onchange="toggleHabitDays(this.value, 'm-hab-days-wrap')">
           <option value="daily">يومياً</option>
@@ -365,28 +354,6 @@
       <div class="modal-actions">
         <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none" onclick="closeModal('habit')">إلغاء</button>
         <button class="btn" onclick="saveHabit()">حفظ العادة</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Task Modal -->
-  <div class="modal-ov" id="modal-task">
-    <div class="modal">
-      <div class="modal-title" id="m-task-title-text">إضافة مهمة 📋</div>
-      <input type="hidden" id="m-task-id">
-      <div class="field"><label>اسم المهمة</label><input type="text" class="inp" id="m-task-title" placeholder="ما الذي تريد إنجازه؟" /></div>
-      <div class="field"><label>ارتباط بهدف (تحديث تلقائي للنسبة)</label><select class="sel" id="m-task-goal" style="width:100%"></select></div>
-      <div class="field"><label>ارتباط بكتاب (لإضافة صفحات عند الإنجاز)</label><select class="sel" id="m-task-book" style="width:100%"></select></div>
-      <div class="field"><label>تصنيف المهمة</label>
-        <select class="sel" id="m-task-period" style="width:100%">
-          <option value="weekly">أسبوعية</option>
-          <option value="monthly">شهرية</option>
-          <option value="yearly">سنوية</option>
-        </select>
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none" onclick="closeModal('task')">إلغاء</button>
-        <button class="btn" onclick="saveTask()">حفظ المهمة</button>
       </div>
     </div>
   </div>
@@ -446,11 +413,10 @@
     </div>
   </div>
 
-  <!-- Mobile Bottom Nav -->
+  <!-- Mobile Bottom Nav - Only 5 items now -->
   <div class="bnav">
     <div class="bnav-item active" data-page="dash" onclick="goPage(this)">📊<span>الملخص</span></div>
     <div class="bnav-item" data-page="daily" onclick="goPage(this)">☀️<span>عاداتي</span></div>
-    <div class="bnav-item" data-page="tasks" onclick="goPage(this)">📋<span>المهام</span></div>
     <div class="bnav-item" data-page="goals" onclick="goPage(this)">🏆<span>أهدافي</span></div>
     <div class="bnav-item" data-page="books" onclick="goPage(this)">📚<span>مكتبتي</span></div>
     <div class="bnav-item" data-page="zaha" onclick="goPage(this)">🏛️<span>زها</span></div>
@@ -477,7 +443,6 @@
     let state = {
       habits: [],    
       history: {},   
-      tasks: [],     
       goals: [],     
       books: [],
       zahaSessions: [],
@@ -499,7 +464,6 @@
         if (p) {
           state.habits = p.habits ? Object.values(p.habits) : [];
           state.history = p.history || {};
-          state.tasks = p.tasks ? Object.values(p.tasks) : [];
           state.goals = p.goals ? Object.values(p.goals) : [];
           state.books = p.books ? Object.values(p.books) : [];
           state.zahaSessions = p.zahaSessions ? Object.values(p.zahaSessions) : [];
@@ -538,18 +502,12 @@
       const optionsHtml = `<option value="">-- بدون هدف مرتبط --</option>` + 
         state.goals.map(g => `<option value="${g.id}">🎯 ${g.title}</option>`).join('');
       
-      const selTaskGoal = document.getElementById('m-task-goal');
-      if (selTaskGoal) selTaskGoal.innerHTML = optionsHtml;
-      
       const selHabitGoal = document.getElementById('m-hab-goal');
       if (selHabitGoal) selHabitGoal.innerHTML = optionsHtml;
 
       const bookOptionsHtml = `<option value="">-- بدون كتاب مرتبط --</option>` + 
         state.books.map(b => `<option value="${b.id}">📖 ${b.title}</option>`).join('');
         
-      const selTaskBook = document.getElementById('m-task-book');
-      if (selTaskBook) selTaskBook.innerHTML = bookOptionsHtml;
-      
       const selHabitBook = document.getElementById('m-hab-book');
       if (selHabitBook) selHabitBook.innerHTML = bookOptionsHtml;
     }
@@ -594,24 +552,6 @@
           document.getElementById('m-hab-book').value = '';
         }
       } 
-      else if (type === 'task') {
-        if(id) {
-          const t = state.tasks.find(x => x.id === id);
-          if(!t) return;
-          document.getElementById('m-task-id').value = t.id;
-          document.getElementById('m-task-title-text').textContent = 'تعديل المهمة ✎';
-          document.getElementById('m-task-title').value = t.title;
-          document.getElementById('m-task-goal').value = t.goalId || '';
-          document.getElementById('m-task-book').value = t.bookId || '';
-          document.getElementById('m-task-period').value = t.period || 'weekly';
-        } else {
-          document.getElementById('m-task-id').value = '';
-          document.getElementById('m-task-title-text').textContent = 'إضافة مهمة 📋';
-          document.getElementById('m-task-title').value = '';
-          document.getElementById('m-task-goal').value = '';
-          document.getElementById('m-task-book').value = '';
-        }
-      }
       else if (type === 'goal') {
         if(id) {
           const g = state.goals.find(x => x.id === id);
@@ -679,7 +619,6 @@
     function renderAll() {
       renderHabits();
       renderHabitStats();
-      renderTasks();
       renderGoals();
       renderBooks();
       renderZaha();
@@ -910,142 +849,41 @@
     }
 
     // ═══════════════════════════════════════
-    //  TASKS
-    // ═══════════════════════════════════════
-    function saveTask() {
-      const id = document.getElementById('m-task-id').value;
-      const title = document.getElementById('m-task-title').value.trim();
-      const period = document.getElementById('m-task-period').value;
-      const goalId = document.getElementById('m-task-goal').value; 
-      const bookId = document.getElementById('m-task-book').value; 
-      
-      if (!title) { toast('يرجى إدخال اسم المهمة'); return; }
-      
-      if(id) {
-        const t = state.tasks.find(x => x.id == id);
-        if(t) { t.title = title; t.period = period; t.goalId = goalId; t.bookId = bookId; }
-      } else {
-        state.tasks.push({ id: state.nextId++, title, period, goalId, bookId, completed: false, dateAdded: today });
-      }
-      
-      saveState(); 
-      renderAll(); 
-      closeModal('task');
-      toast('تم الحفظ ✓'); 
-    }
-    
-    function toggleTask(id, bookId = null) { 
-      const t = state.tasks.find(x => x.id === id); 
-      if (t) { 
-        if (!t.completed && bookId) {
-            const pagesInput = document.getElementById(`t-pages-${id}`);
-            const b = state.books.find(x => x.id == bookId);
-            if (pagesInput && pagesInput.value && b) {
-                const pages = parseInt(pagesInput.value);
-                if (!isNaN(pages) && pages > 0) {
-                    b.readPages = Math.min(b.readPages + pages, b.totalPages);
-                    toast(`تمت إضافة ${pages} صفحة للكتاب ✓`);
-                }
-            }
-        }
-        t.completed = !t.completed; 
-        saveState(); 
-        renderAll(); 
-      } 
-    }
-    
-    function delTask(id) { 
-      if(!confirm('حذف المهمة؟')) return;
-      state.tasks = state.tasks.filter(t => t.id !== id); 
-      saveState(); 
-      renderAll(); 
-    }
-    
-    function renderTasks() {
-      const sorted = [...state.tasks].sort((a, b) => a.completed - b.completed);
-      const periodLabels = { 'weekly': 'أسبوعية', 'monthly': 'شهرية', 'yearly': 'سنوية' };
-
-      document.getElementById('tasks-list').innerHTML = sorted.length ? sorted.map(t => {
-        const goalInfo = t.goalId ? state.goals.find(g => g.id == t.goalId) : null;
-        const bookInfo = t.bookId ? state.books.find(b => b.id == t.bookId) : null;
-        
-        let bookInputHtml = '';
-        if (bookInfo && !t.completed) {
-            bookInputHtml = `<input type="number" id="t-pages-${t.id}" class="inp" placeholder="كم صفحة؟" style="width:90px; padding:4px 8px; font-size:11px; height: 28px; margin-inline-end: 8px;" min="1" onclick="event.stopPropagation()">`;
-        } else if (bookInfo && t.completed) {
-            bookInputHtml = `<span style="font-size:11px; color:var(--primary); margin-inline-end: 8px; font-weight:bold;">تم التحديث ✓</span>`;
-        }
-
-        return `
-        <div class="list-item ${t.completed ? 'done' : ''}">
-          <div class="check-btn ${t.completed ? 'active' : ''}" onclick="toggleTask(${t.id}, ${t.bookId ? `'${t.bookId}'` : 'null'})">${t.completed ? '✓' : ''}</div>
-          ${bookInputHtml}
-          <div class="item-info">
-            <div class="item-title">${t.title}</div>
-            <div class="item-meta">
-              <span class="badge period-badge">${periodLabels[t.period] || 'عامة'}</span>
-              ${goalInfo ? `<span class="badge goal-badge">🎯 مرتبطة بـ: ${goalInfo.title}</span>` : ''}
-              ${bookInfo ? `<span class="badge" style="background:#e0f2fe; color:#0284c7">📖 ${bookInfo.title}</span>` : ''}
-            </div>
-          </div>
-          <button class="del-btn" style="color:var(--text2); margin-inline-end:4px" onclick="openModal('task', ${t.id})">✎</button>
-          <button class="del-btn" onclick="delTask(${t.id})">✕</button>
-        </div>`;
-      }).join('') : '<div class="empty">لا توجد مهام مسجلة</div>';
-    }
-
-    // ═══════════════════════════════════════
     //  GOALS 
     // ═══════════════════════════════════════
     function getGoalProgressInfo(goalId) {
-      const linkedTasks = state.tasks.filter(t => t.goalId == goalId);
       const linkedHabits = state.habits.filter(h => h.goalId == goalId);
 
-      if (linkedTasks.length === 0 && linkedHabits.length === 0) {
-        return { isAuto: false, pct: null, tasksTotal: 0, tasksDone: 0, habitsTotal: 0 };
+      if (linkedHabits.length === 0) {
+        return { isAuto: false, pct: null, habitsTotal: 0 };
       }
 
-      let taskPct = 0, habitPct = 0;
-      let parts = 0;
-
-      if (linkedTasks.length > 0) {
-        const done = linkedTasks.filter(t => t.completed).length;
-        taskPct = (done / linkedTasks.length) * 100;
-        parts++;
-      }
-
-      let habitsTotal = 0;
-      if (linkedHabits.length > 0) {
-        let expectedTotal = 0;
-        let doneTotal = 0;
-        linkedHabits.forEach(h => {
-          let expected = 0; let done = 0;
-          let startD = new Date(h.start || today);
-          let endD = new Date(today); if (h.end && new Date(h.end) < endD) endD = new Date(h.end);
-          let cur = new Date(startD);
-          while (cur <= endD) {
-            if (h.freq === 'daily' || (h.freq === 'specific' && h.days.includes(cur.getDay()))) expected++;
-            cur.setDate(cur.getDate() + 1);
-          }
-          Object.keys(state.history).forEach(d => { if (d <= today && state.history[d].includes(h.id)) done++; });
-          expectedTotal += expected;
-          doneTotal += done;
-        });
-        if (expectedTotal > 0) {
-          habitPct = (doneTotal / expectedTotal) * 100;
+      let habitPct = 0;
+      let expectedTotal = 0;
+      let doneTotal = 0;
+      
+      linkedHabits.forEach(h => {
+        let expected = 0; let done = 0;
+        let startD = new Date(h.start || today);
+        let endD = new Date(today); if (h.end && new Date(h.end) < endD) endD = new Date(h.end);
+        let cur = new Date(startD);
+        while (cur <= endD) {
+          if (h.freq === 'daily' || (h.freq === 'specific' && h.days.includes(cur.getDay()))) expected++;
+          cur.setDate(cur.getDate() + 1);
         }
-        parts++;
-        habitsTotal = linkedHabits.length;
+        Object.keys(state.history).forEach(d => { if (d <= today && state.history[d].includes(h.id)) done++; });
+        expectedTotal += expected;
+        doneTotal += done;
+      });
+      
+      if (expectedTotal > 0) {
+        habitPct = (doneTotal / expectedTotal) * 100;
       }
-
-      const finalPct = parts > 0 ? Math.round((taskPct + habitPct) / parts) : 0;
 
       return {
         isAuto: true,
-        pct: finalPct,
-        tasksTotal: linkedTasks.length,
-        tasksDone: linkedTasks.filter(t => t.completed).length,
-        habitsTotal: habitsTotal
+        pct: Math.round(habitPct),
+        habitsTotal: linkedHabits.length
       };
     }
 
@@ -1065,9 +903,8 @@
     }
     
     function delGoal(id) { 
-      if(!confirm('هل أنت متأكد من حذف هذا الهدف؟ (المهام المرتبطة ستبقى موجودة ولكن غير مرتبطة)')) return;
+      if(!confirm('هل أنت متأكد من حذف هذا الهدف؟ (العادات المرتبطة ستبقى موجودة ولكن غير مرتبطة)')) return;
       state.goals = state.goals.filter(g => g.id !== id); 
-      state.tasks.forEach(t => { if(t.goalId == id) t.goalId = ""; });
       state.habits.forEach(h => { if(h.goalId == id) h.goalId = ""; });
       saveState(); populateGlobalSelectors(); renderAll(); 
     }
@@ -1098,16 +935,12 @@
         let controlHtml = '';
 
         if (info.isAuto) {
-          let breakdown = [];
-          if(info.tasksTotal > 0) breakdown.push(`المهام: ${info.tasksDone}/${info.tasksTotal}`);
-          if(info.habitsTotal > 0) breakdown.push(`العادات: ${info.habitsTotal}`);
-
           detailsHtml = `<div style="font-size:12px; color:var(--primary); margin-top:14px; font-weight:700;">
-            🔒 النسبة محسوبة تلقائياً (${breakdown.join(' | ')})
+            🔒 النسبة محسوبة تلقائياً (العادات: ${info.habitsTotal})
           </div>`;
         } else {
           detailsHtml = `<div style="font-size:12px; color:var(--text3); margin-top:14px;">
-            💡 هدف يدوي (اسحب الشريط، أو اربط به مهام/عادات ليُحسب آلياً)
+            💡 هدف يدوي (اسحب الشريط، أو اربط به عادات ليُحسب آلياً)
           </div>`;
           controlHtml = `<input type="range" min="0" max="100" value="${pct}" oninput="updateGoalUI(${g.id}, this.value)" onchange="saveGoalUI(${g.id}, this.value)">`;
         }
@@ -1154,7 +987,6 @@
     function delBook(id) {
       if(!confirm('حذف الكتاب؟')) return;
       state.books = state.books.filter(b => b.id !== id);
-      state.tasks.forEach(t => { if(t.bookId == id) t.bookId = ""; });
       state.habits.forEach(h => { if(h.bookId == id) h.bookId = ""; });
       saveState(); populateGlobalSelectors(); renderAll();
     }
