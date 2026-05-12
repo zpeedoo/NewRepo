@@ -317,6 +317,7 @@
         <div class="field"><label>النهاية (اختياري)</label><input type="date" class="inp" id="m-hab-end" /></div>
       </div>
       <div class="field"><label>ارتباط بهدف (اختياري)</label><select class="sel" id="m-hab-goal" style="width:100%"></select></div>
+      <div class="field"><label>ارتباط بكتاب (اختياري)</label><select class="sel" id="m-hab-book" style="width:100%"></select></div>
       <div class="field"><label>نظام التكرار</label>
         <select class="sel" id="m-hab-freq" style="width:100%" onchange="toggleHabitDays(this.value, 'm-hab-days-wrap')">
           <option value="daily">يومياً</option>
@@ -349,6 +350,7 @@
       <input type="hidden" id="m-task-id">
       <div class="field"><label>اسم المهمة</label><input type="text" class="inp" id="m-task-title" placeholder="ما الذي تريد إنجازه؟" /></div>
       <div class="field"><label>ارتباط بهدف (تحديث تلقائي للنسبة)</label><select class="sel" id="m-task-goal" style="width:100%"></select></div>
+      <div class="field"><label>ارتباط بكتاب (لإضافة صفحات عند الإنجاز)</label><select class="sel" id="m-task-book" style="width:100%"></select></div>
       <div class="field"><label>تصنيف المهمة</label>
         <select class="sel" id="m-task-period" style="width:100%">
           <option value="weekly">أسبوعية</option>
@@ -485,6 +487,15 @@
       
       const selHabitGoal = document.getElementById('m-hab-goal');
       if (selHabitGoal) selHabitGoal.innerHTML = optionsHtml;
+
+      const bookOptionsHtml = `<option value="">-- بدون كتاب مرتبط --</option>` + 
+        state.books.map(b => `<option value="${b.id}">📖 ${b.title}</option>`).join('');
+        
+      const selTaskBook = document.getElementById('m-task-book');
+      if (selTaskBook) selTaskBook.innerHTML = bookOptionsHtml;
+      
+      const selHabitBook = document.getElementById('m-hab-book');
+      if (selHabitBook) selHabitBook.innerHTML = bookOptionsHtml;
     }
 
 
@@ -513,6 +524,7 @@
           document.getElementById('m-hab-start').value = h.start || today;
           document.getElementById('m-hab-end').value = h.end || '';
           document.getElementById('m-hab-goal').value = h.goalId || '';
+          document.getElementById('m-hab-book').value = h.bookId || '';
           document.getElementById('m-hab-freq').value = h.freq || 'daily';
           toggleHabitDays(h.freq || 'daily', 'm-hab-days-wrap');
           document.querySelectorAll('#m-hab-days-wrap .day-btn').forEach(b => {
@@ -524,6 +536,7 @@
           document.getElementById('m-hab-title-text').textContent = 'إضافة عادة جديدة ✨';
           document.getElementById('m-hab-title').value = '';
           document.getElementById('m-hab-goal').value = '';
+          document.getElementById('m-hab-book').value = '';
         }
       } 
       else if (type === 'task') {
@@ -534,12 +547,14 @@
           document.getElementById('m-task-title-text').textContent = 'تعديل المهمة ✎';
           document.getElementById('m-task-title').value = t.title;
           document.getElementById('m-task-goal').value = t.goalId || '';
+          document.getElementById('m-task-book').value = t.bookId || '';
           document.getElementById('m-task-period').value = t.period || 'weekly';
         } else {
           document.getElementById('m-task-id').value = '';
           document.getElementById('m-task-title-text').textContent = 'إضافة مهمة 📋';
           document.getElementById('m-task-title').value = '';
           document.getElementById('m-task-goal').value = '';
+          document.getElementById('m-task-book').value = '';
         }
       }
       else if (type === 'goal') {
@@ -609,6 +624,7 @@
       const end = document.getElementById('m-hab-end').value;
       const freq = document.getElementById('m-hab-freq').value;
       const goalId = document.getElementById('m-hab-goal').value;
+      const bookId = document.getElementById('m-hab-book').value;
       let days = [];
       if (freq === 'specific') {
         document.querySelectorAll('#m-hab-days-wrap .day-btn.active').forEach(b => days.push(parseInt(b.dataset.day)));
@@ -617,9 +633,9 @@
       
       if(id) {
         const h = state.habits.find(x => x.id == id);
-        if(h) { h.title = title; h.start = start; h.end = end; h.freq = freq; h.days = days; h.goalId = goalId; }
+        if(h) { h.title = title; h.start = start; h.end = end; h.freq = freq; h.days = days; h.goalId = goalId; h.bookId = bookId; }
       } else {
-        state.habits.push({ id: state.nextId++, title, start, end, freq, days, goalId });
+        state.habits.push({ id: state.nextId++, title, start, end, freq, days, goalId, bookId });
       }
       
       saveState(); renderAll(); closeModal('habit'); toast('تم الحفظ ✓');
@@ -631,11 +647,25 @@
       saveState(); renderAll();
     }
 
-    function toggleHabit(id) {
+    function toggleHabit(id, bookId = null) {
       if (!state.history[today]) state.history[today] = [];
       const arr = state.history[today];
-      if (arr.includes(id)) state.history[today] = arr.filter(x => x !== id);
-      else state.history[today].push(id);
+      if (arr.includes(id)) {
+        state.history[today] = arr.filter(x => x !== id);
+      } else {
+        if (bookId) {
+            const pagesInput = document.getElementById(`h-pages-${id}`);
+            const b = state.books.find(x => x.id == bookId);
+            if (pagesInput && pagesInput.value && b) {
+                const pages = parseInt(pagesInput.value);
+                if (!isNaN(pages) && pages > 0) {
+                    b.readPages = Math.min(b.readPages + pages, b.totalPages);
+                    toast(`تمت إضافة ${pages} صفحة للكتاب ✓`);
+                }
+            }
+        }
+        state.history[today].push(id);
+      }
       saveState(); renderAll();
     }
 
@@ -656,11 +686,24 @@
       document.getElementById('habit-list').innerHTML = activeToday.length ? activeToday.map(h => {
         const done = arr.includes(h.id);
         const goalInfo = state.goals.find(g => g.id == h.goalId);
+        const bookInfo = h.bookId ? state.books.find(b => b.id == h.bookId) : null;
+        
+        let bookInputHtml = '';
+        if (bookInfo && !done) {
+            bookInputHtml = `<input type="number" id="h-pages-${h.id}" class="inp" placeholder="كم صفحة؟" style="width:90px; padding:4px 8px; font-size:11px; height: 28px; margin-inline-end: 8px;" min="1" onclick="event.stopPropagation()">`;
+        } else if (bookInfo && done) {
+            bookInputHtml = `<span style="font-size:11px; color:var(--primary); margin-inline-end: 8px; font-weight:bold;">تم التحديث ✓</span>`;
+        }
+
         return `<div class="list-item ${done ? 'done' : ''}">
-          <div class="check-btn ${done ? 'active' : ''}" onclick="toggleHabit(${h.id})">${done ? '✓' : ''}</div>
+          <div class="check-btn ${done ? 'active' : ''}" onclick="toggleHabit(${h.id}, ${h.bookId ? `'${h.bookId}'` : 'null'})">${done ? '✓' : ''}</div>
+          ${bookInputHtml}
           <div class="item-info">
             <div class="item-title">${h.title}</div>
-            ${goalInfo ? `<div class="item-meta"><span class="badge goal-badge">🎯 ${goalInfo.title}</span></div>` : ''}
+            <div class="item-meta">
+              ${goalInfo ? `<span class="badge goal-badge">🎯 ${goalInfo.title}</span>` : ''}
+              ${bookInfo ? `<span class="badge" style="background:#e0f2fe; color:#0284c7">📖 ${bookInfo.title}</span>` : ''}
+            </div>
           </div>
           <button class="del-btn" style="color:var(--text2); margin-inline-end:4px" onclick="openModal('habit', ${h.id})">✎</button>
           <button class="del-btn" onclick="delHabit(${h.id})">✕</button>
@@ -700,14 +743,15 @@
       const title = document.getElementById('m-task-title').value.trim();
       const period = document.getElementById('m-task-period').value;
       const goalId = document.getElementById('m-task-goal').value; 
+      const bookId = document.getElementById('m-task-book').value; 
       
       if (!title) { toast('يرجى إدخال اسم المهمة'); return; }
       
       if(id) {
         const t = state.tasks.find(x => x.id == id);
-        if(t) { t.title = title; t.period = period; t.goalId = goalId; }
+        if(t) { t.title = title; t.period = period; t.goalId = goalId; t.bookId = bookId; }
       } else {
-        state.tasks.push({ id: state.nextId++, title, period, goalId, completed: false, dateAdded: today });
+        state.tasks.push({ id: state.nextId++, title, period, goalId, bookId, completed: false, dateAdded: today });
       }
       
       saveState(); 
@@ -716,9 +760,20 @@
       toast('تم الحفظ ✓'); 
     }
     
-    function toggleTask(id) { 
+    function toggleTask(id, bookId = null) { 
       const t = state.tasks.find(x => x.id === id); 
       if (t) { 
+        if (!t.completed && bookId) {
+            const pagesInput = document.getElementById(`t-pages-${id}`);
+            const b = state.books.find(x => x.id == bookId);
+            if (pagesInput && pagesInput.value && b) {
+                const pages = parseInt(pagesInput.value);
+                if (!isNaN(pages) && pages > 0) {
+                    b.readPages = Math.min(b.readPages + pages, b.totalPages);
+                    toast(`تمت إضافة ${pages} صفحة للكتاب ✓`);
+                }
+            }
+        }
         t.completed = !t.completed; 
         saveState(); 
         renderAll(); 
@@ -739,14 +794,25 @@
 
       document.getElementById('tasks-list').innerHTML = sorted.length ? sorted.map(t => {
         const goalInfo = t.goalId ? state.goals.find(g => g.id == t.goalId) : null;
+        const bookInfo = t.bookId ? state.books.find(b => b.id == t.bookId) : null;
+        
+        let bookInputHtml = '';
+        if (bookInfo && !t.completed) {
+            bookInputHtml = `<input type="number" id="t-pages-${t.id}" class="inp" placeholder="كم صفحة؟" style="width:90px; padding:4px 8px; font-size:11px; height: 28px; margin-inline-end: 8px;" min="1" onclick="event.stopPropagation()">`;
+        } else if (bookInfo && t.completed) {
+            bookInputHtml = `<span style="font-size:11px; color:var(--primary); margin-inline-end: 8px; font-weight:bold;">تم التحديث ✓</span>`;
+        }
+
         return `
         <div class="list-item ${t.completed ? 'done' : ''}">
-          <div class="check-btn ${t.completed ? 'active' : ''}" onclick="toggleTask(${t.id})">${t.completed ? '✓' : ''}</div>
+          <div class="check-btn ${t.completed ? 'active' : ''}" onclick="toggleTask(${t.id}, ${t.bookId ? `'${t.bookId}'` : 'null'})">${t.completed ? '✓' : ''}</div>
+          ${bookInputHtml}
           <div class="item-info">
             <div class="item-title">${t.title}</div>
             <div class="item-meta">
               <span class="badge period-badge">${periodLabels[t.period] || 'عامة'}</span>
               ${goalInfo ? `<span class="badge goal-badge">🎯 مرتبطة بـ: ${goalInfo.title}</span>` : ''}
+              ${bookInfo ? `<span class="badge" style="background:#e0f2fe; color:#0284c7">📖 ${bookInfo.title}</span>` : ''}
             </div>
           </div>
           <button class="del-btn" style="color:var(--text2); margin-inline-end:4px" onclick="openModal('task', ${t.id})">✎</button>
@@ -756,18 +822,72 @@
     }
 
     // ═══════════════════════════════════════
-    //  GOALS (FULLY AUTOMATED)
+    //  GOALS (HYBRID AUTOMATED & MANUAL)
     // ═══════════════════════════════════════
+    
+    function getGoalProgressInfo(goalId) {
+      const linkedTasks = state.tasks.filter(t => t.goalId == goalId);
+      const linkedHabits = state.habits.filter(h => h.goalId == goalId);
+
+      if (linkedTasks.length === 0 && linkedHabits.length === 0) {
+        return { isAuto: false, pct: null, tasksTotal: 0, tasksDone: 0, habitsTotal: 0 };
+      }
+
+      let taskPct = 0, habitPct = 0;
+      let parts = 0;
+
+      if (linkedTasks.length > 0) {
+        const done = linkedTasks.filter(t => t.completed).length;
+        taskPct = (done / linkedTasks.length) * 100;
+        parts++;
+      }
+
+      let habitsTotal = 0;
+      if (linkedHabits.length > 0) {
+        let expectedTotal = 0;
+        let doneTotal = 0;
+        linkedHabits.forEach(h => {
+          let expected = 0; let done = 0;
+          let startD = new Date(h.start || today);
+          let endD = new Date(today); if (h.end && new Date(h.end) < endD) endD = new Date(h.end);
+          let cur = new Date(startD);
+          while (cur <= endD) {
+            if (h.freq === 'daily' || (h.freq === 'specific' && h.days.includes(cur.getDay()))) expected++;
+            cur.setDate(cur.getDate() + 1);
+          }
+          Object.keys(state.history).forEach(d => { if (d <= today && state.history[d].includes(h.id)) done++; });
+          expectedTotal += expected;
+          doneTotal += done;
+        });
+        if (expectedTotal > 0) {
+          habitPct = (doneTotal / expectedTotal) * 100;
+        }
+        parts++;
+        habitsTotal = linkedHabits.length;
+      }
+
+      const finalPct = parts > 0 ? Math.round((taskPct + habitPct) / parts) : 0;
+
+      return {
+        isAuto: true,
+        pct: finalPct,
+        tasksTotal: linkedTasks.length,
+        tasksDone: linkedTasks.filter(t => t.completed).length,
+        habitsTotal: habitsTotal
+      };
+    }
+
     function saveGoal() {
       const id = document.getElementById('m-goal-id').value;
       const title = document.getElementById('m-goal-title').value.trim();
-      if (!title) return;
+      if (!title) { toast('يرجى إدخال اسم الهدف'); return; }
 
       if(id) {
         const g = state.goals.find(x => x.id == id);
         if(g) { g.title = title; }
       } else {
-        state.goals.push({ id: state.nextId++, title });
+        // نضمن إعطاء تقدم مبدئي 0 للأهداف اليدوية الجديدة
+        state.goals.push({ id: state.nextId++, title, progress: 0 });
       }
       
       saveState(); populateGlobalSelectors(); renderAll(); closeModal('goal'); toast('تم الحفظ 🎯');
@@ -781,31 +901,59 @@
       saveState(); populateGlobalSelectors(); renderAll(); 
     }
 
+    function updateGoalUI(id, val) {
+      const g = state.goals.find(x => x.id === id);
+      const info = getGoalProgressInfo(id);
+      if (g && !info.isAuto) {
+        g.progress = parseInt(val);
+        document.getElementById(`goal-pct-${id}`).textContent = g.progress + '%';
+        document.getElementById(`goal-fill-${id}`).style.width = g.progress + '%';
+        renderDashboard(); 
+      }
+    }
+    
+    function saveGoalUI(id, val) { 
+      const g = state.goals.find(x => x.id === id); 
+      const info = getGoalProgressInfo(id);
+      if (g && !info.isAuto) { g.progress = parseInt(val); saveState(); renderDashboard(); } 
+    }
+
     function renderGoals() {
       document.getElementById('goal-list').innerHTML = state.goals.length ? state.goals.map(g => {
-        // Calculate goal progress strictly from Tasks dynamically
-        const linkedTasks = state.tasks.filter(t => t.goalId == g.id);
-        const totalLinked = linkedTasks.length;
-        const completedLinked = linkedTasks.filter(t => t.completed).length;
-        const pct = totalLinked > 0 ? Math.round((completedLinked / totalLinked) * 100) : 0;
+        const info = getGoalProgressInfo(g.id);
+        const pct = info.isAuto ? info.pct : (g.progress || 0);
+
+        let detailsHtml = '';
+        let controlHtml = '';
+
+        if (info.isAuto) {
+          let breakdown = [];
+          if(info.tasksTotal > 0) breakdown.push(`المهام: ${info.tasksDone}/${info.tasksTotal}`);
+          if(info.habitsTotal > 0) breakdown.push(`العادات: ${info.habitsTotal}`);
+
+          detailsHtml = `<div style="font-size:12px; color:var(--primary); margin-top:14px; font-weight:700;">
+            🔒 النسبة محسوبة تلقائياً (${breakdown.join(' | ')})
+          </div>`;
+        } else {
+          detailsHtml = `<div style="font-size:12px; color:var(--text3); margin-top:14px;">
+            💡 هدف يدوي (اسحب الشريط، أو اربط به مهام/عادات ليُحسب آلياً)
+          </div>`;
+          controlHtml = `<input type="range" min="0" max="100" value="${pct}" oninput="updateGoalUI(${g.id}, this.value)" onchange="saveGoalUI(${g.id}, this.value)">`;
+        }
 
         return `
         <div class="card-box">
           <div class="card-hdr">
             <div class="card-title">${g.title}</div>
             <div style="display:flex;gap:12px;align-items:center">
-              <div class="card-pct">${pct}%</div>
+              <div class="card-pct" id="goal-pct-${g.id}">${pct}%</div>
               <button class="del-btn" style="color:var(--text2)" onclick="openModal('goal', ${g.id})">✎</button>
               <button class="del-btn" onclick="delGoal(${g.id})">✕</button>
             </div>
           </div>
-          <div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" style="background:var(--primary);width:${pct}%"></div></div></div>
-          
-          <div style="font-size:12px; color:var(--text3); margin-top:14px;">
-            ${totalLinked > 0 
-                ? `✔ تم إنجاز <b>${completedLinked}</b> من أصل <b>${totalLinked}</b> مهام مرتبطة بهذا الهدف.` 
-                : '💡 النسبة تُحسب تلقائياً. قم بإضافة مهمة جديدة واربطها بهذا الهدف لتبدأ القياس!'}
-          </div>
+          <div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" id="goal-fill-${g.id}" style="background:var(--primary);width:${pct}%"></div></div></div>
+          ${controlHtml}
+          ${detailsHtml}
         </div>`;
       }).join('') : '<div class="empty">لم تقم بإضافة أهداف كبيرة بعد</div>';
     }
@@ -920,7 +1068,7 @@
       const readPagesAll = state.books.reduce((s,b) => s + b.readPages, 0);
       const overallBooksPct = totalPagesAll > 0 ? (readPagesAll / totalPagesAll * 100) : 0;
       
-      // Find Active Book (book with progress > 0 but not 100%. Fallback to a new book)
+      // Find Active Book
       const activeBook = state.books.find(b => b.readPages > 0 && b.readPages < b.totalPages) || state.books.find(b => b.readPages === 0);
       let activeBookHtml = '';
       if(activeBook) {
@@ -932,15 +1080,13 @@
       document.getElementById('circ-txt-books').textContent = Math.round(overallBooksPct) + '%';
       updateCircle('circ-books', overallBooksPct);
 
-      // Goals (Dynamically Calculate Average Progress of all goals based on tasks)
+      // Goals (Dynamically Calculate Average Progress of all goals based on tasks, habits, and manual inputs)
       let gAvg = 0;
       if (state.goals.length > 0) {
           let sumProgress = 0;
           state.goals.forEach(g => {
-            const linkedTasks = state.tasks.filter(t => t.goalId == g.id);
-            if (linkedTasks.length > 0) {
-                sumProgress += (linkedTasks.filter(t => t.completed).length / linkedTasks.length * 100);
-            }
+            const info = getGoalProgressInfo(g.id);
+            sumProgress += info.isAuto ? info.pct : (g.progress || 0);
           });
           gAvg = sumProgress / state.goals.length;
       }
