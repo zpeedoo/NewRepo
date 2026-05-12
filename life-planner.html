@@ -8,9 +8,14 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#f4f6f8">
   
+  <!-- Anti-Cache Meta Tags -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  
   <title>مخطط الحياة | Life Dashboard</title>
   
-  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
@@ -49,7 +54,7 @@
     .nav-item:hover { background: var(--surface2); color: var(--black); }
     .nav-item.active { background: var(--primary-light); color: var(--primary); }
 
-    /* Bottom Nav (Mobile) - UPDATED to perfectly fit 5 items on iPhone 11 */
+    /* Bottom Nav (Mobile) - 5 items evenly distributed */
     .bnav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-top: 1px solid var(--border); z-index: 100; justify-content: space-between; align-items: center; padding: 6px 4px; padding-bottom: max(8px, env(safe-area-inset-bottom)); box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
     .bnav-item { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text2); padding: 6px 0; font-size: 19px; cursor: pointer; transition: 0.2s; border-radius: var(--r-sm); }
     .bnav-item span { display: block; font-size: 9px; font-weight: 700; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; text-align: center; }
@@ -79,7 +84,7 @@
     
     .metric-icon-wrap { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 18px; }
     .metric-title { font-size: 13px; color: var(--text2); font-weight: 700; margin-bottom: 4px; }
-    .metric-val { font-size: 28px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--black); letter-spacing: -1px; }
+    .metric-val { font-size: 28px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--black); letter-spacing: -1px; line-height:1.2;}
 
     /* SVG Circles */
     .circ-wrap { position: relative; width: 70px; height: 70px; flex-shrink: 0; margin-top: auto; margin-bottom: auto;}
@@ -107,9 +112,8 @@
     
     .badge { padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; }
     .goal-badge { background: var(--primary-light); color: var(--primary); }
-    .period-badge { background: #e0f2fe; color: #0284c7; }
 
-    /* Cards (Goals, Books, Zaha) */
+    /* Cards (Goals, Books) */
     .card-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow); transition: 0.3s; }
     .card-box:hover { box-shadow: 0 15px 35px -10px rgba(0,0,0,0.1); }
     .card-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
@@ -117,8 +121,20 @@
     .card-pct { font-size: 18px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); background: var(--primary-light); padding: 4px 12px; border-radius: 20px; }
 
     /* Zaha Specific Card */
+    .zaha-dash { display: flex; justify-content: space-around; align-items: center; background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); border: 1px solid var(--border); border-radius: var(--r); padding: 30px 10px; margin-bottom: 24px; box-shadow: var(--shadow); }
+    .z-metric { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .z-num-row { display: flex; align-items: center; gap: 8px; }
+    .z-icon { background: var(--surface2); padding: 4px; border-radius: 6px; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .z-num { font-size: 42px; font-weight: 300; color: #111; font-family: 'JetBrains Mono', monospace; letter-spacing: -2px; line-height: 1; }
+    .z-lbl { font-size: 12px; color: #555; font-weight: 800; }
     .zaha-summary { white-space: pre-wrap; font-size: 13px; color: var(--text2); line-height: 1.6; background: var(--surface2); padding: 12px; border-radius: var(--r-sm); margin-top: 12px; border-right: 3px solid var(--zaha); }
 
+    /* New Image-Matched Chart Card */
+    .analytics-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; box-shadow: var(--shadow); margin-bottom: 30px; color: var(--black); }
+    .analytics-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-direction: row-reverse; }
+    .analytics-title { font-size: 16px; font-weight: 800; color: var(--black); }
+    .analytics-filter { background: var(--surface); color: var(--black); border: 1px solid #e5e7eb; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; outline: none; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+    
     /* Inputs & Buttons */
     .add-bar { display: flex; gap: 12px; margin-bottom: 30px; background: var(--surface); padding: 16px; border-radius: var(--r); border: 1px solid var(--border); align-items: center; justify-content: space-between; flex-wrap: wrap; box-shadow: var(--shadow); }
     .inp { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--black); padding: 12px 16px; border-radius: var(--r-sm); font-size: 14px; font-weight: 700; outline: none; transition: 0.2s; box-sizing: border-box; }
@@ -128,14 +144,12 @@
     
     .btn { background: var(--primary); color: #fff; border: none; padding: 12px 24px; border-radius: 30px; font-size: 14px; font-weight: 800; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; box-shadow: 0 4px 10px rgba(230, 92, 79, 0.3); }
     .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(230, 92, 79, 0.4); }
-    .btn-dark { background: var(--black); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    .btn-dark { background: var(--black); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
     .btn-dark:hover { box-shadow: 0 6px 15px rgba(0,0,0,0.3); }
     .btn-zaha { background: var(--zaha); box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); }
     .btn-zaha:hover { box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4); }
     
-    /* Circular FAB button */
     .btn-circle { width: 44px; height: 44px; padding: 0; border-radius: 50%; font-size: 24px; font-weight: 400; }
-
     .del-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text2); cursor: pointer; font-size: 14px; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
     .del-btn:hover { background: #fee2e2; color: var(--red); border-color: #fca5a5; }
 
@@ -153,9 +167,6 @@
     .day-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text2); padding: 10px 0; text-align: center; border-radius: var(--r-sm); cursor: pointer; font-size: 12px; font-weight: 700; transition: 0.2s; user-select: none; }
     .day-btn.active { background: var(--black); color: #fff; border-color: var(--black); }
 
-    /* Chart Header */
-    .chart-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
-    
     /* Status & Helpers */
     .sync-status { font-size: 12px; font-weight: 700; text-align: center; color: var(--text3); margin-top: auto; padding-top: 20px; }
     .sync-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--text3); margin-inline-end: 6px; }
@@ -171,7 +182,7 @@
       .date-hdr { flex-direction: column; align-items: flex-start; gap: 20px; }
       .greeting { margin-top: 10px; }
       .add-bar { flex-direction: row; }
-      .chart-hdr { flex-direction: column; align-items: flex-start; }
+      .analytics-hdr { flex-direction: column; align-items: flex-end; gap: 12px; }
     }
   </style>
 </head>
@@ -222,7 +233,7 @@
           </div>
         </div>
         
-        <!-- Card 2: Books -->
+        <!-- Card 2: Books (INCREASED FONT SIZES BY 25%) -->
         <div class="metric-card">
           <div style="flex:1; padding-inline-end: 10px;">
             <div class="metric-icon-wrap" style="background:#fbeae8; color:var(--primary)">📚</div>
@@ -249,19 +260,17 @@
         </div>
       </div>
 
-      <!-- Chart Container with Filter -->
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:24px;height:320px;margin-bottom:30px;box-shadow:var(--shadow)">
-        <div class="chart-hdr">
-          <h3 style="font-size:16px; font-weight: 800; color:var(--black)">معدل إنجاز العادات</h3>
-          <select class="sel" id="chart-filter" onchange="renderChart()" style="min-width: 120px; padding: 6px 12px;">
-            <option value="7">آخر 7 أيام</option>
-            <option value="30">آخر شهر</option>
-            <option value="90">آخر 3 أشهر</option>
-            <option value="365">آخر سنة</option>
-          </select>
+      <!-- New Image-Matched Chart Card -->
+      <div class="analytics-card">
+        <div class="analytics-hdr">
+           <div class="analytics-title">معدل إنجاز العادات</div>
+           <select class="analytics-filter" id="chart-filter" onchange="renderChart()">
+               <option value="7">آخر 7 أيام</option>
+               <option value="30">آخر شهر</option>
+           </select>
         </div>
-        <div style="height: 220px; position: relative;">
-          <canvas id="habitsChart"></canvas>
+        <div style="height: 220px; position: relative; margin-top: 10px;">
+          <canvas id="productivityChart"></canvas>
         </div>
       </div>
     </div>
@@ -296,22 +305,22 @@
       <div id="books-list"></div>
     </div>
 
-    <!-- ZAHA CENTER -->
+    <!-- ZAHA CENTER (Students strictly removed) -->
     <div class="page" id="page-zaha">
       <div class="add-bar" style="border-color: var(--zaha-light); box-shadow: 0 10px 30px -10px rgba(79, 70, 229, 0.15);">
         <div style="font-weight:800; font-size:16px; color: var(--zaha)">سجل حصص مركز زها 🏛️</div>
         <button class="btn btn-zaha" onclick="openModal('zaha')">+ توثيق حصة جديدة</button>
       </div>
 
-      <div style="display: flex; gap: 16px; margin-bottom: 24px;">
-        <div style="flex: 1; background: var(--surface); padding: 16px; border-radius: var(--r-sm); border: 1px solid var(--border); text-align: center;">
-            <div style="font-size: 12px; color: var(--text2); margin-bottom: 4px;">إجمالي الساعات المسجلة</div>
-            <div id="zaha-total-hours" style="font-size: 24px; font-weight: 800; color: var(--zaha); font-family: 'JetBrains Mono', monospace;">0</div>
-        </div>
-        <div style="flex: 1; background: var(--surface); padding: 16px; border-radius: var(--r-sm); border: 1px solid var(--border); text-align: center;">
-            <div style="font-size: 12px; color: var(--text2); margin-bottom: 4px;">عدد الحصص الكلي</div>
-            <div id="zaha-total-sessions" style="font-size: 24px; font-weight: 800; color: var(--black); font-family: 'JetBrains Mono', monospace;">0</div>
-        </div>
+      <div class="zaha-dash">
+           <div class="z-metric">
+              <div class="z-num-row"><span class="z-icon">⏱️</span><span class="z-num" id="z-val-hours">0</span></div>
+              <span class="z-lbl">إجمالي الساعات</span>
+           </div>
+           <div class="z-metric">
+              <div class="z-num-row"><span class="z-icon">📝</span><span class="z-num" id="z-val-sessions">0</span></div>
+              <span class="z-lbl">الحصص المنجزة</span>
+           </div>
       </div>
 
       <div id="zaha-list"></div>
@@ -388,7 +397,7 @@
     </div>
   </div>
 
-  <!-- Zaha Modal -->
+  <!-- Zaha Modal (No Students) -->
   <div class="modal-ov" id="modal-zaha">
     <div class="modal">
       <div class="modal-title" id="m-zaha-title-text" style="color: var(--zaha)">توثيق حصة زها 🏛️</div>
@@ -397,7 +406,7 @@
       <div class="field"><label>اسم الدورة / الفريق</label><input type="text" class="inp" id="m-zaha-course" placeholder="مثال: 3dmqx" /></div>
       
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div class="field"><label>تاريخ الحصة</label><input type="date" class="inp" id="m-zaha-date" /></div>
+        <div class="field"><label>التاريخ</label><input type="date" class="inp" id="m-zaha-date" /></div>
         <div class="field"><label>عدد الساعات</label><input type="number" class="inp" id="m-zaha-hours" min="1" value="2" /></div>
       </div>
       
@@ -413,7 +422,7 @@
     </div>
   </div>
 
-  <!-- Mobile Bottom Nav - Only 5 items evenly distributed -->
+  <!-- Mobile Bottom Nav - FORCED 20% WIDTH EACH FOR PERFECT FIT -->
   <div class="bnav">
     <div class="bnav-item active" data-page="dash" onclick="goPage(this)">📊<span>الملخص</span></div>
     <div class="bnav-item" data-page="daily" onclick="goPage(this)">☀️<span>عاداتي</span></div>
@@ -425,6 +434,8 @@
   <div class="toast" id="toast">✨ <span id="toast-msg"></span></div>
 
   <script>
+    const APP_VER = "v10"; // Cache buster
+    
     // ═══════════════════════════════════════
     //  FIREBASE & STATE SETUP
     // ═══════════════════════════════════════
@@ -483,7 +494,7 @@
         console.error("Sync error", err);
         document.getElementById('syncDot').classList.remove('on');
         if (isInitialLoad) {
-          const s = localStorage.getItem('life_planner_v6');
+          const s = localStorage.getItem('life_planner_v10');
           if (s) { state = JSON.parse(s); populateGlobalSelectors(); renderAll(); }
           isInitialLoad = false;
         }
@@ -495,7 +506,7 @@
         await db.ref('planner_state').set(state);
         document.getElementById('syncDot').classList.add('on');
       } catch (e) { document.getElementById('syncDot').classList.remove('on'); }
-      localStorage.setItem('life_planner_v6', JSON.stringify(state));
+      localStorage.setItem('life_planner_v10', JSON.stringify(state));
     }
 
     function populateGlobalSelectors() {
@@ -626,7 +637,7 @@
     }
 
     // ═══════════════════════════════════════
-    //  ZAHA CENTER LOGIC
+    //  ZAHA CENTER LOGIC (Students Removed Completely)
     // ═══════════════════════════════════════
     function saveZahaSession() {
       const id = document.getElementById('m-zaha-id').value;
@@ -676,8 +687,8 @@
         const totalHours = state.zahaSessions.reduce((s, z) => s + z.hours, 0);
         const totalSessions = state.zahaSessions.length;
         
-        document.getElementById('zaha-total-hours').textContent = totalHours;
-        document.getElementById('zaha-total-sessions').textContent = totalSessions;
+        document.getElementById('z-val-hours').textContent = totalHours;
+        document.getElementById('z-val-sessions').textContent = totalSessions;
 
         document.getElementById('zaha-list').innerHTML = state.zahaSessions.length ? state.zahaSessions.map(z => {
             const formattedDate = new Date(z.date).toLocaleDateString('ar-JO', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
@@ -1044,7 +1055,7 @@
 
 
     // ═══════════════════════════════════════
-    //  DASHBOARD & CHARTS
+    //  DASHBOARD & CHARTS (MATCHING IMAGE DESIGN)
     // ═══════════════════════════════════════
     let dashChart = null;
     
@@ -1063,7 +1074,7 @@
       document.getElementById('circ-txt-daily').textContent = Math.round(dPct) + '%';
       updateCircle('circ-daily', dPct);
 
-      // Books
+      // Books (INCREASED FONT SIZES)
       const allBooks = state.books.length;
       const totalPagesAll = state.books.reduce((s,b) => s + b.totalPages, 0);
       const readPagesAll = state.books.reduce((s,b) => s + b.readPages, 0);
@@ -1073,10 +1084,10 @@
       let activeBookHtml = '';
       if(activeBook) {
          const aPct = Math.round((activeBook.readPages / activeBook.totalPages) * 100);
-         activeBookHtml = `<div style="font-size:11px; color:var(--text3); margin-top:6px; font-weight:normal; line-height:1.4;">تقرأ الآن: ${activeBook.title} (${aPct}%)</div>`;
+         activeBookHtml = `<div style="font-size:18px; color:var(--text3); margin-top:8px; font-weight:normal; line-height:1.4;">تقرأ الآن: ${activeBook.title} (${aPct}%)</div>`;
       }
 
-      document.getElementById('dash-books-val').innerHTML = `${allBooks} <span style="font-size:13px; color:var(--text2); font-weight:normal;">كتب مسجلة</span>${activeBookHtml}`;
+      document.getElementById('dash-books-val').innerHTML = `${allBooks} <span style="font-size:20px; color:var(--text2); font-weight:normal;">كتب مسجلة</span>${activeBookHtml}`;
       document.getElementById('circ-txt-books').textContent = Math.round(overallBooksPct) + '%';
       updateCircle('circ-books', overallBooksPct);
 
@@ -1099,66 +1110,76 @@
 
     function renderChart() {
       const daysFilter = parseInt(document.getElementById('chart-filter').value) || 7;
-      const labels = []; const vals = [];
-      
+      const labels = []; 
+      const habitsVals = [];
+
       for(let i=daysFilter-1; i>=0; i--) {
         const d = new Date(); d.setDate(d.getDate() - i);
         const dateStr = d.toLocaleDateString('en-CA'); 
         
         if (daysFilter <= 7) {
-          labels.push(d.toLocaleDateString('ar-JO', { weekday: 'short' }));
+          labels.push(d.toLocaleDateString('ar-JO', { weekday: 'long' })); // Full day name to match image
         } else {
           labels.push(`${d.getMonth()+1}/${d.getDate()}`);
         }
         
+        // Habits Data
         const act = getActiveHabitsForDate(dateStr);
         const done = act.filter(h => (state.history[dateStr] || []).includes(h.id)).length;
-        vals.push(act.length ? (done / act.length * 100) : 0);
+        habitsVals.push(act.length ? (done / act.length * 100) : 0);
       }
       
       if (dashChart) dashChart.destroy();
-      const ctx = document.getElementById('habitsChart').getContext('2d');
+      const ctx = document.getElementById('productivityChart').getContext('2d');
       
-      const gradient = ctx.createLinearGradient(0, 0, 0, 200);
-      gradient.addColorStop(0, '#e65c4f');
-      gradient.addColorStop(1, '#fbeae8');
+      // Creating gradient exactly like the uploaded image
+      const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+      gradient.addColorStop(0, 'rgba(244, 114, 114, 0.8)'); // Soft salmon/red
+      gradient.addColorStop(1, 'rgba(244, 114, 114, 0.05)');
 
       dashChart = new Chart(ctx, { 
         type: 'bar', 
         data: { 
           labels, 
-          datasets: [{ 
-            label: 'نسبة الإنجاز (%)', 
-            data: vals, 
-            backgroundColor: gradient, 
-            borderRadius: daysFilter <= 30 ? 6 : 2,
-            borderSkipped: false,
-            barThickness: daysFilter <= 7 ? 24 : daysFilter <= 30 ? 10 : 'flex'
-          }] 
+          datasets: [
+            { 
+                label: 'معدل إنجاز العادات', 
+                data: habitsVals, 
+                backgroundColor: gradient, 
+                borderRadius: 8,
+                borderSkipped: false,
+                barThickness: daysFilter <= 7 ? 16 : daysFilter <= 30 ? 8 : 'flex'
+            }
+          ] 
         }, 
         options: { 
           responsive: true, 
-          maintainAspectRatio: false, 
+          maintainAspectRatio: false,
           plugins: { 
             legend: { display: false },
             tooltip: {
-              backgroundColor: '#111',
+              backgroundColor: 'rgba(255, 255, 255, 0.95)',
+              titleColor: '#111111',
+              bodyColor: '#111111',
+              borderColor: '#f3f4f6',
+              borderWidth: 1,
               titleFont: {family: 'Almarai'},
-              bodyFont: {family: 'JetBrains Mono'}
+              bodyFont: {family: 'JetBrains Mono'},
+              callbacks: { label: c => c.raw.toFixed(0) + '%' }
             }
           }, 
           scales: { 
             y: { 
-              grid: { color: '#f3f4f6' }, 
-              ticks: { color: '#9ca3af', font: { family: 'JetBrains Mono', size: 11 }, callback: v => v + '%' },
+              grid: { color: '#f3f4f6', drawBorder: false }, 
+              ticks: { color: '#9ca3af', font: { family: 'JetBrains Mono', size: 10 }, stepSize: 10, callback: v => v + '%' },
               beginAtZero: true,
               max: 100
             }, 
             x: { 
-              grid: { display: false }, 
+              grid: { display: false, drawBorder: false }, 
               ticks: { 
                 color: '#6b7280', 
-                font: { family: 'Almarai', size: daysFilter <= 7 ? 12 : 9, weight: 'bold' },
+                font: { family: 'Almarai', size: daysFilter <= 7 ? 12 : 9, weight: '700' },
                 maxTicksLimit: 15
               } 
             } 
