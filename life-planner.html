@@ -49,10 +49,10 @@
     .nav-item:hover { background: var(--surface2); color: var(--black); }
     .nav-item.active { background: var(--primary-light); color: var(--primary); }
 
-    /* Bottom Nav (Mobile) - UPDATED to show all icons evenly without scrolling */
-    .bnav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-top: 1px solid var(--border); z-index: 100; justify-content: space-around; align-items: center; padding: 8px 4px; padding-bottom: max(8px, env(safe-area-inset-bottom)); box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
-    .bnav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text2); padding: 8px 2px; font-size: 20px; cursor: pointer; transition: 0.2s; border-radius: var(--r-sm); }
-    .bnav-item span { display: block; font-size: 10px; font-weight: 700; margin-top: 6px; }
+    /* Bottom Nav (Mobile) - UPDATED to perfectly fit 5 items on iPhone 11 */
+    .bnav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-top: 1px solid var(--border); z-index: 100; justify-content: space-between; align-items: center; padding: 6px 4px; padding-bottom: max(8px, env(safe-area-inset-bottom)); box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
+    .bnav-item { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text2); padding: 6px 0; font-size: 19px; cursor: pointer; transition: 0.2s; border-radius: var(--r-sm); }
+    .bnav-item span { display: block; font-size: 9px; font-weight: 700; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; text-align: center; }
     .bnav-item.active { color: var(--primary); background: var(--primary-light); transform: translateY(-2px); }
 
     /* Pages */
@@ -413,7 +413,7 @@
     </div>
   </div>
 
-  <!-- Mobile Bottom Nav - Only 5 items now -->
+  <!-- Mobile Bottom Nav - Only 5 items evenly distributed -->
   <div class="bnav">
     <div class="bnav-item active" data-page="dash" onclick="goPage(this)">📊<span>الملخص</span></div>
     <div class="bnav-item" data-page="daily" onclick="goPage(this)">☀️<span>عاداتي</span></div>
