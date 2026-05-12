@@ -17,7 +17,9 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- مكتبة المصادقة Auth -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
   <style>
@@ -54,7 +56,7 @@
     .nav-item:hover { background: var(--surface2); color: var(--black); }
     .nav-item.active { background: var(--primary-light); color: var(--primary); }
 
-    /* Bottom Nav (Mobile) - 5 items evenly distributed */
+    /* Bottom Nav (Mobile) */
     .bnav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-top: 1px solid var(--border); z-index: 100; justify-content: space-between; align-items: center; padding: 6px 4px; padding-bottom: max(8px, env(safe-area-inset-bottom)); box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
     .bnav-item { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text2); padding: 6px 0; font-size: 19px; cursor: pointer; transition: 0.2s; border-radius: var(--r-sm); }
     .bnav-item span { display: block; font-size: 9px; font-weight: 700; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; text-align: center; }
@@ -72,7 +74,7 @@
     .date-text { font-size: 14px; font-weight: 700; color: var(--text2); line-height: 1.2; }
     
     .greeting { text-align: left; }
-    .greeting h1 { font-size: 28px; margin: 0; font-weight: 800; color: var(--black); letter-spacing: -0.5px; }
+    .greeting h1 { font-size: 28px; margin: 0; font-weight: 800; color: var(--black); letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px; }
     .greeting p { color: var(--text3); font-size: 18px; font-weight: 400; margin-top: 4px; }
 
     h2 { font-size: 18px; margin: 30px 0 16px; color: var(--black); font-weight: 800; }
@@ -129,7 +131,7 @@
     .z-lbl { font-size: 12px; color: #555; font-weight: 800; }
     .zaha-summary { white-space: pre-wrap; font-size: 13px; color: var(--text2); line-height: 1.6; background: var(--surface2); padding: 12px; border-radius: var(--r-sm); margin-top: 12px; border-right: 3px solid var(--zaha); }
 
-    /* New Image-Matched Chart Card */
+    /* Chart Card */
     .analytics-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; box-shadow: var(--shadow); margin-bottom: 30px; color: var(--black); }
     .analytics-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-direction: row-reverse; }
     .analytics-title { font-size: 16px; font-weight: 800; color: var(--black); }
@@ -143,9 +145,10 @@
     .sel { background: var(--surface2); border: 1px solid var(--border); color: var(--black); padding: 10px 16px; border-radius: var(--r-sm); font-size: 13px; font-weight: 700; outline: none; cursor: pointer; }
     
     .btn { background: var(--primary); color: #fff; border: none; padding: 12px 24px; border-radius: 30px; font-size: 14px; font-weight: 800; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; box-shadow: 0 4px 10px rgba(230, 92, 79, 0.3); }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(230, 92, 79, 0.4); }
+    .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(230, 92, 79, 0.4); }
+    .btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
     .btn-dark { background: var(--black); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-    .btn-dark:hover { box-shadow: 0 6px 15px rgba(0,0,0,0.3); }
+    .btn-dark:hover:not(:disabled) { box-shadow: 0 6px 15px rgba(0,0,0,0.3); }
     .btn-zaha { background: var(--zaha); box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); }
     .btn-zaha:hover { box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4); }
     
@@ -159,7 +162,7 @@
     .modal { background: var(--surface); width: 90%; max-width: 450px; border-radius: var(--r); border: none; padding: 30px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); transform: translateY(20px); transition: 0.3s; max-height: 90vh; overflow-y: auto; }
     .modal-ov.show .modal { transform: translateY(0); }
     .modal-title { font-size: 18px; font-weight: 800; margin-bottom: 24px; color: var(--black); }
-    .field { margin-bottom: 16px; }
+    .field { margin-bottom: 16px; text-align: right; }
     .field label { display: block; font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 8px; }
     .modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 30px; }
     
@@ -175,6 +178,11 @@
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .empty { text-align: center; padding: 50px 20px; color: var(--text3); font-size: 14px; font-weight: 700; background: var(--surface2); border: 2px dashed var(--border); border-radius: var(--r); }
 
+    /* Auth Screen Overlay */
+    #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; backdrop-filter: blur(10px); }
+    .auth-card { background: var(--surface); width: 90%; max-width: 400px; border-radius: var(--r); padding: 40px 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); text-align: center; border: 1px solid var(--border); }
+    .auth-logo { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 24px; font-weight: 800; color: var(--black); margin-bottom: 10px; }
+
     @media (max-width: 768px) {
       .sidebar { display: none; }
       .bnav { display: flex; }
@@ -188,6 +196,27 @@
 </head>
 
 <body>
+
+  <!-- AUTHENTICATION SCREEN -->
+  <div id="auth-screen">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="logo-icon" style="width: 48px; height: 48px; font-size: 22px;">P</div>
+        <span>مخططي</span>
+      </div>
+      <h2 style="margin-top: 0; margin-bottom: 8px;">تسجيل الدخول</h2>
+      <p style="font-size: 13px; color: var(--text2); margin-bottom: 30px;">يرجى تسجيل الدخول للوصول إلى مساحتك الآمنة</p>
+
+      <div class="field"><label style="text-align: right;">البريد الإلكتروني</label><input type="email" id="auth-email" class="inp" placeholder="name@example.com" /></div>
+      <div class="field"><label style="text-align: right;">كلمة المرور</label><input type="password" id="auth-password" class="inp" placeholder="••••••••" /></div>
+
+      <button id="btn-login" class="btn btn-dark" style="width: 100%; margin-top: 15px; padding: 14px;" onclick="handleLogin()">تسجيل الدخول</button>
+      <button id="btn-signup" class="btn" style="width: 100%; margin-top: 12px; background: var(--surface2); color: var(--black); box-shadow: none; border: 1px solid var(--border);" onclick="handleSignUp()">إنشاء حساب جديد</button>
+
+      <div style="margin-top: 24px; font-size: 13px; color: var(--primary); cursor: pointer; font-weight: 700; transition: 0.2s;" onclick="handleReset()">هل نسيت كلمة المرور؟</div>
+    </div>
+  </div>
+
   <!-- Desktop Sidebar -->
   <div class="sidebar">
     <div class="logo">
@@ -199,7 +228,11 @@
     <div class="nav-item" data-page="goals" onclick="goPage(this)">🏆 أهداف السنة</div>
     <div class="nav-item" data-page="books" onclick="goPage(this)">📚 مكتبتي</div>
     <div class="nav-item" data-page="zaha" onclick="goPage(this)">🏛️ مركز زها</div>
-    <div class="sync-status"><span class="sync-dot" id="syncDot"></span>مزامنة سحابية</div>
+    
+    <div style="margin-top: auto; width: 100%;">
+      <div class="nav-item" style="color: var(--red); justify-content: center; background: rgba(239, 68, 68, 0.05);" onclick="handleLogout()">🚪 تسجيل الخروج</div>
+      <div class="sync-status"><span class="sync-dot" id="syncDot"></span>مزامنة سحابية</div>
+    </div>
   </div>
 
   <!-- Main Content -->
@@ -212,7 +245,9 @@
         <div class="date-text" id="hdr-date-full">Tue,<br>December</div>
       </div>
       <div class="greeting">
-        <h1>مرحباً، صفوان 👋</h1>
+        <h1>مرحباً، صفوان 
+            <button class="del-btn" style="color:var(--red); width:36px; height:36px; font-size:18px; margin-right: 10px;" onclick="handleLogout()" title="تسجيل الخروج">🚪</button>
+        </h1>
         <p>قم بتنظيم يومك وأهدافك بسهولة!</p>
       </div>
     </div>
@@ -233,7 +268,7 @@
           </div>
         </div>
         
-        <!-- Card 2: Books (INCREASED FONT SIZES BY 25%) -->
+        <!-- Card 2: Books -->
         <div class="metric-card">
           <div style="flex:1; padding-inline-end: 10px;">
             <div class="metric-icon-wrap" style="background:#fbeae8; color:var(--primary)">📚</div>
@@ -260,7 +295,7 @@
         </div>
       </div>
 
-      <!-- New Image-Matched Chart Card -->
+      <!-- Chart Container -->
       <div class="analytics-card">
         <div class="analytics-hdr">
            <div class="analytics-title">معدل إنجاز العادات</div>
@@ -305,7 +340,7 @@
       <div id="books-list"></div>
     </div>
 
-    <!-- ZAHA CENTER (Students strictly removed) -->
+    <!-- ZAHA CENTER -->
     <div class="page" id="page-zaha">
       <div class="add-bar" style="border-color: var(--zaha-light); box-shadow: 0 10px 30px -10px rgba(79, 70, 229, 0.15);">
         <div style="font-weight:800; font-size:16px; color: var(--zaha)">سجل حصص مركز زها 🏛️</div>
@@ -397,7 +432,7 @@
     </div>
   </div>
 
-  <!-- Zaha Modal (No Students) -->
+  <!-- Zaha Modal -->
   <div class="modal-ov" id="modal-zaha">
     <div class="modal">
       <div class="modal-title" id="m-zaha-title-text" style="color: var(--zaha)">توثيق حصة زها 🏛️</div>
@@ -422,7 +457,7 @@
     </div>
   </div>
 
-  <!-- Mobile Bottom Nav - FORCED 20% WIDTH EACH FOR PERFECT FIT -->
+  <!-- Mobile Bottom Nav -->
   <div class="bnav">
     <div class="bnav-item active" data-page="dash" onclick="goPage(this)">📊<span>الملخص</span></div>
     <div class="bnav-item" data-page="daily" onclick="goPage(this)">☀️<span>عاداتي</span></div>
@@ -434,10 +469,10 @@
   <div class="toast" id="toast">✨ <span id="toast-msg"></span></div>
 
   <script>
-    const APP_VER = "v10"; // Cache buster
+    const APP_VER = "v13"; 
     
     // ═══════════════════════════════════════
-    //  FIREBASE & STATE SETUP
+    //  FIREBASE & AUTH SETUP
     // ═══════════════════════════════════════
     const firebaseConfig = {
       apiKey: "AIzaSyD5_r_wBDjy1y6Pm0oOwLIMdHyITiknSSw",
@@ -450,6 +485,9 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+    const auth = firebase.auth();
+
+    let currentUserUID = null;
 
     let state = {
       habits: [],    
@@ -468,9 +506,116 @@
     const engMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     document.getElementById('hdr-date-full').innerHTML = `${engDays[dNow.getDay()]},<br>${engMonths[dNow.getMonth()]}`;
 
+    // ═══════════════════════════════════════
+    //  AUTHENTICATION LOGIC (WITH DETAILED ERRORS)
+    // ═══════════════════════════════════════
+    
+    const authErrors = {
+        'auth/invalid-email': 'البريد الإلكتروني غير صالح.',
+        'auth/user-not-found': 'لا يوجد حساب بهذا الإيميل.',
+        'auth/wrong-password': 'كلمة المرور خاطئة.',
+        'auth/email-already-in-use': 'هذا الإيميل مستخدم مسبقاً لحساب آخر.',
+        'auth/weak-password': 'كلمة المرور ضعيفة (6 أحرف على الأقل).',
+        'auth/missing-email': 'يرجى إدخال البريد الإلكتروني.',
+        'auth/operation-not-allowed': 'يجب تفعيل تسجيل الدخول (Email/Password) من منصة Firebase أولاً!',
+        'auth/configuration-not-found': 'لم يتم تفعيل نظام المصادقة! افتح Firebase -> Authentication واضغط Get Started.'
+    };
+
+    function getAuthError(err) {
+        console.error("Firebase Auth Error:", err); 
+        return authErrors[err.code] || 'حدث خطأ: ' + err.message;
+    }
+
+    function setBtnLoading(btnId, isLoading, text) {
+        const btn = document.getElementById(btnId);
+        if(!btn) return;
+        btn.disabled = isLoading;
+        btn.textContent = isLoading ? 'جاري التحميل...' : text;
+    }
+
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            currentUserUID = user.uid;
+            document.getElementById('auth-screen').style.display = 'none';
+            checkAndMigrateDataThenLoad(currentUserUID);
+        } else {
+            currentUserUID = null;
+            document.getElementById('auth-screen').style.display = 'flex';
+        }
+    });
+
+    function handleLogin() {
+        const email = document.getElementById('auth-email').value.trim();
+        const pass = document.getElementById('auth-password').value;
+        if(!email || !pass) { toast('يرجى تعبئة الإيميل وكلمة المرور'); return; }
+        
+        setBtnLoading('btn-login', true, 'تسجيل الدخول');
+        auth.signInWithEmailAndPassword(email, pass)
+            .then(() => {
+                toast('تم تسجيل الدخول بنجاح!');
+                setBtnLoading('btn-login', false, 'تسجيل الدخول');
+            })
+            .catch(error => {
+                toast(getAuthError(error));
+                setBtnLoading('btn-login', false, 'تسجيل الدخول');
+            });
+    }
+
+    function handleSignUp() {
+        const email = document.getElementById('auth-email').value.trim();
+        const pass = document.getElementById('auth-password').value;
+        if(!email || !pass) { toast('يرجى تعبئة الإيميل وكلمة المرور'); return; }
+
+        setBtnLoading('btn-signup', true, 'إنشاء حساب جديد');
+        auth.createUserWithEmailAndPassword(email, pass)
+            .then(() => {
+                toast('تم إنشاء الحساب بنجاح!');
+                setBtnLoading('btn-signup', false, 'إنشاء حساب جديد');
+            })
+            .catch(error => {
+                toast(getAuthError(error));
+                setBtnLoading('btn-signup', false, 'إنشاء حساب جديد');
+            });
+    }
+
+    function handleReset() {
+        const email = document.getElementById('auth-email').value.trim();
+        if(!email) { toast('أدخل بريدك الإلكتروني أولاً في الخانة المخصصة'); return; }
+
+        auth.sendPasswordResetEmail(email)
+            .then(() => toast('تم إرسال رابط استعادة كلمة المرور إلى بريدك ✓'))
+            .catch(error => toast(getAuthError(error)));
+    }
+
+    function handleLogout() {
+        if(confirm('هل تريد تسجيل الخروج من حسابك؟')) {
+            auth.signOut();
+        }
+    }
+
+    // ═══════════════════════════════════════
+    //  DATA MIGRATION & LOADING
+    // ═══════════════════════════════════════
+    async function checkAndMigrateDataThenLoad(uid) {
+        const userRef = db.ref(`users/${uid}/planner_state`);
+        
+        userRef.once('value', async (snap) => {
+            if (!snap.exists()) {
+                const oldSnap = await db.ref('planner_state').once('value');
+                if (oldSnap.exists()) {
+                    await userRef.set(oldSnap.val());
+                    toast('تم استرجاع بياناتك السابقة بنجاح ✓');
+                }
+            }
+            loadState();
+        });
+    }
+
     let isInitialLoad = true;
     function loadState() {
-      db.ref('planner_state').on('value', (snapshot) => {
+      if (!currentUserUID) return;
+
+      db.ref(`users/${currentUserUID}/planner_state`).on('value', (snapshot) => {
         const p = snapshot.val();
         if (p) {
           state.habits = p.habits ? Object.values(p.habits) : [];
@@ -494,7 +639,7 @@
         console.error("Sync error", err);
         document.getElementById('syncDot').classList.remove('on');
         if (isInitialLoad) {
-          const s = localStorage.getItem('life_planner_v10');
+          const s = localStorage.getItem(`life_planner_${currentUserUID}`);
           if (s) { state = JSON.parse(s); populateGlobalSelectors(); renderAll(); }
           isInitialLoad = false;
         }
@@ -502,11 +647,12 @@
     }
 
     async function saveState() {
+      if (!currentUserUID) return;
       try {
-        await db.ref('planner_state').set(state);
+        await db.ref(`users/${currentUserUID}/planner_state`).set(state);
         document.getElementById('syncDot').classList.add('on');
       } catch (e) { document.getElementById('syncDot').classList.remove('on'); }
-      localStorage.setItem('life_planner_v10', JSON.stringify(state));
+      localStorage.setItem(`life_planner_${currentUserUID}`, JSON.stringify(state));
     }
 
     function populateGlobalSelectors() {
@@ -637,7 +783,7 @@
     }
 
     // ═══════════════════════════════════════
-    //  ZAHA CENTER LOGIC (Students Removed Completely)
+    //  ZAHA CENTER LOGIC
     // ═══════════════════════════════════════
     function saveZahaSession() {
       const id = document.getElementById('m-zaha-id').value;
@@ -1074,7 +1220,7 @@
       document.getElementById('circ-txt-daily').textContent = Math.round(dPct) + '%';
       updateCircle('circ-daily', dPct);
 
-      // Books (INCREASED FONT SIZES)
+      // Books 
       const allBooks = state.books.length;
       const totalPagesAll = state.books.reduce((s,b) => s + b.totalPages, 0);
       const readPagesAll = state.books.reduce((s,b) => s + b.readPages, 0);
@@ -1134,7 +1280,7 @@
       
       // Creating gradient exactly like the uploaded image
       const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-      gradient.addColorStop(0, 'rgba(244, 114, 114, 0.8)'); // Soft salmon/red
+      gradient.addColorStop(0, 'rgba(244, 114, 114, 0.8)'); 
       gradient.addColorStop(1, 'rgba(244, 114, 114, 0.05)');
 
       dashChart = new Chart(ctx, { 
@@ -1187,8 +1333,6 @@
         } 
       });
     }
-
-    window.onload = loadState;
   </script>
 </body>
 </html>
