@@ -28,6 +28,8 @@
       --primary: #e65c4f; 
       --primary-light: #fbeae8;
       --black: #111111;
+      --zaha: #4f46e5; /* Distinct color for Zaha */
+      --zaha-light: #e0e7ff;
       --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
       --r: 24px;
       --r-sm: 14px;
@@ -49,8 +51,8 @@
 
     /* Bottom Nav (Mobile) */
     .bnav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-top: 1px solid var(--border); z-index: 100; justify-content: space-around; padding: 10px 0; padding-bottom: env(safe-area-inset-bottom, 10px); box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
-    .bnav-item { flex: 1; text-align: center; color: var(--text2); padding: 8px 0; font-size: 20px; cursor: pointer; transition: 0.2s; }
-    .bnav-item span { display: block; font-size: 10px; font-weight: 700; margin-top: 4px; }
+    .bnav-item { flex: 1; text-align: center; color: var(--text2); padding: 6px 0; font-size: 18px; cursor: pointer; transition: 0.2s; }
+    .bnav-item span { display: block; font-size: 9px; font-weight: 700; margin-top: 4px; }
     .bnav-item.active { color: var(--primary); transform: translateY(-2px); }
 
     /* Pages */
@@ -107,23 +109,29 @@
     .goal-badge { background: var(--primary-light); color: var(--primary); }
     .period-badge { background: #e0f2fe; color: #0284c7; }
 
-    /* Cards (Goals, Books) */
+    /* Cards (Goals, Books, Zaha) */
     .card-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow); transition: 0.3s; }
     .card-box:hover { box-shadow: 0 15px 35px -10px rgba(0,0,0,0.1); }
     .card-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
     .card-title { font-size: 16px; font-weight: 800; color: var(--black); }
     .card-pct { font-size: 18px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); background: var(--primary-light); padding: 4px 12px; border-radius: 20px; }
 
+    /* Zaha Specific Card */
+    .zaha-summary { white-space: pre-wrap; font-size: 13px; color: var(--text2); line-height: 1.6; background: var(--surface2); padding: 12px; border-radius: var(--r-sm); margin-top: 12px; border-right: 3px solid var(--zaha); }
+
     /* Inputs & Buttons */
     .add-bar { display: flex; gap: 12px; margin-bottom: 30px; background: var(--surface); padding: 16px; border-radius: var(--r); border: 1px solid var(--border); align-items: center; justify-content: space-between; flex-wrap: wrap; box-shadow: var(--shadow); }
     .inp { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--black); padding: 12px 16px; border-radius: var(--r-sm); font-size: 14px; font-weight: 700; outline: none; transition: 0.2s; box-sizing: border-box; }
     .inp:focus { border-color: var(--black); background: var(--surface); }
+    textarea.inp { resize: vertical; min-height: 80px; font-weight: normal; font-size: 13px; }
     .sel { background: var(--surface2); border: 1px solid var(--border); color: var(--black); padding: 10px 16px; border-radius: var(--r-sm); font-size: 13px; font-weight: 700; outline: none; cursor: pointer; }
     
     .btn { background: var(--primary); color: #fff; border: none; padding: 12px 24px; border-radius: 30px; font-size: 14px; font-weight: 800; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; box-shadow: 0 4px 10px rgba(230, 92, 79, 0.3); }
     .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(230, 92, 79, 0.4); }
     .btn-dark { background: var(--black); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
     .btn-dark:hover { box-shadow: 0 6px 15px rgba(0,0,0,0.3); }
+    .btn-zaha { background: var(--zaha); box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); }
+    .btn-zaha:hover { box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4); }
     
     /* Circular FAB button */
     .btn-circle { width: 44px; height: 44px; padding: 0; border-radius: 50%; font-size: 24px; font-weight: 400; }
@@ -180,6 +188,7 @@
     <div class="nav-item" data-page="tasks" onclick="goPage(this)">📋 قائمة المهام</div>
     <div class="nav-item" data-page="goals" onclick="goPage(this)">🏆 أهداف السنة</div>
     <div class="nav-item" data-page="books" onclick="goPage(this)">📚 مكتبتي</div>
+    <div class="nav-item" data-page="zaha" onclick="goPage(this)">🏛️ مركز زها</div> <!-- NEW -->
     <div class="sync-status"><span class="sync-dot" id="syncDot"></span>مزامنة سحابية</div>
   </div>
 
@@ -193,7 +202,7 @@
         <div class="date-text" id="hdr-date-full">Tue,<br>December</div>
       </div>
       <div class="greeting">
-        <h1>مرحباً، هل تحتاج مساعدة؟ 👋</h1>
+        <h1>مرحباً، صفوان 👋</h1>
         <p>قم بتنظيم يومك وأهدافك بسهولة!</p>
       </div>
     </div>
@@ -214,7 +223,7 @@
           </div>
         </div>
         
-        <!-- Card 2: Books (SMART METRIC) -->
+        <!-- Card 2: Books -->
         <div class="metric-card">
           <div style="flex:1; padding-inline-end: 10px;">
             <div class="metric-icon-wrap" style="background:#fbeae8; color:var(--primary)">📚</div>
@@ -276,15 +285,10 @@
         <div style="font-weight:800; font-size:16px">قائمة المهام الشاملة</div>
         <button class="btn btn-dark" onclick="openModal('task')">+ إضافة مهمة</button>
       </div>
-      
-      <div style="margin-bottom: 20px; padding: 12px; background: var(--primary-light); color: var(--primary); border-radius: var(--r-sm); font-size: 13px; font-weight: 700;">
-        💡 عند إضافة مهمة وربطها بهدف، سيتم حساب نسبة إنجاز الهدف <b>تلقائياً</b>!
-      </div>
-
       <div id="tasks-list"></div>
     </div>
 
-    <!-- Goals (FULLY AUTOMATED PROGRESS) -->
+    <!-- Goals -->
     <div class="page" id="page-goals">
       <div class="add-bar">
         <div style="font-weight:800; font-size:16px">أهداف السنة الكبرى</div>
@@ -293,13 +297,34 @@
       <div id="goal-list"></div>
     </div>
 
-    <!-- Books Library (QUICK INLINE ADD) -->
+    <!-- Books Library -->
     <div class="page" id="page-books">
       <div class="add-bar">
         <div style="font-weight:800; font-size:16px">مكتبتي 📚</div>
         <button class="btn btn-dark" onclick="openModal('book')">+ إضافة كتاب</button>
       </div>
       <div id="books-list"></div>
+    </div>
+
+    <!-- ZAHA CENTER (NEW SECTION) -->
+    <div class="page" id="page-zaha">
+      <div class="add-bar" style="border-color: var(--zaha-light); box-shadow: 0 10px 30px -10px rgba(79, 70, 229, 0.15);">
+        <div style="font-weight:800; font-size:16px; color: var(--zaha)">سجل حصص مركز زها 🏛️</div>
+        <button class="btn btn-zaha" onclick="openModal('zaha')">+ توثيق حصة جديدة</button>
+      </div>
+
+      <div style="display: flex; gap: 16px; margin-bottom: 24px;">
+        <div style="flex: 1; background: var(--surface); padding: 16px; border-radius: var(--r-sm); border: 1px solid var(--border); text-align: center;">
+            <div style="font-size: 12px; color: var(--text2); margin-bottom: 4px;">إجمالي الساعات المسجلة</div>
+            <div id="zaha-total-hours" style="font-size: 24px; font-weight: 800; color: var(--zaha); font-family: 'JetBrains Mono', monospace;">0</div>
+        </div>
+        <div style="flex: 1; background: var(--surface); padding: 16px; border-radius: var(--r-sm); border: 1px solid var(--border); text-align: center;">
+            <div style="font-size: 12px; color: var(--text2); margin-bottom: 4px;">عدد الحصص الكلي</div>
+            <div id="zaha-total-sessions" style="font-size: 24px; font-weight: 800; color: var(--black); font-family: 'JetBrains Mono', monospace;">0</div>
+        </div>
+      </div>
+
+      <div id="zaha-list"></div>
     </div>
 
   </div> <!-- End Main -->
@@ -395,12 +420,37 @@
     </div>
   </div>
 
+  <!-- Zaha Modal (NEW) -->
+  <div class="modal-ov" id="modal-zaha">
+    <div class="modal">
+      <div class="modal-title" id="m-zaha-title-text" style="color: var(--zaha)">توثيق حصة زها 🏛️</div>
+      <input type="hidden" id="m-zaha-id">
+      
+      <div class="field"><label>اسم الدورة / الفريق</label><input type="text" class="inp" id="m-zaha-course" placeholder="مثال: 3dmqx" /></div>
+      
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="field"><label>تاريخ الحصة</label><input type="date" class="inp" id="m-zaha-date" /></div>
+        <div class="field"><label>عدد الساعات</label><input type="number" class="inp" id="m-zaha-hours" min="1" value="2" /></div>
+      </div>
+      
+      <div class="field">
+          <label>ما تم تقديمه في الحصة (اكتب كنقاط)</label>
+          <textarea class="inp" id="m-zaha-summary" placeholder="- تعلم كذا...&#10;- إنشاء كذا..."></textarea>
+      </div>
+      
+      <div class="modal-actions">
+        <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none" onclick="closeModal('zaha')">إلغاء</button>
+        <button class="btn btn-zaha" onclick="saveZahaSession()">حفظ الحصة</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Mobile Bottom Nav -->
   <div class="bnav">
     <div class="bnav-item active" data-page="dash" onclick="goPage(this)">📊<span>الملخص</span></div>
     <div class="bnav-item" data-page="daily" onclick="goPage(this)">☀️<span>عاداتي</span></div>
     <div class="bnav-item" data-page="tasks" onclick="goPage(this)">📋<span>المهام</span></div>
-    <div class="bnav-item" data-page="books" onclick="goPage(this)">📚<span>مكتبتي</span></div>
+    <div class="bnav-item" data-page="zaha" onclick="goPage(this)">🏛️<span>زها</span></div>
   </div>
 
   <div class="toast" id="toast">✨ <span id="toast-msg"></span></div>
@@ -426,7 +476,8 @@
       history: {},   
       tasks: [],     
       goals: [],     
-      books: [],     
+      books: [],
+      zahaSessions: [], // NEW: Zaha attendance tracker
       nextId: 1
     };
 
@@ -448,12 +499,14 @@
           state.tasks = p.tasks ? Object.values(p.tasks) : [];
           state.goals = p.goals ? Object.values(p.goals) : [];
           state.books = p.books ? Object.values(p.books) : [];
+          state.zahaSessions = p.zahaSessions ? Object.values(p.zahaSessions) : []; // Load Zaha
           state.nextId = p.nextId || 1;
         }
         document.getElementById('syncDot').classList.add('on');
         if (!state.history[today]) state.history[today] = [];
         if (isInitialLoad) {
           document.getElementById('m-hab-start').value = today;
+          document.getElementById('m-zaha-date').value = today; // default date for zaha
           isInitialLoad = false;
         }
         
@@ -463,7 +516,7 @@
         console.error("Sync error", err);
         document.getElementById('syncDot').classList.remove('on');
         if (isInitialLoad) {
-          const s = localStorage.getItem('life_planner_v5');
+          const s = localStorage.getItem('life_planner_v6');
           if (s) { state = JSON.parse(s); populateGlobalSelectors(); renderAll(); }
           isInitialLoad = false;
         }
@@ -475,7 +528,7 @@
         await db.ref('planner_state').set(state);
         document.getElementById('syncDot').classList.add('on');
       } catch (e) { document.getElementById('syncDot').classList.remove('on'); }
-      localStorage.setItem('life_planner_v5', JSON.stringify(state));
+      localStorage.setItem('life_planner_v6', JSON.stringify(state));
     }
 
     function populateGlobalSelectors() {
@@ -587,6 +640,25 @@
           document.getElementById('m-book-read').value = '0';
         }
       }
+      else if (type === 'zaha') {
+        if(id) {
+          const z = state.zahaSessions.find(x => x.id === id);
+          if(!z) return;
+          document.getElementById('m-zaha-id').value = z.id;
+          document.getElementById('m-zaha-title-text').textContent = 'تعديل بيانات الحصة ✎';
+          document.getElementById('m-zaha-course').value = z.course;
+          document.getElementById('m-zaha-date').value = z.date;
+          document.getElementById('m-zaha-hours').value = z.hours;
+          document.getElementById('m-zaha-summary').value = z.summary;
+        } else {
+          document.getElementById('m-zaha-id').value = '';
+          document.getElementById('m-zaha-title-text').textContent = 'توثيق حصة زها 🏛️';
+          document.getElementById('m-zaha-course').value = '';
+          document.getElementById('m-zaha-date').value = today;
+          document.getElementById('m-zaha-hours').value = '2';
+          document.getElementById('m-zaha-summary').value = '';
+        }
+      }
       
       document.getElementById(`modal-${type}`).classList.add('show'); 
     }
@@ -608,8 +680,96 @@
       renderTasks();
       renderGoals();
       renderBooks();
+      renderZaha(); // NEW
       renderDashboard();
     }
+
+    // ═══════════════════════════════════════
+    //  ZAHA CENTER LOGIC (NEW)
+    // ═══════════════════════════════════════
+    function saveZahaSession() {
+      const id = document.getElementById('m-zaha-id').value;
+      const course = document.getElementById('m-zaha-course').value.trim();
+      const date = document.getElementById('m-zaha-date').value || today;
+      const hours = parseInt(document.getElementById('m-zaha-hours').value) || 0;
+      const summary = document.getElementById('m-zaha-summary').value.trim();
+
+      if (!course) { toast('يرجى إدخال اسم الدورة أو الفريق'); return; }
+
+      if(id) {
+        const z = state.zahaSessions.find(x => x.id == id);
+        if(z) { z.course = course; z.date = date; z.hours = hours; z.summary = summary; }
+      } else {
+        state.zahaSessions.push({ id: state.nextId++, course, date, hours, summary });
+      }
+
+      // Sort by date descending (newest first)
+      state.zahaSessions.sort((a,b) => new Date(b.date) - new Date(a.date));
+      
+      saveState(); renderAll(); closeModal('zaha'); toast('تم توثيق الحصة بنجاح 🏛️');
+    }
+
+    function delZahaSession(id) {
+      if(!confirm('هل أنت متأكد من حذف سجل هذه الحصة؟')) return;
+      state.zahaSessions = state.zahaSessions.filter(z => z.id !== id);
+      saveState(); renderAll();
+    }
+
+    function copyZahaWhatsApp(id) {
+        const session = state.zahaSessions.find(x => x.id === id);
+        if(!session) return;
+        
+        // Format exactly as requested
+        const formattedDate = new Date(session.date).toLocaleDateString('ar-JO'); // Converts to standard short date
+        const msg = `ملخص الحصة التدريبية\n\n* اسم الدورة / الفريق: ${session.course}\n* اسم المدرب: صفوان كراسنه\n* التاريخ: ${formattedDate}\n* الساعات المنجزة: ${session.hours}\n\n🔹 ما تم تقديمه في الحصة:\n\n${session.summary}`;
+        
+        // Copy to clipboard
+        const el = document.createElement('textarea');
+        el.value = msg;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        
+        toast('تم النسخ للحافظة! جاهز للصق بالواتساب 💬');
+    }
+
+    function renderZaha() {
+        const totalHours = state.zahaSessions.reduce((s, z) => s + z.hours, 0);
+        const totalSessions = state.zahaSessions.length;
+        
+        document.getElementById('zaha-total-hours').textContent = totalHours;
+        document.getElementById('zaha-total-sessions').textContent = totalSessions;
+
+        document.getElementById('zaha-list').innerHTML = state.zahaSessions.length ? state.zahaSessions.map(z => {
+            const formattedDate = new Date(z.date).toLocaleDateString('ar-JO', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
+            return `
+            <div class="card-box" style="border-left: 4px solid var(--zaha);">
+                <div class="card-hdr" style="margin-bottom: 8px;">
+                    <div style="display:flex; align-items:center; gap:10px">
+                        <div style="font-size:24px">🧑‍🏫</div>
+                        <div>
+                            <div class="card-title">${z.course}</div>
+                            <div style="font-size:12px; color:var(--text3); margin-top:4px">${formattedDate} • ${z.hours} ساعات</div>
+                        </div>
+                    </div>
+                </div>
+                
+                ${z.summary ? `<div class="zaha-summary">${z.summary}</div>` : ''}
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px;">
+                    <button class="btn" style="background:#25D366; box-shadow:none; font-size:12px; padding:8px 16px;" onclick="copyZahaWhatsApp(${z.id})">
+                        💬 نسخ للواتساب
+                    </button>
+                    <div style="display:flex; gap:6px;">
+                        <button class="del-btn" onclick="openModal('zaha', ${z.id})">✎</button>
+                        <button class="del-btn" onclick="delZahaSession(${z.id})">✕</button>
+                    </div>
+                </div>
+            </div>`;
+        }).join('') : '<div class="empty">لم يتم تسجيل أي حصص لمركز زها بعد. اضغط على الزر بالأعلى للتوثيق!</div>';
+    }
+
 
     // ═══════════════════════════════════════
     //  HABITS
@@ -712,6 +872,8 @@
     }
 
     function renderHabitStats() {
+      const dayNames = ['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
+      
       const html = state.habits.map(h => {
         let expected = 0; let done = 0;
         let startD = new Date(h.start || today);
@@ -723,20 +885,33 @@
         }
         Object.keys(state.history).forEach(d => { if (d <= today && state.history[d].includes(h.id)) done++; });
         const pct = expected === 0 ? 0 : Math.min((done / expected) * 100, 100);
+        
+        let freqLabel = h.freq === 'daily' ? 'يومياً' : 'أيام محددة';
+        if (h.freq === 'specific' && h.days && h.days.length > 0) {
+            freqLabel = h.days.map(d => dayNames[d]).join('، ');
+        }
+        
+        let progressText = expected === 0
+            ? '💡 لم يحن وقت التنفيذ بعد'
+            : `الإنجاز الفعلي: <strong>${done}</strong> من <strong>${expected}</strong> أيام مجدولة`;
+
         return `<div class="list-item" style="padding:20px; display:block">
           <div style="display:flex; justify-content:space-between; margin-bottom:12px">
-            <span style="font-size:15px; font-weight:800; color:var(--black)">${h.title}</span>
+            <div style="display:flex; flex-direction:column; gap:4px;">
+              <span style="font-size:15px; font-weight:800; color:var(--black)">${h.title}</span>
+              <span style="font-size:11px; color:var(--text2);">⏱ أيام التكرار: ${freqLabel}</span>
+            </div>
             <span style="font-size:16px; color:var(--primary); font-weight:800; font-family:'JetBrains Mono', monospace">${pct.toFixed(0)}%</span>
           </div>
           <div class="prog-bg"><div class="prog-fill" style="background:var(--primary); width:${pct}%"></div></div>
-          <div class="item-meta" style="margin-top:12px">الإنجاز الفعلي: <strong>${done}</strong> من <strong>${expected}</strong> أيام مجدولة</div>
+          <div class="item-meta" style="margin-top:12px">${progressText}</div>
         </div>`;
       }).join('');
       document.getElementById('habit-stats').innerHTML = html || '<div class="empty">لم تتم إضافة أي عادات بعد</div>';
     }
 
     // ═══════════════════════════════════════
-    //  TASKS (UNIFIED & EDITABLE)
+    //  TASKS
     // ═══════════════════════════════════════
     function saveTask() {
       const id = document.getElementById('m-task-id').value;
@@ -788,7 +963,6 @@
     }
     
     function renderTasks() {
-      // Sort tasks: incomplete first
       const sorted = [...state.tasks].sort((a, b) => a.completed - b.completed);
       const periodLabels = { 'weekly': 'أسبوعية', 'monthly': 'شهرية', 'yearly': 'سنوية' };
 
@@ -822,9 +996,8 @@
     }
 
     // ═══════════════════════════════════════
-    //  GOALS (HYBRID AUTOMATED & MANUAL)
+    //  GOALS 
     // ═══════════════════════════════════════
-    
     function getGoalProgressInfo(goalId) {
       const linkedTasks = state.tasks.filter(t => t.goalId == goalId);
       const linkedHabits = state.habits.filter(h => h.goalId == goalId);
@@ -886,7 +1059,6 @@
         const g = state.goals.find(x => x.id == id);
         if(g) { g.title = title; }
       } else {
-        // نضمن إعطاء تقدم مبدئي 0 للأهداف اليدوية الجديدة
         state.goals.push({ id: state.nextId++, title, progress: 0 });
       }
       
@@ -947,8 +1119,8 @@
             <div class="card-title">${g.title}</div>
             <div style="display:flex;gap:12px;align-items:center">
               <div class="card-pct" id="goal-pct-${g.id}">${pct}%</div>
-              <button class="del-btn" style="color:var(--text2)" onclick="openModal('goal', ${g.id})">✎</button>
-              <button class="del-btn" onclick="delGoal(${g.id})">✕</button>
+              <button class="del-btn" style="color:var(--text2)" onclick="openModal('goal', ${g.id})" title="تعديل الهدف">✎</button>
+              <button class="del-btn" onclick="delGoal(${g.id})" title="حذف الهدف">✕</button>
             </div>
           </div>
           <div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" id="goal-fill-${g.id}" style="background:var(--primary);width:${pct}%"></div></div></div>
@@ -959,7 +1131,7 @@
     }
 
     // ═══════════════════════════════════════
-    //  BOOKS LIBRARY (INLINE QUICK ADD)
+    //  BOOKS LIBRARY
     // ═══════════════════════════════════════
     function saveBook() {
       const id = document.getElementById('m-book-id').value;
@@ -977,16 +1149,18 @@
         state.books.push({ id: state.nextId++, title, totalPages, readPages });
       }
       
-      saveState(); renderAll(); closeModal('book'); toast('تم حفظ الكتاب 📚');
+      saveState(); populateGlobalSelectors(); renderAll(); closeModal('book'); toast('تم حفظ الكتاب 📚');
     }
 
     function delBook(id) {
       if(!confirm('حذف الكتاب؟')) return;
       state.books = state.books.filter(b => b.id !== id);
-      saveState(); renderAll();
+      // Remove link from habits/tasks
+      state.tasks.forEach(t => { if(t.bookId == id) t.bookId = ""; });
+      state.habits.forEach(h => { if(h.bookId == id) h.bookId = ""; });
+      saveState(); populateGlobalSelectors(); renderAll();
     }
 
-    // New Inline Quick Add Logic
     function quickAddPagesInline(id) {
       const b = state.books.find(x => x.id === id);
       if(!b) return;
@@ -1025,13 +1199,10 @@
           <div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" style="background:var(--primary);width:${pct}%"></div></div></div>
           
           <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; border-top: 1px solid var(--border); padding-top:16px;">
-            
-            <!-- Quick Add Form -->
             <div style="display:flex; align-items:center; gap:8px;">
                 <input type="number" id="quick-add-book-${b.id}" class="inp" placeholder="كم صفحة؟" style="width:100px; padding:8px 12px;" min="1" ${isDone? 'disabled':''}>
                 <button class="btn btn-dark" style="padding:8px 16px;" onclick="quickAddPagesInline(${b.id})" title="إضافة" ${isDone? 'disabled':''}>+</button>
             </div>
-            
             <div style="display:flex; gap:6px;">
               <button class="del-btn" onclick="openModal('book', ${b.id})">✎</button>
               <button class="del-btn" onclick="delBook(${b.id})">✕</button>
@@ -1062,13 +1233,12 @@
       document.getElementById('circ-txt-daily').textContent = Math.round(dPct) + '%';
       updateCircle('circ-daily', dPct);
 
-      // Books (SMART METRIC - OVERALL PROGRESS)
+      // Books
       const allBooks = state.books.length;
       const totalPagesAll = state.books.reduce((s,b) => s + b.totalPages, 0);
       const readPagesAll = state.books.reduce((s,b) => s + b.readPages, 0);
       const overallBooksPct = totalPagesAll > 0 ? (readPagesAll / totalPagesAll * 100) : 0;
       
-      // Find Active Book
       const activeBook = state.books.find(b => b.readPages > 0 && b.readPages < b.totalPages) || state.books.find(b => b.readPages === 0);
       let activeBookHtml = '';
       if(activeBook) {
@@ -1080,7 +1250,7 @@
       document.getElementById('circ-txt-books').textContent = Math.round(overallBooksPct) + '%';
       updateCircle('circ-books', overallBooksPct);
 
-      // Goals (Dynamically Calculate Average Progress of all goals based on tasks, habits, and manual inputs)
+      // Goals
       let gAvg = 0;
       if (state.goals.length > 0) {
           let sumProgress = 0;
