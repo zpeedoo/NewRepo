@@ -72,7 +72,7 @@
 
     /* Dashboard Metrics Cards */
     .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 30px; }
-    .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
+    .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: flex-start; transition: 0.3s; min-height: 125px; }
     .metric-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px -10px rgba(0,0,0,0.1); }
     
     .metric-icon-wrap { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 18px; }
@@ -80,7 +80,7 @@
     .metric-val { font-size: 28px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--black); letter-spacing: -1px; }
 
     /* SVG Circles */
-    .circ-wrap { position: relative; width: 70px; height: 70px; flex-shrink: 0; }
+    .circ-wrap { position: relative; width: 70px; height: 70px; flex-shrink: 0; margin-top: auto; margin-bottom: auto;}
     .circ-bg { fill: none; stroke: var(--border); stroke-width: 6; }
     .circ-val { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 1s cubic-bezier(0.16, 1, 0.3, 1); transform: rotate(-90deg); transform-origin: 50% 50%; }
     .circ-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--black); }
@@ -89,12 +89,6 @@
     .prog-wrap { margin-top: 16px; }
     .prog-bg { background: var(--border); height: 8px; border-radius: 4px; overflow: hidden; }
     .prog-fill { height: 100%; border-radius: 4px; transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-    
-    input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; margin: 10px 0; }
-    input[type=range]:focus { outline: none; }
-    input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 8px; cursor: pointer; background: var(--border); border-radius: 4px; }
-    input[type=range]::-webkit-slider-thumb { height: 20px; width: 20px; border-radius: 50%; background: var(--black); cursor: pointer; -webkit-appearance: none; margin-top: -6px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.2s; }
-    input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.1); }
 
     /* Lists & Items */
     .list-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 18px 20px; margin-bottom: 12px; display: flex; align-items: center; gap: 16px; transition: 0.2s; box-shadow: var(--shadow); }
@@ -209,7 +203,7 @@
       <div class="grid-4">
         <!-- Card 1 -->
         <div class="metric-card">
-          <div>
+          <div style="flex:1">
             <div class="metric-icon-wrap" style="background:#e0f2fe; color:#0284c7">☀️</div>
             <div class="metric-title">العادات اليومية</div>
             <div class="metric-val" id="dash-daily-val">0/0</div>
@@ -220,12 +214,12 @@
           </div>
         </div>
         
-        <!-- Card 2: Replaced with Books -->
+        <!-- Card 2: Books (SMART METRIC) -->
         <div class="metric-card">
-          <div>
+          <div style="flex:1; padding-inline-end: 10px;">
             <div class="metric-icon-wrap" style="background:#fbeae8; color:var(--primary)">📚</div>
-            <div class="metric-title">الكتب المقروءة</div>
-            <div class="metric-val" id="dash-books-val">0</div>
+            <div class="metric-title">مكتبتي (التقدم العام)</div>
+            <div class="metric-val" id="dash-books-val" style="font-size: 24px;">0</div>
           </div>
           <div class="circ-wrap">
             <svg width="70" height="70" viewBox="0 0 70 70"><circle class="circ-bg" cx="35" cy="35" r="30"></circle><circle class="circ-val" id="circ-books" cx="35" cy="35" r="30" stroke="var(--primary)" stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle></svg>
@@ -235,7 +229,7 @@
 
         <!-- Card 3 -->
         <div class="metric-card">
-          <div>
+          <div style="flex:1">
             <div class="metric-icon-wrap" style="background:#f3f4f6; color:var(--black)">🏆</div>
             <div class="metric-title">تقدم أهداف السنة</div>
             <div class="metric-val" id="dash-goals-val">0%</div>
@@ -268,7 +262,6 @@
     <div class="page" id="page-daily">
       <div class="add-bar">
         <div style="font-weight:800; font-size:16px">المهام والعادات المجدولة لليوم</div>
-        <!-- CHANGED: Circular button with just + -->
         <button class="btn btn-dark btn-circle" onclick="openModal('habit')" title="إضافة عادة">+</button>
       </div>
       <div id="habit-list"></div>
@@ -277,7 +270,7 @@
       <div id="habit-stats"></div>
     </div>
 
-    <!-- Tasks (UNIFIED LIST + EDITABLE) -->
+    <!-- Tasks -->
     <div class="page" id="page-tasks">
       <div class="add-bar">
         <div style="font-weight:800; font-size:16px">قائمة المهام الشاملة</div>
@@ -291,7 +284,7 @@
       <div id="tasks-list"></div>
     </div>
 
-    <!-- Goals (EDITABLE & AUTOMATED PROGRESS) -->
+    <!-- Goals (FULLY AUTOMATED PROGRESS) -->
     <div class="page" id="page-goals">
       <div class="add-bar">
         <div style="font-weight:800; font-size:16px">أهداف السنة الكبرى</div>
@@ -300,7 +293,7 @@
       <div id="goal-list"></div>
     </div>
 
-    <!-- Books Library (NEW SECTION) -->
+    <!-- Books Library (QUICK INLINE ADD) -->
     <div class="page" id="page-books">
       <div class="add-bar">
         <div style="font-weight:800; font-size:16px">مكتبتي 📚</div>
@@ -349,7 +342,7 @@
     </div>
   </div>
 
-  <!-- Task Modal (NEW for editing and adding) -->
+  <!-- Task Modal -->
   <div class="modal-ov" id="modal-task">
     <div class="modal">
       <div class="modal-title" id="m-task-title-text">إضافة مهمة 📋</div>
@@ -370,7 +363,7 @@
     </div>
   </div>
 
-  <!-- Goal Modal (NEW for editing and adding) -->
+  <!-- Goal Modal -->
   <div class="modal-ov" id="modal-goal">
     <div class="modal">
       <div class="modal-title" id="m-goal-title-text">إضافة هدف 🏆</div>
@@ -383,7 +376,7 @@
     </div>
   </div>
 
-  <!-- Book Modal (NEW) -->
+  <!-- Book Modal -->
   <div class="modal-ov" id="modal-book">
     <div class="modal">
       <div class="modal-title" id="m-book-title-text">إضافة كتاب 📚</div>
@@ -426,20 +419,18 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // Data Structure
     let state = {
       habits: [],    
       history: {},   
       tasks: [],     
       goals: [],     
-      books: [],     // NEW: For Books library
+      books: [],     
       nextId: 1
     };
 
     const dNow = new Date();
     const today = new Date(dNow.getTime() - (dNow.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
     
-    // Set Header Date visually
     document.getElementById('hdr-day').textContent = dNow.getDate();
     const engDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const engMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -464,15 +455,14 @@
           isInitialLoad = false;
         }
         
-        recalculateGoalsProgress();
         populateGlobalSelectors();
         renderAll();
       }, (err) => {
         console.error("Sync error", err);
         document.getElementById('syncDot').classList.remove('on');
         if (isInitialLoad) {
-          const s = localStorage.getItem('life_planner_v4');
-          if (s) { state = JSON.parse(s); recalculateGoalsProgress(); populateGlobalSelectors(); renderAll(); }
+          const s = localStorage.getItem('life_planner_v5');
+          if (s) { state = JSON.parse(s); populateGlobalSelectors(); renderAll(); }
           isInitialLoad = false;
         }
       });
@@ -483,24 +473,7 @@
         await db.ref('planner_state').set(state);
         document.getElementById('syncDot').classList.add('on');
       } catch (e) { document.getElementById('syncDot').classList.remove('on'); }
-      localStorage.setItem('life_planner_v4', JSON.stringify(state));
-    }
-
-    // ═══════════════════════════════════════
-    //  GOALS AUTO-CALCULATION
-    // ═══════════════════════════════════════
-    function recalculateGoalsProgress() {
-      state.goals.forEach(g => {
-        const linkedTasks = state.tasks.filter(t => t.goalId == g.id);
-        if (linkedTasks.length > 0) {
-          const completedTasks = linkedTasks.filter(t => t.completed).length;
-          const calculatedPct = Math.round((completedTasks / linkedTasks.length) * 100);
-          g.progress = calculatedPct;
-          g.hasLinkedTasks = true; 
-        } else {
-          g.hasLinkedTasks = false; 
-        }
-      });
+      localStorage.setItem('life_planner_v5', JSON.stringify(state));
     }
 
     function populateGlobalSelectors() {
@@ -737,7 +710,6 @@
         state.tasks.push({ id: state.nextId++, title, period, goalId, completed: false, dateAdded: today });
       }
       
-      recalculateGoalsProgress(); 
       saveState(); 
       renderAll(); 
       closeModal('task');
@@ -748,7 +720,6 @@
       const t = state.tasks.find(x => x.id === id); 
       if (t) { 
         t.completed = !t.completed; 
-        recalculateGoalsProgress(); 
         saveState(); 
         renderAll(); 
       } 
@@ -757,7 +728,6 @@
     function delTask(id) { 
       if(!confirm('حذف المهمة؟')) return;
       state.tasks = state.tasks.filter(t => t.id !== id); 
-      recalculateGoalsProgress(); 
       saveState(); 
       renderAll(); 
     }
@@ -786,7 +756,7 @@
     }
 
     // ═══════════════════════════════════════
-    //  GOALS
+    //  GOALS (FULLY AUTOMATED)
     // ═══════════════════════════════════════
     function saveGoal() {
       const id = document.getElementById('m-goal-id').value;
@@ -797,7 +767,7 @@
         const g = state.goals.find(x => x.id == id);
         if(g) { g.title = title; }
       } else {
-        state.goals.push({ id: state.nextId++, title, progress: 0, hasLinkedTasks: false });
+        state.goals.push({ id: state.nextId++, title });
       }
       
       saveState(); populateGlobalSelectors(); renderAll(); closeModal('goal'); toast('تم الحفظ 🎯');
@@ -810,44 +780,38 @@
       state.habits.forEach(h => { if(h.goalId == id) h.goalId = ""; });
       saveState(); populateGlobalSelectors(); renderAll(); 
     }
-    
-    function updateGoalUI(id, val) {
-      const g = state.goals.find(x => x.id === id);
-      if (g && !g.hasLinkedTasks) {
-        g.progress = parseInt(val);
-        document.getElementById(`goal-pct-${id}`).textContent = g.progress + '%';
-        document.getElementById(`goal-fill-${id}`).style.width = g.progress + '%';
-        renderDashboard(); 
-      }
-    }
-    
-    function saveGoalUI(id, val) { 
-      const g = state.goals.find(x => x.id === id); 
-      if (g && !g.hasLinkedTasks) { g.progress = parseInt(val); saveState(); } 
-    }
 
     function renderGoals() {
-      document.getElementById('goal-list').innerHTML = state.goals.length ? state.goals.map(g => `
+      document.getElementById('goal-list').innerHTML = state.goals.length ? state.goals.map(g => {
+        // Calculate goal progress strictly from Tasks dynamically
+        const linkedTasks = state.tasks.filter(t => t.goalId == g.id);
+        const totalLinked = linkedTasks.length;
+        const completedLinked = linkedTasks.filter(t => t.completed).length;
+        const pct = totalLinked > 0 ? Math.round((completedLinked / totalLinked) * 100) : 0;
+
+        return `
         <div class="card-box">
           <div class="card-hdr">
             <div class="card-title">${g.title}</div>
             <div style="display:flex;gap:12px;align-items:center">
-              <div class="card-pct" id="goal-pct-${g.id}">${g.progress}%</div>
+              <div class="card-pct">${pct}%</div>
               <button class="del-btn" style="color:var(--text2)" onclick="openModal('goal', ${g.id})">✎</button>
               <button class="del-btn" onclick="delGoal(${g.id})">✕</button>
             </div>
           </div>
-          <div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" id="goal-fill-${g.id}" style="background:var(--primary);width:${g.progress}%"></div></div></div>
+          <div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" style="background:var(--primary);width:${pct}%"></div></div></div>
           
-          ${g.hasLinkedTasks 
-            ? `<div style="font-size:11px; color:var(--text3); margin-top:12px; text-align:left;">🔒 النسبة محسوبة تلقائياً بناءً على إنجاز المهام المرتبطة</div>` 
-            : `<input type="range" min="0" max="100" value="${g.progress}" oninput="updateGoalUI(${g.id}, this.value)" onchange="saveGoalUI(${g.id}, this.value)">`
-          }
-        </div>`).join('') : '<div class="empty">لم تقم بإضافة أهداف كبيرة بعد</div>';
+          <div style="font-size:12px; color:var(--text3); margin-top:14px;">
+            ${totalLinked > 0 
+                ? `✔ تم إنجاز <b>${completedLinked}</b> من أصل <b>${totalLinked}</b> مهام مرتبطة بهذا الهدف.` 
+                : '💡 النسبة تُحسب تلقائياً. قم بإضافة مهمة جديدة واربطها بهذا الهدف لتبدأ القياس!'}
+          </div>
+        </div>`;
+      }).join('') : '<div class="empty">لم تقم بإضافة أهداف كبيرة بعد</div>';
     }
 
     // ═══════════════════════════════════════
-    //  BOOKS LIBRARY
+    //  BOOKS LIBRARY (INLINE QUICK ADD)
     // ═══════════════════════════════════════
     function saveBook() {
       const id = document.getElementById('m-book-id').value;
@@ -874,14 +838,20 @@
       saveState(); renderAll();
     }
 
-    function quickAddPages(id) {
+    // New Inline Quick Add Logic
+    function quickAddPagesInline(id) {
       const b = state.books.find(x => x.id === id);
       if(!b) return;
-      const added = prompt(`كم صفحة قرأت اليوم من "${b.title}"؟\n(الصفحات الحالية: ${b.readPages}/${b.totalPages})`);
-      const val = parseInt(added);
+      const inputEl = document.getElementById(`quick-add-book-${id}`);
+      const val = parseInt(inputEl.value);
+      
       if(!isNaN(val) && val > 0) {
         b.readPages = Math.min(b.readPages + val, b.totalPages);
-        saveState(); renderAll(); toast('قراءة ممتعة! تم التحديث ✓');
+        saveState(); 
+        renderAll(); 
+        toast(`تم إضافة ${val} صفحات. قراءة ممتعة! ✓`);
+      } else {
+        toast('يرجى إدخال عدد صفحات صحيح');
       }
     }
 
@@ -903,9 +873,17 @@
               <div class="card-pct">${pct}%</div>
             </div>
           </div>
+          
           <div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" style="background:var(--primary);width:${pct}%"></div></div></div>
-          <div style="display:flex; justify-content:space-between; margin-top:16px;">
-            <button class="btn btn-dark" style="font-size:12px; padding:8px 16px; opacity:${isDone? '0.5':'1'}" onclick="quickAddPages(${b.id})" ${isDone? 'disabled':''}>+ تحديث القراءة</button>
+          
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; border-top: 1px solid var(--border); padding-top:16px;">
+            
+            <!-- Quick Add Form -->
+            <div style="display:flex; align-items:center; gap:8px;">
+                <input type="number" id="quick-add-book-${b.id}" class="inp" placeholder="كم صفحة؟" style="width:100px; padding:8px 12px;" min="1" ${isDone? 'disabled':''}>
+                <button class="btn btn-dark" style="padding:8px 16px;" onclick="quickAddPagesInline(${b.id})" title="إضافة" ${isDone? 'disabled':''}>+</button>
+            </div>
+            
             <div style="display:flex; gap:6px;">
               <button class="del-btn" onclick="openModal('book', ${b.id})">✎</button>
               <button class="del-btn" onclick="delBook(${b.id})">✕</button>
@@ -936,16 +914,36 @@
       document.getElementById('circ-txt-daily').textContent = Math.round(dPct) + '%';
       updateCircle('circ-daily', dPct);
 
-      // Books (Completed vs Total)
+      // Books (SMART METRIC - OVERALL PROGRESS)
       const allBooks = state.books.length;
-      const doneBooks = state.books.filter(b => b.readPages >= b.totalPages).length;
-      const bPct = allBooks ? (doneBooks / allBooks * 100) : 0;
-      document.getElementById('dash-books-val').textContent = `${doneBooks}/${allBooks}`;
-      document.getElementById('circ-txt-books').textContent = Math.round(bPct) + '%';
-      updateCircle('circ-books', bPct);
+      const totalPagesAll = state.books.reduce((s,b) => s + b.totalPages, 0);
+      const readPagesAll = state.books.reduce((s,b) => s + b.readPages, 0);
+      const overallBooksPct = totalPagesAll > 0 ? (readPagesAll / totalPagesAll * 100) : 0;
+      
+      // Find Active Book (book with progress > 0 but not 100%. Fallback to a new book)
+      const activeBook = state.books.find(b => b.readPages > 0 && b.readPages < b.totalPages) || state.books.find(b => b.readPages === 0);
+      let activeBookHtml = '';
+      if(activeBook) {
+         const aPct = Math.round((activeBook.readPages / activeBook.totalPages) * 100);
+         activeBookHtml = `<div style="font-size:11px; color:var(--text3); margin-top:6px; font-weight:normal; line-height:1.4;">تقرأ الآن: ${activeBook.title} (${aPct}%)</div>`;
+      }
 
-      // Goals 
-      const gAvg = state.goals.length ? state.goals.reduce((s, g) => s + g.progress, 0) / state.goals.length : 0;
+      document.getElementById('dash-books-val').innerHTML = `${allBooks} <span style="font-size:13px; color:var(--text2); font-weight:normal;">كتب مسجلة</span>${activeBookHtml}`;
+      document.getElementById('circ-txt-books').textContent = Math.round(overallBooksPct) + '%';
+      updateCircle('circ-books', overallBooksPct);
+
+      // Goals (Dynamically Calculate Average Progress of all goals based on tasks)
+      let gAvg = 0;
+      if (state.goals.length > 0) {
+          let sumProgress = 0;
+          state.goals.forEach(g => {
+            const linkedTasks = state.tasks.filter(t => t.goalId == g.id);
+            if (linkedTasks.length > 0) {
+                sumProgress += (linkedTasks.filter(t => t.completed).length / linkedTasks.length * 100);
+            }
+          });
+          gAvg = sumProgress / state.goals.length;
+      }
       document.getElementById('dash-goals-val').textContent = Math.round(gAvg) + '%';
       document.getElementById('circ-txt-goals').textContent = Math.round(gAvg) + '%';
       updateCircle('circ-goals', gAvg);
@@ -957,16 +955,13 @@
       const daysFilter = parseInt(document.getElementById('chart-filter').value) || 7;
       const labels = []; const vals = [];
       
-      // Calculate data points
       for(let i=daysFilter-1; i>=0; i--) {
         const d = new Date(); d.setDate(d.getDate() - i);
-        const dateStr = d.toLocaleDateString('en-CA'); // YYYY-MM-DD
+        const dateStr = d.toLocaleDateString('en-CA'); 
         
-        // Format label based on range
         if (daysFilter <= 7) {
           labels.push(d.toLocaleDateString('ar-JO', { weekday: 'short' }));
         } else {
-          // For longer periods, just show MM/DD
           labels.push(`${d.getMonth()+1}/${d.getDate()}`);
         }
         
@@ -990,7 +985,7 @@
             label: 'نسبة الإنجاز (%)', 
             data: vals, 
             backgroundColor: gradient, 
-            borderRadius: daysFilter <= 30 ? 6 : 2, // Thinner border radius for dense charts
+            borderRadius: daysFilter <= 30 ? 6 : 2,
             borderSkipped: false,
             barThickness: daysFilter <= 7 ? 24 : daysFilter <= 30 ? 10 : 'flex'
           }] 
@@ -1018,7 +1013,7 @@
               ticks: { 
                 color: '#6b7280', 
                 font: { family: 'Almarai', size: daysFilter <= 7 ? 12 : 9, weight: 'bold' },
-                maxTicksLimit: 15 // Prevent crowding on large ranges
+                maxTicksLimit: 15
               } 
             } 
           } 
