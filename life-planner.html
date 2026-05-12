@@ -409,14 +409,14 @@
 
       <div class="reader-tabs">
           <button class="rtab-btn active" id="rtab-read" onclick="switchReaderMode('read')">قراءة الكتاب</button>
-          <button class="rtab-btn" id="rtab-import" onclick="switchReaderMode('import')">رفع ملف (MD)</button>
+          <button class="rtab-btn" id="rtab-import" onclick="switchReaderMode('import')">رفع ملف</button>
       </div>
 
       <div id="reader-import-section" style="display: none; background: white; padding: 30px; border-radius: var(--r); box-shadow: var(--shadow); border: 1px solid var(--border); text-align: center;">
           <h3>ارفع ملف الكتاب المترجم</h3>
-          <p style="font-size: 13px; color: #666; margin-bottom: 25px;">يجب أن يكون الملف بتنسيق Markdown (.md) أو Text (.txt)<br>الترتيب: فقرة إنجليزية تليها فوراً الفقرة العربية.</p>
+          <p style="font-size: 13px; color: #666; margin-bottom: 25px;">يجب أن يكون الملف بتنسيق Markdown (.md)، Text (.txt) أو HTML (.html)<br>الترتيب: فقرة إنجليزية تليها فوراً الفقرة العربية.</p>
           <div class="file-upload-wrapper" onclick="document.getElementById('readerFileInput').click()">
-              <input type="file" id="readerFileInput" accept=".md,.txt" onchange="handleFileSelect(this)" style="display:none;">
+              <input type="file" id="readerFileInput" accept=".md,.txt,.html,.htm" onchange="handleFileSelect(this)" style="display:none;">
               <div id="readerFileName">اضغط لاختيار ملف من جهازك</div>
           </div>
           <button class="btn btn-dark" id="saveReaderBtn" disabled onclick="processAndSaveFile()" style="width: 100%; font-size: 16px; padding: 12px;">بدء المعالجة والحفظ 🚀</button>
@@ -536,7 +536,7 @@
   <div class="toast" id="toast">✨ <span id="toast-msg"></span></div>
 
   <script>
-    const APP_VER = "v14_Integrated"; 
+    const APP_VER = "v15_Integrated"; 
 
     // Global Error Handling
     window.onerror = function(message, source, lineno, colno, error) {
@@ -1536,7 +1536,18 @@
         if (!currentUserUID) { alert("يجب تسجيل الدخول لكي تتمكن من الحفظ."); return; }
         
         document.getElementById('global-loading').style.display = 'flex';
-        const allParas = window.rawFileContent.split(/\n\s*\n/).map(p => p.trim()).filter(p => p.length > 0);
+        
+        const fileName = document.getElementById('readerFileName').textContent.toLowerCase();
+        let textToParse = window.rawFileContent;
+        
+        // Handle HTML files by parsing them and extracting text content
+        if (fileName.endsWith('.html') || fileName.endsWith('.htm') || textToParse.trim().toLowerCase().startsWith('<')) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(textToParse, 'text/html');
+            textToParse = doc.body.innerText; 
+        }
+
+        const allParas = textToParse.split(/\n\s*\n/).map(p => p.trim()).filter(p => p.length > 0);
         const arrangedData = [];
         
         for (let i = 0; i < allParas.length; i += 2) {
@@ -1567,7 +1578,7 @@
         if (!area) return;
 
         if (readerData.length === 0) {
-            area.innerHTML = `<div style="text-align:center; padding:40px; color:#888;">الكتاب فارغ. ارفع ملف MD للبدء.</div>`;
+            area.innerHTML = `<div style="text-align:center; padding:40px; color:#888;">الكتاب فارغ. ارفع ملف MD أو HTML للبدء.</div>`;
             return;
         }
         
