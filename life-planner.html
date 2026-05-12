@@ -49,11 +49,12 @@
     .nav-item:hover { background: var(--surface2); color: var(--black); }
     .nav-item.active { background: var(--primary-light); color: var(--primary); }
 
-    /* Bottom Nav (Mobile) */
-    .bnav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-top: 1px solid var(--border); z-index: 100; justify-content: space-around; padding: 10px 0; padding-bottom: env(safe-area-inset-bottom, 10px); box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
-    .bnav-item { flex: 1; text-align: center; color: var(--text2); padding: 6px 0; font-size: 18px; cursor: pointer; transition: 0.2s; }
-    .bnav-item span { display: block; font-size: 9px; font-weight: 700; margin-top: 4px; }
-    .bnav-item.active { color: var(--primary); transform: translateY(-2px); }
+    /* Bottom Nav (Mobile) - UPDATED FOR SCROLLING */
+    .bnav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-top: 1px solid var(--border); z-index: 100; padding: 8px 12px; padding-bottom: max(8px, env(safe-area-inset-bottom)); box-shadow: 0 -5px 20px rgba(0,0,0,0.05); overflow-x: auto; flex-wrap: nowrap; gap: 6px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .bnav::-webkit-scrollbar { display: none; }
+    .bnav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text2); padding: 8px 6px; font-size: 20px; cursor: pointer; transition: 0.2s; flex-shrink: 0; min-width: 65px; border-radius: var(--r-sm); }
+    .bnav-item span { display: block; font-size: 10px; font-weight: 700; margin-top: 6px; }
+    .bnav-item.active { color: var(--primary); background: var(--primary-light); transform: translateY(-2px); }
 
     /* Pages */
     .page { display: none; animation: fade 0.4s cubic-bezier(0.16, 1, 0.3, 1); padding-bottom: 80px; }
@@ -188,7 +189,7 @@
     <div class="nav-item" data-page="tasks" onclick="goPage(this)">📋 قائمة المهام</div>
     <div class="nav-item" data-page="goals" onclick="goPage(this)">🏆 أهداف السنة</div>
     <div class="nav-item" data-page="books" onclick="goPage(this)">📚 مكتبتي</div>
-    <div class="nav-item" data-page="zaha" onclick="goPage(this)">🏛️ مركز زها</div> <!-- NEW -->
+    <div class="nav-item" data-page="zaha" onclick="goPage(this)">🏛️ مركز زها</div>
     <div class="sync-status"><span class="sync-dot" id="syncDot"></span>مزامنة سحابية</div>
   </div>
 
@@ -420,7 +421,7 @@
     </div>
   </div>
 
-  <!-- Zaha Modal (NEW) -->
+  <!-- Zaha Modal -->
   <div class="modal-ov" id="modal-zaha">
     <div class="modal">
       <div class="modal-title" id="m-zaha-title-text" style="color: var(--zaha)">توثيق حصة زها 🏛️</div>
@@ -450,6 +451,8 @@
     <div class="bnav-item active" data-page="dash" onclick="goPage(this)">📊<span>الملخص</span></div>
     <div class="bnav-item" data-page="daily" onclick="goPage(this)">☀️<span>عاداتي</span></div>
     <div class="bnav-item" data-page="tasks" onclick="goPage(this)">📋<span>المهام</span></div>
+    <div class="bnav-item" data-page="goals" onclick="goPage(this)">🏆<span>أهدافي</span></div>
+    <div class="bnav-item" data-page="books" onclick="goPage(this)">📚<span>مكتبتي</span></div>
     <div class="bnav-item" data-page="zaha" onclick="goPage(this)">🏛️<span>زها</span></div>
   </div>
 
@@ -477,7 +480,7 @@
       tasks: [],     
       goals: [],     
       books: [],
-      zahaSessions: [], // NEW: Zaha attendance tracker
+      zahaSessions: [],
       nextId: 1
     };
 
@@ -499,14 +502,14 @@
           state.tasks = p.tasks ? Object.values(p.tasks) : [];
           state.goals = p.goals ? Object.values(p.goals) : [];
           state.books = p.books ? Object.values(p.books) : [];
-          state.zahaSessions = p.zahaSessions ? Object.values(p.zahaSessions) : []; // Load Zaha
+          state.zahaSessions = p.zahaSessions ? Object.values(p.zahaSessions) : [];
           state.nextId = p.nextId || 1;
         }
         document.getElementById('syncDot').classList.add('on');
         if (!state.history[today]) state.history[today] = [];
         if (isInitialLoad) {
           document.getElementById('m-hab-start').value = today;
-          document.getElementById('m-zaha-date').value = today; // default date for zaha
+          document.getElementById('m-zaha-date').value = today;
           isInitialLoad = false;
         }
         
@@ -550,7 +553,6 @@
       const selHabitBook = document.getElementById('m-hab-book');
       if (selHabitBook) selHabitBook.innerHTML = bookOptionsHtml;
     }
-
 
     // ═══════════════════════════════════════
     //  UI & NAVIGATION
@@ -680,12 +682,12 @@
       renderTasks();
       renderGoals();
       renderBooks();
-      renderZaha(); // NEW
+      renderZaha();
       renderDashboard();
     }
 
     // ═══════════════════════════════════════
-    //  ZAHA CENTER LOGIC (NEW)
+    //  ZAHA CENTER LOGIC
     // ═══════════════════════════════════════
     function saveZahaSession() {
       const id = document.getElementById('m-zaha-id').value;
@@ -703,7 +705,6 @@
         state.zahaSessions.push({ id: state.nextId++, course, date, hours, summary });
       }
 
-      // Sort by date descending (newest first)
       state.zahaSessions.sort((a,b) => new Date(b.date) - new Date(a.date));
       
       saveState(); renderAll(); closeModal('zaha'); toast('تم توثيق الحصة بنجاح 🏛️');
@@ -719,11 +720,9 @@
         const session = state.zahaSessions.find(x => x.id === id);
         if(!session) return;
         
-        // Format exactly as requested
-        const formattedDate = new Date(session.date).toLocaleDateString('ar-JO'); // Converts to standard short date
+        const formattedDate = new Date(session.date).toLocaleDateString('ar-JO');
         const msg = `ملخص الحصة التدريبية\n\n* اسم الدورة / الفريق: ${session.course}\n* اسم المدرب: صفوان كراسنه\n* التاريخ: ${formattedDate}\n* الساعات المنجزة: ${session.hours}\n\n🔹 ما تم تقديمه في الحصة:\n\n${session.summary}`;
         
-        // Copy to clipboard
         const el = document.createElement('textarea');
         el.value = msg;
         document.body.appendChild(el);
@@ -1155,7 +1154,6 @@
     function delBook(id) {
       if(!confirm('حذف الكتاب؟')) return;
       state.books = state.books.filter(b => b.id !== id);
-      // Remove link from habits/tasks
       state.tasks.forEach(t => { if(t.bookId == id) t.bookId = ""; });
       state.habits.forEach(h => { if(h.bookId == id) h.bookId = ""; });
       saveState(); populateGlobalSelectors(); renderAll();
