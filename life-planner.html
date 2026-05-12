@@ -195,7 +195,7 @@
     .empty { text-align: center; padding: 50px 20px; color: var(--text3); font-size: 14px; font-weight: 700; background: var(--surface2); border: 2px dashed var(--border); border-radius: var(--r); }
 
     /* Auth Screen Overlay */
-    #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; backdrop-filter: blur(10px); }
+    #auth-screen { display: none !important; position: fixed; inset: 0; background: var(--bg); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; backdrop-filter: blur(10px); }
     .auth-card { background: var(--surface); width: 90%; max-width: 400px; border-radius: var(--r); padding: 40px 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); text-align: center; border: 1px solid var(--border); }
     .auth-logo { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 24px; font-weight: 800; color: var(--black); margin-bottom: 10px; }
     
@@ -548,7 +548,7 @@
     //  FIREBASE & AUTH SETUP
     // ═══════════════════════════════════════
     const firebaseConfig = {
-      apiKey: "", 
+      apiKey: "AIzaSyD5_r_wBDjy1y6Pm0oOwLIMdHyITiknSSw", 
       authDomain: "myexpenses-3b6f5.firebaseapp.com",
       projectId: "myexpenses-3b6f5",
       storageBucket: "myexpenses-3b6f5.firebasestorage.app",
@@ -604,7 +604,8 @@
         'auth/weak-password': 'كلمة المرور ضعيفة (6 أحرف على الأقل).',
         'auth/missing-email': 'يرجى إدخال البريد الإلكتروني.',
         'auth/operation-not-allowed': 'يجب تفعيل تسجيل الدخول (Email/Password) من منصة Firebase أولاً!',
-        'auth/configuration-not-found': 'لم يتم تفعيل نظام المصادقة! افتح Firebase -> Authentication واضغط Get Started.'
+        'auth/configuration-not-found': 'لم يتم تفعيل نظام المصادقة! افتح Firebase -> Authentication واضغط Get Started.',
+        'auth/invalid-api-key': 'مفتاح الـ API غير صالح أو غير موجود.'
     };
 
     function getAuthError(err) {
@@ -619,6 +620,21 @@
         btn.textContent = isLoading ? 'جاري التحميل...' : text;
     }
 
+    // === إيقاف تسجيل الدخول مؤقتاً للتجربة ===
+    currentUserUID = "test_user_123"; 
+    document.getElementById('auth-screen').style.display = 'none';
+    
+    // إخفاء رسالة التحذير في القارئ الذكي
+    const authWarn = document.getElementById('auth-warning');
+    if(authWarn) authWarn.style.display = 'none';
+    
+    // تحميل البيانات مباشرة للمستخدم التجريبي
+    setTimeout(() => {
+        checkAndMigrateDataThenLoad(currentUserUID);
+        loadBookContent();
+    }, 500);
+
+    /* --- الكود الأصلي لتسجيل الدخول (معطل حالياً) ---
     if (auth) {
         auth.onAuthStateChanged((user) => {
             if (user) {
@@ -632,8 +648,13 @@
             }
         });
     }
+    ------------------------------------------------ */
 
     function handleLogin() {
+        if (!auth) {
+            toast('عذراً، لم يتم تهيئة نظام المصادقة بنجاح.');
+            return;
+        }
         const email = document.getElementById('auth-email').value.trim();
         const pass = document.getElementById('auth-password').value;
         if(!email || !pass) { toast('يرجى تعبئة الإيميل وكلمة المرور'); return; }
@@ -651,6 +672,10 @@
     }
 
     function handleSignUp() {
+        if (!auth) {
+            toast('عذراً، لم يتم تهيئة نظام المصادقة بنجاح.');
+            return;
+        }
         const email = document.getElementById('auth-email').value.trim();
         const pass = document.getElementById('auth-password').value;
         if(!email || !pass) { toast('يرجى تعبئة الإيميل وكلمة المرور'); return; }
@@ -668,6 +693,10 @@
     }
 
     function handleReset() {
+        if (!auth) {
+            toast('عذراً، لم يتم تهيئة نظام المصادقة بنجاح.');
+            return;
+        }
         const email = document.getElementById('auth-email').value.trim();
         if(!email) { toast('أدخل بريدك الإلكتروني أولاً في الخانة المخصصة'); return; }
 
@@ -677,7 +706,7 @@
     }
 
     function handleLogout() {
-        if(confirm('هل تريد تسجيل الخروج من حسابك؟')) {
+        if (auth && confirm('هل تريد تسجيل الخروج من حسابك؟')) {
             auth.signOut();
         }
     }
