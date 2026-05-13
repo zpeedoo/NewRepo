@@ -136,10 +136,6 @@
     /* Reader Specific Styles */
     .progress-container-global { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 4px; z-index: 2000; background: var(--border); }
     .progress-bar-global { height: 100%; background: var(--primary); width: 0%; transition: width 0.2s; }
-    
-    #yt-container { position: fixed; bottom: 80px; left: 20px; width: 300px; aspect-ratio: 16/9; background: black; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 2000; overflow: hidden; display: none; transition: 0.3s; }
-    #yt-container.minimized { width: 60px; height: 40px; }
-    .yt-controls { position: absolute; top: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); padding: 5px; display: flex; justify-content: space-between; z-index: 10; }
 
     .reader-tabs { display: flex; gap: 10px; margin-bottom: 30px; background: white; padding: 5px; border-radius: 12px; box-shadow: var(--shadow); }
     .rtab-btn { flex: 1; padding: 12px; border: none; background: none; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.3s; color: var(--text2); }
@@ -234,15 +230,6 @@
   <div id="global-loading" class="loading-overlay">
       <div style="font-size:30px;">⏳</div>
       <div>جاري معالجة البيانات سحابياً...</div>
-  </div>
-
-  <!-- YouTube Sync Player -->
-  <div id="yt-container">
-      <div class="yt-controls">
-          <button onclick="toggleMinimizeYT()" style="background:none; border:none; color:white; cursor:pointer;">➖</button>
-          <button onclick="closeYT()" style="background:none; border:none; color:white; cursor:pointer;">✕</button>
-      </div>
-      <div id="player"></div>
   </div>
 
   <!-- AUTHENTICATION SCREEN (Hidden for testing) -->
@@ -398,10 +385,9 @@
     <!-- SMART READER -->
     <div class="page" id="page-reader">
       <div class="add-bar" style="border-color: var(--primary-light);">
-        <div style="font-weight:800; font-size:16px; color: var(--primary)">القارئ الذكي المتزامن 📖</div>
+        <div style="font-weight:800; font-size:16px; color: var(--primary)">القارئ الذكي 📖</div>
         <div style="display: flex; gap: 8px;">
             <button class="btn btn-dark" style="padding: 5px 15px; font-size: 12px; border-radius: 8px;" onclick="jumpToLastRead()">الذهاب لآخر ما قرأت 📍</button>
-            <button class="btn" style="padding: 5px 15px; font-size: 12px; background: #FF0000; color:white; border: none; border-radius: 8px;" onclick="openYTPrompt()">ربط يوتيوب 🎥</button>
         </div>
       </div>
 
@@ -427,7 +413,7 @@
 
   </div> <!-- End Main -->
 
-  <!-- MODALS (Habits, Goals, Books, Zaha) remain unchanged but kept for completeness -->
+  <!-- MODALS -->
   <!-- Habit Modal -->
   <div class="modal-ov" id="modal-habit">
     <div class="modal">
@@ -529,7 +515,7 @@
   <div class="toast" id="toast">✨ <span id="toast-msg"></span></div>
 
   <script>
-    const APP_VER = "v16_ReaderProgress"; 
+    const APP_VER = "v17_Reader_Cleaned"; 
 
     window.onerror = function(message, source, lineno, colno, error) {
         console.error("Global Error Caught:", message);
@@ -681,7 +667,6 @@
     }
 
     function openModal(type, id = null) { 
-        /* ... Modal logic is identical to previous version ... */
         if (type === 'habit') {
         if(id) {
           const h = state.habits.find(x => x.id === id);
@@ -954,24 +939,6 @@
     // ═══════════════════════════════════════
     //  SMART READER LOGIC (INTEGRATED) + PROGRESS TRACKING
     // ═══════════════════════════════════════
-    let player;
-    function onYouTubeIframeAPIReady() { /* Initialization happens on demand */ }
-    function openYTPrompt() {
-        const url = prompt("الصق رابط فيديو اليوتيوب الخاص بالكتاب:");
-        if (url) {
-            const vidId = extractVideoID(url);
-            if (vidId) { initYTPlayer(vidId); document.getElementById('yt-container').style.display = 'block'; } 
-            else { alert("رابط يوتيوب غير صالح."); }
-        }
-    }
-    function extractVideoID(url) { const match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/); return (match && match[2].length === 11) ? match[2] : null; }
-    function initYTPlayer(id) {
-        if (player && typeof player.loadVideoById === 'function') { player.loadVideoById(id); return; }
-        const tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(tag);
-        window.onYouTubeIframeAPIReady = () => { player = new YT.Player('player', { height: '100%', width: '100%', videoId: id, playerVars: { 'autoplay': 1, 'playsinline': 1 } }); };
-    }
-    function toggleMinimizeYT() { document.getElementById('yt-container').classList.toggle('minimized'); }
-    function closeYT() { document.getElementById('yt-container').style.display = 'none'; if (player && typeof player.pauseVideo === 'function') { player.pauseVideo(); } }
 
     function switchReaderMode(m) {
         document.getElementById('reader-import-section').style.display = m === 'import' ? 'block' : 'none';
@@ -1008,7 +975,6 @@
         const arrangedData = [];
         
         for (let i = 0; i < allParas.length; i += 2) {
-            // Added `read: false` property to track progress
             arrangedData.push({ en: allParas[i] || "", ar: allParas[i+1] || "...", read: false });
         }
         
@@ -1025,21 +991,18 @@
 
     function loadBookContent() {
         if(!db || !currentUserUID) return;
-        // Listen once to avoid jumpy scrolling when we update read status locally
         db.ref(`users/${currentUserUID}/current_book`).once('value', (s) => {
             readerData = s.val() || [];
             renderBookContent();
         });
     }
 
-    // Toggle paragraph read status locally and update Firebase silently
     function toggleReaderPara(index) {
         if (!currentUserUID || !readerData[index]) return;
         
         const newStatus = !readerData[index].read;
         readerData[index].read = newStatus;
         
-        // Update DOM locally to prevent re-rendering entire book
         const block = document.getElementById(`r-block-${index}`);
         const btn = block.querySelector('.check-btn');
         if (newStatus) {
@@ -1051,8 +1014,6 @@
         }
         
         updateReaderStatsUI();
-
-        // Update Firebase specifically for this node
         db.ref(`users/${currentUserUID}/current_book/${index}/read`).set(newStatus);
     }
 
@@ -1077,9 +1038,11 @@
         
         if (firstUnreadIndex !== -1) {
             const el = document.getElementById(`r-block-${firstUnreadIndex}`);
-            if (el) {
-                const y = el.getBoundingClientRect().top + window.scrollY - 100; // Account for fixed header
-                window.scrollTo({top: y, behavior: 'smooth'});
+            const mainContainer = document.getElementById('main');
+            if (el && mainContainer) {
+                // Calculate position considering the header space inside the main container
+                const targetY = el.offsetTop - 120;
+                mainContainer.scrollTo({top: targetY, behavior: 'smooth'});
             }
         } else {
             toast('لقد أنهيت الكتاب بالكامل! 🏆');
@@ -1095,7 +1058,6 @@
             return;
         }
         
-        // Render Stats Header
         let htmlContent = `<div class="reader-stats-box" id="reader-stats-summary"></div>`;
         
         htmlContent += readerData.map((block, index) => {
@@ -1114,19 +1076,21 @@
         }).join('');
         
         area.innerHTML = htmlContent;
-        updateReaderStatsUI(); // Initialize stats
+        updateReaderStatsUI(); 
     }
 
-    window.onscroll = function() {
-        var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    // Fix scroll tracking to use the main container instead of the window
+    document.getElementById('main').addEventListener('scroll', function() {
+        var mainEl = document.getElementById('main');
+        var winScroll = mainEl.scrollTop;
+        var height = mainEl.scrollHeight - mainEl.clientHeight;
         var scrolled = (winScroll / height) * 100;
         
         if (document.getElementById('page-reader').classList.contains('active')) {
             const progBar = document.getElementById("readingProgress");
             if(progBar && !isNaN(scrolled)) progBar.style.width = scrolled + "%";
         }
-    };
+    });
   </script>
 </body>
 </html>
