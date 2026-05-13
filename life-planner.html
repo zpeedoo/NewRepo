@@ -142,6 +142,20 @@
     .card-title { font-size: 16px; font-weight: 800; color: var(--black); }
     .card-pct { font-size: 18px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); background: var(--primary-light); padding: 4px 12px; border-radius: 20px; }
 
+    /* Zaha Dashboard Info */
+    .zaha-dash { display: flex; justify-content: space-around; align-items: center; background: linear-gradient(135deg, var(--surface2) 0%, var(--surface) 100%); border: 1px solid var(--border); border-radius: var(--r); padding: 30px 10px; margin-bottom: 24px; box-shadow: var(--shadow); }
+    .z-metric { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .z-num-row { display: flex; align-items: center; gap: 8px; }
+    .z-icon { background: var(--surface2); padding: 4px; border-radius: 6px; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .z-num { font-size: 42px; font-weight: 300; color: var(--black); font-family: 'JetBrains Mono', monospace; letter-spacing: -2px; line-height: 1; }
+    .z-lbl { font-size: 12px; color: var(--text2); font-weight: 800; }
+    .zaha-summary { white-space: pre-wrap; font-size: 13px; color: var(--text2); line-height: 1.6; background: var(--surface2); padding: 12px; border-radius: var(--r-sm); margin-top: 12px; }
+
+    /* Zaha Grid Items */
+    .zaha-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 10px 0;}
+    .zaha-card { display: flex; flex-direction: column; height: 100%; margin-bottom: 0 !important; }
+    .zaha-card-actions { margin-top: auto; }
+
     /* Chart Card */
     .analytics-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; box-shadow: var(--shadow); margin-bottom: 30px; color: var(--black); }
     .analytics-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-direction: row-reverse; }
@@ -208,7 +222,7 @@
     .btn-zaha { background: var(--zaha); box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); }
     .btn-zaha:hover { box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4); }
     
-    .btn-circle { width: 44px; height: 44px; padding: 0; border-radius: 50%; font-size: 24px; font-weight: 400; }
+    .btn-circle { width: 44px; height: 44px; padding: 0; border-radius: 50%; font-size: 26px; font-weight: 400; display: inline-flex; align-items: center; justify-content: center; padding-bottom: 2px; }
     .del-btn { background: var(--surface2); border: 1px solid var(--border-darker); color: var(--text2); cursor: pointer; font-size: 14px; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
     .del-btn:hover { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
 
@@ -375,6 +389,7 @@
            <select class="analytics-filter" id="chart-filter" onchange="renderChart()">
                <option value="7">آخر 7 أيام</option>
                <option value="30">آخر شهر</option>
+               <option value="365">آخر سنة</option>
            </select>
         </div>
         <div style="height: 220px; position: relative; margin-top: 10px;">
@@ -398,7 +413,7 @@
     <div class="page" id="page-goals">
       <div class="add-bar">
         <div style="font-weight:800; font-size:16px">أهداف السنة الكبرى</div>
-        <button class="btn btn-dark" onclick="openModal('goal')">+ إضافة هدف</button>
+        <button class="btn btn-dark btn-circle" onclick="openModal('goal')" title="إضافة هدف">+</button>
       </div>
       <div id="goal-list"></div>
     </div>
@@ -407,7 +422,7 @@
     <div class="page" id="page-books">
       <div class="add-bar">
         <div style="font-weight:800; font-size:16px">الكتب الورقية واليدوية 📚</div>
-        <button class="btn btn-dark" onclick="openModal('book')">+ إضافة كتاب</button>
+        <button class="btn btn-dark btn-circle" onclick="openModal('book')" title="إضافة كتاب">+</button>
       </div>
       <div id="books-list"></div>
     </div>
@@ -416,7 +431,7 @@
     <div class="page" id="page-zaha">
       <div class="add-bar" style="border-color: var(--zaha-light); box-shadow: 0 10px 30px -10px rgba(79, 70, 229, 0.15);">
         <div style="font-weight:800; font-size:16px; color: var(--zaha)">سجل حصص مركز زها 🏛️</div>
-        <button class="btn btn-zaha" onclick="openModal('zaha')">+ توثيق حصة جديدة</button>
+        <button class="btn btn-zaha btn-circle" onclick="openModal('zaha')" title="توثيق حصة جديدة">+</button>
       </div>
       <div class="zaha-dash">
            <div class="z-metric">
@@ -428,7 +443,7 @@
               <span class="z-lbl">الحصص المنجزة</span>
            </div>
       </div>
-      <div id="zaha-list"></div>
+      <div id="zaha-list" class="zaha-grid"></div>
     </div>
 
     <!-- SMART READER -->
@@ -592,7 +607,7 @@
   <div class="toast" id="toast">✨ <span id="toast-msg"></span></div>
 
   <script>
-    const APP_VER = "v19_DualBooks_Rename"; 
+    const APP_VER = "v20_Final_Polish"; 
 
     window.onerror = function(message, source, lineno, colno, error) {
         console.error("Global Error Caught:", message);
@@ -772,18 +787,19 @@
         }
       } 
       else if (type === 'goal') {
+        const endOfYear = new Date(new Date().getFullYear(), 11, 31).toISOString().split('T')[0];
         if(id) {
           const g = state.goals.find(x => x.id === id);
           if(!g) return;
           document.getElementById('m-goal-id').value = g.id;
           document.getElementById('m-goal-title-text').textContent = 'تعديل الهدف ✎';
           document.getElementById('m-goal-title').value = g.title;
-          document.getElementById('m-goal-end').value = g.endDate || '';
+          document.getElementById('m-goal-end').value = g.endDate || endOfYear;
         } else {
           document.getElementById('m-goal-id').value = '';
           document.getElementById('m-goal-title-text').textContent = 'إضافة هدف 🏆';
           document.getElementById('m-goal-title').value = '';
-          document.getElementById('m-goal-end').value = '';
+          document.getElementById('m-goal-end').value = endOfYear;
         }
       }
       else if (type === 'book') {
@@ -852,7 +868,40 @@
     function saveZahaSession() { const id = document.getElementById('m-zaha-id').value; const course = document.getElementById('m-zaha-course').value.trim(); const date = document.getElementById('m-zaha-date').value || today; const hours = parseInt(document.getElementById('m-zaha-hours').value) || 0; const summary = document.getElementById('m-zaha-summary').value.trim(); if (!course) { toast('يرجى إدخال اسم الدورة أو الفريق'); return; } if(id) { const z = state.zahaSessions.find(x => x.id == id); if(z) { z.course = course; z.date = date; z.hours = hours; z.summary = summary; } } else { state.zahaSessions.push({ id: state.nextId++, course, date, hours, summary }); } state.zahaSessions.sort((a,b) => new Date(b.date) - new Date(a.date)); saveState(); renderAll(); closeModal('zaha'); toast('تم توثيق الحصة بنجاح 🏛️'); }
     function delZahaSession(id) { if(!confirm('تأكيد الحذف؟')) return; state.zahaSessions = state.zahaSessions.filter(z => z.id !== id); saveState(); renderAll(); }
     function copyZahaWhatsApp(id) { const session = state.zahaSessions.find(x => x.id === id); if(!session) return; const msg = `ملخص الحصة التدريبية\n\n* الدورة: ${session.course}\n* المدرب: صفوان كراسنه\n* الساعات: ${session.hours}\n\n🔹 الملخص:\n${session.summary}`; const el = document.createElement('textarea'); el.value = msg; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); toast('تم النسخ للواتساب 💬'); }
-    function renderZaha() { document.getElementById('z-val-hours').textContent = state.zahaSessions.reduce((s, z) => s + z.hours, 0); document.getElementById('z-val-sessions').textContent = state.zahaSessions.length; document.getElementById('zaha-list').innerHTML = state.zahaSessions.length ? state.zahaSessions.map(z => { return `<div class="card-box" style="border-left: 4px solid var(--zaha);"><div class="card-hdr" style="margin-bottom: 8px;"><div style="display:flex; gap:10px"><div style="font-size:24px">🧑‍🏫</div><div><div class="card-title">${z.course}</div><div style="font-size:12px; color:var(--text3); margin-top:4px">${z.date} • ${z.hours} ساعات</div></div></div></div>${z.summary ? `<div class="zaha-summary">${z.summary}</div>` : ''}<div style="display:flex; justify-content:space-between; margin-top:16px;"><button class="btn" style="background:#25D366; font-size:12px; padding:8px 16px;" onclick="copyZahaWhatsApp(${z.id})">💬 نسخ للواتساب</button><div style="display:flex; gap:6px;"><button class="del-btn" onclick="openModal('zaha', ${z.id})">✎</button><button class="del-btn" onclick="delZahaSession(${z.id})">✕</button></div></div></div>`; }).join('') : '<div class="empty">لم يتم تسجيل حصص بعد.</div>'; }
+    
+    function renderZaha() { 
+        document.getElementById('z-val-hours').textContent = state.zahaSessions.reduce((s, z) => s + z.hours, 0); 
+        document.getElementById('z-val-sessions').textContent = state.zahaSessions.length; 
+        
+        document.getElementById('zaha-list').className = 'zaha-grid';
+        document.getElementById('zaha-list').innerHTML = state.zahaSessions.length ? state.zahaSessions.map(z => { 
+            const formattedDate = new Date(z.date).toLocaleDateString('ar-JO', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
+            return `
+            <div class="card-box zaha-card" style="border-top: 4px solid var(--zaha); border-left: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+                <div class="card-hdr" style="margin-bottom: 8px;">
+                    <div style="display:flex; align-items:flex-start; gap:10px; flex-direction: column;">
+                        <div style="display:flex; align-items: center; gap: 10px;">
+                            <div style="font-size:24px">🧑‍🏫</div>
+                            <div class="card-title">${z.course}</div>
+                        </div>
+                        <div style="font-size:12px; color:var(--text3); margin-top:4px">${formattedDate} • ${z.hours} ساعات</div>
+                    </div>
+                </div>
+                
+                ${z.summary ? `<div class="zaha-summary" style="flex-grow: 1;">${z.summary}</div>` : ''}
+
+                <div class="zaha-card-actions" style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; border-top: 1px dashed var(--border-darker); padding-top: 12px;">
+                    <button class="btn" style="background:#25D366; color: white; box-shadow:none; font-size:12px; padding:6px 12px; display:flex; align-items:center; gap:4px;" onclick="copyZahaWhatsApp(${z.id})">
+                        💬 واتساب
+                    </button>
+                    <div style="display:flex; gap:6px;">
+                        <button class="del-btn" onclick="openModal('zaha', ${z.id})">✎</button>
+                        <button class="del-btn" onclick="delZahaSession(${z.id})">✕</button>
+                    </div>
+                </div>
+            </div>`; 
+        }).join('') : '<div class="empty" style="grid-column: 1 / -1;">لم يتم تسجيل حصص بعد.</div>'; 
+    }
 
     function toggleHabitDays(val, wrapId) { document.getElementById(wrapId).style.display = val === 'specific' ? 'block' : 'none'; }
     function saveHabit() { const id = document.getElementById('m-hab-id').value; const title = document.getElementById('m-hab-title').value.trim(); if (!title) { toast('أدخل اسم العادة'); return; } const freq = document.getElementById('m-hab-freq').value; let days = []; if (freq === 'specific') { document.querySelectorAll('#m-hab-days-wrap .day-btn.active').forEach(b => days.push(parseInt(b.dataset.day))); if (!days.length) { toast('اختر يوم واحد على الأقل'); return; } } if(id) { const h = state.habits.find(x => x.id == id); if(h) { h.title = title; h.start = document.getElementById('m-hab-start').value || today; h.end = document.getElementById('m-hab-end').value; h.freq = freq; h.days = days; h.goalId = document.getElementById('m-hab-goal').value; h.bookId = document.getElementById('m-hab-book').value; } } else { state.habits.push({ id: state.nextId++, title, start: document.getElementById('m-hab-start').value || today, end: document.getElementById('m-hab-end').value, freq, days, goalId: document.getElementById('m-hab-goal').value, bookId: document.getElementById('m-hab-book').value }); } saveState(); renderAll(); closeModal('habit'); toast('تم الحفظ ✓'); }
@@ -868,14 +917,11 @@
         if (linked.length === 0) return { isAuto: false, pct: null, habitsTotal: 0 }; 
         
         let exTot = 0; let dnTot = 0; 
-        
-        // استخدام تاريخ نهاية الهدف، أو نهاية السنة الحالية كافتراضي
         let goalEndD = goal.endDate ? new Date(goal.endDate) : new Date(new Date().getFullYear(), 11, 31);
         
         linked.forEach(h => { 
             let ex = 0; let dn = 0; 
             let startD = new Date(h.start || today); 
-            // حساب المدة من بداية العادة وحتى نهاية العادة أو نهاية الهدف (أيهما أقرب)
             let endD = h.end ? new Date(Math.min(new Date(h.end), goalEndD)) : goalEndD; 
             
             let cur = new Date(startD); 
@@ -965,7 +1011,7 @@
     function renderBooks() { document.getElementById('books-list').innerHTML = state.books.length ? state.books.map(b => { const pct = Math.round((b.readPages / b.totalPages) * 100) || 0; const isDone = pct === 100; return `<div class="card-box"><div class="card-hdr"><div style="display:flex; align-items:center; gap:10px"><div style="font-size:24px">${isDone ? '🏆' : '📖'}</div><div><div class="card-title" style="text-decoration: ${isDone ? 'line-through' : 'none'}">${b.title}</div><div style="font-size:12px; color:var(--text3); font-family:'JetBrains Mono', monospace; margin-top:4px">${b.readPages} / ${b.totalPages} صفحة</div></div></div><div class="card-pct">${pct}%</div></div><div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" style="background:var(--primary);width:${pct}%"></div></div></div><div style="display:flex; justify-content:space-between; margin-top:20px; border-top: 1px solid var(--border); padding-top:16px;"><div style="display:flex; align-items:center; gap:8px;"><input type="number" id="quick-add-book-${b.id}" class="inp" placeholder="كم صفحة؟" style="width:100px; padding:8px 12px;" min="1" ${isDone?'disabled':''}><button class="btn btn-dark" style="padding:8px 16px;" onclick="quickAddPagesInline(${b.id})" ${isDone?'disabled':''}>+</button></div><div style="display:flex; gap:6px;"><button class="del-btn" onclick="openModal('book', ${b.id})">✎</button><button class="del-btn" onclick="delBook(${b.id})">✕</button></div></div></div>`; }).join('') : '<div class="empty">مكتبتك فارغة. أضف كتابك الأول للبدء!</div>'; }
 
     // ═══════════════════════════════════════
-    //  DASHBOARD & CHARTS (UPDATED DUAL CIRCLES)
+    //  DASHBOARD & CHARTS
     // ═══════════════════════════════════════
     let dashChart = null;
     
@@ -1010,7 +1056,15 @@
       
       for(let i=daysFilter-1; i>=0; i--) {
         const d = new Date(); d.setDate(d.getDate() - i); const dateStr = d.toLocaleDateString('en-CA'); 
-        labels.push(daysFilter <= 7 ? d.toLocaleDateString('ar-JO', { weekday: 'long' }) : `${d.getMonth()+1}/${d.getDate()}`);
+        
+        if (daysFilter <= 7) {
+            labels.push(d.toLocaleDateString('ar-JO', { weekday: 'long' }));
+        } else if (daysFilter <= 30) {
+            labels.push(`${d.getMonth()+1}/${d.getDate()}`);
+        } else {
+            labels.push(d.toLocaleDateString('ar-JO', { month: 'short', year: 'numeric' }));
+        }
+
         const act = getActiveHabitsForDate(dateStr); const done = act.filter(h => (state.history[dateStr] || []).includes(h.id)).length;
         habitsVals.push(act.length ? (done / act.length * 100) : 0);
       }
@@ -1022,19 +1076,19 @@
 
       dashChart = new Chart(ctx, { 
           type: 'bar', 
-          data: { labels, datasets: [{ data: habitsVals, backgroundColor: gradient, borderRadius: 8, barThickness: daysFilter<=7?16:8 }] }, 
+          data: { labels, datasets: [{ data: habitsVals, backgroundColor: gradient, borderRadius: 8, barThickness: daysFilter <= 7 ? 16 : (daysFilter <= 30 ? 8 : 'flex') }] }, 
           options: { 
               responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, 
               scales: { 
-                  y: { beginAtZero: true, max: 100, grid:{color: isDark?'#333':'#f3f4f6'}, ticks:{color: isDark?'#a0a0a0':'#9ca3af'} },
-                  x: { grid:{display:false}, ticks:{color: isDark?'#a0a0a0':'#6b7280'} }
+                  y: { beginAtZero: true, max: 100, grid:{color: isDark?'#333':'#f3f4f6'}, ticks:{color: isDark?'#a0a0a0':'#9ca3af', maxTicksLimit: 10} },
+                  x: { grid:{display:false}, ticks:{color: isDark?'#a0a0a0':'#6b7280', maxTicksLimit: 15} }
               } 
           } 
       });
     }
 
     // ═══════════════════════════════════════
-    //  SMART READER LOGIC (LIBRARY + SEARCH + HTML PARSING + RENAME)
+    //  SMART READER LOGIC
     // ═══════════════════════════════════════
 
     function switchReaderMode(m) {
@@ -1080,16 +1134,13 @@
         const bookMeta = state.readerBooks.find(b => b.id === id);
         if(!bookMeta) return;
         
-        // العثور على الكرت الذي تم الضغط عليه
         const card = event.target.closest('.reader-book-card');
         const titleDiv = card.querySelector('.rbc-title');
         
-        // منع فتح مربع نص جديد إذا كان مفتوحاً بالفعل
         if(titleDiv.querySelector('input')) return;
 
         const currentTitle = bookMeta.title;
         
-        // إنشاء مربع نص
         const input = document.createElement('input');
         input.type = 'text';
         input.value = currentTitle;
@@ -1099,17 +1150,12 @@
         input.style.padding = '4px 8px';
         input.style.textAlign = 'center';
         
-        // استبدال النص بالمربع
         titleDiv.innerHTML = '';
         titleDiv.appendChild(input);
-        
-        // التركيز على المربع فوراً
         input.focus();
         
-        // منع فتح الكتاب عند الضغط داخل مربع النص
         input.addEventListener('click', (e) => e.stopPropagation());
 
-        // دالة الحفظ
         function finishRename() {
             const newName = input.value.trim();
             if(newName !== "" && newName !== currentTitle) {
@@ -1118,22 +1164,14 @@
                 renderReaderLibrary();
                 toast('تم تعديل اسم الكتاب بنجاح ✓');
             } else {
-                // إرجاع الاسم القديم إذا ترك المربع فارغاً
                 titleDiv.textContent = currentTitle;
             }
         }
 
-        // الحفظ عند النقر خارج المربع
         input.addEventListener('blur', finishRename);
-        
-        // الحفظ عند الضغط على Enter أو الإلغاء عند الضغط على Escape
         input.addEventListener('keydown', (e) => {
-            if(e.key === 'Enter') {
-                input.blur();
-            } else if (e.key === 'Escape') {
-                input.value = currentTitle; 
-                input.blur();
-            }
+            if(e.key === 'Enter') input.blur();
+            else if (e.key === 'Escape') { input.value = currentTitle; input.blur(); }
         });
     }
 
@@ -1172,7 +1210,6 @@
         if (file) {
             document.getElementById('readerFileName').textContent = file.name;
             document.getElementById('saveReaderBtn').disabled = false;
-            // Auto fill title if empty
             if(!document.getElementById('new-book-title').value) {
                 document.getElementById('new-book-title').value = file.name.replace(/\.[^/.]+$/, "");
             }
@@ -1192,11 +1229,10 @@
         const fileName = document.getElementById('readerFileName').textContent.toLowerCase();
         let textToParse = window.rawFileContent;
         
-        // HTML Parser Magic
         if (fileName.endsWith('.html') || fileName.endsWith('.htm') || textToParse.trim().toLowerCase().startsWith('<')) {
             const parser = new DOMParser(); 
             const doc = parser.parseFromString(textToParse, 'text/html'); 
-            textToParse = doc.body.innerText; // Extracts only visible text, strips code!
+            textToParse = doc.body.innerText; 
         }
 
         const allParas = textToParse.split(/\n\s*\n/).map(p => p.trim()).filter(p => p.length > 0);
@@ -1210,16 +1246,13 @@
         const newBookMeta = { id: newBookId, title: titleInput, progress: 0, total: arrangedData.length };
         
         try {
-            // Save Content
             await db.ref(`users/${currentUserUID}/book_contents/${newBookId}`).set(arrangedData);
-            // Save Meta
             state.readerBooks.push(newBookMeta);
             await saveState();
             
             document.getElementById('global-loading').style.display = 'none';
             alert("تم المعالجة والحفظ بنجاح ✓");
             
-            // Reset fields
             document.getElementById('new-book-title').value = '';
             document.getElementById('readerFileName').textContent = 'اضغط هنا لاختيار ملف من جهازك';
             document.getElementById('saveReaderBtn').disabled = true;
@@ -1250,14 +1283,12 @@
         
         updateReaderStatsUI();
         
-        // Silent sync
         db.ref(`users/${currentUserUID}/book_contents/${currentOpenBookId}/${index}/read`).set(newStatus);
         
-        // Update Metadata
         const bookMeta = state.readerBooks.find(b => b.id === currentOpenBookId);
         if(bookMeta) {
             bookMeta.progress = readerData.filter(p => p.read).length;
-            saveState(); // Update dashboard
+            saveState(); 
         }
     }
 
@@ -1292,7 +1323,6 @@
         }
     }
     
-    // --- Font Size Adjustment ---
     function changeFontSize(delta) {
         currentFontSize += delta;
         if(currentFontSize < 12) currentFontSize = 12;
@@ -1303,7 +1333,6 @@
         });
     }
 
-    // --- Search Functionality ---
     function searchReaderBook(query) {
         const blocks = document.querySelectorAll('.paragraph-block-reader');
         const q = query.toLowerCase();
