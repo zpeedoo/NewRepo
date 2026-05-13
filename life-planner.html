@@ -1018,22 +1018,69 @@
     }
 
     function renderDailyMiniDash() {
-        const activeToday = getActiveHabitsForDate(today);
         const container = document.getElementById('mini-dash-content');
-        
         if (!container) return;
 
-        if (activeToday.length === 0) {
-            container.innerHTML = `<div class="empty" style="padding: 20px; border: none; background: transparent;">لا يوجد عادات مجدولة لليوم</div>`;
+        if (state.habits.length === 0) {
+            container.innerHTML = `<div class="empty" style="padding: 20px; border: none; background: transparent;">لا يوجد عادات مجدولة</div>`;
             return;
         }
 
-        const doneIds = state.history[today] || [];
-        const dDone = activeToday.filter(h => doneIds.includes(h.id)).length;
-        const dPct = Math.round((dDone / activeToday.length) * 100);
+        let totalExpected = 0;
+        let totalDone = 0;
+        const activeWeeklyHabits = [];
 
-        const itemsHtml = activeToday.map(h => {
-            const isDone = doneIds.includes(h.id);
+        // حساب الإنجاز لآخر 7 أيام
+        state.habits.forEach(h => {
+            let expected = 0; 
+            let done = 0; 
+            let dStart = new Date(h.start || today);
+            let dEnd = h.end ? new Date(Math.min(new Date(today), new Date(h.end))) : new Date(today);
+            
+            // حصر الحساب بآخر 7 أيام
+            let fDate = new Date(today);
+            fDate.setDate(fDate.getDate() - 6); 
+            if (dStart < fDate) dStart = fDate;
+            
+            if (dStart <= dEnd) {
+                let cur = new Date(dStart);
+                let daysInRange = 0;
+                while (cur <= dEnd) { 
+                    daysInRange++;
+                    if (h.freq === 'daily' || (h.freq === 'specific' && h.days.includes(cur.getDay()))) expected++; 
+                    
+                    let dStr = cur.toLocaleDateString('en-CA');
+                    if (state.history[dStr] && state.history[dStr].includes(h.id)) done++;
+                    
+                    cur.setDate(cur.getDate() + 1); 
+                }
+                
+                if (h.freq === 'weekly') expected = Math.ceil(daysInRange / 7);
+                if (h.freq === 'monthly') expected = Math.ceil(daysInRange / 30);
+                if (h.freq === 'yearly') expected = Math.ceil(daysInRange / 365);
+            }
+
+            if (expected > 0) {
+                totalExpected += expected;
+                totalDone += done;
+                activeWeeklyHabits.push({ habit: h, expected, done });
+            }
+        });
+
+        if (activeWeeklyHabits.length === 0) {
+            container.innerHTML = `<div class="empty" style="padding: 20px; border: none; background: transparent;">لا يوجد مهام مطلوبة هذا الأسبوع</div>`;
+            return;
+        }
+
+        const dPct = totalExpected === 0 ? 0 : Math.min(Math.round((totalDone / totalExpected) * 100), 100);
+
+        const itemsHtml = activeWeeklyHabits.map(item => {
+            const h = item.habit;
+            const expected = item.expected;
+            const done = item.done;
+            const isDone = done >= expected; 
+            const pct = Math.min(Math.round((done / expected) * 100), 100);
+            
             const gInfo = state.goals.find(g => g.id == h.goalId);
             const icon = h.bookId ? '📖' : (gInfo ? '🎯' : '⚡');
             
@@ -1043,10 +1090,10 @@
                 <div class="md-info">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <div class="md-name" title="${h.title}">${h.title}</div>
-                        <div class="md-status ${isDone ? 'done' : ''}">${isDone ? '100%' : '0%'}</div>
+                        <div class="md-status ${isDone ? 'done' : ''}">${pct}%</div>
                     </div>
                     <div class="md-bar-bg">
-                        <div class="md-bar-fill ${isDone ? 'done' : ''}"></div>
+                        <div class="md-bar-fill ${isDone ? 'done' : ''}" style="width: ${pct}%"></div>
                     </div>
                 </div>
             </div>`;
@@ -1056,7 +1103,7 @@
 
         container.innerHTML = `
             <div class="md-header">
-                <div class="md-title">تقدم اليوم</div>
+                <div class="md-title">تقدم الأسبوع <span style="font-size:11px; color:var(--text3); font-weight:normal;">(آخر 7 أيام)</span></div>
                 <div style="font-size: 18px; font-weight: 800; color: var(--primary); font-family: 'JetBrains Mono', monospace;">${dPct}%</div>
             </div>
             
@@ -1068,8 +1115,8 @@
                     </svg>
                 </div>
                 <div>
-                    <div style="font-size: 12px; color: var(--text2); font-weight: 700;">العادات المنجزة</div>
-                    <div style="font-size: 18px; font-weight: 800; color: var(--black);"><span style="color: var(--primary)">${dDone}</span> / ${activeToday.length}</div>
+                    <div style="font-size: 12px; color: var(--text2); font-weight: 700;">المهام الأسبوعية المنجزة</div>
+                    <div style="font-size: 18px; font-weight: 800; color: var(--black);"><span style="color: var(--primary)">${totalDone}</span> / ${totalExpected}</div>
                 </div>
             </div>
 
