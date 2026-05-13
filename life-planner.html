@@ -285,7 +285,7 @@
     .zaha-card { display: flex; flex-direction: column; height: 100%; margin-bottom: 0 !important; }
 
     /* Auth Screen Overlay */
-    #auth-screen { display: none !important; position: fixed; inset: 0; background: var(--bg); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; backdrop-filter: blur(10px); }
+    #auth-screen { display: flex; position: fixed; inset: 0; background: var(--bg); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; backdrop-filter: blur(10px); }
     .auth-card { background: var(--surface); width: 90%; max-width: 400px; border-radius: var(--r); padding: 40px 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); text-align: center; border: 1px solid var(--border); }
     .auth-logo { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 24px; font-weight: 800; color: var(--black); margin-bottom: 10px; }
 
@@ -318,7 +318,7 @@
       <div>جاري معالجة البيانات...</div>
   </div>
 
-  <!-- AUTHENTICATION SCREEN (HIDDEN) -->
+  <!-- AUTHENTICATION SCREEN -->
   <div id="auth-screen">
     <div class="auth-card">
       <div class="auth-logo">
@@ -343,6 +343,7 @@
     </div>
     <div class="nav-item active" data-page="dash" onclick="goPage(this)">📊 الملخص العام</div>
     <div class="nav-item" data-page="daily" onclick="goPage(this)">☀️ عاداتي اليومية</div>
+    <div class="nav-item" data-page="calendar" onclick="goPage(this)">📅 التقويم والمزاج</div>
     <div class="nav-item" data-page="goals" onclick="goPage(this)">🏆 أهداف السنة</div>
     <div class="nav-item" data-page="books" onclick="goPage(this)">📚 مكتبتي اليدوية</div>
     <div class="nav-item" data-page="reader" onclick="goPage(this)">📖 القارئ الذكي</div>
@@ -365,7 +366,7 @@
         <div class="date-text" id="hdr-date-full">Tue,<br>December</div>
       </div>
       <div class="greeting" style="flex: 1;">
-        <h1>مرحباً، صديقي </h1>
+        <h1>مرحباً، <span id="user-greeting-name">صديقي</span></h1>
         <p>قم بتنظيم يومك وأهدافك بسهولة!</p>
       </div>
       <div class="header-actions">
@@ -518,6 +519,26 @@
         </div>
       </div>
       <div id="all-habits-list"></div>
+    </div>
+
+    <!-- CALENDAR & MOOD PAGE -->
+    <div class="page" id="page-calendar">
+        <div class="add-bar" style="border-color: var(--cal-full);">
+            <div style="font-weight:800; font-size:16px; color: var(--cal-full)">التقويم الشهري 📅</div>
+            <div style="display:flex; gap:10px; align-items:center; font-size:12px; font-weight:700;">
+                <div style="display:flex; align-items:center; gap:4px;"><div style="width:12px; height:12px; background:var(--cal-full); border-radius:3px;"></div> مكتمل</div>
+                <div style="display:flex; align-items:center; gap:4px;"><div style="width:12px; height:12px; background:var(--cal-half); border-radius:3px;"></div> جزئي</div>
+                <div style="display:flex; align-items:center; gap:4px;"><div style="width:12px; height:12px; background:var(--cal-low); border-radius:3px;"></div> قليل</div>
+            </div>
+        </div>
+        
+        <div class="card-box">
+            <div style="text-align:center; font-size:20px; font-weight:800; margin-bottom: 20px;" id="cal-month-title"></div>
+            <div class="cal-header-days">
+                <div>الأحد</div><div>الإثنين</div><div>الثلاثاء</div><div>الأربعاء</div><div>الخميس</div><div>الجمعة</div><div>السبت</div>
+            </div>
+            <div class="cal-grid" id="calendar-grid"></div>
+        </div>
     </div>
 
     <!-- Goals -->
@@ -775,7 +796,7 @@
   <div class="toast" id="toast">✨ <span id="toast-msg"></span></div>
 
   <script>
-    const APP_VER = "v27_Refined_UI"; 
+    const APP_VER = "v28_Production_Auth_Restored"; 
 
     window.onerror = function(message, source, lineno, colno, error) { console.error("Global Error Caught:", message); return false; };
 
@@ -792,25 +813,76 @@
     let db, auth;
     try { if (!firebase.apps.length) firebase.initializeApp(firebaseConfig); db = firebase.database(); auth = firebase.auth(); } catch (e) { console.error("Firebase Init Error:", e); }
 
-    let currentUserUID = "test_user_123"; 
+    let currentUserUID = null; 
     
-    // --- إيقاف شاشة تسجيل الدخول لإستعادة الحساب التجريبي ---
-    document.getElementById('auth-screen').style.setProperty('display', 'none', 'important');
-
-    /* if (auth) {
+    // --- تفعيل شاشة تسجيل الدخول والمصادقة الحقيقية ---
+    if (auth) {
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUserUID = user.uid;
-                document.getElementById('auth-screen').style.setProperty('display', 'none', 'important');
+                document.getElementById('auth-screen').style.display = 'none';
+                
+                // Fetch user name or email for greeting
+                let displayName = user.email ? user.email.split('@')[0] : "صديقي";
+                document.getElementById('user-greeting-name').textContent = displayName;
+
                 checkAndMigrateDataThenLoad(currentUserUID);
                 setupNotifications();
             } else {
                 currentUserUID = null;
-                document.getElementById('auth-screen').style.setProperty('display', 'flex', 'important');
+                document.getElementById('auth-screen').style.display = 'flex';
+                document.getElementById('global-loading').style.display = 'none';
             }
         });
     }
-    */
+
+    function handleLogin() {
+        const email = document.getElementById('auth-email').value.trim();
+        const pass = document.getElementById('auth-password').value;
+        if(!email || !pass) { toast('يرجى تعبئة الإيميل وكلمة المرور'); return; }
+        
+        const btn = document.getElementById('btn-login');
+        btn.disabled = true; btn.textContent = "جاري الدخول...";
+        
+        auth.signInWithEmailAndPassword(email, pass).then(() => {
+            toast('تم تسجيل الدخول بنجاح!');
+            btn.disabled = false; btn.textContent = "تسجيل الدخول";
+        }).catch(e => {
+            toast('خطأ: تأكد من الإيميل أو كلمة المرور');
+            btn.disabled = false; btn.textContent = "تسجيل الدخول";
+            console.error(e);
+        });
+    }
+
+    function handleSignUp() {
+        const email = document.getElementById('auth-email').value.trim();
+        const pass = document.getElementById('auth-password').value;
+        if(!email || !pass) { toast('يرجى تعبئة الإيميل وكلمة المرور'); return; }
+        
+        const btn = document.getElementById('btn-signup');
+        btn.disabled = true; btn.textContent = "جاري الإنشاء...";
+
+        auth.createUserWithEmailAndPassword(email, pass).then(() => {
+            toast('تم إنشاء الحساب بنجاح!');
+            btn.disabled = false; btn.textContent = "إنشاء حساب جديد";
+        }).catch(e => {
+            toast('خطأ: ' + e.message);
+            btn.disabled = false; btn.textContent = "إنشاء حساب جديد";
+        });
+    }
+
+    function handleReset() {
+        const email = document.getElementById('auth-email').value.trim();
+        if(!email) { toast('أدخل بريدك الإلكتروني أولاً في الخانة المخصصة'); return; }
+        auth.sendPasswordResetEmail(email).then(() => toast('تم إرسال رابط استعادة كلمة المرور لبريدك')).catch(e => toast('خطأ: ' + e.message));
+    }
+
+    function handleLogout() { 
+        if(confirm("هل تود تسجيل الخروج من حسابك؟")) {
+            if(auth) auth.signOut();
+        }
+    }
+    // ------------------------------------------------------------------------
     
     let state = {
       habits: [], history: {}, goals: [], books: [], readerBooks: [], zahaSessions: [], nextId: 1,
@@ -826,10 +898,6 @@
     const engDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const engMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     document.getElementById('hdr-date-full').innerHTML = `${engDays[dNow.getDay()]},<br>${engMonths[dNow.getMonth()]}`;
-
-    setTimeout(() => { checkAndMigrateDataThenLoad(currentUserUID); setupNotifications(); }, 300);
-
-    function handleLogout() { toast("أنت حالياً في وضع التجربة."); }
 
     async function checkAndMigrateDataThenLoad(uid) {
         const userRef = db.ref(`users/${uid}/planner_state`);
@@ -881,6 +949,7 @@
       document.getElementById('page-' + name).classList.add('active');
       document.getElementById('reader-progress-container').style.display = (name === 'reader' && currentOpenBookId) ? 'block' : 'none';
       if(name === 'reader' && !currentOpenBookId) switchReaderMode('library');
+      if(name === 'calendar') renderCalendar();
       renderAll();
     }
     function openModal(type, id = null) { 
@@ -913,7 +982,7 @@
         renderZaha(); 
         renderReaderLibrary(); 
         renderDashboard(); 
-        renderCalendar(); 
+        if(document.getElementById('page-calendar').classList.contains('active')) renderCalendar(); 
     }
 
     function getStreak(habitId) {
@@ -1032,7 +1101,7 @@
         state.journal[today] = { mood, text };
         saveState();
         toast('تم حفظ يومياتك بنجاح 📓');
-        renderCalendar(); // تحديث التقويم فوراً بعد الحفظ
+        renderCalendar(); 
     }
 
     function renderCalendar() {
@@ -1112,7 +1181,7 @@
                     saveState();
                 }
             }
-        }, 60000); // Check every minute
+        }, 60000); 
     }
 
     function getGoalProgressInfo(goalId) { const goal = state.goals.find(g => g.id == goalId); const linked = state.habits.filter(h => h.goalId == goalId); if (linked.length === 0) return { isAuto: false, pct: null, habitsTotal: 0 }; let exTot = 0; let dnTot = 0; let goalEndD = goal.endDate ? new Date(goal.endDate) : new Date(new Date().getFullYear(), 11, 31); linked.forEach(h => { let ex = 0; let dn = 0; let startD = new Date(h.start || today); let endD = h.end ? new Date(Math.min(new Date(h.end), goalEndD)) : goalEndD; let cur = new Date(startD); cur.setHours(0,0,0,0); endD.setHours(0,0,0,0); let daysInRange = 0; while (cur <= endD) { daysInRange++; if (h.freq === 'daily' || (h.freq === 'specific' && h.days.includes(cur.getDay()))) { ex++; } cur.setDate(cur.getDate() + 1); } if (h.freq === 'weekly') ex = Math.ceil(daysInRange / 7); if (h.freq === 'monthly') ex = Math.ceil(daysInRange / 30); if (h.freq === 'yearly') ex = Math.ceil(daysInRange / 365); Object.keys(state.history).forEach(d => { let histDate = new Date(d); if (histDate >= startD && histDate <= endD && state.history[d].includes(h.id)) dn++; }); exTot += ex; dnTot += dn; }); let pct = exTot > 0 ? Math.round((dnTot / exTot) * 100) : 0; return { isAuto: true, pct: Math.min(pct, 100), habitsTotal: linked.length }; }
@@ -1295,6 +1364,7 @@
         var height = mainEl.scrollHeight - mainEl.clientHeight;
         var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
         
+        // Progress bar for text books
         if (document.getElementById('page-reader').classList.contains('active') && currentOpenBookId) {
             const bookMeta = state.readerBooks.find(b => b.id === currentOpenBookId);
             if(bookMeta && bookMeta.type === 'text') {
