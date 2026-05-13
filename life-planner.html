@@ -272,6 +272,11 @@
 
 <body>
 
+  <!-- Scroll to Top Button -->
+  <button id="scrollTopBtn" onclick="scrollToTop()" title="العودة للأعلى" style="display: none; position: fixed; bottom: 90px; left: 20px; z-index: 1000; background: var(--primary); color: white; border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; cursor: pointer; box-shadow: 0 4px 10px rgba(230, 92, 79, 0.4); transition: background 0.3s, transform 0.3s; align-items: center; justify-content: center; padding-bottom: 4px;">
+    ↑
+  </button>
+
   <!-- Top Progress Bar (Only visible in reader) -->
   <div class="progress-container-global" id="reader-progress-container">
       <div class="progress-bar-global" id="readingProgress"></div>
@@ -607,7 +612,7 @@
   <div class="toast" id="toast">✨ <span id="toast-msg"></span></div>
 
   <script>
-    const APP_VER = "v20_Final_Polish"; 
+    const APP_VER = "v21_ScrollTop_LibDefault"; 
 
     window.onerror = function(message, source, lineno, colno, error) {
         console.error("Global Error Caught:", message);
@@ -624,7 +629,6 @@
         if(dashChart) renderChart(); 
     }
     
-    // Apply saved theme on load
     if (localStorage.getItem('planner_theme') === 'dark') {
         document.body.classList.add('dark-theme');
         document.getElementById('theme-color-meta').content = '#121212';
@@ -753,9 +757,12 @@
       document.querySelectorAll(`.nav-item[data-page="${name}"], .bnav-item[data-page="${name}"]`).forEach(n => n.classList.add('active'));
       document.getElementById('page-' + name).classList.add('active');
       
-      document.getElementById('reader-progress-container').style.display = (name === 'reader' && currentOpenBookId) ? 'block' : 'none';
-      
-      if(name === 'reader' && !currentOpenBookId) switchReaderMode('library');
+      // Request: Whenever entering the smart reader, go to the library view
+      if(name === 'reader') {
+          switchReaderMode('library');
+      } else {
+          document.getElementById('reader-progress-container').style.display = 'none';
+      }
 
       renderAll();
     }
@@ -1373,6 +1380,7 @@
         updateReaderStatsUI(); 
     }
 
+    // Scroll tracking for progress bar and scroll-to-top button
     document.getElementById('main').addEventListener('scroll', function() {
         var mainEl = document.getElementById('main');
         var winScroll = mainEl.scrollTop;
@@ -1383,7 +1391,19 @@
             const progBar = document.getElementById("readingProgress");
             if(progBar && !isNaN(scrolled)) progBar.style.width = scrolled + "%";
         }
+
+        // Show or hide scroll to top button
+        const topBtn = document.getElementById('scrollTopBtn');
+        if (winScroll > 400) {
+            topBtn.style.display = 'flex';
+        } else {
+            topBtn.style.display = 'none';
+        }
     });
+
+    function scrollToTop() {
+        document.getElementById('main').scrollTo({ top: 0, behavior: 'smooth' });
+    }
   </script>
 </body>
 </html>
