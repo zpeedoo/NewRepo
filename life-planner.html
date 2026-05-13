@@ -284,6 +284,11 @@
     .zaha-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 10px 0;}
     .zaha-card { display: flex; flex-direction: column; height: 100%; margin-bottom: 0 !important; }
 
+    /* Auth Screen Overlay */
+    #auth-screen { display: none !important; position: fixed; inset: 0; background: var(--bg); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; backdrop-filter: blur(10px); }
+    .auth-card { background: var(--surface); width: 90%; max-width: 400px; border-radius: var(--r); padding: 40px 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); text-align: center; border: 1px solid var(--border); }
+    .auth-logo { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 24px; font-weight: 800; color: var(--black); margin-bottom: 10px; }
+
     @media (max-width: 768px) {
       .sidebar { display: none; }
       .bnav { display: flex; }
@@ -313,7 +318,25 @@
       <div>جاري معالجة البيانات...</div>
   </div>
 
-  <div id="auth-screen" style="display: none !important;"></div>
+  <!-- AUTHENTICATION SCREEN (Hidden for testing, ready for future use) -->
+  <div id="auth-screen">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="logo-icon">P</div>
+        <span>مخططي</span>
+      </div>
+      <h2 style="margin-top: 0; margin-bottom: 8px;">تسجيل الدخول</h2>
+      <p style="font-size: 13px; color: var(--text2); margin-bottom: 30px;">يرجى تسجيل الدخول للوصول إلى مساحتك الآمنة</p>
+
+      <div class="field" style="text-align: right; margin-bottom: 16px;"><label style="display: block; font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 8px;">البريد الإلكتروني</label><input type="email" id="auth-email" class="inp" placeholder="name@example.com" /></div>
+      <div class="field" style="text-align: right; margin-bottom: 16px;"><label style="display: block; font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 8px;">كلمة المرور</label><input type="password" id="auth-password" class="inp" placeholder="••••••••" /></div>
+
+      <button id="btn-login" class="btn btn-dark" style="width: 100%; margin-top: 15px; padding: 14px;" onclick="handleLogin()">تسجيل الدخول</button>
+      <button id="btn-signup" class="btn" style="width: 100%; margin-top: 12px; background: var(--surface2); color: var(--text); box-shadow: none; border: 1px solid var(--border-darker);" onclick="handleSignUp()">إنشاء حساب جديد</button>
+
+      <div style="margin-top: 24px; font-size: 13px; color: var(--primary); cursor: pointer; font-weight: 700; transition: 0.2s;" onclick="handleReset()">هل نسيت كلمة المرور؟</div>
+    </div>
+  </div>
 
   <!-- Desktop Sidebar -->
   <div class="sidebar">
@@ -761,7 +784,7 @@
   <div class="toast" id="toast">✨ <span id="toast-msg"></span></div>
 
   <script>
-    const APP_VER = "v24_PDF_Support_Button"; 
+    const APP_VER = "v25_Auth_Hidden"; 
 
     window.onerror = function(message, source, lineno, colno, error) { console.error("Global Error Caught:", message); return false; };
 
@@ -779,6 +802,45 @@
     try { if (!firebase.apps.length) firebase.initializeApp(firebaseConfig); db = firebase.database(); auth = firebase.auth(); } catch (e) { console.error("Firebase Init Error:", e); }
 
     let currentUserUID = "test_user_123"; 
+    
+    // إيقاف شاشة الدخول مؤقتاً
+    document.getElementById('auth-screen').style.setProperty('display', 'none', 'important');
+
+    /* --- كود تسجيل الدخول الفعلي (معطل حالياً) ---
+    if (auth) {
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentUserUID = user.uid;
+                document.getElementById('auth-screen').style.setProperty('display', 'none', 'important');
+                checkAndMigrateDataThenLoad(currentUserUID);
+                setupNotifications();
+            } else {
+                currentUserUID = null;
+                document.getElementById('auth-screen').style.setProperty('display', 'flex', 'important');
+            }
+        });
+    }
+
+    function handleLogin() {
+        const email = document.getElementById('auth-email').value.trim();
+        const pass = document.getElementById('auth-password').value;
+        if(!email || !pass) { toast('يرجى تعبئة الإيميل وكلمة المرور'); return; }
+        auth.signInWithEmailAndPassword(email, pass).then(() => toast('تم تسجيل الدخول بنجاح!')).catch(e => toast('خطأ: ' + e.message));
+    }
+
+    function handleSignUp() {
+        const email = document.getElementById('auth-email').value.trim();
+        const pass = document.getElementById('auth-password').value;
+        if(!email || !pass) { toast('يرجى تعبئة الإيميل وكلمة المرور'); return; }
+        auth.createUserWithEmailAndPassword(email, pass).then(() => toast('تم إنشاء الحساب بنجاح!')).catch(e => toast('خطأ: ' + e.message));
+    }
+
+    function handleReset() {
+        const email = document.getElementById('auth-email').value.trim();
+        if(!email) { toast('أدخل بريدك الإلكتروني أولاً'); return; }
+        auth.sendPasswordResetEmail(email).then(() => toast('تم إرسال رابط استعادة كلمة المرور')).catch(e => toast('خطأ: ' + e.message));
+    }
+    ------------------------------------------------ */
     
     let state = {
       habits: [], history: {}, goals: [], books: [], readerBooks: [], zahaSessions: [], nextId: 1,
