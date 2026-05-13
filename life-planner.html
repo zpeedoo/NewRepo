@@ -158,14 +158,18 @@
 
     /* Reader Library Grid */
     .reader-library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px; padding: 10px 0; }
-    .reader-book-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 20px 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+    .reader-book-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 30px 15px 20px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: var(--shadow); position: relative; overflow: hidden; }
     .reader-book-card:hover { transform: translateY(-5px); border-color: var(--primary); }
     .rbc-icon { font-size: 40px; margin-bottom: 15px; display: block; }
     .rbc-title { font-size: 14px; font-weight: 800; color: var(--black); margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .rbc-prog-bg { background: var(--border-darker); height: 6px; border-radius: 3px; width: 100%; overflow: hidden; }
     .rbc-prog-fill { background: var(--primary); height: 100%; }
-    .rbc-del { position: absolute; top: 5px; left: 5px; width: 24px; height: 24px; border-radius: 50%; background: rgba(239, 68, 68, 0.1); color: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 10px; opacity: 0; transition: 0.2s; }
-    .reader-book-card:hover .rbc-del { opacity: 1; }
+    
+    /* Edit and Delete buttons for Reader Books */
+    .rbc-actions { position: absolute; top: 8px; left: 8px; display: flex; gap: 6px; opacity: 0; transition: 0.2s; }
+    .rbc-btn { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; transition: 0.2s; background: var(--surface2); border: 1px solid var(--border-darker); color: var(--text2); }
+    .rbc-btn:hover { filter: brightness(0.9); transform: scale(1.1); }
+    .reader-book-card:hover .rbc-actions { opacity: 1; }
 
     .file-upload-wrapper { border: 2px dashed var(--border-darker); background: var(--surface2); padding: 30px 20px; border-radius: 15px; margin: 20px 0; cursor: pointer; text-align: center; transition: 0.3s; color: var(--text); }
     .file-upload-wrapper:hover { border-color: var(--primary); background: var(--primary-light); }
@@ -232,6 +236,11 @@
     
     .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); color: white; z-index: 4000; align-items: center; justify-content: center; font-weight: 800; flex-direction: column; gap: 10px; backdrop-filter: blur(5px); }
 
+    /* Specific styling for the requested Dual-Circle Book Card layout */
+    .dash-book-matched { display: flex; justify-content: space-between; align-items: center; flex-direction: row-reverse; padding: 20px; }
+    .dash-book-matched .text-side { text-align: right; }
+    .circles-side { display: flex; align-items: center; justify-content: flex-end; }
+
     @media (max-width: 768px) {
       .sidebar { display: none; }
       .bnav { display: flex; }
@@ -240,14 +249,8 @@
       .greeting { margin-top: 10px; }
       .add-bar { flex-direction: row; }
       .analytics-hdr { flex-direction: column; align-items: flex-end; gap: 12px; }
-      /* Matched Image Style for Dashboard Book Card */
-      .dash-book-matched { flex-direction: row !important; } 
+      .dash-book-matched { flex-direction: column !important; align-items: flex-start; gap: 15px; } 
     }
-    
-    /* Specific styling for the requested Book Card layout */
-    .dash-book-matched { display: flex; justify-content: space-between; align-items: center; flex-direction: row-reverse; }
-    .dash-book-matched .text-side { text-align: right; }
-    .dash-book-matched .circ-wrap { margin: 0; }
   </style>
 </head>
 
@@ -276,9 +279,9 @@
     <div class="nav-item active" data-page="dash" onclick="goPage(this)">📊 الملخص العام</div>
     <div class="nav-item" data-page="daily" onclick="goPage(this)">☀️ عاداتي اليومية</div>
     <div class="nav-item" data-page="goals" onclick="goPage(this)">🏆 أهداف السنة</div>
-    <div class="nav-item" data-page="books" onclick="goPage(this)">📚 مكتبتي</div>
-    <div class="nav-item" data-page="zaha" onclick="goPage(this)">🏛️ مركز زها</div>
+    <div class="nav-item" data-page="books" onclick="goPage(this)">📚 مكتبتي اليدوية</div>
     <div class="nav-item" data-page="reader" onclick="goPage(this)">📖 القارئ الذكي</div>
+    <div class="nav-item" data-page="zaha" onclick="goPage(this)">🏛️ مركز زها</div>
     
     <div style="margin-top: auto; width: 100%;">
       <div class="nav-item" style="color: var(--text2); justify-content: center; border: 1px solid var(--border);" onclick="handleLogout()">تسجيل الخروج</div>
@@ -319,7 +322,7 @@
           </div>
         </div>
         
-        <!-- Card 2: Books (MATCHING THE UPLOADED IMAGE) -->
+        <!-- Card 2: Books (DUAL CIRCLES FOR MANUAL & SMART READER) -->
         <div class="metric-card dash-book-matched">
           <div class="text-side">
             <div class="metric-icon-wrap" style="background:#fbeae8; color:var(--primary); margin-right: auto; margin-left:0;">📚</div>
@@ -329,9 +332,15 @@
                 <span style="font-size: 16px; font-weight: normal; color: var(--text2);">كتب مسجلة</span>
             </div>
           </div>
-          <div class="circ-wrap">
-            <svg width="70" height="70" viewBox="0 0 70 70"><circle class="circ-bg" cx="35" cy="35" r="30"></circle><circle class="circ-val" id="circ-books" cx="35" cy="35" r="30" stroke="var(--primary)" stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle></svg>
-            <div class="circ-text" id="circ-txt-books" style="font-size:16px;">0%</div>
+          <div class="circles-side">
+            <div class="circ-wrap" title="القارئ الذكي (إلكتروني)" style="transform: scale(0.85); margin-left: -15px;">
+              <svg width="70" height="70" viewBox="0 0 70 70"><circle class="circ-bg" cx="35" cy="35" r="30"></circle><circle class="circ-val" id="circ-books-smart" cx="35" cy="35" r="30" stroke="var(--zaha)" stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle></svg>
+              <div class="circ-text" id="circ-txt-books-smart" style="font-size:15px; color:var(--zaha)">0%</div>
+            </div>
+            <div class="circ-wrap" title="الكتب الورقية (يدوي)" style="transform: scale(0.85);">
+              <svg width="70" height="70" viewBox="0 0 70 70"><circle class="circ-bg" cx="35" cy="35" r="30"></circle><circle class="circ-val" id="circ-books-manual" cx="35" cy="35" r="30" stroke="var(--primary)" stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle></svg>
+              <div class="circ-text" id="circ-txt-books-manual" style="font-size:15px; color:var(--primary)">0%</div>
+            </div>
           </div>
         </div>
 
@@ -384,7 +393,7 @@
       <div id="goal-list"></div>
     </div>
 
-    <!-- Books Library -->
+    <!-- Books Library (Manual) -->
     <div class="page" id="page-books">
       <div class="add-bar">
         <div style="font-weight:800; font-size:16px">الكتب الورقية واليدوية 📚</div>
@@ -452,8 +461,8 @@
               <div style="font-weight:800; color:var(--primary); font-size:18px;" id="current-reading-title">اسم الكتاب</div>
               <div class="rt-tools">
                   <input type="text" class="rt-search" id="reader-search" placeholder="بحث في الكتاب 🔍" onkeyup="searchReaderBook(this.value)">
-                  <button class="rt-btn" onclick="changeFontSize(2)">A+</button>
-                  <button class="rt-btn" onclick="changeFontSize(-2)">A-</button>
+                  <button class="rt-btn" onclick="changeFontSize(2)" title="تكبير الخط">A+</button>
+                  <button class="rt-btn" onclick="changeFontSize(-2)" title="تصغير الخط">A-</button>
                   <button class="rt-btn" onclick="jumpToLastRead()" style="background:var(--primary); color:white; border-color:var(--primary);">العودة لآخر قراءة 📍</button>
               </div>
           </div>
@@ -572,7 +581,7 @@
   <div class="toast" id="toast">✨ <span id="toast-msg"></span></div>
 
   <script>
-    const APP_VER = "v18_DarkReaderTheme"; 
+    const APP_VER = "v19_DualBooks_Rename"; 
 
     window.onerror = function(message, source, lineno, colno, error) {
         console.error("Global Error Caught:", message);
@@ -586,7 +595,7 @@
         const isDark = document.body.classList.toggle('dark-theme');
         localStorage.setItem('planner_theme', isDark ? 'dark' : 'light');
         document.getElementById('theme-color-meta').content = isDark ? '#121212' : '#f4f6f8';
-        if(dashChart) renderChart(); // Update chart colors
+        if(dashChart) renderChart(); 
     }
     
     // Apply saved theme on load
@@ -623,15 +632,15 @@
       habits: [],    
       history: {},   
       goals: [],     
-      books: [], // Manual books
-      readerBooks: [], // Smart Reader Books metadata [{id, title, progress, total}]
+      books: [], 
+      readerBooks: [], 
       zahaSessions: [],
       nextId: 1
     };
 
     let currentOpenBookId = null;
-    let readerData = []; // Content of currently open book
-    let currentFontSize = 17; // Base font size
+    let readerData = []; 
+    let currentFontSize = 17; 
     window.rawFileContent = "";
 
     const dNow = new Date();
@@ -672,7 +681,7 @@
           state.history = p.history || {};
           state.goals = p.goals ? Object.values(p.goals) : [];
           state.books = p.books ? Object.values(p.books) : [];
-          state.readerBooks = p.readerBooks ? Object.values(p.readerBooks) : []; // Load reader books metadata
+          state.readerBooks = p.readerBooks ? Object.values(p.readerBooks) : []; 
           state.zahaSessions = p.zahaSessions ? Object.values(p.zahaSessions) : [];
           state.nextId = p.nextId || 1;
         }
@@ -726,7 +735,6 @@
     }
 
     function openModal(type, id = null) { 
-        // [Existing Modal Code Unchanged for brevity, assumed functional]
         if (type === 'habit') {
         if(id) {
           const h = state.habits.find(x => x.id === id);
@@ -828,7 +836,6 @@
     // ═══════════════════════════════════════
     //  ZAHA, HABITS, GOALS, MANUAL BOOKS
     // ═══════════════════════════════════════
-    // [Keeping exactly as provided to not break functionality]
     function saveZahaSession() { const id = document.getElementById('m-zaha-id').value; const course = document.getElementById('m-zaha-course').value.trim(); const date = document.getElementById('m-zaha-date').value || today; const hours = parseInt(document.getElementById('m-zaha-hours').value) || 0; const summary = document.getElementById('m-zaha-summary').value.trim(); if (!course) { toast('يرجى إدخال اسم الدورة أو الفريق'); return; } if(id) { const z = state.zahaSessions.find(x => x.id == id); if(z) { z.course = course; z.date = date; z.hours = hours; z.summary = summary; } } else { state.zahaSessions.push({ id: state.nextId++, course, date, hours, summary }); } state.zahaSessions.sort((a,b) => new Date(b.date) - new Date(a.date)); saveState(); renderAll(); closeModal('zaha'); toast('تم توثيق الحصة بنجاح 🏛️'); }
     function delZahaSession(id) { if(!confirm('تأكيد الحذف؟')) return; state.zahaSessions = state.zahaSessions.filter(z => z.id !== id); saveState(); renderAll(); }
     function copyZahaWhatsApp(id) { const session = state.zahaSessions.find(x => x.id === id); if(!session) return; const msg = `ملخص الحصة التدريبية\n\n* الدورة: ${session.course}\n* المدرب: صفوان كراسنه\n* الساعات: ${session.hours}\n\n🔹 الملخص:\n${session.summary}`; const el = document.createElement('textarea'); el.value = msg; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); toast('تم النسخ للواتساب 💬'); }
@@ -855,7 +862,7 @@
     function renderBooks() { document.getElementById('books-list').innerHTML = state.books.length ? state.books.map(b => { const pct = Math.round((b.readPages / b.totalPages) * 100) || 0; const isDone = pct === 100; return `<div class="card-box"><div class="card-hdr"><div style="display:flex; align-items:center; gap:10px"><div style="font-size:24px">${isDone ? '🏆' : '📖'}</div><div><div class="card-title" style="text-decoration: ${isDone ? 'line-through' : 'none'}">${b.title}</div><div style="font-size:12px; color:var(--text3); font-family:'JetBrains Mono', monospace; margin-top:4px">${b.readPages} / ${b.totalPages} صفحة</div></div></div><div class="card-pct">${pct}%</div></div><div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" style="background:var(--primary);width:${pct}%"></div></div></div><div style="display:flex; justify-content:space-between; margin-top:20px; border-top: 1px solid var(--border); padding-top:16px;"><div style="display:flex; align-items:center; gap:8px;"><input type="number" id="quick-add-book-${b.id}" class="inp" placeholder="كم صفحة؟" style="width:100px; padding:8px 12px;" min="1" ${isDone?'disabled':''}><button class="btn btn-dark" style="padding:8px 16px;" onclick="quickAddPagesInline(${b.id})" ${isDone?'disabled':''}>+</button></div><div style="display:flex; gap:6px;"><button class="del-btn" onclick="openModal('book', ${b.id})">✎</button><button class="del-btn" onclick="delBook(${b.id})">✕</button></div></div></div>`; }).join('') : '<div class="empty">مكتبتك فارغة. أضف كتابك الأول للبدء!</div>'; }
 
     // ═══════════════════════════════════════
-    //  DASHBOARD & CHARTS (UPDATED FOR TOTAL BOOKS PROGRESS)
+    //  DASHBOARD & CHARTS (UPDATED DUAL CIRCLES)
     // ═══════════════════════════════════════
     let dashChart = null;
     
@@ -866,17 +873,26 @@
       const activeToday = getActiveHabitsForDate(today); const dDone = activeToday.filter(h => (state.history[today] || []).includes(h.id)).length; const dPct = activeToday.length ? (dDone / activeToday.length * 100) : 0;
       document.getElementById('dash-daily-val').textContent = `${dDone}/${activeToday.length}`; document.getElementById('circ-txt-daily').textContent = Math.round(dPct) + '%'; updateCircle('circ-daily', dPct);
       
-      // Books (Combining Manual and Smart Reader)
-      let totalP = 0, readP = 0;
-      state.books.forEach(b => { totalP += b.totalPages; readP += b.readPages; });
-      state.readerBooks.forEach(b => { totalP += b.total; readP += b.progress; });
+      // Books - Manual
+      let totalP_manual = 0, readP_manual = 0;
+      state.books.forEach(b => { totalP_manual += b.totalPages; readP_manual += b.readPages; });
+      const manualPct = totalP_manual > 0 ? (readP_manual / totalP_manual * 100) : 0;
       
-      const overallBooksPct = totalP > 0 ? (readP / totalP * 100) : 0;
+      // Books - Smart Reader
+      let totalP_smart = 0, readP_smart = 0;
+      state.readerBooks.forEach(b => { totalP_smart += b.total; readP_smart += b.progress; });
+      const smartPct = totalP_smart > 0 ? (readP_smart / totalP_smart * 100) : 0;
+      
       const totalBooksCount = state.books.length + state.readerBooks.length;
       
       document.getElementById('dash-books-count').textContent = totalBooksCount;
-      document.getElementById('circ-txt-books').textContent = Math.round(overallBooksPct) + '%'; 
-      updateCircle('circ-books', overallBooksPct);
+      
+      // Update the two separate circles
+      document.getElementById('circ-txt-books-smart').textContent = Math.round(smartPct) + '%'; 
+      updateCircle('circ-books-smart', smartPct);
+
+      document.getElementById('circ-txt-books-manual').textContent = Math.round(manualPct) + '%'; 
+      updateCircle('circ-books-manual', manualPct);
 
       // Goals
       let gAvg = state.goals.length > 0 ? state.goals.reduce((s,g) => s + (getGoalProgressInfo(g.id).isAuto ? getGoalProgressInfo(g.id).pct : (g.progress || 0)), 0) / state.goals.length : 0;
@@ -915,7 +931,7 @@
     }
 
     // ═══════════════════════════════════════
-    //  SMART READER LOGIC (LIBRARY + SEARCH + HTML PARSING)
+    //  SMART READER LOGIC (LIBRARY + SEARCH + HTML PARSING + RENAME)
     // ═══════════════════════════════════════
 
     function switchReaderMode(m) {
@@ -927,7 +943,6 @@
         document.getElementById('rtab-read').classList.toggle('active', m === 'read');
         document.getElementById('rtab-lib').classList.toggle('active', m === 'library');
         
-        // Show the Read tab button only if a book is open
         document.getElementById('rtab-read').style.display = currentOpenBookId ? 'block' : 'none';
         document.getElementById('reader-progress-container').style.display = (m === 'read') ? 'block' : 'none';
         
@@ -945,13 +960,29 @@
             const pct = Math.round((book.progress / book.total) * 100) || 0;
             return `
             <div class="reader-book-card" onclick="openReaderBook(${book.id})">
-                <div class="rbc-del" onclick="deleteReaderBook(event, ${book.id})" title="حذف الكتاب">✕</div>
+                <div class="rbc-actions">
+                    <div class="rbc-btn" style="color: var(--zaha);" onclick="renameReaderBook(event, ${book.id})" title="تعديل الاسم">✏️</div>
+                    <div class="rbc-btn" style="color: #ef4444;" onclick="deleteReaderBook(event, ${book.id})" title="حذف الكتاب">✕</div>
+                </div>
                 <span class="rbc-icon">📘</span>
-                <div class="rbc-title">${book.title}</div>
+                <div class="rbc-title" title="${book.title}">${book.title}</div>
                 <div style="font-size:11px; color:var(--text3); margin-bottom:8px;">${pct}% مُنجز</div>
                 <div class="rbc-prog-bg"><div class="rbc-prog-fill" style="width:${pct}%"></div></div>
             </div>`;
         }).join('');
+    }
+
+    function renameReaderBook(event, id) {
+        event.stopPropagation();
+        const bookMeta = state.readerBooks.find(b => b.id === id);
+        if(!bookMeta) return;
+        const newName = prompt("أدخل الاسم الجديد للكتاب:", bookMeta.title);
+        if(newName && newName.trim() !== "") {
+            bookMeta.title = newName.trim();
+            saveState();
+            renderReaderLibrary();
+            toast('تم تعديل اسم الكتاب بنجاح ✓');
+        }
     }
 
     function deleteReaderBook(event, id) {
