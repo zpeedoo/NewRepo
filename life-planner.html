@@ -163,11 +163,11 @@
     .daily-main { flex: 1; min-width: 0; }
     .daily-sidebar { width: 320px; flex-shrink: 0; position: sticky; top: 30px; }
     
-    .mini-dash-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; box-shadow: var(--shadow); transition: 0.3s; }
+    .mini-dash-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; box-shadow: var(--shadow); transition: 0.3s; margin-bottom: 20px;}
     .md-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .md-title { font-weight: 800; font-size: 16px; color: var(--black); }
     .md-overall { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px dashed var(--border-darker); }
-    .md-list { display: flex; flex-direction: column; gap: 16px; max-height: 400px; overflow-y: auto; padding-left: 5px; }
+    .md-list { display: flex; flex-direction: column; gap: 16px; max-height: 250px; overflow-y: auto; padding-left: 5px; }
     .md-item { display: flex; align-items: center; gap: 12px; }
     .md-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 16px; border: 1px solid var(--border-darker); flex-shrink: 0; }
     .md-info { flex: 1; min-width: 0; }
@@ -184,14 +184,14 @@
     .mood-btn.active { background: var(--primary-light); border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
 
     /* Calendar Grid Styles */
-    .cal-header-days { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: 800; font-size: 12px; color: var(--text2); margin-bottom: 10px; }
-    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
-    .cal-cell { aspect-ratio: 1; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; position: relative; color: var(--text); background: var(--surface); transition: 0.3s; }
+    .cal-header-days { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: 800; font-size: 11px; color: var(--text2); margin-bottom: 10px; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+    .cal-cell { aspect-ratio: 1; border-radius: 8px; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; position: relative; color: var(--text); background: var(--surface); transition: 0.3s; }
     .cal-day-empty { background: var(--cal-empty); color: var(--text3); border-color: transparent;}
     .cal-day-low { background: var(--cal-low); border-color: var(--cal-low); }
     .cal-day-half { background: var(--cal-half); border-color: var(--cal-half); color: #fff;}
     .cal-day-full { background: var(--cal-full); border-color: var(--cal-full); color: #fff; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);}
-    .cal-mood { position: absolute; bottom: 2px; right: 2px; font-size: 12px; }
+    .cal-mood { position: absolute; bottom: 2px; right: 2px; font-size: 10px; }
     .cal-today-marker { position: absolute; top: 4px; left: 4px; width: 6px; height: 6px; background: var(--primary); border-radius: 50%; }
 
     /* Shared Common Elements */
@@ -318,7 +318,7 @@
       <div>جاري معالجة البيانات...</div>
   </div>
 
-  <!-- AUTHENTICATION SCREEN -->
+  <!-- AUTHENTICATION SCREEN (HIDDEN) -->
   <div id="auth-screen">
     <div class="auth-card">
       <div class="auth-logo">
@@ -327,13 +327,10 @@
       </div>
       <h2 style="margin-top: 0; margin-bottom: 8px;">تسجيل الدخول</h2>
       <p style="font-size: 13px; color: var(--text2); margin-bottom: 30px;">يرجى تسجيل الدخول للوصول إلى مساحتك الآمنة</p>
-
       <div class="field" style="text-align: right; margin-bottom: 16px;"><label style="display: block; font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 8px;">البريد الإلكتروني</label><input type="email" id="auth-email" class="inp" placeholder="name@example.com" /></div>
       <div class="field" style="text-align: right; margin-bottom: 16px;"><label style="display: block; font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 8px;">كلمة المرور</label><input type="password" id="auth-password" class="inp" placeholder="••••••••" /></div>
-
       <button id="btn-login" class="btn btn-dark" style="width: 100%; margin-top: 15px; padding: 14px;" onclick="handleLogin()">تسجيل الدخول</button>
       <button id="btn-signup" class="btn" style="width: 100%; margin-top: 12px; background: var(--surface2); color: var(--text); box-shadow: none; border: 1px solid var(--border-darker);" onclick="handleSignUp()">إنشاء حساب جديد</button>
-
       <div style="margin-top: 24px; font-size: 13px; color: var(--primary); cursor: pointer; font-weight: 700; transition: 0.2s;" onclick="handleReset()">هل نسيت كلمة المرور؟</div>
     </div>
   </div>
@@ -346,7 +343,6 @@
     </div>
     <div class="nav-item active" data-page="dash" onclick="goPage(this)">📊 الملخص العام</div>
     <div class="nav-item" data-page="daily" onclick="goPage(this)">☀️ عاداتي اليومية</div>
-    <div class="nav-item" data-page="calendar" onclick="goPage(this)">📅 التقويم والمزاج</div>
     <div class="nav-item" data-page="goals" onclick="goPage(this)">🏆 أهداف السنة</div>
     <div class="nav-item" data-page="books" onclick="goPage(this)">📚 مكتبتي اليدوية</div>
     <div class="nav-item" data-page="reader" onclick="goPage(this)">📖 القارئ الذكي</div>
@@ -354,7 +350,7 @@
     <div class="nav-item" data-page="all-habits" style="display:none;"></div>
     
     <div style="margin-top: auto; width: 100%;">
-      <div class="nav-item" style="color: var(--red); justify-content: center; border: 1px solid var(--border); background: rgba(239, 68, 68, 0.05);" onclick="handleLogout()">🚪 تسجيل الخروج</div>
+      <div class="nav-item" style="color: var(--text2); justify-content: center; border: 1px solid var(--border);" onclick="handleLogout()">تسجيل الخروج</div>
       <div class="sync-status"><span class="sync-dot" id="syncDot"></span>مزامنة سحابية</div>
     </div>
   </div>
@@ -452,14 +448,14 @@
 
     <!-- Daily Habits -->
     <div class="page" id="page-daily">
+      
       <div class="add-bar">
         <div style="font-weight:800; font-size:16px">العادات المجدولة لليوم</div>
-        <button class="btn btn-dark btn-circle" onclick="openModal('habit')" title="إضافة عادة">+</button>
+        <div style="display: flex; gap: 8px;">
+            <button class="btn btn-dark btn-circle" style="background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); box-shadow:none; font-size:18px;" onclick="goPage({dataset: {page: 'all-habits'}})" title="إدارة جميع العادات والإحصائيات">⚙️</button>
+            <button class="btn btn-dark btn-circle" onclick="openModal('habit')" title="إضافة عادة">+</button>
+        </div>
       </div>
-      
-      <button class="btn" style="width: 100%; margin-bottom: 25px; padding: 16px; font-size: 16px; background: var(--zaha); box-shadow: 0 4px 15px var(--zaha-light);" onclick="goPage({dataset: {page: 'all-habits'}})">
-          إدارة جميع العادات والإحصائيات الشاملة ⚙️
-      </button>
 
       <div class="daily-layout">
           <div class="daily-main">
@@ -479,6 +475,21 @@
 
           <div class="daily-sidebar">
               <div class="mini-dash-card" id="mini-dash-content"></div>
+              
+              <!-- Mini Calendar -->
+              <div class="mini-dash-card" style="margin-top: 20px; padding: 20px;">
+                  <div style="text-align:center; font-size:15px; font-weight:800; margin-bottom: 15px; color: var(--black);" id="cal-month-title"></div>
+                  <div class="cal-header-days" style="font-size: 11px;">
+                      <div>أحد</div><div>إثن</div><div>ثلا</div><div>أرب</div><div>خمي</div><div>جمع</div><div>سبت</div>
+                  </div>
+                  <div class="cal-grid" id="calendar-grid" style="gap: 4px;"></div>
+                  <div style="display:flex; justify-content:center; gap:10px; align-items:center; font-size:10px; font-weight:700; margin-top: 15px; color: var(--text2);">
+                      <div style="display:flex; align-items:center; gap:4px;"><div style="width:10px; height:10px; background:var(--cal-full); border-radius:3px;"></div> مكتمل</div>
+                      <div style="display:flex; align-items:center; gap:4px;"><div style="width:10px; height:10px; background:var(--cal-half); border-radius:3px;"></div> جزئي</div>
+                      <div style="display:flex; align-items:center; gap:4px;"><div style="width:10px; height:10px; background:var(--cal-low); border-radius:3px;"></div> قليل</div>
+                  </div>
+              </div>
+
           </div>
       </div>
     </div>
@@ -507,26 +518,6 @@
         </div>
       </div>
       <div id="all-habits-list"></div>
-    </div>
-
-    <!-- CALENDAR & MOOD PAGE -->
-    <div class="page" id="page-calendar">
-        <div class="add-bar" style="border-color: var(--cal-full);">
-            <div style="font-weight:800; font-size:16px; color: var(--cal-full)">التقويم الشهري 📅</div>
-            <div style="display:flex; gap:10px; align-items:center; font-size:12px; font-weight:700;">
-                <div style="display:flex; align-items:center; gap:4px;"><div style="width:12px; height:12px; background:var(--cal-full); border-radius:3px;"></div> مكتمل</div>
-                <div style="display:flex; align-items:center; gap:4px;"><div style="width:12px; height:12px; background:var(--cal-half); border-radius:3px;"></div> جزئي</div>
-                <div style="display:flex; align-items:center; gap:4px;"><div style="width:12px; height:12px; background:var(--cal-low); border-radius:3px;"></div> قليل</div>
-            </div>
-        </div>
-        
-        <div class="card-box">
-            <div style="text-align:center; font-size:20px; font-weight:800; margin-bottom: 20px;" id="cal-month-title"></div>
-            <div class="cal-header-days">
-                <div>الأحد</div><div>الإثنين</div><div>الثلاثاء</div><div>الأربعاء</div><div>الخميس</div><div>الجمعة</div><div>السبت</div>
-            </div>
-            <div class="cal-grid" id="calendar-grid"></div>
-        </div>
     </div>
 
     <!-- Goals -->
@@ -775,7 +766,7 @@
   <div class="bnav">
     <div class="bnav-item active" data-page="dash" onclick="goPage(this)">📊<span>الملخص</span></div>
     <div class="bnav-item" data-page="daily" onclick="goPage(this)">☀️<span>عاداتي</span></div>
-    <div class="bnav-item" data-page="calendar" onclick="goPage(this)">📅<span>تقويم</span></div>
+    <div class="bnav-item" data-page="goals" onclick="goPage(this)">🏆<span>أهدافي</span></div>
     <div class="bnav-item" data-page="books" onclick="goPage(this)">📚<span>ورقي</span></div>
     <div class="bnav-item" data-page="reader" onclick="goPage(this)">📖<span>القارئ</span></div>
     <div class="bnav-item" data-page="zaha" onclick="goPage(this)">🏛️<span>زها</span></div>
@@ -784,7 +775,7 @@
   <div class="toast" id="toast">✨ <span id="toast-msg"></span></div>
 
   <script>
-    const APP_VER = "v26_Restore_Auth"; 
+    const APP_VER = "v27_Refined_UI"; 
 
     window.onerror = function(message, source, lineno, colno, error) { console.error("Global Error Caught:", message); return false; };
 
@@ -801,10 +792,12 @@
     let db, auth;
     try { if (!firebase.apps.length) firebase.initializeApp(firebaseConfig); db = firebase.database(); auth = firebase.auth(); } catch (e) { console.error("Firebase Init Error:", e); }
 
-    let currentUserUID = null; 
+    let currentUserUID = "test_user_123"; 
     
-    // --- تم إعادة تفعيل كود تسجيل الدخول الفعلي لاستعادة بياناتك الأصلية ---
-    if (auth) {
+    // --- إيقاف شاشة تسجيل الدخول لإستعادة الحساب التجريبي ---
+    document.getElementById('auth-screen').style.setProperty('display', 'none', 'important');
+
+    /* if (auth) {
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUserUID = user.uid;
@@ -817,32 +810,11 @@
             }
         });
     }
-
-    function handleLogin() {
-        const email = document.getElementById('auth-email').value.trim();
-        const pass = document.getElementById('auth-password').value;
-        if(!email || !pass) { toast('يرجى تعبئة الإيميل وكلمة المرور'); return; }
-        auth.signInWithEmailAndPassword(email, pass).then(() => toast('تم تسجيل الدخول بنجاح!')).catch(e => toast('خطأ: ' + e.message));
-    }
-
-    function handleSignUp() {
-        const email = document.getElementById('auth-email').value.trim();
-        const pass = document.getElementById('auth-password').value;
-        if(!email || !pass) { toast('يرجى تعبئة الإيميل وكلمة المرور'); return; }
-        auth.createUserWithEmailAndPassword(email, pass).then(() => toast('تم إنشاء الحساب بنجاح!')).catch(e => toast('خطأ: ' + e.message));
-    }
-
-    function handleReset() {
-        const email = document.getElementById('auth-email').value.trim();
-        if(!email) { toast('أدخل بريدك الإلكتروني أولاً'); return; }
-        auth.sendPasswordResetEmail(email).then(() => toast('تم إرسال رابط استعادة كلمة المرور')).catch(e => toast('خطأ: ' + e.message));
-    }
-    // ------------------------------------------------------------------------
+    */
     
     let state = {
       habits: [], history: {}, goals: [], books: [], readerBooks: [], zahaSessions: [], nextId: 1,
-      journal: {}, 
-      settings: { notifTime: '20:00' }
+      journal: {}, settings: { notifTime: '20:00' }
     };
 
     let currentOpenBookId = null; let readerData = []; let currentFontSize = 17; window.rawFileContent = "";
@@ -855,11 +827,9 @@
     const engMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     document.getElementById('hdr-date-full').innerHTML = `${engDays[dNow.getDay()]},<br>${engMonths[dNow.getMonth()]}`;
 
-    function handleLogout() { 
-        if(confirm("هل تود تسجيل الخروج من حسابك؟")) {
-            if(auth) auth.signOut();
-        }
-    }
+    setTimeout(() => { checkAndMigrateDataThenLoad(currentUserUID); setupNotifications(); }, 300);
+
+    function handleLogout() { toast("أنت حالياً في وضع التجربة."); }
 
     async function checkAndMigrateDataThenLoad(uid) {
         const userRef = db.ref(`users/${uid}/planner_state`);
@@ -911,7 +881,6 @@
       document.getElementById('page-' + name).classList.add('active');
       document.getElementById('reader-progress-container').style.display = (name === 'reader' && currentOpenBookId) ? 'block' : 'none';
       if(name === 'reader' && !currentOpenBookId) switchReaderMode('library');
-      if(name === 'calendar') renderCalendar();
       renderAll();
     }
     function openModal(type, id = null) { 
@@ -936,7 +905,16 @@
     let toastTimeout;
     function toast(msg) { const t = document.getElementById('toast'); document.getElementById('toast-msg').textContent = msg; t.classList.add('show'); clearTimeout(toastTimeout); toastTimeout = setTimeout(() => t.classList.remove('show'), 2500); }
 
-    function renderAll() { renderHabits(); renderAllHabits(); renderGoals(); renderBooks(); renderZaha(); renderReaderLibrary(); renderDashboard(); if(document.getElementById('page-calendar').classList.contains('active')) renderCalendar(); }
+    function renderAll() { 
+        renderHabits(); 
+        renderAllHabits(); 
+        renderGoals(); 
+        renderBooks(); 
+        renderZaha(); 
+        renderReaderLibrary(); 
+        renderDashboard(); 
+        renderCalendar(); 
+    }
 
     function getStreak(habitId) {
         const h = state.habits.find(x => x.id === habitId);
@@ -1054,6 +1032,7 @@
         state.journal[today] = { mood, text };
         saveState();
         toast('تم حفظ يومياتك بنجاح 📓');
+        renderCalendar(); // تحديث التقويم فوراً بعد الحفظ
     }
 
     function renderCalendar() {
@@ -1062,7 +1041,8 @@
         const month = now.getMonth();
         
         const engMonthsAr = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
-        document.getElementById('cal-month-title').textContent = `${engMonthsAr[month]} ${year}`;
+        const titleEl = document.getElementById('cal-month-title');
+        if (titleEl) titleEl.textContent = `${engMonthsAr[month]} ${year}`;
         
         const firstDay = new Date(year, month, 1);
         const lastDay = new Date(year, month + 1, 0);
@@ -1099,7 +1079,8 @@
             html += `<div class="cal-cell ${colorClass}">${todayMarker}${d}${moodEmoji}</div>`;
         }
         
-        document.getElementById('calendar-grid').innerHTML = html;
+        const gridEl = document.getElementById('calendar-grid');
+        if(gridEl) gridEl.innerHTML = html;
     }
 
     function requestNotification() {
@@ -1247,7 +1228,6 @@
         }
     }
 
-    // PDF specific function
     function updatePdfProgress() {
         if (!currentOpenBookId) return;
         const bookMeta = state.readerBooks.find(b => b.id === currentOpenBookId);
@@ -1264,12 +1244,10 @@
         toast('تم حفظ تقدمك بنجاح ✓');
     }
 
-    // Text File specific functions
     function handleFileSelect(input) { const file = input.files[0]; if (file) { document.getElementById('readerFileName').textContent = file.name; document.getElementById('saveReaderBtn').disabled = false; if(!document.getElementById('new-book-title').value) { document.getElementById('new-book-title').value = file.name.replace(/\.[^/.]+$/, ""); } const reader = new FileReader(); reader.onload = (e) => { window.rawFileContent = e.target.result; }; reader.onerror = () => { alert("خطأ أثناء قراءة الملف"); }; reader.readAsText(file); } }
     
     async function processAndSaveFile() { const titleInput = document.getElementById('new-book-title').value.trim(); if (!window.rawFileContent || !titleInput) { alert("اختر الملف واكتب الاسم."); return; } if (!currentUserUID) return; document.getElementById('global-loading').style.display = 'flex'; const fileName = document.getElementById('readerFileName').textContent.toLowerCase(); let textToParse = window.rawFileContent; if (fileName.endsWith('.html') || fileName.endsWith('.htm') || textToParse.trim().toLowerCase().startsWith('<')) { const parser = new DOMParser(); const doc = parser.parseFromString(textToParse, 'text/html'); textToParse = doc.body.innerText; } const allParas = textToParse.split(/\n\s*\n/).map(p => p.trim()).filter(p => p.length > 0); const arrangedData = []; for (let i = 0; i < allParas.length; i += 2) { arrangedData.push({ en: allParas[i] || "", ar: allParas[i+1] || "...", read: false }); } const newBookId = Date.now(); const newBookMeta = { id: newBookId, title: titleInput, type: 'text', progress: 0, total: arrangedData.length }; try { await db.ref(`users/${currentUserUID}/book_contents/${newBookId}`).set(arrangedData); state.readerBooks.push(newBookMeta); await saveState(); document.getElementById('global-loading').style.display = 'none'; alert("تم الحفظ ✓"); document.getElementById('new-book-title').value = ''; document.getElementById('readerFileName').textContent = 'اضغط هنا للاختيار'; document.getElementById('saveReaderBtn').disabled = true; window.rawFileContent = ''; openReaderBook(newBookId); } catch(e) { document.getElementById('global-loading').style.display = 'none'; alert("خطأ سحابي: " + e.message); } }
     
-    // PDF specific function
     async function savePdfBook() {
         const title = document.getElementById('pdf-book-title').value.trim();
         const url = document.getElementById('pdf-book-url').value.trim();
@@ -1317,7 +1295,6 @@
         var height = mainEl.scrollHeight - mainEl.clientHeight;
         var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
         
-        // Progress bar for text books
         if (document.getElementById('page-reader').classList.contains('active') && currentOpenBookId) {
             const bookMeta = state.readerBooks.find(b => b.id === currentOpenBookId);
             if(bookMeta && bookMeta.type === 'text') {
