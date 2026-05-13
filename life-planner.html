@@ -318,7 +318,7 @@
       <div>جاري معالجة البيانات...</div>
   </div>
 
-  <!-- AUTHENTICATION SCREEN (Hidden for testing, ready for future use) -->
+  <!-- AUTHENTICATION SCREEN -->
   <div id="auth-screen">
     <div class="auth-card">
       <div class="auth-logo">
@@ -354,7 +354,7 @@
     <div class="nav-item" data-page="all-habits" style="display:none;"></div>
     
     <div style="margin-top: auto; width: 100%;">
-      <div class="nav-item" style="color: var(--text2); justify-content: center; border: 1px solid var(--border);" onclick="handleLogout()">تسجيل الخروج</div>
+      <div class="nav-item" style="color: var(--red); justify-content: center; border: 1px solid var(--border); background: rgba(239, 68, 68, 0.05);" onclick="handleLogout()">🚪 تسجيل الخروج</div>
       <div class="sync-status"><span class="sync-dot" id="syncDot"></span>مزامنة سحابية</div>
     </div>
   </div>
@@ -369,7 +369,7 @@
         <div class="date-text" id="hdr-date-full">Tue,<br>December</div>
       </div>
       <div class="greeting" style="flex: 1;">
-        <h1>مرحباً، صفوان </h1>
+        <h1>مرحباً، صديقي </h1>
         <p>قم بتنظيم يومك وأهدافك بسهولة!</p>
       </div>
       <div class="header-actions">
@@ -784,7 +784,7 @@
   <div class="toast" id="toast">✨ <span id="toast-msg"></span></div>
 
   <script>
-    const APP_VER = "v25_Auth_Hidden"; 
+    const APP_VER = "v26_Restore_Auth"; 
 
     window.onerror = function(message, source, lineno, colno, error) { console.error("Global Error Caught:", message); return false; };
 
@@ -801,12 +801,9 @@
     let db, auth;
     try { if (!firebase.apps.length) firebase.initializeApp(firebaseConfig); db = firebase.database(); auth = firebase.auth(); } catch (e) { console.error("Firebase Init Error:", e); }
 
-    let currentUserUID = "test_user_123"; 
+    let currentUserUID = null; 
     
-    // إيقاف شاشة الدخول مؤقتاً
-    document.getElementById('auth-screen').style.setProperty('display', 'none', 'important');
-
-    /* --- كود تسجيل الدخول الفعلي (معطل حالياً) ---
+    // --- تم إعادة تفعيل كود تسجيل الدخول الفعلي لاستعادة بياناتك الأصلية ---
     if (auth) {
         auth.onAuthStateChanged((user) => {
             if (user) {
@@ -840,7 +837,7 @@
         if(!email) { toast('أدخل بريدك الإلكتروني أولاً'); return; }
         auth.sendPasswordResetEmail(email).then(() => toast('تم إرسال رابط استعادة كلمة المرور')).catch(e => toast('خطأ: ' + e.message));
     }
-    ------------------------------------------------ */
+    // ------------------------------------------------------------------------
     
     let state = {
       habits: [], history: {}, goals: [], books: [], readerBooks: [], zahaSessions: [], nextId: 1,
@@ -858,14 +855,17 @@
     const engMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     document.getElementById('hdr-date-full').innerHTML = `${engDays[dNow.getDay()]},<br>${engMonths[dNow.getMonth()]}`;
 
-    setTimeout(() => { checkAndMigrateDataThenLoad(currentUserUID); setupNotifications(); }, 300);
-
-    function handleLogout() { toast("أنت حالياً في وضع التجربة."); }
+    function handleLogout() { 
+        if(confirm("هل تود تسجيل الخروج من حسابك؟")) {
+            if(auth) auth.signOut();
+        }
+    }
 
     async function checkAndMigrateDataThenLoad(uid) {
         const userRef = db.ref(`users/${uid}/planner_state`);
         userRef.once('value', async (snap) => { if (!snap.exists()) { const oldSnap = await db.ref('planner_state').once('value'); if (oldSnap.exists()) await userRef.set(oldSnap.val()); } loadState(); });
     }
+    
     let isInitialLoad = true;
     function loadState() {
       if (!currentUserUID) return;
