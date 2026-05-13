@@ -237,9 +237,11 @@
     .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); color: white; z-index: 4000; align-items: center; justify-content: center; font-weight: 800; flex-direction: column; gap: 10px; backdrop-filter: blur(5px); }
 
     /* Specific styling for the requested Dual-Circle Book Card layout */
-    .dash-book-matched { display: flex; justify-content: space-between; align-items: center; flex-direction: row-reverse; padding: 20px; }
+    .dash-book-matched { display: flex; justify-content: space-between; align-items: center; padding: 20px; flex-direction: row; }
     .dash-book-matched .text-side { text-align: right; }
-    .circles-side { display: flex; align-items: center; justify-content: flex-end; }
+    .circles-side { display: flex; align-items: center; justify-content: flex-end; gap: 15px; }
+    .circle-col { display: flex; flex-direction: column; align-items: center; gap: 2px; margin-top: 5px; }
+    .circle-label { font-size: 11px; font-weight: 800; color: var(--text2); }
 
     @media (max-width: 768px) {
       .sidebar { display: none; }
@@ -325,7 +327,7 @@
         <!-- Card 2: Books (DUAL CIRCLES FOR MANUAL & SMART READER) -->
         <div class="metric-card dash-book-matched">
           <div class="text-side">
-            <div class="metric-icon-wrap" style="background:#fbeae8; color:var(--primary); margin-right: auto; margin-left:0;">📚</div>
+            <div class="metric-icon-wrap" style="background:#fbeae8; color:var(--primary); margin-right: 0; margin-left:auto;">📚</div>
             <div class="metric-title">مكتبتي (التقدم العام)</div>
             <div class="metric-val">
                 <span id="dash-books-count">0</span>
@@ -333,13 +335,21 @@
             </div>
           </div>
           <div class="circles-side">
-            <div class="circ-wrap" title="القارئ الذكي (إلكتروني)" style="transform: scale(0.85); margin-left: -15px;">
-              <svg width="70" height="70" viewBox="0 0 70 70"><circle class="circ-bg" cx="35" cy="35" r="30"></circle><circle class="circ-val" id="circ-books-smart" cx="35" cy="35" r="30" stroke="var(--zaha)" stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle></svg>
-              <div class="circ-text" id="circ-txt-books-smart" style="font-size:15px; color:var(--zaha)">0%</div>
+            <!-- Manual Books Circle (Right) -->
+            <div class="circle-col">
+              <div class="circ-wrap" title="الكتب الورقية (يدوي)" style="transform: scale(0.85); margin: 0;">
+                <svg width="70" height="70" viewBox="0 0 70 70"><circle class="circ-bg" cx="35" cy="35" r="30"></circle><circle class="circ-val" id="circ-books-manual" cx="35" cy="35" r="30" stroke="var(--primary)" stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle></svg>
+                <div class="circ-text" id="circ-txt-books-manual" style="font-size:15px; color:var(--primary)">0%</div>
+              </div>
+              <span class="circle-label">ورقي (يدوي)</span>
             </div>
-            <div class="circ-wrap" title="الكتب الورقية (يدوي)" style="transform: scale(0.85);">
-              <svg width="70" height="70" viewBox="0 0 70 70"><circle class="circ-bg" cx="35" cy="35" r="30"></circle><circle class="circ-val" id="circ-books-manual" cx="35" cy="35" r="30" stroke="var(--primary)" stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle></svg>
-              <div class="circ-text" id="circ-txt-books-manual" style="font-size:15px; color:var(--primary)">0%</div>
+            <!-- Smart Reader Books Circle (Left) -->
+            <div class="circle-col">
+              <div class="circ-wrap" title="القارئ الذكي (إلكتروني)" style="transform: scale(0.85); margin: 0;">
+                <svg width="70" height="70" viewBox="0 0 70 70"><circle class="circ-bg" cx="35" cy="35" r="30"></circle><circle class="circ-val" id="circ-books-smart" cx="35" cy="35" r="30" stroke="var(--zaha)" stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle></svg>
+                <div class="circ-text" id="circ-txt-books-smart" style="font-size:15px; color:var(--zaha)">0%</div>
+              </div>
+              <span class="circle-label">القارئ الذكي</span>
             </div>
           </div>
         </div>
@@ -523,6 +533,7 @@
       <div class="modal-title" id="m-goal-title-text">إضافة هدف 🏆</div>
       <input type="hidden" id="m-goal-id">
       <div class="field"><label>اسم الهدف</label><input type="text" class="inp" id="m-goal-title" placeholder="مثال: تعلم لغة جديدة" /></div>
+      <div class="field"><label>تاريخ إنجاز الهدف (لحساب التقدم تلقائياً)</label><input type="date" class="inp" id="m-goal-end" /></div>
       <div class="modal-actions">
         <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none" onclick="closeModal('goal')">إلغاء</button>
         <button class="btn" onclick="saveGoal()">حفظ الهدف</button>
@@ -767,10 +778,12 @@
           document.getElementById('m-goal-id').value = g.id;
           document.getElementById('m-goal-title-text').textContent = 'تعديل الهدف ✎';
           document.getElementById('m-goal-title').value = g.title;
+          document.getElementById('m-goal-end').value = g.endDate || '';
         } else {
           document.getElementById('m-goal-id').value = '';
           document.getElementById('m-goal-title-text').textContent = 'إضافة هدف 🏆';
           document.getElementById('m-goal-title').value = '';
+          document.getElementById('m-goal-end').value = '';
         }
       }
       else if (type === 'book') {
@@ -849,12 +862,102 @@
     function renderHabits() { const activeToday = getActiveHabitsForDate(today); document.getElementById('habit-list').innerHTML = activeToday.length ? activeToday.map(h => { const done = (state.history[today] || []).includes(h.id); const gInfo = state.goals.find(g => g.id == h.goalId); const bInfo = h.bookId ? state.books.find(b => b.id == h.bookId) : null; let bInput = (bInfo && !done) ? `<input type="number" id="h-pages-${h.id}" class="inp" placeholder="كم صفحة؟" style="width:90px; padding:4px 8px; font-size:11px; height: 28px; margin-inline-end: 8px;" min="1" onclick="event.stopPropagation()">` : (bInfo && done) ? `<span style="font-size:11px; color:var(--primary); margin-inline-end: 8px; font-weight:bold;">تم التحديث ✓</span>` : ''; return `<div class="list-item ${done ? 'done' : ''}"><div class="check-btn ${done ? 'active' : ''}" onclick="toggleHabit(${h.id}, ${h.bookId ? `'${h.bookId}'` : 'null'})">${done ? '✓' : ''}</div>${bInput}<div class="item-info"><div class="item-title">${h.title}</div><div class="item-meta">${gInfo ? `<span class="badge goal-badge">🎯 ${gInfo.title}</span>` : ''}${bInfo ? `<span class="badge" style="background:#e0f2fe; color:#0284c7">📖 ${bInfo.title}</span>` : ''}</div></div><button class="del-btn" style="color:var(--text2); margin-inline-end:4px" onclick="openModal('habit', ${h.id})">✎</button><button class="del-btn" onclick="delHabit(${h.id})">✕</button></div>`; }).join('') : '<div class="empty">لا يوجد عادات اليوم</div>'; }
     function renderHabitStats() { document.getElementById('habit-stats').innerHTML = state.habits.map(h => { let expected = 0; let done = 0; let cur = new Date(h.start || today); let endD = h.end ? new Date(Math.min(new Date(today), new Date(h.end))) : new Date(today); while (cur <= endD) { if (h.freq === 'daily' || h.days.includes(cur.getDay())) expected++; cur.setDate(cur.getDate() + 1); } Object.keys(state.history).forEach(d => { if (d <= today && state.history[d].includes(h.id)) done++; }); const pct = expected === 0 ? 0 : Math.min((done / expected) * 100, 100); return `<div class="list-item" style="padding:20px; display:block"><div style="display:flex; justify-content:space-between; margin-bottom:12px"><div style="display:flex; flex-direction:column; gap:4px;"><span style="font-size:15px; font-weight:800">${h.title}</span></div><span style="font-size:16px; color:var(--primary); font-weight:800; font-family:'JetBrains Mono', monospace">${pct.toFixed(0)}%</span></div><div class="prog-bg"><div class="prog-fill" style="background:var(--primary); width:${pct}%"></div></div></div>`; }).join('') || '<div class="empty">لم تتم إضافة عادات بعد</div>'; }
 
-    function getGoalProgressInfo(goalId) { const linked = state.habits.filter(h => h.goalId == goalId); if (linked.length === 0) return { isAuto: false, pct: null, habitsTotal: 0 }; let exTot = 0; let dnTot = 0; linked.forEach(h => { let ex = 0; let dn = 0; let cur = new Date(h.start || today); let endD = h.end ? new Date(Math.min(new Date(today), new Date(h.end))) : new Date(today); while (cur <= endD) { if (h.freq === 'daily' || h.days.includes(cur.getDay())) ex++; cur.setDate(cur.getDate() + 1); } Object.keys(state.history).forEach(d => { if (d <= today && state.history[d].includes(h.id)) dn++; }); exTot += ex; dnTot += dn; }); return { isAuto: true, pct: Math.round(exTot>0 ? (dnTot/exTot)*100 : 0), habitsTotal: linked.length }; }
-    function saveGoal() { const id = document.getElementById('m-goal-id').value; const title = document.getElementById('m-goal-title').value.trim(); if (!title) { toast('أدخل اسم الهدف'); return; } if(id) { const g = state.goals.find(x => x.id == id); if(g) g.title = title; } else { state.goals.push({ id: state.nextId++, title, progress: 0 }); } saveState(); populateGlobalSelectors(); renderAll(); closeModal('goal'); toast('تم الحفظ 🎯'); }
+    function getGoalProgressInfo(goalId) { 
+        const goal = state.goals.find(g => g.id == goalId);
+        const linked = state.habits.filter(h => h.goalId == goalId); 
+        if (linked.length === 0) return { isAuto: false, pct: null, habitsTotal: 0 }; 
+        
+        let exTot = 0; let dnTot = 0; 
+        
+        // استخدام تاريخ نهاية الهدف، أو نهاية السنة الحالية كافتراضي
+        let goalEndD = goal.endDate ? new Date(goal.endDate) : new Date(new Date().getFullYear(), 11, 31);
+        
+        linked.forEach(h => { 
+            let ex = 0; let dn = 0; 
+            let startD = new Date(h.start || today); 
+            // حساب المدة من بداية العادة وحتى نهاية العادة أو نهاية الهدف (أيهما أقرب)
+            let endD = h.end ? new Date(Math.min(new Date(h.end), goalEndD)) : goalEndD; 
+            
+            let cur = new Date(startD); 
+            cur.setHours(0,0,0,0);
+            endD.setHours(0,0,0,0);
+
+            while (cur <= endD) { 
+                if (h.freq === 'daily' || (h.freq === 'specific' && h.days.includes(cur.getDay()))) {
+                    ex++; 
+                }
+                cur.setDate(cur.getDate() + 1); 
+            } 
+            Object.keys(state.history).forEach(d => { if (state.history[d].includes(h.id)) dn++; }); 
+            exTot += ex; dnTot += dn; 
+        }); 
+        
+        let pct = exTot > 0 ? Math.round((dnTot / exTot) * 100) : 0;
+        return { isAuto: true, pct: Math.min(pct, 100), habitsTotal: linked.length }; 
+    }
+    
+    function saveGoal() { 
+        const id = document.getElementById('m-goal-id').value; 
+        const title = document.getElementById('m-goal-title').value.trim(); 
+        const endDate = document.getElementById('m-goal-end').value;
+        if (!title) { toast('أدخل اسم الهدف'); return; } 
+        if(id) { 
+            const g = state.goals.find(x => x.id == id); 
+            if(g) { g.title = title; g.endDate = endDate; } 
+        } else { 
+            state.goals.push({ id: state.nextId++, title, endDate, progress: 0 }); 
+        } 
+        saveState(); populateGlobalSelectors(); renderAll(); closeModal('goal'); toast('تم الحفظ 🎯'); 
+    }
+    
     function delGoal(id) { if(confirm('تأكيد الحذف؟')) { state.goals = state.goals.filter(g => g.id !== id); state.habits.forEach(h => { if(h.goalId == id) h.goalId = ""; }); saveState(); populateGlobalSelectors(); renderAll(); } }
     function updateGoalUI(id, val) { const g = state.goals.find(x => x.id === id); if (g && !getGoalProgressInfo(id).isAuto) { g.progress = parseInt(val); document.getElementById(`goal-pct-${id}`).textContent = g.progress + '%'; document.getElementById(`goal-fill-${id}`).style.width = g.progress + '%'; renderDashboard(); } }
     function saveGoalUI(id, val) { const g = state.goals.find(x => x.id === id); if (g && !getGoalProgressInfo(id).isAuto) { g.progress = parseInt(val); saveState(); renderDashboard(); } }
-    function renderGoals() { document.getElementById('goal-list').innerHTML = state.goals.length ? state.goals.map(g => { const info = getGoalProgressInfo(g.id); const pct = info.isAuto ? info.pct : (g.progress || 0); return `<div class="card-box"><div class="card-hdr"><div class="card-title">${g.title}</div><div style="display:flex;gap:12px;align-items:center"><div class="card-pct" id="goal-pct-${g.id}">${pct}%</div><button class="del-btn" onclick="openModal('goal', ${g.id})">✎</button><button class="del-btn" onclick="delGoal(${g.id})">✕</button></div></div><div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" id="goal-fill-${g.id}" style="background:var(--primary);width:${pct}%"></div></div></div>${info.isAuto ? `<div style="font-size:12px; color:var(--primary); margin-top:14px;">🔒 محسوبة تلقائياً</div>` : `<input type="range" min="0" max="100" value="${pct}" oninput="updateGoalUI(${g.id}, this.value)" onchange="saveGoalUI(${g.id}, this.value)">` }</div>`; }).join('') : '<div class="empty">لم تقم بإضافة أهداف</div>'; }
+    
+    function renderGoals() { 
+        document.getElementById('goal-list').innerHTML = state.goals.length ? state.goals.map(g => { 
+            const info = getGoalProgressInfo(g.id); 
+            const pct = info.isAuto ? info.pct : (g.progress || 0); 
+            const dateStr = g.endDate ? `📅 حتى: ${g.endDate}` : 'بدون تاريخ نهاية';
+
+            return `
+            <div class="list-item" style="display:flex; flex-direction:column; align-items:stretch; padding: 20px; border-radius: 16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+                    
+                    <!-- Buttons & Percentage (Left Side) -->
+                    <div style="display:flex; gap: 8px; align-items:center;">
+                        <button class="del-btn" style="width:32px; height:32px; border-radius:8px; background:var(--surface); border:1px solid var(--border-darker); font-size:12px;" onclick="delGoal(${g.id})">✕</button>
+                        <button class="del-btn" style="width:32px; height:32px; border-radius:8px; background:var(--surface); border:1px solid var(--border-darker); font-size:12px;" onclick="openModal('goal', ${g.id})">✏️</button>
+                        <div class="card-pct" style="margin:0; padding:6px 14px; font-size:14px; background:var(--primary-light); color:var(--primary); border-radius:20px; font-weight:800;">${pct}%</div>
+                    </div>
+
+                    <!-- Title (Right Side) -->
+                    <div style="text-align: right;">
+                        <div class="card-title" style="margin:0; font-size: 16px;">${g.title}</div>
+                    </div>
+                    
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="prog-wrap" style="margin-top: 5px; margin-bottom: 8px;">
+                    <div class="prog-bg" style="height: 6px; background: var(--border-darker);">
+                        <div class="prog-fill" id="goal-fill-${g.id}" style="background:var(--primary); width:${pct}%;"></div>
+                    </div>
+                </div>
+                
+                <!-- Bottom Info -->
+                <div style="display:flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+                    <div style="font-size:10px; color:var(--text3); font-weight:700;">${dateStr}</div>
+                    <div style="font-size:11px; color:var(--primary); font-weight:700;">
+                        ${info.isAuto ? 'محسوبة تلقائياً 🔒' : 'تحديث يدوي ⚙️'}
+                    </div>
+                </div>
+                
+                <!-- Manual Slider (If not auto) -->
+                ${!info.isAuto ? `<input type="range" min="0" max="100" value="${pct}" style="width:100%; margin-top:15px;" oninput="updateGoalUI(${g.id}, this.value)" onchange="saveGoalUI(${g.id}, this.value)">` : ''}
+            </div>`; 
+        }).join('') : '<div class="empty">لم تقم بإضافة أهداف</div>'; 
+    }
 
     function saveBook() { const id = document.getElementById('m-book-id').value; const title = document.getElementById('m-book-title').value.trim(); if (!title) { toast('أدخل اسم الكتاب'); return; } if(id) { const b = state.books.find(x => x.id == id); if(b) { b.title = title; b.totalPages = parseInt(document.getElementById('m-book-total').value)||1; b.readPages = Math.min(parseInt(document.getElementById('m-book-read').value)||0, b.totalPages); } } else { state.books.push({ id: state.nextId++, title, totalPages: parseInt(document.getElementById('m-book-total').value)||1, readPages: Math.min(parseInt(document.getElementById('m-book-read').value)||0, parseInt(document.getElementById('m-book-total').value)||1) }); } saveState(); populateGlobalSelectors(); renderAll(); closeModal('book'); toast('تم حفظ الكتاب 📚'); }
     function delBook(id) { if(confirm('تأكيد الحذف؟')) { state.books = state.books.filter(b => b.id !== id); state.habits.forEach(h => { if(h.bookId == id) h.bookId = ""; }); saveState(); populateGlobalSelectors(); renderAll(); } }
@@ -976,13 +1079,62 @@
         event.stopPropagation();
         const bookMeta = state.readerBooks.find(b => b.id === id);
         if(!bookMeta) return;
-        const newName = prompt("أدخل الاسم الجديد للكتاب:", bookMeta.title);
-        if(newName && newName.trim() !== "") {
-            bookMeta.title = newName.trim();
-            saveState();
-            renderReaderLibrary();
-            toast('تم تعديل اسم الكتاب بنجاح ✓');
+        
+        // العثور على الكرت الذي تم الضغط عليه
+        const card = event.target.closest('.reader-book-card');
+        const titleDiv = card.querySelector('.rbc-title');
+        
+        // منع فتح مربع نص جديد إذا كان مفتوحاً بالفعل
+        if(titleDiv.querySelector('input')) return;
+
+        const currentTitle = bookMeta.title;
+        
+        // إنشاء مربع نص
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = currentTitle;
+        input.className = 'inp';
+        input.style.width = '100%';
+        input.style.fontSize = '13px';
+        input.style.padding = '4px 8px';
+        input.style.textAlign = 'center';
+        
+        // استبدال النص بالمربع
+        titleDiv.innerHTML = '';
+        titleDiv.appendChild(input);
+        
+        // التركيز على المربع فوراً
+        input.focus();
+        
+        // منع فتح الكتاب عند الضغط داخل مربع النص
+        input.addEventListener('click', (e) => e.stopPropagation());
+
+        // دالة الحفظ
+        function finishRename() {
+            const newName = input.value.trim();
+            if(newName !== "" && newName !== currentTitle) {
+                bookMeta.title = newName;
+                saveState();
+                renderReaderLibrary();
+                toast('تم تعديل اسم الكتاب بنجاح ✓');
+            } else {
+                // إرجاع الاسم القديم إذا ترك المربع فارغاً
+                titleDiv.textContent = currentTitle;
+            }
         }
+
+        // الحفظ عند النقر خارج المربع
+        input.addEventListener('blur', finishRename);
+        
+        // الحفظ عند الضغط على Enter أو الإلغاء عند الضغط على Escape
+        input.addEventListener('keydown', (e) => {
+            if(e.key === 'Enter') {
+                input.blur();
+            } else if (e.key === 'Escape') {
+                input.value = currentTitle; 
+                input.blur();
+            }
+        });
     }
 
     function deleteReaderBook(event, id) {
