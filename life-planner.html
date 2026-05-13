@@ -158,10 +158,36 @@
 
     /* Chart Card */
     .analytics-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; box-shadow: var(--shadow); margin-bottom: 30px; color: var(--black); }
-    .analytics-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-direction: row-reverse; }
+    .analytics-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-direction: row-reverse; flex-wrap: wrap; gap: 10px; }
     .analytics-title { font-size: 16px; font-weight: 800; color: var(--black); }
     .analytics-filter { background: var(--surface); color: var(--black); border: 1px solid var(--border-darker); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; outline: none; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
     
+    /* Daily Layout & Mini Dashboard */
+    .daily-layout { display: flex; gap: 30px; align-items: flex-start; }
+    .daily-main { flex: 1; min-width: 0; }
+    .daily-sidebar { width: 320px; flex-shrink: 0; position: sticky; top: 30px; }
+    
+    .mini-dash-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; box-shadow: var(--shadow); transition: 0.3s; }
+    .mini-dash-card:hover { box-shadow: 0 15px 35px -10px rgba(0,0,0,0.1); }
+    .md-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .md-title { font-weight: 800; font-size: 16px; color: var(--black); }
+    .md-overall { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px dashed var(--border-darker); }
+    
+    .md-list { display: flex; flex-direction: column; gap: 16px; max-height: 400px; overflow-y: auto; padding-left: 5px; }
+    .md-list::-webkit-scrollbar { width: 4px; }
+    .md-list::-webkit-scrollbar-thumb { background: var(--border-darker); border-radius: 4px; }
+    
+    .md-item { display: flex; align-items: center; gap: 12px; }
+    .md-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 16px; border: 1px solid var(--border-darker); flex-shrink: 0; }
+    .md-info { flex: 1; min-width: 0; }
+    .md-name { font-size: 13px; font-weight: 700; color: var(--black); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .md-status { font-size: 11px; font-weight: 800; color: var(--text3); font-family: 'JetBrains Mono', monospace; }
+    .md-status.done { color: var(--primary); }
+    
+    .md-bar-bg { height: 6px; background: var(--surface2); border: 1px solid var(--border-darker); border-radius: 3px; margin-top: 6px; overflow: hidden; }
+    .md-bar-fill { height: 100%; border-radius: 3px; background: var(--text3); transition: 0.4s; width: 0%; }
+    .md-bar-fill.done { background: var(--primary); width: 100%; }
+
     /* Reader Specific Styles */
     .progress-container-global { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 4px; z-index: 2000; background: var(--border); }
     .progress-bar-global { height: 100%; background: var(--primary); width: 0%; transition: width 0.2s; }
@@ -266,6 +292,9 @@
       .add-bar { flex-direction: row; }
       .analytics-hdr { flex-direction: column; align-items: flex-end; gap: 12px; }
       .dash-book-matched { flex-direction: column !important; align-items: flex-start; gap: 15px; } 
+      
+      .daily-layout { flex-direction: column-reverse; }
+      .daily-sidebar { width: 100%; position: static; margin-bottom: 20px; }
     }
   </style>
 </head>
@@ -303,6 +332,8 @@
     <div class="nav-item" data-page="books" onclick="goPage(this)">📚 مكتبتي اليدوية</div>
     <div class="nav-item" data-page="reader" onclick="goPage(this)">📖 القارئ الذكي</div>
     <div class="nav-item" data-page="zaha" onclick="goPage(this)">🏛️ مركز زها</div>
+    <!-- Hidden Nav item for the new page so goPage works seamlessly -->
+    <div class="nav-item" data-page="all-habits" style="display:none;"></div>
     
     <div style="margin-top: auto; width: 100%;">
       <div class="nav-item" style="color: var(--text2); justify-content: center; border: 1px solid var(--border);" onclick="handleLogout()">تسجيل الخروج</div>
@@ -392,8 +423,10 @@
         <div class="analytics-hdr">
            <div class="analytics-title">معدل إنجاز العادات</div>
            <select class="analytics-filter" id="chart-filter" onchange="renderChart()">
-               <option value="7">آخر 7 أيام</option>
+               <option value="1">اليوم</option>
+               <option value="7" selected>آخر أسبوع</option>
                <option value="30">آخر شهر</option>
+               <option value="180">آخر 6 أشهر</option>
                <option value="365">آخر سنة</option>
            </select>
         </div>
@@ -406,12 +439,55 @@
     <!-- Daily Habits -->
     <div class="page" id="page-daily">
       <div class="add-bar">
-        <div style="font-weight:800; font-size:16px">العادات المجدولة</div>
+        <div style="font-weight:800; font-size:16px">العادات المجدولة لليوم</div>
         <button class="btn btn-dark btn-circle" onclick="openModal('habit')" title="إضافة عادة">+</button>
       </div>
-      <div id="habit-list"></div>
-      <h2 style="margin-top: 40px; border-top: 2px solid var(--border); padding-top: 30px;">إحصائيات وتقييم العادات 📊</h2>
-      <div id="habit-stats"></div>
+      
+      <!-- Button to Navigate to All Habits & Stats -->
+      <button class="btn" style="width: 100%; margin-bottom: 25px; padding: 16px; font-size: 16px; background: var(--zaha); box-shadow: 0 4px 15px var(--zaha-light);" onclick="goPage({dataset: {page: 'all-habits'}})">
+          إدارة جميع العادات والإحصائيات الشاملة ⚙️
+      </button>
+
+      <div class="daily-layout">
+          <!-- Main Habits List (Right side in RTL) -->
+          <div class="daily-main">
+              <div id="habit-list"></div>
+          </div>
+
+          <!-- Mini Dashboard (Left side in RTL) -->
+          <div class="daily-sidebar">
+              <div class="mini-dash-card" id="mini-dash-content">
+                  <!-- Injected via JS -->
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- ALL HABITS & STATS PAGE -->
+    <div class="page" id="page-all-habits">
+      <div class="add-bar" style="border-color: var(--primary);">
+        <div style="font-weight:800; font-size:16px; color: var(--primary)">إدارة جميع العادات والإحصائيات 📊</div>
+        <div style="display:flex; gap:10px;">
+            <button class="btn btn-dark" style="padding: 8px 16px; font-size: 13px;" onclick="openModal('habit')">+ إضافة عادة</button>
+            <button class="btn" style="background: var(--surface2); color: var(--text); border: 1px solid var(--border-darker); padding: 8px 16px; font-size: 13px;" onclick="goPage({dataset: {page: 'daily'}})">العودة لليوم 🔙</button>
+        </div>
+      </div>
+      
+      <div class="analytics-card" style="margin-bottom: 20px; padding: 16px 24px;">
+        <div class="analytics-hdr" style="margin-bottom: 0;">
+           <div class="analytics-title" style="font-size: 14px;">الفترة الزمنية للتقييم:</div>
+           <select class="analytics-filter" id="habit-stats-filter" onchange="renderAllHabits()">
+               <option value="1">اليوم</option>
+               <option value="7" selected>آخر أسبوع</option>
+               <option value="30">آخر شهر</option>
+               <option value="180">آخر 6 أشهر</option>
+               <option value="365">آخر سنة</option>
+               <option value="all">كل المدة (تراكمي)</option>
+           </select>
+        </div>
+      </div>
+      
+      <div id="all-habits-list"></div>
     </div>
 
     <!-- Goals -->
@@ -526,6 +602,9 @@
         <select class="sel" id="m-hab-freq" style="width:100%" onchange="toggleHabitDays(this.value, 'm-hab-days-wrap')">
           <option value="daily">يومياً</option>
           <option value="specific">أيام محددة في الأسبوع</option>
+          <option value="weekly">أسبوعياً</option>
+          <option value="monthly">شهرياً</option>
+          <option value="yearly">سنوياً</option>
         </select>
       </div>
       <div class="field" id="m-hab-days-wrap" style="display:none">
@@ -612,7 +691,7 @@
   <div class="toast" id="toast">✨ <span id="toast-msg"></span></div>
 
   <script>
-    const APP_VER = "v21_ScrollTop_LibDefault"; 
+    const APP_VER = "v22_Habits_Manager"; 
 
     window.onerror = function(message, source, lineno, colno, error) {
         console.error("Global Error Caught:", message);
@@ -757,7 +836,6 @@
       document.querySelectorAll(`.nav-item[data-page="${name}"], .bnav-item[data-page="${name}"]`).forEach(n => n.classList.add('active'));
       document.getElementById('page-' + name).classList.add('active');
       
-      // Request: Whenever entering the smart reader, go to the library view
       if(name === 'reader') {
           switchReaderMode('library');
       } else {
@@ -768,7 +846,7 @@
     }
 
     function openModal(type, id = null) { 
-        if (type === 'habit') {
+      if (type === 'habit') {
         if(id) {
           const h = state.habits.find(x => x.id === id);
           if(!h) return;
@@ -861,7 +939,7 @@
 
     function renderAll() {
       renderHabits();
-      renderHabitStats();
+      renderAllHabits(); // Render the new All Habits page stats
       renderGoals();
       renderBooks();
       renderZaha();
@@ -914,9 +992,160 @@
     function saveHabit() { const id = document.getElementById('m-hab-id').value; const title = document.getElementById('m-hab-title').value.trim(); if (!title) { toast('أدخل اسم العادة'); return; } const freq = document.getElementById('m-hab-freq').value; let days = []; if (freq === 'specific') { document.querySelectorAll('#m-hab-days-wrap .day-btn.active').forEach(b => days.push(parseInt(b.dataset.day))); if (!days.length) { toast('اختر يوم واحد على الأقل'); return; } } if(id) { const h = state.habits.find(x => x.id == id); if(h) { h.title = title; h.start = document.getElementById('m-hab-start').value || today; h.end = document.getElementById('m-hab-end').value; h.freq = freq; h.days = days; h.goalId = document.getElementById('m-hab-goal').value; h.bookId = document.getElementById('m-hab-book').value; } } else { state.habits.push({ id: state.nextId++, title, start: document.getElementById('m-hab-start').value || today, end: document.getElementById('m-hab-end').value, freq, days, goalId: document.getElementById('m-hab-goal').value, bookId: document.getElementById('m-hab-book').value }); } saveState(); renderAll(); closeModal('habit'); toast('تم الحفظ ✓'); }
     function delHabit(id) { if(confirm('تأكيد الحذف؟')) { state.habits = state.habits.filter(h => h.id !== id); saveState(); renderAll(); } }
     function toggleHabit(id, bookId = null) { if (!state.history[today]) state.history[today] = []; if (state.history[today].includes(id)) { state.history[today] = state.history[today].filter(x => x !== id); } else { if (bookId) { const pagesInput = document.getElementById(`h-pages-${id}`); const b = state.books.find(x => x.id == bookId); if (pagesInput && pagesInput.value && b) { b.readPages = Math.min(b.readPages + parseInt(pagesInput.value), b.totalPages); toast(`تمت إضافة ${pagesInput.value} صفحة للكتاب ✓`); } } state.history[today].push(id); } saveState(); renderAll(); }
-    function getActiveHabitsForDate(dateStr) { const d = new Date(dateStr); const dayIdx = d.getDay(); return state.habits.filter(h => (!h.start || dateStr >= h.start) && (!h.end || dateStr <= h.end) && (h.freq !== 'specific' || h.days.includes(dayIdx))); }
-    function renderHabits() { const activeToday = getActiveHabitsForDate(today); document.getElementById('habit-list').innerHTML = activeToday.length ? activeToday.map(h => { const done = (state.history[today] || []).includes(h.id); const gInfo = state.goals.find(g => g.id == h.goalId); const bInfo = h.bookId ? state.books.find(b => b.id == h.bookId) : null; let bInput = (bInfo && !done) ? `<input type="number" id="h-pages-${h.id}" class="inp" placeholder="كم صفحة؟" style="width:90px; padding:4px 8px; font-size:11px; height: 28px; margin-inline-end: 8px;" min="1" onclick="event.stopPropagation()">` : (bInfo && done) ? `<span style="font-size:11px; color:var(--primary); margin-inline-end: 8px; font-weight:bold;">تم التحديث ✓</span>` : ''; return `<div class="list-item ${done ? 'done' : ''}"><div class="check-btn ${done ? 'active' : ''}" onclick="toggleHabit(${h.id}, ${h.bookId ? `'${h.bookId}'` : 'null'})">${done ? '✓' : ''}</div>${bInput}<div class="item-info"><div class="item-title">${h.title}</div><div class="item-meta">${gInfo ? `<span class="badge goal-badge">🎯 ${gInfo.title}</span>` : ''}${bInfo ? `<span class="badge" style="background:#e0f2fe; color:#0284c7">📖 ${bInfo.title}</span>` : ''}</div></div><button class="del-btn" style="color:var(--text2); margin-inline-end:4px" onclick="openModal('habit', ${h.id})">✎</button><button class="del-btn" onclick="delHabit(${h.id})">✕</button></div>`; }).join('') : '<div class="empty">لا يوجد عادات اليوم</div>'; }
-    function renderHabitStats() { document.getElementById('habit-stats').innerHTML = state.habits.map(h => { let expected = 0; let done = 0; let cur = new Date(h.start || today); let endD = h.end ? new Date(Math.min(new Date(today), new Date(h.end))) : new Date(today); while (cur <= endD) { if (h.freq === 'daily' || h.days.includes(cur.getDay())) expected++; cur.setDate(cur.getDate() + 1); } Object.keys(state.history).forEach(d => { if (d <= today && state.history[d].includes(h.id)) done++; }); const pct = expected === 0 ? 0 : Math.min((done / expected) * 100, 100); return `<div class="list-item" style="padding:20px; display:block"><div style="display:flex; justify-content:space-between; margin-bottom:12px"><div style="display:flex; flex-direction:column; gap:4px;"><span style="font-size:15px; font-weight:800">${h.title}</span></div><span style="font-size:16px; color:var(--primary); font-weight:800; font-family:'JetBrains Mono', monospace">${pct.toFixed(0)}%</span></div><div class="prog-bg"><div class="prog-fill" style="background:var(--primary); width:${pct}%"></div></div></div>`; }).join('') || '<div class="empty">لم تتم إضافة عادات بعد</div>'; }
+    
+    // Returns active habits to be shown in the daily checklist
+    function getActiveHabitsForDate(dateStr) { 
+        const d = new Date(dateStr); 
+        const dayIdx = d.getDay(); 
+        return state.habits.filter(h => {
+            if(h.start && dateStr < h.start) return false;
+            if(h.end && dateStr > h.end) return false;
+            if(h.freq === 'specific' && !h.days.includes(dayIdx)) return false;
+            return true; 
+        }); 
+    }
+    
+    function renderHabits() { 
+        const activeToday = getActiveHabitsForDate(today); 
+        document.getElementById('habit-list').innerHTML = activeToday.length ? activeToday.map(h => { 
+            const done = (state.history[today] || []).includes(h.id); 
+            const gInfo = state.goals.find(g => g.id == h.goalId); const bInfo = h.bookId ? state.books.find(b => b.id == h.bookId) : null; 
+            let bInput = (bInfo && !done) ? `<input type="number" id="h-pages-${h.id}" class="inp" placeholder="كم صفحة؟" style="width:90px; padding:4px 8px; font-size:11px; height: 28px; margin-inline-end: 8px;" min="1" onclick="event.stopPropagation()">` : (bInfo && done) ? `<span style="font-size:11px; color:var(--primary); margin-inline-end: 8px; font-weight:bold;">تم التحديث ✓</span>` : ''; 
+            return `<div class="list-item ${done ? 'done' : ''}"><div class="check-btn ${done ? 'active' : ''}" onclick="toggleHabit(${h.id}, ${h.bookId ? `'${h.bookId}'` : 'null'})">${done ? '✓' : ''}</div>${bInput}<div class="item-info"><div class="item-title">${h.title}</div><div class="item-meta">${gInfo ? `<span class="badge goal-badge">🎯 ${gInfo.title}</span>` : ''}${bInfo ? `<span class="badge" style="background:#e0f2fe; color:#0284c7">📖 ${bInfo.title}</span>` : ''}</div></div></div>`; 
+        }).join('') : '<div class="empty">لا يوجد عادات اليوم</div>'; 
+        
+        renderDailyMiniDash(); // Call mini dash render
+    }
+
+    function renderDailyMiniDash() {
+        const activeToday = getActiveHabitsForDate(today);
+        const container = document.getElementById('mini-dash-content');
+        
+        if (!container) return;
+
+        if (activeToday.length === 0) {
+            container.innerHTML = `<div class="empty" style="padding: 20px; border: none; background: transparent;">لا يوجد عادات مجدولة لليوم</div>`;
+            return;
+        }
+
+        const doneIds = state.history[today] || [];
+        const dDone = activeToday.filter(h => doneIds.includes(h.id)).length;
+        const dPct = Math.round((dDone / activeToday.length) * 100);
+
+        const itemsHtml = activeToday.map(h => {
+            const isDone = doneIds.includes(h.id);
+            const gInfo = state.goals.find(g => g.id == h.goalId);
+            const icon = h.bookId ? '📖' : (gInfo ? '🎯' : '⚡');
+            
+            return `
+            <div class="md-item">
+                <div class="md-icon">${icon}</div>
+                <div class="md-info">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div class="md-name" title="${h.title}">${h.title}</div>
+                        <div class="md-status ${isDone ? 'done' : ''}">${isDone ? '100%' : '0%'}</div>
+                    </div>
+                    <div class="md-bar-bg">
+                        <div class="md-bar-fill ${isDone ? 'done' : ''}"></div>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+
+        const circleOffset = 188.4 - (dPct / 100 * 188.4);
+
+        container.innerHTML = `
+            <div class="md-header">
+                <div class="md-title">تقدم اليوم</div>
+                <div style="font-size: 18px; font-weight: 800; color: var(--primary); font-family: 'JetBrains Mono', monospace;">${dPct}%</div>
+            </div>
+            
+            <div class="md-overall">
+                <div class="circ-wrap" style="transform: scale(0.85); margin: 0; width: 60px; height: 60px;">
+                    <svg width="60" height="60" viewBox="0 0 70 70" style="overflow:visible;">
+                        <circle class="circ-bg" cx="35" cy="35" r="30" stroke-width="6"></circle>
+                        <circle class="circ-val" cx="35" cy="35" r="30" stroke="var(--primary)" stroke-width="6" stroke-dasharray="188.4" stroke-dashoffset="${circleOffset}" style="transition: stroke-dashoffset 0.8s ease;"></circle>
+                    </svg>
+                </div>
+                <div>
+                    <div style="font-size: 12px; color: var(--text2); font-weight: 700;">العادات المنجزة</div>
+                    <div style="font-size: 18px; font-weight: 800; color: var(--black);"><span style="color: var(--primary)">${dDone}</span> / ${activeToday.length}</div>
+                </div>
+            </div>
+
+            <div class="md-list">
+                ${itemsHtml}
+            </div>
+        `;
+    }
+
+    // New Function for "All Habits" Page (Calculates progress dynamically based on filter)
+    function renderAllHabits() {
+        const filterVal = document.getElementById('habit-stats-filter') ? document.getElementById('habit-stats-filter').value : '7';
+        const dayNames = ['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
+        
+        const html = state.habits.map(h => {
+            let expected = 0; let done = 0; 
+            let dStart = new Date(h.start || today);
+            let dEnd = h.end ? new Date(Math.min(new Date(today), new Date(h.end))) : new Date(today);
+            
+            if (filterVal !== 'all') {
+                let fDate = new Date(today);
+                fDate.setDate(fDate.getDate() - parseInt(filterVal) + 1);
+                if (dStart < fDate) dStart = fDate;
+            }
+            
+            if (dStart <= dEnd) {
+                let cur = new Date(dStart);
+                let daysInRange = 0;
+                while (cur <= dEnd) { 
+                    daysInRange++;
+                    if (h.freq === 'daily' || (h.freq === 'specific' && h.days.includes(cur.getDay()))) expected++; 
+                    
+                    let dStr = cur.toLocaleDateString('en-CA');
+                    if (state.history[dStr] && state.history[dStr].includes(h.id)) done++;
+                    
+                    cur.setDate(cur.getDate() + 1); 
+                }
+                
+                if (h.freq === 'weekly') expected = Math.ceil(daysInRange / 7);
+                if (h.freq === 'monthly') expected = Math.ceil(daysInRange / 30);
+                if (h.freq === 'yearly') expected = Math.ceil(daysInRange / 365);
+            }
+            
+            const pct = expected === 0 ? 0 : Math.min((done / expected) * 100, 100);
+            
+            let freqLabel = 'يومياً';
+            if (h.freq === 'specific' && h.days && h.days.length > 0) freqLabel = h.days.map(d => dayNames[d]).join('، ');
+            if (h.freq === 'weekly') freqLabel = 'أسبوعياً';
+            if (h.freq === 'monthly') freqLabel = 'شهرياً';
+            if (h.freq === 'yearly') freqLabel = 'سنوياً';
+
+            let progressText = expected === 0
+                ? '💡 لا يوجد إنجاز مطلوب في هذه الفترة'
+                : `الإنجاز الفعلي: <strong>${done}</strong> من <strong>${expected}</strong> مرات مطلوبة`;
+
+            return `
+            <div class="list-item" style="padding:20px; display:block">
+                <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center; flex-wrap:wrap; gap:10px;">
+                    <div style="display:flex; flex-direction:column; gap:4px;">
+                        <span style="font-size:16px; font-weight:800; color:var(--text)">${h.title}</span>
+                        <span style="font-size:12px; color:var(--text2);">⏱ التكرار: ${freqLabel}</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap: 10px;">
+                        <span style="font-size:18px; color:var(--primary); font-weight:800; font-family:'JetBrains Mono', monospace">${pct.toFixed(0)}%</span>
+                        <button class="del-btn" style="background:var(--surface2);" onclick="openModal('habit', ${h.id})">✎</button>
+                        <button class="del-btn" onclick="delHabit(${h.id})">✕</button>
+                    </div>
+                </div>
+                <div class="prog-bg"><div class="prog-fill" style="background:var(--primary); width:${pct}%"></div></div>
+                <div class="item-meta" style="margin-top:12px">${progressText}</div>
+            </div>`;
+        }).join('');
+        
+        const listEl = document.getElementById('all-habits-list');
+        if (listEl) listEl.innerHTML = html || '<div class="empty">لم تتم إضافة عادات بعد</div>'; 
+    }
 
     function getGoalProgressInfo(goalId) { 
         const goal = state.goals.find(g => g.id == goalId);
@@ -935,13 +1164,23 @@
             cur.setHours(0,0,0,0);
             endD.setHours(0,0,0,0);
 
+            let daysInRange = 0;
             while (cur <= endD) { 
+                daysInRange++;
                 if (h.freq === 'daily' || (h.freq === 'specific' && h.days.includes(cur.getDay()))) {
                     ex++; 
                 }
                 cur.setDate(cur.getDate() + 1); 
             } 
-            Object.keys(state.history).forEach(d => { if (state.history[d].includes(h.id)) dn++; }); 
+            
+            if (h.freq === 'weekly') ex = Math.ceil(daysInRange / 7);
+            if (h.freq === 'monthly') ex = Math.ceil(daysInRange / 30);
+            if (h.freq === 'yearly') ex = Math.ceil(daysInRange / 365);
+            
+            Object.keys(state.history).forEach(d => { 
+                let histDate = new Date(d);
+                if (histDate >= startD && histDate <= endD && state.history[d].includes(h.id)) dn++; 
+            }); 
             exTot += ex; dnTot += dn; 
         }); 
         
@@ -976,37 +1215,26 @@
             return `
             <div class="list-item" style="display:flex; flex-direction:column; align-items:stretch; padding: 20px; border-radius: 16px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
-                    
-                    <!-- Buttons & Percentage (Left Side) -->
                     <div style="display:flex; gap: 8px; align-items:center;">
                         <button class="del-btn" style="width:32px; height:32px; border-radius:8px; background:var(--surface); border:1px solid var(--border-darker); font-size:12px;" onclick="delGoal(${g.id})">✕</button>
                         <button class="del-btn" style="width:32px; height:32px; border-radius:8px; background:var(--surface); border:1px solid var(--border-darker); font-size:12px;" onclick="openModal('goal', ${g.id})">✏️</button>
                         <div class="card-pct" style="margin:0; padding:6px 14px; font-size:14px; background:var(--primary-light); color:var(--primary); border-radius:20px; font-weight:800;">${pct}%</div>
                     </div>
-
-                    <!-- Title (Right Side) -->
                     <div style="text-align: right;">
                         <div class="card-title" style="margin:0; font-size: 16px;">${g.title}</div>
                     </div>
-                    
                 </div>
-                
-                <!-- Progress Bar -->
                 <div class="prog-wrap" style="margin-top: 5px; margin-bottom: 8px;">
                     <div class="prog-bg" style="height: 6px; background: var(--border-darker);">
                         <div class="prog-fill" id="goal-fill-${g.id}" style="background:var(--primary); width:${pct}%;"></div>
                     </div>
                 </div>
-                
-                <!-- Bottom Info -->
                 <div style="display:flex; justify-content: space-between; align-items: center; margin-top: 8px;">
                     <div style="font-size:10px; color:var(--text3); font-weight:700;">${dateStr}</div>
                     <div style="font-size:11px; color:var(--primary); font-weight:700;">
                         ${info.isAuto ? 'محسوبة تلقائياً 🔒' : 'تحديث يدوي ⚙️'}
                     </div>
                 </div>
-                
-                <!-- Manual Slider (If not auto) -->
                 ${!info.isAuto ? `<input type="range" min="0" max="100" value="${pct}" style="width:100%; margin-top:15px;" oninput="updateGoalUI(${g.id}, this.value)" onchange="saveGoalUI(${g.id}, this.value)">` : ''}
             </div>`; 
         }).join('') : '<div class="empty">لم تقم بإضافة أهداف</div>'; 
