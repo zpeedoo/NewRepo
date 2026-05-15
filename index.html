@@ -29,10 +29,227 @@
             --pink: #f472b6;
             --orange: #fb923c;
             --teal: #2dd4bf;
+            --hover-row: rgba(255, 255, 255, 0.02);
             --r: 10px;
             --r2: 14px;
             --r3: 18px;
         }
+
+        [data-theme="light"] {
+            --bg: #f4eef9;
+            --surface: rgba(255, 255, 255, 0.75);
+            --surface2: rgba(255, 255, 255, 0.55);
+            --surface3: rgba(167, 139, 250, 0.12);
+            --border: rgba(167, 139, 250, 0.16);
+            --border2: rgba(167, 139, 250, 0.28);
+            --text: #2b2154;
+            --text2: #5b528a;
+            --text3: #8e85b8;
+            --accent: #a78bfa;
+            --accent2: #7c6dfa;
+            --green: #34d399;
+            --red: #fb7185;
+            --amber: #fbbf24;
+            --cyan: #22d3ee;
+            --pink: #f472b6;
+            --orange: #fb923c;
+            --teal: #2dd4bf;
+            --hover-row: rgba(167, 139, 250, 0.06);
+            --shadow-card: 0 4px 24px rgba(167, 139, 250, 0.12), 0 1px 2px rgba(167, 139, 250, 0.06);
+            --shadow-lg: 0 10px 40px rgba(167, 139, 250, 0.18);
+            --r: 14px;
+            --r2: 20px;
+            --r3: 26px;
+        }
+
+        /* ─── LIGHT THEME GLASSMORPHISM ─── */
+        [data-theme="light"] html,
+        [data-theme="light"] body {
+            background: radial-gradient(circle at 15% 10%, #fce7f3 0%, transparent 45%),
+                        radial-gradient(circle at 85% 20%, #ddd6fe 0%, transparent 50%),
+                        radial-gradient(circle at 75% 90%, #cffafe 0%, transparent 45%),
+                        radial-gradient(circle at 20% 80%, #fef3c7 0%, transparent 40%),
+                        linear-gradient(135deg, #faf8ff 0%, #fff5f9 100%);
+            background-attachment: fixed;
+        }
+        [data-theme="light"] .main {
+            background: transparent;
+        }
+
+        [data-theme="light"] .sidebar {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(167, 139, 250, 0.12);
+            box-shadow: 0 8px 32px rgba(167, 139, 250, 0.06);
+        }
+
+        [data-theme="light"] .card,
+        [data-theme="light"] .form-card,
+        [data-theme="light"] .invoice-card,
+        [data-theme="light"] .loan-card,
+        [data-theme="light"] .table-card,
+        [data-theme="light"] .modal {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: var(--shadow-card);
+        }
+
+        [data-theme="light"] .metric {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: var(--shadow-card);
+        }
+
+        [data-theme="light"] .income-source,
+        [data-theme="light"] .sub-item,
+        [data-theme="light"] .maint-item {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(167, 139, 250, 0.1);
+        }
+
+        [data-theme="light"] .inp,
+        [data-theme="light"] .period-sel,
+        [data-theme="light"] select.inp option {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: rgba(167, 139, 250, 0.18);
+            color: var(--text);
+        }
+        [data-theme="light"] .inp:focus { border-color: var(--accent2); box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15); }
+
+        [data-theme="light"] .btn {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: rgba(167, 139, 250, 0.2);
+            color: var(--text);
+            box-shadow: 0 2px 8px rgba(167, 139, 250, 0.06);
+        }
+        [data-theme="light"] .btn:hover { background: rgba(255, 255, 255, 0.95); }
+        [data-theme="light"] .btn-primary {
+            background: linear-gradient(135deg, #a78bfa 0%, #7c6dfa 100%);
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(124, 109, 250, 0.35);
+        }
+        [data-theme="light"] .btn-primary:hover {
+            background: linear-gradient(135deg, #b89cff 0%, #8d7efb 100%);
+        }
+
+        [data-theme="light"] .chip {
+            background: rgba(255, 255, 255, 0.6);
+            border-color: rgba(167, 139, 250, 0.15);
+            color: var(--text2);
+        }
+        [data-theme="light"] .chip:hover,
+        [data-theme="light"] .chip.active {
+            background: rgba(167, 139, 250, 0.18);
+            border-color: rgba(167, 139, 250, 0.35);
+            color: var(--accent2);
+        }
+
+        [data-theme="light"] .nav-item.active {
+            background: linear-gradient(90deg, rgba(167, 139, 250, 0.16), rgba(167, 139, 250, 0.06));
+            color: var(--accent2);
+            border-right-color: var(--accent);
+        }
+        [data-theme="light"] .nav-item:hover {
+            background: rgba(167, 139, 250, 0.08);
+            color: var(--accent2);
+        }
+
+        [data-theme="light"] th {
+            background: rgba(167, 139, 250, 0.08);
+            color: var(--text2);
+        }
+        [data-theme="light"] td { color: var(--text2); }
+        [data-theme="light"] .td-main { color: var(--text); }
+
+        [data-theme="light"] .bbar-bg,
+        [data-theme="light"] .progress-bg,
+        [data-theme="light"] .renew-bar-wrap {
+            background: rgba(167, 139, 250, 0.12);
+        }
+
+        [data-theme="light"] .shop-tab {
+            background: rgba(255, 255, 255, 0.6);
+            border-color: rgba(167, 139, 250, 0.15);
+        }
+        [data-theme="light"] .shop-tab.active {
+            background: rgba(167, 139, 250, 0.18);
+            border-color: rgba(167, 139, 250, 0.4);
+            color: var(--accent2);
+        }
+
+        [data-theme="light"] .toast {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            box-shadow: 0 10px 40px rgba(167, 139, 250, 0.2);
+        }
+
+        [data-theme="light"] .logo {
+            border-bottom-color: rgba(167, 139, 250, 0.12);
+        }
+        [data-theme="light"] .logo-title {
+            background: linear-gradient(135deg, #7c6dfa 0%, #f472b6 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        [data-theme="light"] .period-badge {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: rgba(167, 139, 250, 0.15);
+        }
+
+        [data-theme="light"] .badge {
+            background: rgba(167, 139, 250, 0.12);
+            color: var(--accent2);
+        }
+
+        [data-theme="light"] ::-webkit-scrollbar-thumb {
+            background: rgba(167, 139, 250, 0.3);
+        }
+
+        [data-theme="light"] .divider { background: rgba(167, 139, 250, 0.15); }
+
+        [data-theme="light"] .empty {
+            color: var(--text3);
+        }
+
+        [data-theme="light"] .bottom-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(167, 139, 250, 0.1);
+            box-shadow: 0 -4px 20px rgba(167, 139, 250, 0.08);
+        }
+        [data-theme="light"] .bnav-item.active {
+            background: rgba(167, 139, 250, 0.14);
+            color: var(--accent2);
+        }
+        [data-theme="light"] .bnav-item { color: var(--text3); }
+
+        [data-theme="light"] .page-title {
+            background: linear-gradient(135deg, #2b2154 0%, #7c6dfa 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        [data-theme="light"] .card-title,
+        [data-theme="light"] .form-title,
+        [data-theme="light"] .sec-title {
+            color: var(--text3);
+        }
+
+        [data-theme="light"] .metric-val { color: var(--text); }
+        [data-theme="light"] .metric-pos { color: var(--green); }
+        [data-theme="light"] .metric-neg { color: var(--red); }
 
         * {
             box-sizing: border-box;
@@ -345,7 +562,7 @@
         .circ-val {
             font-size: 20px;
             font-weight: 600;
-            color: #fff;
+            color: var(--text);
             letter-spacing: -0.5px;
             font-family: 'JetBrains Mono', monospace;
         }
@@ -463,6 +680,14 @@
             width: 120px;
             height: 120px;
             margin: 0 auto;
+            flex-shrink: 0;
+        }
+
+        .donut-wrap canvas {
+            position: absolute !important;
+            inset: 0;
+            width: 100% !important;
+            height: 100% !important;
         }
 
         .donut-center {
@@ -471,7 +696,8 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            pointer-events: none
+            pointer-events: none;
+            z-index: 2;
         }
 
         .donut-total {
@@ -614,7 +840,7 @@
         }
 
         tr:hover td {
-            background: rgba(255, 255, 255, 0.02)
+            background: var(--hover-row)
         }
 
         .td-main {
@@ -1023,6 +1249,10 @@
             z-index: 300
         }
 
+        [data-theme="light"] .modal-ov {
+            background: rgba(15, 23, 42, 0.45);
+        }
+
         .modal-ov.open {
             display: flex
         }
@@ -1251,7 +1481,7 @@
         .shop-tab .tab-amt {
             font-family: 'JetBrains Mono', monospace;
             font-size: 10px;
-            background: rgba(255, 255, 255, 0.07);
+            background: var(--surface3);
             padding: 1px 5px;
             border-radius: 8px;
         }
@@ -1430,6 +1660,59 @@
             overflow-y: auto;
             padding-right: 2px;
         }
+
+        /* Subscription renewal progress bars */
+        .renew-row {
+            display: grid;
+            grid-template-columns: minmax(120px, 1.2fr) 2.5fr minmax(80px, auto);
+            gap: 12px;
+            align-items: center;
+            padding: 10px 4px;
+            border-bottom: 1px solid var(--border);
+        }
+        .renew-row:last-child { border-bottom: none; }
+        .renew-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text);
+            overflow: hidden;
+        }
+        .renew-name-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .renew-bar-wrap {
+            position: relative;
+            height: 14px;
+            background: var(--surface3);
+            border-radius: 7px;
+            overflow: hidden;
+        }
+        .renew-bar-fill {
+            position: absolute;
+            top: 0; right: 0; bottom: 0;
+            border-radius: 7px;
+            transition: width .4s ease;
+        }
+        .renew-days {
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            white-space: nowrap;
+        }
+        @media (max-width: 700px) {
+            .renew-row {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto auto;
+            }
+            .renew-name { grid-column: 1; grid-row: 1; }
+            .renew-days { grid-column: 2; grid-row: 1; }
+            .renew-bar-wrap { grid-column: 1 / -1; grid-row: 2; }
+        }
     </style>
 </head>
 
@@ -1543,6 +1826,10 @@
                 <button class="chip" id="chip-year" onclick="setQuickPeriod('year',this)">سنة</button>
                 <button class="chip" id="chip-all" onclick="setQuickPeriod('all',this)">الكل</button>
             </div>
+            <button class="btn" id="themeToggleBtn" onclick="toggleTheme()" style="margin-top:10px;width:100%;justify-content:center;gap:8px;">
+                <span id="themeToggleIcon">☀️</span>
+                <span id="themeToggleLbl">الوضع النهاري</span>
+            </button>
         </div>
     </div>
 
@@ -1564,14 +1851,28 @@
                 <!-- Content injected via JS -->
             </div>
 
-            <!-- Daily Trend Chart -->
-            <div class="card" style="margin-bottom:16px">
-                <div class="card-title">مؤشر الإنفاق اليومي (أعلى وأقل أيام الصرف)</div>
-                <div style="position:relative;height:160px">
-                    <canvas id="dailyTrendChart" role="img" aria-label="مؤشر الإنفاق اليومي"></canvas>
+            <!-- Days-to-renewal progress bars -->
+            <div class="card" style="margin-bottom: 14px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                    <div class="card-title" style="margin-bottom:0">الأيام المتبقية لتجديد الاشتراكات</div>
+                    <div style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">
+                        <span style="color:var(--green)">●</span> بعيد
+                        <span style="color:var(--amber);margin-right:8px">●</span> اقترب
+                        <span style="color:var(--red);margin-right:8px">●</span> وشيك
+                    </div>
                 </div>
+                <div id="ov-progress-list"></div>
             </div>
-            
+
+            <!-- Upcoming subscription renewals -->
+            <div class="card" style="margin-bottom: 16px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                    <div class="card-title" style="margin-bottom:0">تجديدات الاشتراكات القادمة</div>
+                    <div id="ov-renew-count" style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace"></div>
+                </div>
+                <div id="ov-renewals"></div>
+            </div>
+
             <!-- Monthly Chart & Budget bars -->
             <div class="grid-2">
                 <div class="card">
@@ -1638,8 +1939,21 @@
                     <div id="income-fixed-list"></div>
                 </div>
                 <div class="card">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                        <div class="card-title">الاستقطاعات الثابتة من الراتب</div>
+                        <button class="btn btn-sm" onclick="openModal('editFixedDeds')">✎ تعديل</button>
+                    </div>
+                    <div id="fixed-deds-list"></div>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
                     <div class="card-title">دخل فري لانس / متغير</div>
                     <div id="income-var-list"></div>
+                </div>
+                <div class="card">
+                    <div class="card-title">ملخص الراتب الصافي</div>
+                    <div id="salary-net-summary"></div>
                 </div>
             </div>
             <div class="form-card">
@@ -1681,18 +1995,9 @@
 
             <!-- Dashboard -->
             <div class="metrics" id="exp-dash-metrics" style="margin-bottom:14px"></div>
-            <div class="grid-2" style="margin-bottom:14px">
-                <div class="card">
-                    <div class="card-title">توزيع حسب الفئة</div>
-                    <div id="exp-dash-cats"></div>
-                </div>
-                <div class="card">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                        <div class="card-title">الاستقطاعات الثابتة (شهرياً)</div>
-                        <button class="btn btn-sm" onclick="openModal('editFixedDeds')">✎ تعديل</button>
-                    </div>
-                    <div id="fixed-deds-list"></div>
-                </div>
+            <div class="card" style="margin-bottom:14px">
+                <div class="card-title">توزيع حسب الفئة</div>
+                <div id="exp-dash-cats"></div>
             </div>
 
             <!-- Filter tabs for items -->
@@ -1715,6 +2020,58 @@
                 <div class="page-title">الاشتراكات</div><button class="btn btn-primary btn-circle" onclick="openModal('addSub')">+</button>
             </div>
             <div class="metrics" id="sub-metrics"></div>
+
+            <!-- Days-to-renewal progress bars -->
+            <div class="card" style="margin-bottom:14px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                    <div class="card-title" style="margin-bottom:0">الأيام المتبقية لكل تجديد</div>
+                    <div style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">
+                        <span style="color:var(--green)">●</span> بعيد
+                        <span style="color:var(--amber);margin-right:8px">●</span> اقترب
+                        <span style="color:var(--red);margin-right:8px">●</span> وشيك
+                    </div>
+                </div>
+                <div id="sub-progress-list"></div>
+            </div>
+
+            <!-- Renewal list dashboard -->
+            <div class="card" style="margin-bottom:14px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                    <div class="card-title" style="margin-bottom:0">تجديدات قادمة (خلال 30 يوماً)</div>
+                    <div id="sub-renew-count" style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace"></div>
+                </div>
+                <div id="sub-renewals"></div>
+            </div>
+
+            <!-- Yearly subscriptions dashboard -->
+            <div class="grid-2" style="margin-bottom:14px">
+                <div class="card">
+                    <div class="card-title">التكلفة الشهرية المتوقعة (12 شهر)</div>
+                    <div style="position:relative;height:200px">
+                        <canvas id="subYearlyChart" role="img" aria-label="التكلفة الشهرية للاشتراكات"></canvas>
+                    </div>
+                    <div id="sub-yearly-stats" style="margin-top:12px;display:flex;justify-content:space-between;font-size:12px"></div>
+                </div>
+                <div class="card">
+                    <div class="card-title">توزيع الاشتراكات حسب الفئة (سنوي)</div>
+                    <div id="sub-cat-breakdown"></div>
+                </div>
+            </div>
+
+            <!-- Period report -->
+            <div class="card" style="margin-bottom:14px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:10px">
+                    <div class="card-title" style="margin-bottom:0">تقرير الفترة</div>
+                    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                        <input class="inp" type="date" id="sub-report-from" style="width:auto;min-width:140px" />
+                        <span style="color:var(--text3);font-size:11px">إلى</span>
+                        <input class="inp" type="date" id="sub-report-to" style="width:auto;min-width:140px" />
+                        <button class="btn btn-primary btn-sm" onclick="renderSubsReport()">عرض التقرير</button>
+                    </div>
+                </div>
+                <div id="sub-report-result"></div>
+            </div>
+
             <div class="grid-3" id="sub-list-grid">
                 <div class="card">
                     <div class="card-title">يومية</div>
@@ -1977,9 +2334,21 @@
                         <select class="inp" id="m-sub-cat"></select>
                     </div>
                 </div>
-                <div class="field">
-                    <label>تاريخ التجديد القادم</label><input class="inp" type="date" id="m-sub-next" />
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+                    <div class="field">
+                        <label>تاريخ البداية</label><input class="inp" type="date" id="m-sub-start" />
+                    </div>
+                    <div class="field">
+                        <label>تاريخ التجديد القادم</label><input class="inp" type="date" id="m-sub-next" />
+                    </div>
+                    <div class="field">
+                        <label>تاريخ النهاية (اختياري)</label><input class="inp" type="date" id="m-sub-end" />
+                    </div>
                 </div>
+                <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface2);border-radius:var(--r);border:1px solid var(--border);cursor:pointer;font-size:12px">
+                    <input type="checkbox" id="m-sub-renew" checked style="width:16px;height:16px;cursor:pointer;accent-color:var(--accent)" />
+                    <span>تجديد تلقائي عند انتهاء الفترة</span>
+                </label>
                 <div class="field">
                     <label>ملاحظة (اختياري)</label><input class="inp" id="m-sub-note" placeholder="ملاحظة" />
                 </div>
@@ -2023,9 +2392,21 @@
                         <select class="inp" id="e-sub-cat"></select>
                     </div>
                 </div>
-                <div class="field">
-                    <label>تاريخ التجديد القادم</label><input class="inp" type="date" id="e-sub-next" />
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+                    <div class="field">
+                        <label>تاريخ البداية</label><input class="inp" type="date" id="e-sub-start" />
+                    </div>
+                    <div class="field">
+                        <label>تاريخ التجديد القادم</label><input class="inp" type="date" id="e-sub-next" />
+                    </div>
+                    <div class="field">
+                        <label>تاريخ النهاية (اختياري)</label><input class="inp" type="date" id="e-sub-end" />
+                    </div>
                 </div>
+                <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface2);border-radius:var(--r);border:1px solid var(--border);cursor:pointer;font-size:12px">
+                    <input type="checkbox" id="e-sub-renew" style="width:16px;height:16px;cursor:pointer;accent-color:var(--accent)" />
+                    <span>تجديد تلقائي عند انتهاء الفترة</span>
+                </label>
                 <div class="field">
                     <label>ملاحظة (اختياري)</label><input class="inp" id="e-sub-note" />
                 </div>
@@ -2285,19 +2666,22 @@
             maintenance: [],
             loans: [],
             categories: [
-                { name: 'طعام', color: '#7c6dfa' }, { name: 'مواصلات', color: '#34d399' },
-                { name: 'فواتير', color: '#fb923c' }, { name: 'ترفيه', color: '#f472b6' },
-                { name: 'صحة', color: '#fbbf24' }, { name: 'تعليم', color: '#22d3ee' },
-                { name: 'تسوق', color: '#a78bfa' }, { name: 'سيارة', color: '#fb7185' },
-                { name: 'إيجار', color: '#818cf8' }, { name: 'ديون', color: '#facc15' },
-                { name: 'المصاريف الشهرية', color: '#f43f5e' },
-                { name: 'مصاريف السيارة', color: '#ef4444' },
-                { name: 'مصاريف المدارس', color: '#3b82f6' },
-                { name: 'الحارس', color: '#8b5cf6' },
-                { name: 'اخرى', color: '#64748b' },
-                { name: 'أخرى', color: '#888' }
+                { name: 'إيجار / قسط البيت', color: '#818cf8' },
+                { name: 'فواتير وخدمات', color: '#fb923c' },
+                { name: 'صيانة المنزل', color: '#0ea5e9' },
+                { name: 'بقالة وسوبرماركت', color: '#34d399' },
+                { name: 'مطاعم وقهوة', color: '#f59e0b' },
+                { name: 'خدم منزلية', color: '#8b5cf6' },
+                { name: 'وقود ومواصلات', color: '#06b6d4' },
+                { name: 'صيانة السيارة وتأمينها', color: '#fb7185' },
+                { name: 'مصاريف الأولاد والمدارس', color: '#3b82f6' },
+                { name: 'صحة وأدوية', color: '#10b981' },
+                { name: 'تسوق وملابس', color: '#a78bfa' },
+                { name: 'ترفيه وسفر', color: '#f472b6' },
+                { name: 'قروض وأقساط', color: '#facc15' },
+                { name: 'أخرى', color: '#94a3b8' }
             ],
-            budgets: { طعام: 300, مواصلات: 100, فواتير: 200, صحة: 150, تسوق: 200, سيارة: 150 },
+            budgets: {},
             nextId: 200,
             shopping: [],
             incomeDeductions: [],
@@ -2452,14 +2836,88 @@
                 console.error("Firebase fetch error", err);
             });
 
-            // ALWAYS ensure the new default categories exist, regardless of data source
-            const newCats = [{ name: 'سيارة', color: '#fb7185' }, { name: 'إيجار', color: '#818cf8' }, { name: 'ديون', color: '#facc15' }, { name: 'المصاريف الشهرية', color: '#f43f5e' }, { name: 'مصاريف السيارة', color: '#ef4444' }, { name: 'مصاريف المدارس', color: '#3b82f6' }, { name: 'الحارس', color: '#8b5cf6' }, { name: 'اخرى', color: '#64748b' }, { name: 'أخرى', color: '#888' }];
-            newCats.forEach(nc => {
-                if (!state.categories.find(c => c.name === nc.name)) {
-                    state.categories.push(nc);
-                    needsSave = true;
-                }
+            // ── CATEGORY MIGRATION v2 ──
+            // Map old category names to the new unified list
+            const CAT_MIGRATION = {
+                'طعام': 'بقالة وسوبرماركت',
+                'مواصلات': 'وقود ومواصلات',
+                'فواتير': 'فواتير وخدمات',
+                'ترفيه': 'ترفيه وسفر',
+                'صحة': 'صحة وأدوية',
+                'تعليم': 'مصاريف الأولاد والمدارس',
+                'تسوق': 'تسوق وملابس',
+                'سيارة': 'صيانة السيارة وتأمينها',
+                'إيجار': 'إيجار / قسط البيت',
+                'ديون': 'قروض وأقساط',
+                'المصاريف الشهرية': 'فواتير وخدمات',
+                'مصاريف السيارة': 'صيانة السيارة وتأمينها',
+                'مصاريف المدارس': 'مصاريف الأولاد والمدارس',
+                'الحارس': 'خدم منزلية',
+                'اخرى': 'أخرى',
+                'غير مصنفة': 'أخرى'
+            };
+            const NEW_CATS = [
+                { name: 'إيجار / قسط البيت', color: '#818cf8' },
+                { name: 'فواتير وخدمات', color: '#fb923c' },
+                { name: 'صيانة المنزل', color: '#0ea5e9' },
+                { name: 'بقالة وسوبرماركت', color: '#34d399' },
+                { name: 'مطاعم وقهوة', color: '#f59e0b' },
+                { name: 'خدم منزلية', color: '#8b5cf6' },
+                { name: 'وقود ومواصلات', color: '#06b6d4' },
+                { name: 'صيانة السيارة وتأمينها', color: '#fb7185' },
+                { name: 'مصاريف الأولاد والمدارس', color: '#3b82f6' },
+                { name: 'صحة وأدوية', color: '#10b981' },
+                { name: 'تسوق وملابس', color: '#a78bfa' },
+                { name: 'ترفيه وسفر', color: '#f472b6' },
+                { name: 'قروض وأقساط', color: '#facc15' },
+                { name: 'أخرى', color: '#94a3b8' }
+            ];
+            const NEW_CAT_SET = new Set(NEW_CATS.map(c => c.name));
+            const remap = name => {
+                const n = (name || '').toString().trim();
+                if (NEW_CAT_SET.has(n)) return n;
+                if (CAT_MIGRATION[n]) return CAT_MIGRATION[n];
+                return 'أخرى';
+            };
+
+            // Migrate categories list to new schema (preserve user-added custom categories)
+            const hasOldCats = state.categories.some(c => CAT_MIGRATION[c.name] !== undefined);
+            const missingNew = NEW_CATS.some(nc => !state.categories.find(c => c.name === nc.name));
+            if (hasOldCats || missingNew) {
+                // Keep custom categories that user added (not in old list and not in new list)
+                const customCats = state.categories.filter(c =>
+                    !NEW_CAT_SET.has(c.name) && CAT_MIGRATION[c.name] === undefined
+                );
+                state.categories = [...NEW_CATS, ...customCats];
+                needsSave = true;
+            }
+
+            // Migrate expense item subcategories
+            state.expenses.forEach(e => {
+                (e.items || []).forEach(it => {
+                    const before = it.subcat;
+                    const after = remap(before);
+                    if (before !== after) { it.subcat = after; needsSave = true; }
+                });
             });
+
+            // Migrate subscription categories
+            (state.subscriptions || []).forEach(s => {
+                const before = s.cat;
+                const after = remap(before);
+                if (before !== after) { s.cat = after; needsSave = true; }
+            });
+
+            // Migrate budget keys
+            if (state.budgets) {
+                const newBudgets = {};
+                Object.keys(state.budgets).forEach(k => {
+                    const nk = remap(k);
+                    newBudgets[nk] = (newBudgets[nk] || 0) + (parseFloat(state.budgets[k]) || 0);
+                });
+                state.budgets = newBudgets;
+            }
+
             if (needsSave) saveState();
         }
 
@@ -2514,7 +2972,10 @@
         function monthlyIncome() {
             const fixed = state.incomeSources.reduce((s, src) => s + src.amount, 0);
             const fl = state.freelanceLog.filter(f => inRange(f.date)).reduce((s, f) => s + f.amount, 0);
-            return { fixed, fl, total: fixed + fl };
+            const deds = calcFixedDeductions();
+            const netFixed = fixed - deds;
+            // total = net available income (used by overview/budget calculations)
+            return { fixed, fl, deds, netFixed, total: netFixed + fl, gross: fixed + fl };
         }
 
         // ═══════════════════════════════════════
@@ -2589,7 +3050,7 @@
         // ═══════════════════════════════════════
         //  OVERVIEW
         // ═══════════════════════════════════════
-        let charts = { donut: null, line: null, stmtLine: null, dailyTrend: null };
+        let charts = { donut: null, line: null, stmtLine: null };
         function renderOverview() {
             document.getElementById('periodBadge').textContent = periodLabel();
             const exps = state.expenses.filter(e => inRange(e.date));
@@ -2695,12 +3156,112 @@
             renderDonut(exps);
             renderBudgetBars(exps);
             renderLine();
-            renderDailyTrend(exps);
+            renderSubProgressBars('ov-progress-list');
+            renderRenewals('ov-renewals', 'ov-renew-count');
 
+        }
+
+        // Compute period length in days for a subscription (cycle length)
+        function subCycleDays(s) {
+            return s.freq === 'daily' ? 1 : s.freq === 'yearly' ? 365 : 30;
+        }
+        // Check if subscription is active (not ended)
+        function isSubActive(s) {
+            if (!s.end) return true;
+            const endD = new Date(s.end); endD.setHours(0,0,0,0);
+            const today = new Date(); today.setHours(0,0,0,0);
+            return endD >= today;
+        }
+        function renderSubProgressBars(listId) {
+            const listEl = document.getElementById(listId);
+            if (!listEl) return;
+            const today = new Date(); today.setHours(0,0,0,0);
+            const items = (state.subscriptions || [])
+                .filter(s => s.next && isSubActive(s))
+                .map(s => {
+                    const next = new Date(s.next); next.setHours(0,0,0,0);
+                    const cycleDays = subCycleDays(s);
+                    const days = Math.round((next - today) / 86400000);
+                    // Progress: fraction of cycle remaining (0 = today, 1 = full cycle away)
+                    const remainingFrac = Math.max(0, Math.min(1, days / cycleDays));
+                    return { ...s, days, cycleDays, remainingFrac };
+                })
+                .sort((a, b) => a.days - b.days);
+            if (!items.length) {
+                listEl.innerHTML = '<div class="empty">لا اشتراكات نشطة</div>';
+                return;
+            }
+            listEl.innerHTML = items.map(s => {
+                // Color based on remaining fraction (green when full, red when near 0)
+                let col, bgCol;
+                if (s.days < 0) { col = 'var(--red)'; bgCol = 'var(--red)'; }
+                else if (s.remainingFrac > 0.5) { col = 'var(--green)'; bgCol = 'var(--green)'; }
+                else if (s.remainingFrac > 0.25) { col = 'var(--amber)'; bgCol = 'var(--amber)'; }
+                else { col = 'var(--red)'; bgCol = 'var(--red)'; }
+                const fillPct = s.days < 0 ? 100 : Math.max(2, s.remainingFrac * 100);
+                const lbl = s.days < 0 ? `متأخر ${Math.abs(s.days)} يوم`
+                    : s.days === 0 ? 'اليوم'
+                    : s.days === 1 ? 'غداً'
+                    : `${s.days} يوم`;
+                return `<div class="renew-row">
+                    <div class="renew-name">
+                        <span style="font-size:16px">${s.icon || '📦'}</span>
+                        <span class="renew-name-text">${s.name}</span>
+                    </div>
+                    <div class="renew-bar-wrap">
+                        <div class="renew-bar-fill" style="width:${fillPct}%;background:linear-gradient(90deg, ${bgCol}, ${bgCol}cc)"></div>
+                    </div>
+                    <div class="renew-days" style="color:${col}">${lbl}</div>
+                </div>`;
+            }).join('');
+        }
+        function renderRenewals(listId, countId) {
+            const listEl = document.getElementById(listId);
+            const countEl = document.getElementById(countId);
+            if (!listEl) return;
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const horizon = new Date(today.getTime() + 30 * 86400000);
+            const items = (state.subscriptions || [])
+                .filter(s => s.next)
+                .map(s => {
+                    const d = new Date(s.next);
+                    d.setHours(0,0,0,0);
+                    const days = Math.round((d - today) / 86400000);
+                    return { ...s, dateObj: d, days };
+                })
+                .filter(s => s.dateObj <= horizon)
+                .sort((a, b) => a.dateObj - b.dateObj);
+
+            if (countEl) countEl.textContent = items.length ? `${items.length} اشتراك` : '';
+            if (!items.length) {
+                listEl.innerHTML = '<div class="empty">لا تجديدات قريبة خلال 30 يوماً</div>';
+                return;
+            }
+            listEl.innerHTML = items.map(s => {
+                const overdue = s.days < 0;
+                const urgent = s.days >= 0 && s.days <= 3;
+                const soon = s.days > 3 && s.days <= 7;
+                const col = overdue ? 'var(--red)' : urgent ? 'var(--red)' : soon ? 'var(--amber)' : 'var(--accent2)';
+                const bg = overdue ? 'rgba(248,113,113,0.15)' : urgent ? 'rgba(248,113,113,0.15)' : soon ? 'rgba(251,191,36,0.15)' : 'rgba(124,109,250,0.15)';
+                const lbl = overdue ? `متأخر ${Math.abs(s.days)} يوم` : s.days === 0 ? 'اليوم' : s.days === 1 ? 'غداً' : `بعد ${s.days} يوم`;
+                const freqLbl = { daily: 'يومي', monthly: 'شهري', yearly: 'سنوي' }[s.freq] || '';
+                return `<div class="sub-item">
+                    <div class="sub-icon" style="background:${bg}">${s.icon || '📦'}</div>
+                    <div class="sub-info">
+                        <div class="sub-name">${s.name}</div>
+                        <div class="sub-meta" style="font-family:'JetBrains Mono',monospace">${s.next} · ${freqLbl}</div>
+                    </div>
+                    <div style="text-align:left">
+                        <div class="sub-amt">${s.amount.toFixed(2)} د.أ</div>
+                        <div style="font-size:11px;font-weight:600;color:${col};margin-top:2px">${lbl}</div>
+                    </div>
+                </div>`;
+            }).join('');
         }
         function normCat(name) {
             const v = (name || '').toString().trim();
-            if (v === 'undefined' || v === 'null' || !v || v === 'غير مصنفة') return 'أخرى';
+            if (v === 'undefined' || v === 'null' || !v || v === 'غير مصنفة' || v === 'اخرى') return 'أخرى';
             return v;
         }
         function catColor(name) { return (state.categories.find(c => c.name === name) || { color: '#888' }).color }
@@ -2717,10 +3278,6 @@
                 const cat = normCat(s.cat);
                 byCat[cat] = (byCat[cat] || 0) + amt;
             });
-            if (state.fixedSubs) {
-                if (state.fixedSubs.social && state.fixedSubs.social.amount) { const c = normCat('الضمان الاجتماعي'); byCat[c] = (byCat[c] || 0) + state.fixedSubs.social.amount; }
-                if (state.fixedSubs.health && state.fixedSubs.health.amount) { const c = normCat('التأمين الصحي'); byCat[c] = (byCat[c] || 0) + state.fixedSubs.health.amount; }
-            }
             if (state.loans) state.loans.forEach(l => {
                 byCat['ديون'] = (byCat['ديون'] || 0) + l.monthly;
             });
@@ -2790,76 +3347,17 @@
             const ctx = document.getElementById('lineChart').getContext('2d');
             charts.line = new Chart(ctx, { type: 'line', data: { labels, datasets: [{ data: vals, borderColor: '#7c6dfa', backgroundColor: 'rgba(124,109,250,0.1)', tension: 0.4, pointBackgroundColor: '#7c6dfa', pointRadius: 3, fill: true, borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.raw.toFixed(2) + ' د.أ' } } }, scales: { x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#55545f', font: { size: 10 } } }, y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#55545f', font: { size: 10 }, callback: v => v + 'د.أ' } } } } });
         }
-        function renderDailyTrend(exps) {
-            const dailyData = {};
-            exps.forEach(e => {
-                // assume e.date is YYYY-MM-DD
-                const day = parseInt(e.date.split('-')[2]);
-                dailyData[day] = (dailyData[day] || 0) + e.amount;
-            });
-            
-            // get number of days in selected period, limit to 31 max
-            let daysInMonth = 31;
-            if(state.periodMode === 'month') {
-                daysInMonth = new Date(state.periodYear, state.periodMonth + 1, 0).getDate();
-            }
-
-            const labels = [];
-            const vals = [];
-            for (let i = 1; i <= daysInMonth; i++) {
-                labels.push(i);
-                vals.push(dailyData[i] || 0);
-            }
-
-            if (charts.dailyTrend) charts.dailyTrend.destroy();
-            const ctx = document.getElementById('dailyTrendChart').getContext('2d');
-            
-            // create gradient
-            const gradient = ctx.createLinearGradient(0, 0, 0, 160);
-            gradient.addColorStop(0, 'rgba(248, 113, 113, 0.4)');
-            gradient.addColorStop(1, 'rgba(248, 113, 113, 0.0)');
-
-            charts.dailyTrend = new Chart(ctx, { 
-                type: 'line', 
-                data: { 
-                    labels, 
-                    datasets: [{ 
-                        data: vals, 
-                        borderColor: '#f87171', 
-                        backgroundColor: gradient, 
-                        tension: 0.4, 
-                        pointRadius: 0,
-                        pointHoverRadius: 4,
-                        fill: true, 
-                        borderWidth: 2 
-                    }] 
-                }, 
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false, 
-                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.raw.toFixed(2) + ' د.أ' } } }, 
-                    scales: { 
-                        x: { display: false }, 
-                        y: { display: false, min: 0 } 
-                    },
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    }
-                } 
-            });
-        }
         function calcSubMonthly() {
-            let t = state.subscriptions.reduce((s, sub) => {
+            return state.subscriptions.reduce((s, sub) => {
                 if (sub.freq === 'daily') return s + sub.amount * 30;
                 if (sub.freq === 'monthly') return s + sub.amount;
                 if (sub.freq === 'yearly') return s + sub.amount / 12;
                 return s;
             }, 0);
-            if (state.fixedSubs) {
-                t += (state.fixedSubs.social?.amount || 0) + (state.fixedSubs.health?.amount || 0);
-            }
-            return t;
+        }
+        function calcFixedDeductions() {
+            if (!state.fixedSubs) return 0;
+            return (state.fixedSubs.social?.amount || 0) + (state.fixedSubs.health?.amount || 0);
         }
 
         // ═══════════════════════════════════════
@@ -2921,13 +3419,81 @@
         // ═══════════════════════════════════════
         const INC_TYPES = { salary: 'راتب', freelance_fixed: 'فري لانس ثابت', rent: 'إيجار', investment: 'استثمار', other: 'أخرى' };
         function renderIncome() {
+            if (!state.fixedSubs || typeof state.fixedSubs.social !== 'object') {
+                state.fixedSubs = { social: { amount: 0, start: td(), end: '' }, health: { amount: 0, start: td(), end: '' } };
+            }
             const inc = monthlyIncome();
             document.getElementById('income-metrics').innerHTML = `
         <div class="metric m-g"><div class="metric-lbl">إجمالي الدخل الثابت/شهر</div><div class="metric-val">${inc.fixed.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
-        <div class="metric m-c"><div class="metric-lbl">دخل فري لانس (الفترة)</div><div class="metric-val">${inc.fl.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
-        <div class="metric m-g"><div class="metric-lbl">الإجمالي الكلي</div><div class="metric-val">${inc.total.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
-        <div class="metric m-a"><div class="metric-lbl">عدد مصادر الدخل</div><div class="metric-val">${state.incomeSources.length}</div></div>
+        <div class="metric m-r"><div class="metric-lbl">استقطاعات شهرية</div><div class="metric-val">${inc.deds.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
+        <div class="metric m-c"><div class="metric-lbl">صافي الراتب الثابت</div><div class="metric-val">${inc.netFixed.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
+        <div class="metric m-a"><div class="metric-lbl">دخل فري لانس (الفترة)</div><div class="metric-val">${inc.fl.toFixed(0)} <span style="font-size:13px;color:var(--text3);font-weight:400">د.أ</span></div></div>
       `;
+            // Fixed deductions card
+            const fL = document.getElementById('fixed-deds-list');
+            if (fL) {
+                const sDate = state.fixedSubs.social.start ? `من: ${state.fixedSubs.social.start}` : '';
+                const sEnd = state.fixedSubs.social.end ? ` إلى: ${state.fixedSubs.social.end}` : ' (مستمر)';
+                const hDate = state.fixedSubs.health.start ? `من: ${state.fixedSubs.health.start}` : '';
+                const hEnd = state.fixedSubs.health.end ? ` إلى: ${state.fixedSubs.health.end}` : ' (مستمر)';
+                fL.innerHTML = `
+            <div class="sub-item">
+                <div class="sub-icon" style="background:rgba(52,211,153,0.15)">🛡️</div>
+                <div class="sub-info">
+                    <div class="sub-name">الضمان الاجتماعي</div>
+                    <div class="sub-meta" style="font-family:'JetBrains Mono',monospace">${sDate}${sEnd}</div>
+                </div>
+                <div class="sub-amt" style="text-align:left">${state.fixedSubs.social.amount.toFixed(2)} د.أ</div>
+            </div>
+            <div class="sub-item">
+                <div class="sub-icon" style="background:rgba(239,68,68,0.15)">🏥</div>
+                <div class="sub-info">
+                    <div class="sub-name">التأمين الصحي</div>
+                    <div class="sub-meta" style="font-family:'JetBrains Mono',monospace">${hDate}${hEnd}</div>
+                </div>
+                <div class="sub-amt" style="text-align:left">${state.fixedSubs.health.amount.toFixed(2)} د.أ</div>
+            </div>`;
+            }
+            const socAmtEl = document.getElementById('m-fixed-social-amt');
+            if (socAmtEl) {
+                socAmtEl.value = state.fixedSubs.social.amount;
+                document.getElementById('m-fixed-social-start').value = state.fixedSubs.social.start;
+                document.getElementById('m-fixed-social-end').value = state.fixedSubs.social.end;
+                document.getElementById('m-fixed-health-amt').value = state.fixedSubs.health.amount;
+                document.getElementById('m-fixed-health-start').value = state.fixedSubs.health.start;
+                document.getElementById('m-fixed-health-end').value = state.fixedSubs.health.end;
+            }
+            // Salary net summary card
+            const sumEl = document.getElementById('salary-net-summary');
+            if (sumEl) {
+                sumEl.innerHTML = `
+            <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">
+                    <span style="color:var(--text2)">إجمالي الراتب الثابت</span>
+                    <span style="color:var(--green);font-family:'JetBrains Mono',monospace;font-weight:600">+${inc.fixed.toFixed(2)} د.أ</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">
+                    <span style="color:var(--text2)">- الضمان الاجتماعي</span>
+                    <span style="color:var(--red);font-family:'JetBrains Mono',monospace">-${state.fixedSubs.social.amount.toFixed(2)} د.أ</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">
+                    <span style="color:var(--text2)">- التأمين الصحي</span>
+                    <span style="color:var(--red);font-family:'JetBrains Mono',monospace">-${state.fixedSubs.health.amount.toFixed(2)} د.أ</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;padding:10px 0;font-size:14px;font-weight:600;margin-top:4px;border-top:2px solid var(--border2)">
+                    <span>صافي الراتب</span>
+                    <span style="color:var(--green);font-family:'JetBrains Mono',monospace">${inc.netFixed.toFixed(2)} د.أ</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:12px;color:var(--text3)">
+                    <span>+ دخل فري لانس (الفترة)</span>
+                    <span style="font-family:'JetBrains Mono',monospace">${inc.fl.toFixed(2)} د.أ</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:13px;font-weight:600;border-top:1px solid var(--border)">
+                    <span>الإجمالي الفعلي بعد الاستقطاعات</span>
+                    <span style="color:var(--green);font-family:'JetBrains Mono',monospace">${(inc.netFixed + inc.fl).toFixed(2)} د.أ</span>
+                </div>
+            </div>`;
+            }
             document.getElementById('income-fixed-list').innerHTML = state.incomeSources.length ? state.incomeSources.map(src => `
         <div class="income-source">
           <div>
@@ -2943,23 +3509,6 @@
             <button class="del-btn" onclick="delIncomeSource(${src.id})" title="حذف">✕</button>
           </div>
         </div>`).join('') : '<div class="empty">لا مصادر دخل ثابتة — أضف من الأعلى</div>';
-            // deductions
-            const dedsEl = document.getElementById('income-deductions-list');
-            if (dedsEl) {
-                const deds = state.incomeDeductions || [];
-                dedsEl.innerHTML = deds.length ? deds.map(d => `
-        <div class="income-source">
-          <div>
-            <div class="income-source-name">${d.name}</div>
-            <div class="income-source-type">استقطاع شهري تلقائي</div>
-          </div>
-          <div style="text-align:left">
-            <div class="income-source-amt" style="color:var(--red)">-${d.amount.toFixed(2)} د.أ</div>
-            <div style="font-size:10px;color:var(--text3)">شهرياً</div>
-          </div>
-          <button class="del-btn" onclick="delDeduction(${d.id})">✕</button>
-        </div>`).join('') + `<div style="display:flex;justify-content:space-between;padding:10px 14px;border-top:1px solid var(--border);font-size:12px;font-weight:600"><span>صافي الراتب بعد الاستقطاعات</span><span style="color:var(--green)">${inc.netFixed.toFixed(2)} د.أ</span></div>` : '<div class="empty">لا استقطاعات — أضف تأمين أو ضمان</div>';
-            }
             // freelance in period
             const flList = state.freelanceLog.filter(f => inRange(f.date)).sort((a, b) => new Date(b.date) - new Date(a.date));
             document.getElementById('income-var-list').innerHTML = flList.length ? flList.slice(0, 5).map(f => `
@@ -3230,10 +3779,6 @@
                 const c = normCat(s.cat);
                 byCat[c] = (byCat[c] || 0) + amt;
             });
-            if (state.fixedSubs) {
-                if (state.fixedSubs.social && state.fixedSubs.social.amount) { const c = normCat('الضمان الاجتماعي'); byCat[c] = (byCat[c] || 0) + state.fixedSubs.social.amount; }
-                if (state.fixedSubs.health && state.fixedSubs.health.amount) { const c = normCat('التأمين الصحي'); byCat[c] = (byCat[c] || 0) + state.fixedSubs.health.amount; }
-            }
             if (state.loans) state.loans.forEach(l => {
                 byCat['ديون'] = (byCat['ديون'] || 0) + l.monthly;
             });
@@ -3418,14 +3963,20 @@
             const amount = parseFloat(document.getElementById('m-sub-amount').value);
             const freq = document.getElementById('m-sub-freq').value;
             const cat = document.getElementById('m-sub-cat').value;
+            const start = document.getElementById('m-sub-start').value || td();
             const next = document.getElementById('m-sub-next').value || td();
+            const end = document.getElementById('m-sub-end').value || '';
+            const autoRenew = document.getElementById('m-sub-renew').checked;
             const note = document.getElementById('m-sub-note').value;
-            if (!name || isNaN(amount) || amount <= 0) { toast('أدخل البيانات'); return; } state.subscriptions.push({
-                id:
-                    state.nextId++, name, icon, amount, freq, cat, next, note
-            }); saveState(); closeModal('addSub'); renderSubs();
-            renderOverview(); toast('تمت الإضافة ✓');['m-sub-name', 'm-sub-icon', 'm-sub-amount', 'm-sub-next'
-                , 'm-sub-note'].forEach(id => document.getElementById(id).value = '');
+            if (!name || isNaN(amount) || amount <= 0) { toast('أدخل البيانات'); return; }
+            state.subscriptions.push({
+                id: state.nextId++, name, icon, amount, freq, cat, start, next, end, autoRenew, note
+            });
+            saveState(); closeModal('addSub'); renderSubs();
+            renderOverview(); toast('تمت الإضافة ✓');
+            ['m-sub-name', 'm-sub-icon', 'm-sub-amount', 'm-sub-start', 'm-sub-next', 'm-sub-end', 'm-sub-note']
+                .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+            document.getElementById('m-sub-renew').checked = true;
         }
         function delSub(id) {
             state.subscriptions = state.subscriptions.filter(s => s.id !== id); saveState();
@@ -3443,49 +3994,12 @@
             state.fixedSubs.health.start = document.getElementById('m-fixed-health-start').value;
             state.fixedSubs.health.end = document.getElementById('m-fixed-health-end').value;
 
-            saveState(); closeModal('editFixedDeds'); renderSubs(); renderOverview(); toast('تم التحديث ✓');
+            saveState(); closeModal('editFixedDeds'); renderIncome(); renderSubs(); renderOverview(); toast('تم التحديث ✓');
         }
         function renderSubs() {
             if (!state.fixedSubs || typeof state.fixedSubs.social !== 'object') {
                 state.fixedSubs = { social: { amount: 0, start: td(), end: '' }, health: { amount: 0, start: td(), end: '' } };
             }
-            const fL = document.getElementById('fixed-deds-list');
-            if (fL) {
-                const sDate = state.fixedSubs.social.start ? `من: ${state.fixedSubs.social.start}` : '';
-                const sEnd = state.fixedSubs.social.end ? ` إلى: ${state.fixedSubs.social.end}` : ' (مستمر)';
-                const hDate = state.fixedSubs.health.start ? `من: ${state.fixedSubs.health.start}` : '';
-                const hEnd = state.fixedSubs.health.end ? ` إلى: ${state.fixedSubs.health.end}` : ' (مستمر)';
-
-                fL.innerHTML = `
-            <div class="sub-item">
-                <div class="sub-icon" style="background:rgba(52,211,153,0.15)">🛡️</div>
-                <div class="sub-info">
-                    <div class="sub-name">الضمان الاجتماعي</div>
-                    <div class="sub-meta" style="font-family:'JetBrains Mono',monospace">${sDate}${sEnd}</div>
-                </div>
-                <div class="sub-amt" style="text-align:left">${state.fixedSubs.social.amount.toFixed(2)} د.أ</div>
-            </div>
-            <div class="sub-item">
-                <div class="sub-icon" style="background:rgba(239,68,68,0.15)">🏥</div>
-                <div class="sub-info">
-                    <div class="sub-name">التأمين الصحي</div>
-                    <div class="sub-meta" style="font-family:'JetBrains Mono',monospace">${hDate}${hEnd}</div>
-                </div>
-                <div class="sub-amt" style="text-align:left">${state.fixedSubs.health.amount.toFixed(2)} د.أ</div>
-            </div>
-            `;
-            }
-            const socAmtEl = document.getElementById('m-fixed-social-amt');
-            if (socAmtEl) {
-                socAmtEl.value = state.fixedSubs.social.amount;
-                document.getElementById('m-fixed-social-start').value = state.fixedSubs.social.start;
-                document.getElementById('m-fixed-social-end').value = state.fixedSubs.social.end;
-                
-                document.getElementById('m-fixed-health-amt').value = state.fixedSubs.health.amount;
-                document.getElementById('m-fixed-health-start').value = state.fixedSubs.health.start;
-                document.getElementById('m-fixed-health-end').value = state.fixedSubs.health.end;
-            }
-
             const monthly = calcSubMonthly();
             const daily = state.subscriptions.filter(s => s.freq === 'daily').reduce((s, x) => s + x.amount, 0);
             const mOnly = state.subscriptions.filter(s => s.freq === 'monthly').reduce((s, x) => s + x.amount, 0);
@@ -3532,6 +4046,187 @@
             </div>
         </div>`).join('') : `<div class="empty">لا اشتراكات ${freqLabel[freq]}ة</div>`;
             });
+            renderSubProgressBars('sub-progress-list');
+            renderRenewals('sub-renewals', 'sub-renew-count');
+            renderSubYearly();
+            renderSubCatBreakdown();
+            // Init period inputs with month start/end if empty
+            const fromEl = document.getElementById('sub-report-from');
+            const toEl = document.getElementById('sub-report-to');
+            if (fromEl && !fromEl.value) {
+                const now = new Date();
+                const first = new Date(now.getFullYear(), now.getMonth(), 1);
+                const last = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                fromEl.value = ymd(first);
+                toEl.value = ymd(last);
+            }
+            renderSubsReport();
+        }
+        function ymd(d) {
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${d.getFullYear()}-${m}-${day}`;
+        }
+        let subYearlyChart = null;
+        function renderSubYearly() {
+            const canvas = document.getElementById('subYearlyChart');
+            if (!canvas) return;
+            const today = new Date();
+            const labels = [];
+            const dataDaily = [], dataMonthly = [], dataYearly = [];
+            // Build 12 months starting from current month
+            for (let i = 0; i < 12; i++) {
+                const m = new Date(today.getFullYear(), today.getMonth() + i, 1);
+                labels.push(MONTHS_SHORT[m.getMonth()] + ' ' + String(m.getFullYear()).slice(2));
+                const monthStart = new Date(m.getFullYear(), m.getMonth(), 1);
+                const monthEnd = new Date(m.getFullYear(), m.getMonth() + 1, 0);
+                let d = 0, mo = 0, y = 0;
+                (state.subscriptions || []).forEach(s => {
+                    if (!isSubInRange(s, monthStart, monthEnd)) return;
+                    if (s.freq === 'daily') d += s.amount * (monthEnd.getDate());
+                    else if (s.freq === 'monthly') mo += s.amount;
+                    else if (s.freq === 'yearly') {
+                        // Yearly: hits the month containing s.next (or future renewals)
+                        if (subRenewsInMonth(s, m)) y += s.amount;
+                    }
+                });
+                dataDaily.push(d);
+                dataMonthly.push(mo);
+                dataYearly.push(y);
+            }
+            if (subYearlyChart) subYearlyChart.destroy();
+            const ctx = canvas.getContext('2d');
+            subYearlyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [
+                        { label: 'يومي', data: dataDaily, backgroundColor: '#f87171' },
+                        { label: 'شهري', data: dataMonthly, backgroundColor: '#7c6dfa' },
+                        { label: 'سنوي', data: dataYearly, backgroundColor: '#34d399' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 11 } } },
+                        tooltip: { callbacks: { label: c => c.dataset.label + ': ' + c.raw.toFixed(2) + ' د.أ' } }
+                    },
+                    scales: {
+                        x: { stacked: true, ticks: { font: { size: 10 } } },
+                        y: { stacked: true, beginAtZero: true, ticks: { font: { size: 10 }, callback: v => v + ' د.أ' } }
+                    }
+                }
+            });
+            // Stats below
+            const total12 = dataDaily.concat(dataMonthly, dataYearly).reduce((s, v) => s + v, 0);
+            const avg = total12 / 12;
+            const peakIdx = dataDaily.map((d, i) => d + dataMonthly[i] + dataYearly[i])
+                .reduce((p, v, i, arr) => v > arr[p] ? i : p, 0);
+            const statsEl = document.getElementById('sub-yearly-stats');
+            if (statsEl) {
+                statsEl.innerHTML = `
+                    <div><span style="color:var(--text3)">الإجمالي السنوي:</span> <strong style="color:var(--accent2)">${total12.toFixed(0)} د.أ</strong></div>
+                    <div><span style="color:var(--text3)">متوسط شهري:</span> <strong>${avg.toFixed(0)} د.أ</strong></div>
+                    <div><span style="color:var(--text3)">أعلى شهر:</span> <strong style="color:var(--amber)">${labels[peakIdx]}</strong></div>
+                `;
+            }
+        }
+        function subRenewsInMonth(s, monthDate) {
+            // Determine if a yearly sub renews in given month
+            if (!s.next) return false;
+            const next = new Date(s.next);
+            const yearAhead = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
+            // Walk forward from s.next by 12 months until we hit/pass monthDate
+            let cur = new Date(next);
+            while (cur < new Date(yearAhead.getFullYear(), yearAhead.getMonth(), 1)) {
+                cur.setFullYear(cur.getFullYear() + 1);
+            }
+            return cur.getFullYear() === monthDate.getFullYear() && cur.getMonth() === monthDate.getMonth();
+        }
+        function isSubInRange(s, from, to) {
+            // Sub is active in the range if start<=to and (end>=from or no end)
+            const start = s.start ? new Date(s.start) : new Date(0);
+            const end = s.end ? new Date(s.end) : new Date('2100-01-01');
+            return start <= to && end >= from;
+        }
+        function renderSubCatBreakdown() {
+            const el = document.getElementById('sub-cat-breakdown');
+            if (!el) return;
+            const byCat = {};
+            (state.subscriptions || []).forEach(s => {
+                const yearly = s.freq === 'daily' ? s.amount * 365 : s.freq === 'monthly' ? s.amount * 12 : s.amount;
+                const c = normCat(s.cat);
+                byCat[c] = (byCat[c] || 0) + yearly;
+            });
+            const cats = Object.keys(byCat).sort((a, b) => byCat[b] - byCat[a]);
+            const total = cats.reduce((s, c) => s + byCat[c], 0);
+            if (!cats.length || total <= 0) {
+                el.innerHTML = '<div class="empty">لا اشتراكات</div>';
+                return;
+            }
+            el.innerHTML = cats.map(c => {
+                const v = byCat[c];
+                const pct = (v / total * 100);
+                return `<div class="bbar">
+                    <div class="bbar-hdr">
+                        <div class="bbar-name"><div class="leg-dot" style="background:${catColor(c)}"></div>${c}</div>
+                        <div class="bbar-nums">${v.toFixed(0)} د.أ <span style="color:var(--text3)">(${pct.toFixed(0)}%)</span></div>
+                    </div>
+                    <div class="bbar-bg"><div class="bbar-fill" style="width:${pct}%;background:${catColor(c)}"></div></div>
+                </div>`;
+            }).join('');
+        }
+        function renderSubsReport() {
+            const el = document.getElementById('sub-report-result');
+            if (!el) return;
+            const fromVal = document.getElementById('sub-report-from').value;
+            const toVal = document.getElementById('sub-report-to').value;
+            if (!fromVal || !toVal) { el.innerHTML = '<div class="empty">حدد الفترة</div>'; return; }
+            const from = new Date(fromVal);
+            const to = new Date(toVal);
+            if (from > to) { el.innerHTML = '<div class="empty">تاريخ البداية بعد النهاية</div>'; return; }
+            const days = Math.round((to - from) / 86400000) + 1;
+            const rows = (state.subscriptions || [])
+                .filter(s => isSubInRange(s, from, to))
+                .map(s => {
+                    let cost = 0;
+                    if (s.freq === 'daily') cost = s.amount * days;
+                    else if (s.freq === 'monthly') cost = s.amount * (days / 30);
+                    else if (s.freq === 'yearly') {
+                        // Count renewals in range
+                        let renewals = 0;
+                        if (s.next) {
+                            let cur = new Date(s.next);
+                            while (cur < from) cur.setFullYear(cur.getFullYear() + 1);
+                            while (cur <= to) { renewals++; cur.setFullYear(cur.getFullYear() + 1); }
+                        }
+                        cost = s.amount * renewals;
+                    }
+                    return { ...s, cost };
+                })
+                .filter(r => r.cost > 0)
+                .sort((a, b) => b.cost - a.cost);
+            const total = rows.reduce((s, r) => s + r.cost, 0);
+            if (!rows.length) { el.innerHTML = '<div class="empty">لا اشتراكات نشطة في هذه الفترة</div>'; return; }
+            const freqLbl = { daily: 'يومي', monthly: 'شهري', yearly: 'سنوي' };
+            el.innerHTML = `
+                <table>
+                    <thead><tr><th>الاشتراك</th><th>الدورية</th><th>الفئة</th><th>التكلفة في الفترة</th></tr></thead>
+                    <tbody>
+                        ${rows.map(r => `<tr>
+                            <td class="td-main">${r.icon || '📦'} ${r.name}</td>
+                            <td>${freqLbl[r.freq] || ''}</td>
+                            <td><span class="badge" style="background:${catColor(r.cat)}22;color:${catColor(r.cat)}">${r.cat || 'أخرى'}</span></td>
+                            <td class="td-mono">${r.cost.toFixed(2)} د.أ</td>
+                        </tr>`).join('')}
+                        <tr style="font-weight:600;background:var(--surface2)">
+                            <td colspan="3" style="color:var(--text)">الإجمالي (${days} يوم)</td>
+                            <td class="td-mono" style="color:var(--accent2)">${total.toFixed(2)} د.أ</td>
+                        </tr>
+                    </tbody>
+                </table>`;
         }
 
         // ═══════════════════════════════════════
@@ -3547,7 +4242,10 @@
             document.getElementById('e-sub-amount').value = s.amount;
             document.getElementById('e-sub-freq').value = s.freq;
             document.getElementById('e-sub-cat').value = s.cat || 'أخرى';
-            document.getElementById('e-sub-next').value = s.next;
+            document.getElementById('e-sub-start').value = s.start || '';
+            document.getElementById('e-sub-next').value = s.next || '';
+            document.getElementById('e-sub-end').value = s.end || '';
+            document.getElementById('e-sub-renew').checked = s.autoRenew !== false;
             document.getElementById('e-sub-note').value = s.note || '';
             openModal('editSub');
         }
@@ -3559,7 +4257,10 @@
             s.amount = parseFloat(document.getElementById('e-sub-amount').value) || 0;
             s.freq = document.getElementById('e-sub-freq').value;
             s.cat = document.getElementById('e-sub-cat').value;
+            s.start = document.getElementById('e-sub-start').value;
             s.next = document.getElementById('e-sub-next').value;
+            s.end = document.getElementById('e-sub-end').value;
+            s.autoRenew = document.getElementById('e-sub-renew').checked;
             s.note = document.getElementById('e-sub-note').value;
             saveState(); closeModal('editSub'); renderSubs(); renderOverview(); toast('تم تعديل الاشتراك ✓');
         }
@@ -4217,10 +4918,66 @@
         }
 
         // ═══════════════════════════════════════
+        // THEME
+        // ═══════════════════════════════════════
+        function applyTheme(theme) {
+            if (theme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                const ic = document.getElementById('themeToggleIcon');
+                const lb = document.getElementById('themeToggleLbl');
+                if (ic) ic.textContent = '🌙';
+                if (lb) lb.textContent = 'الوضع الليلي';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                const ic = document.getElementById('themeToggleIcon');
+                const lb = document.getElementById('themeToggleLbl');
+                if (ic) ic.textContent = '☀️';
+                if (lb) lb.textContent = 'الوضع النهاري';
+            }
+        }
+        function toggleTheme() {
+            const cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+            const next = cur === 'light' ? 'dark' : 'light';
+            try { localStorage.setItem('theme', next); } catch (e) {}
+            applyTheme(next);
+        }
+        (function initTheme() {
+            let saved = 'light';
+            try { saved = localStorage.getItem('theme') || 'light'; } catch (e) {}
+            applyTheme(saved);
+        })();
+
+        // ═══════════════════════════════════════
         // INIT
         // ═══════════════════════════════════════
+        function processAutoRenewals() {
+            // For subscriptions with autoRenew, advance the next date forward if it's in the past
+            const today = new Date(); today.setHours(0,0,0,0);
+            let changed = false;
+            (state.subscriptions || []).forEach(s => {
+                if (s.autoRenew === false) return; // explicit opt-out
+                if (!s.next) return;
+                // If subscription has an end date and it's already passed, do not renew
+                if (s.end) {
+                    const endD = new Date(s.end); endD.setHours(0,0,0,0);
+                    if (endD < today) return;
+                }
+                let next = new Date(s.next); next.setHours(0,0,0,0);
+                while (next < today) {
+                    if (s.freq === 'daily') next.setDate(next.getDate() + 1);
+                    else if (s.freq === 'yearly') next.setFullYear(next.getFullYear() + 1);
+                    else next.setMonth(next.getMonth() + 1);
+                    changed = true;
+                }
+                if (changed) {
+                    s.next = ymd(next);
+                }
+            });
+            if (changed) saveState();
+        }
         async function initApp() {
             await loadState();
+            processAutoRenewals();
             initPeriodSelects();
             state.periodMode = 'all';
             syncPeriodChips();
@@ -4232,6 +4989,8 @@
             const overviewNav = document.querySelector('.nav-item[data-page="overview"]');
             if (overviewNav) goPage(overviewNav);
             else renderOverview();
+            // re-apply theme labels after DOM ready
+            applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
         }
         initApp();
     </script>
