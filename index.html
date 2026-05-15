@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مصاريفي — لوحة المالية الشخصية</title>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -66,12 +68,13 @@
         [data-theme="light"] html,
         [data-theme="light"] body {
             background: radial-gradient(circle at 15% 10%, #fce7f3 0%, transparent 45%),
-                        radial-gradient(circle at 85% 20%, #ddd6fe 0%, transparent 50%),
-                        radial-gradient(circle at 75% 90%, #cffafe 0%, transparent 45%),
-                        radial-gradient(circle at 20% 80%, #fef3c7 0%, transparent 40%),
-                        linear-gradient(135deg, #faf8ff 0%, #fff5f9 100%);
+                radial-gradient(circle at 85% 20%, #ddd6fe 0%, transparent 50%),
+                radial-gradient(circle at 75% 90%, #cffafe 0%, transparent 45%),
+                radial-gradient(circle at 20% 80%, #fef3c7 0%, transparent 40%),
+                linear-gradient(135deg, #faf8ff 0%, #fff5f9 100%);
             background-attachment: fixed;
         }
+
         [data-theme="light"] .main {
             background: transparent;
         }
@@ -119,7 +122,11 @@
             border-color: rgba(167, 139, 250, 0.18);
             color: var(--text);
         }
-        [data-theme="light"] .inp:focus { border-color: var(--accent2); box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15); }
+
+        [data-theme="light"] .inp:focus {
+            border-color: var(--accent2);
+            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15);
+        }
 
         [data-theme="light"] .btn {
             background: rgba(255, 255, 255, 0.7);
@@ -127,13 +134,18 @@
             color: var(--text);
             box-shadow: 0 2px 8px rgba(167, 139, 250, 0.06);
         }
-        [data-theme="light"] .btn:hover { background: rgba(255, 255, 255, 0.95); }
+
+        [data-theme="light"] .btn:hover {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
         [data-theme="light"] .btn-primary {
             background: linear-gradient(135deg, #a78bfa 0%, #7c6dfa 100%);
             border-color: transparent;
             color: #fff;
             box-shadow: 0 4px 14px rgba(124, 109, 250, 0.35);
         }
+
         [data-theme="light"] .btn-primary:hover {
             background: linear-gradient(135deg, #b89cff 0%, #8d7efb 100%);
         }
@@ -143,6 +155,7 @@
             border-color: rgba(167, 139, 250, 0.15);
             color: var(--text2);
         }
+
         [data-theme="light"] .chip:hover,
         [data-theme="light"] .chip.active {
             background: rgba(167, 139, 250, 0.18);
@@ -155,6 +168,7 @@
             color: var(--accent2);
             border-right-color: var(--accent);
         }
+
         [data-theme="light"] .nav-item:hover {
             background: rgba(167, 139, 250, 0.08);
             color: var(--accent2);
@@ -164,12 +178,18 @@
             background: rgba(167, 139, 250, 0.08);
             color: var(--text2);
         }
-        [data-theme="light"] td { color: var(--text2); }
-        [data-theme="light"] .td-main { color: var(--text); }
+
+        [data-theme="light"] td {
+            color: var(--text2);
+        }
+
+        [data-theme="light"] .td-main {
+            color: var(--text);
+        }
 
         [data-theme="light"] .bbar-bg,
         [data-theme="light"] .progress-bg,
-        [data-theme="light"] .renew-bar-wrap {
+        [data-theme="light"] .sub-tracker-bar {
             background: rgba(167, 139, 250, 0.12);
         }
 
@@ -177,6 +197,7 @@
             background: rgba(255, 255, 255, 0.6);
             border-color: rgba(167, 139, 250, 0.15);
         }
+
         [data-theme="light"] .shop-tab.active {
             background: rgba(167, 139, 250, 0.18);
             border-color: rgba(167, 139, 250, 0.4);
@@ -193,6 +214,7 @@
         [data-theme="light"] .logo {
             border-bottom-color: rgba(167, 139, 250, 0.12);
         }
+
         [data-theme="light"] .logo-title {
             background: linear-gradient(135deg, #7c6dfa 0%, #f472b6 100%);
             -webkit-background-clip: text;
@@ -215,7 +237,9 @@
             background: rgba(167, 139, 250, 0.3);
         }
 
-        [data-theme="light"] .divider { background: rgba(167, 139, 250, 0.15); }
+        [data-theme="light"] .divider {
+            background: rgba(167, 139, 250, 0.15);
+        }
 
         [data-theme="light"] .empty {
             color: var(--text3);
@@ -227,11 +251,15 @@
             border-top: 1px solid rgba(167, 139, 250, 0.1);
             box-shadow: 0 -4px 20px rgba(167, 139, 250, 0.08);
         }
+
         [data-theme="light"] .bnav-item.active {
             background: rgba(167, 139, 250, 0.14);
             color: var(--accent2);
         }
-        [data-theme="light"] .bnav-item { color: var(--text3); }
+
+        [data-theme="light"] .bnav-item {
+            color: var(--text3);
+        }
 
         [data-theme="light"] .page-title {
             background: linear-gradient(135deg, #2b2154 0%, #7c6dfa 100%);
@@ -247,9 +275,17 @@
             color: var(--text3);
         }
 
-        [data-theme="light"] .metric-val { color: var(--text); }
-        [data-theme="light"] .metric-pos { color: var(--green); }
-        [data-theme="light"] .metric-neg { color: var(--red); }
+        [data-theme="light"] .metric-val {
+            color: var(--text);
+        }
+
+        [data-theme="light"] .metric-pos {
+            color: var(--green);
+        }
+
+        [data-theme="light"] .metric-neg {
+            color: var(--red);
+        }
 
         * {
             box-sizing: border-box;
@@ -466,7 +502,7 @@
             transition: all .15s;
             white-space: nowrap
         }
-        
+
         .btn-circle {
             width: 36px;
             height: 36px;
@@ -534,10 +570,15 @@
         }
 
         @media(max-width:1200px) {
-            .grid-4 { grid-template-columns: repeat(2, 1fr); }
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
+
         @media(max-width:600px) {
-            .grid-4 { grid-template-columns: 1fr; }
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
         }
 
         .circ-prog-wrap {
@@ -549,16 +590,54 @@
             justify-content: center;
             margin: 0 auto;
         }
+
+        /* Consumption-rate warning animations (escalate as we approach/cross 85%) */
+        @keyframes consumptionWarnPulse {
+            0%, 100% { box-shadow: 0 0 0 0 var(--warn-col, rgba(251, 146, 60, 0.55)); }
+            50%      { box-shadow: 0 0 0 14px rgba(0, 0, 0, 0); }
+        }
+        @keyframes consumptionWarnShake {
+            0%, 100% { transform: translateX(0); }
+            20%      { transform: translateX(-3px); }
+            40%      { transform: translateX(3px); }
+            60%      { transform: translateX(-2px); }
+            80%      { transform: translateX(2px); }
+        }
+        @keyframes consumptionTextGlow {
+            0%, 100% { text-shadow: 0 0 0 transparent; }
+            50%      { text-shadow: 0 0 12px var(--warn-col, rgba(251, 146, 60, 0.8)); }
+        }
+        .circ-prog-wrap.consume-near {
+            --warn-col: rgba(251, 146, 60, 0.55);
+            border-radius: 50%;
+            animation: consumptionWarnPulse 1.8s ease-out infinite;
+        }
+        .circ-prog-wrap.consume-near .circ-val {
+            animation: consumptionTextGlow 1.8s ease-in-out infinite;
+        }
+        .circ-prog-wrap.consume-critical {
+            --warn-col: rgba(248, 113, 113, 0.65);
+            border-radius: 50%;
+            animation: consumptionWarnPulse 1.1s ease-out infinite,
+                       consumptionWarnShake 0.9s ease-in-out infinite;
+        }
+        .circ-prog-wrap.consume-critical .circ-val {
+            animation: consumptionTextGlow 1.1s ease-in-out infinite;
+        }
+
         .circ-prog-wrap svg {
             position: absolute;
-            top: 0; left: 0;
+            top: 0;
+            left: 0;
             transform: rotate(-90deg);
         }
+
         .circ-content {
             position: relative;
             z-index: 1;
             text-align: center;
         }
+
         .circ-val {
             font-size: 20px;
             font-weight: 600;
@@ -566,6 +645,7 @@
             letter-spacing: -0.5px;
             font-family: 'JetBrains Mono', monospace;
         }
+
         .circ-lbl {
             font-size: 10px;
             color: var(--text3);
@@ -731,7 +811,7 @@
             align-items: center;
             gap: 6px
         }
-        
+
         .leg-dot {
             width: 8px;
             height: 8px;
@@ -1661,57 +1741,443 @@
             padding-right: 2px;
         }
 
-        /* Subscription renewal progress bars */
-        .renew-row {
-            display: grid;
-            grid-template-columns: minmax(120px, 1.2fr) 2.5fr minmax(80px, auto);
+        /* ─── Merged subscription tracker (icon + name + bar + days) ─── */
+        .sub-tracker-hdr {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
             gap: 12px;
-            align-items: center;
-            padding: 10px 4px;
-            border-bottom: 1px solid var(--border);
         }
-        .renew-row:last-child { border-bottom: none; }
-        .renew-name {
+
+        .sub-tracker-title-wrap {
+            text-align: right;
+        }
+
+        .sub-tracker-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+
+        .sub-tracker-subtitle {
+            font-size: 11px;
+            color: var(--text3);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .sub-tracker-fraction {
+            font-size: 22px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: -0.5px;
+            white-space: nowrap;
+        }
+
+        .sub-tracker-fraction-total {
+            font-size: 14px;
+            color: var(--text3);
+            font-weight: 500;
+        }
+
+        .sub-tracker-fraction-lbl {
+            display: block;
+            font-size: 10px;
+            color: var(--text3);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 400;
+            margin-top: 2px;
+            text-align: left;
+        }
+
+        .sub-tracker-row {
             display: flex;
             align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .sub-tracker-row:last-child {
+            border-bottom: none;
+        }
+
+        .sub-tracker-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            border: 1.5px solid currentColor;
+            background: transparent;
+        }
+
+        .sub-tracker-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sub-tracker-row-hdr {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 5px;
             gap: 8px;
+        }
+
+        .sub-tracker-name {
             font-size: 13px;
             color: var(--text);
-            overflow: hidden;
-        }
-        .renew-name-text {
+            font-weight: 500;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            text-align: right;
         }
-        .renew-bar-wrap {
-            position: relative;
-            height: 14px;
-            background: var(--surface3);
-            border-radius: 7px;
-            overflow: hidden;
-        }
-        .renew-bar-fill {
-            position: absolute;
-            top: 0; right: 0; bottom: 0;
-            border-radius: 7px;
-            transition: width .4s ease;
-        }
-        .renew-days {
-            text-align: left;
+
+        .sub-tracker-pct {
             font-size: 12px;
             font-weight: 600;
             font-family: 'JetBrains Mono', monospace;
             white-space: nowrap;
         }
-        @media (max-width: 700px) {
-            .renew-row {
-                grid-template-columns: 1fr 1fr;
-                grid-template-rows: auto auto;
+
+        .sub-tracker-bar {
+            height: 6px;
+            background: var(--surface3);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+
+        .sub-tracker-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width .4s ease;
+        }
+
+        .sub-tracker-meta {
+            font-size: 10px;
+            color: var(--text3);
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        /* ─── Statement table (grouped invoices with colors) ─── */
+        .stmt-table tr.stmt-inv-hdr td {
+            border-bottom-color: transparent;
+        }
+
+        .stmt-table tr.stmt-inv-item td {
+            border-bottom-color: rgba(255, 255, 255, 0.05);
+        }
+
+        [data-theme="light"] .stmt-table tr.stmt-inv-item td {
+            border-bottom-color: rgba(15, 23, 42, 0.03);
+        }
+
+        .stmt-table tr.stmt-inv-footer td {
+            padding-top: 8px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--surface3);
+        }
+
+        .stmt-table tr.stmt-inv-item:hover td,
+        .stmt-table tr.stmt-inv-hdr:hover td,
+        .stmt-table tr.stmt-inv-footer:hover td {
+            background: inherit !important;
+            /* keep group color on hover */
+            filter: brightness(1.08);
+        }
+
+        /* Grand total row — prominent */
+        .stmt-table tr.stmt-grand-total td {
+            background: linear-gradient(135deg, rgba(124, 109, 250, 0.18), rgba(167, 139, 250, 0.1));
+            font-weight: 800;
+            font-size: 15px;
+            padding: 16px 18px;
+            color: var(--text);
+            border-top: 2px solid var(--accent);
+            border-bottom: none;
+        }
+
+        .stmt-table tr.stmt-grand-total td:last-child {
+            color: var(--accent2);
+            font-size: 17px;
+            letter-spacing: -0.5px;
+        }
+
+        [data-theme="light"] .stmt-table tr.stmt-grand-total td {
+            background: linear-gradient(135deg, rgba(124, 109, 250, 0.14), rgba(244, 114, 182, 0.1));
+        }
+
+        /* ─── Print styles ─── */
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
-            .renew-name { grid-column: 1; grid-row: 1; }
-            .renew-days { grid-column: 2; grid-row: 1; }
-            .renew-bar-wrap { grid-column: 1 / -1; grid-row: 2; }
+
+            html,
+            body {
+                background: #fff !important;
+                color: #000 !important;
+            }
+
+            .sidebar,
+            .bottom-nav,
+            .topbar-right,
+            .stmt-filters button,
+            #themeToggleBtn,
+            .period-box {
+                display: none !important;
+            }
+
+            .main {
+                margin: 0 !important;
+                padding: 12px !important;
+                overflow: visible !important;
+            }
+
+            .page:not(.active) {
+                display: none !important;
+            }
+
+            .card,
+            .table-card {
+                page-break-inside: avoid;
+                box-shadow: none !important;
+                border-color: #ddd !important;
+            }
+
+            .stmt-table tr {
+                page-break-inside: avoid;
+            }
+
+            canvas {
+                max-height: 200px;
+            }
+        }
+
+        /* Urgent / overdue pulse */
+        @keyframes subPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(248, 113, 113, 0.55);
+            }
+
+            50% {
+                box-shadow: 0 0 0 6px rgba(248, 113, 113, 0);
+            }
+        }
+
+        .sub-tracker-row.urgent .sub-tracker-icon {
+            border-width: 2px;
+            animation: subPulse 1.6s ease-out infinite;
+        }
+
+        /* Shimmer wave (right → left) for subs within a week of renewal */
+        .sub-tracker-bar {
+            position: relative;
+        }
+
+        @keyframes subShimmerRTL {
+            0% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .sub-tracker-row.alert-week .sub-tracker-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 60%;
+            background: linear-gradient(90deg,
+                    transparent 0%,
+                    rgba(255, 255, 255, 0.55) 50%,
+                    transparent 100%);
+            animation: subShimmerRTL 1.6s linear infinite;
+            pointer-events: none;
+        }
+
+        [data-theme="light"] .sub-tracker-row.alert-week .sub-tracker-bar::after {
+            background: linear-gradient(90deg,
+                    transparent 0%,
+                    rgba(255, 255, 255, 0.85) 50%,
+                    transparent 100%);
+        }
+
+        .sub-tracker-row.alert-week .sub-tracker-name {
+            position: relative;
+        }
+
+        .sub-tracker-row.alert-week .sub-tracker-icon {
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.18);
+        }
+
+        .sub-tracker-row.urgent.alert-week .sub-tracker-icon {
+            box-shadow: none;
+            /* urgent pulse takes precedence */
+        }
+
+        /* ─── Monthly evaluation card ─── */
+        .eval-wrap {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .eval-grade {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 22px;
+            border-radius: 16px;
+            min-width: 110px;
+        }
+
+        .eval-grade-letter {
+            font-size: 44px;
+            font-weight: 800;
+            line-height: 1;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: -2px;
+        }
+
+        .eval-grade-lbl {
+            font-size: 11px;
+            margin-top: 6px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .eval-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .eval-stat {
+            text-align: center;
+            padding: 10px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .eval-stat-lbl {
+            font-size: 10px;
+            color: var(--text3);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 5px;
+        }
+
+        .eval-stat-val {
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: -0.4px;
+        }
+
+        .eval-lists {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 18px;
+        }
+        .eval-lists.eval-lists--single {
+            grid-template-columns: 1fr;
+        }
+
+        .eval-list {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 14px;
+        }
+
+        .eval-list-title {
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .eval-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 6px;
+            padding: 7px 0;
+            border-bottom: 1px dashed var(--border);
+            font-size: 12px;
+        }
+
+        .eval-item:last-child {
+            border-bottom: none;
+        }
+
+        .eval-item-name {
+            color: var(--text);
+        }
+
+        .eval-item-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 700px) {
+            .eval-wrap {
+                grid-template-columns: 1fr;
+            }
+
+            .eval-grade {
+                flex-direction: row;
+                gap: 14px;
+                padding: 12px;
+            }
+
+            .eval-grade-letter {
+                font-size: 32px;
+            }
+
+            .eval-stats {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+
+            .eval-lists {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sub-tracker-warn-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 7px;
+            border-radius: 10px;
+            background: rgba(248, 113, 113, 0.15);
+            color: var(--red);
+            font-size: 10px;
+            font-weight: 600;
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            margin-inline-end: 6px;
         }
     </style>
 </head>
@@ -1826,9 +2292,15 @@
                 <button class="chip" id="chip-year" onclick="setQuickPeriod('year',this)">سنة</button>
                 <button class="chip" id="chip-all" onclick="setQuickPeriod('all',this)">الكل</button>
             </div>
-            <button class="btn" id="themeToggleBtn" onclick="toggleTheme()" style="margin-top:10px;width:100%;justify-content:center;gap:8px;">
+            <button class="btn" id="themeToggleBtn" onclick="toggleTheme()"
+                style="margin-top:10px;width:100%;justify-content:center;gap:8px;">
                 <span id="themeToggleIcon">☀️</span>
                 <span id="themeToggleLbl">الوضع النهاري</span>
+            </button>
+            <button class="btn" id="notifBtn" onclick="toggleNotifications()"
+                style="margin-top:6px;width:100%;justify-content:center;gap:8px;">
+                <span id="notifIcon">🔔</span>
+                <span id="notifLbl">تفعيل التنبيهات</span>
             </button>
         </div>
     </div>
@@ -1845,32 +2317,24 @@
                     <button class="btn btn-primary btn-circle" onclick="openModal('addExpense')">+</button>
                 </div>
             </div>
-            
+
             <!-- 4 Mini Dashboards -->
             <div class="grid-4" id="mini-dashboards" style="margin-bottom: 14px;">
                 <!-- Content injected via JS -->
             </div>
 
-            <!-- Days-to-renewal progress bars -->
-            <div class="card" style="margin-bottom: 14px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-                    <div class="card-title" style="margin-bottom:0">الأيام المتبقية لتجديد الاشتراكات</div>
-                    <div style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">
-                        <span style="color:var(--green)">●</span> بعيد
-                        <span style="color:var(--amber);margin-right:8px">●</span> اقترب
-                        <span style="color:var(--red);margin-right:8px">●</span> وشيك
+            <!-- Subscription tracker (merged) -->
+            <div class="card" style="margin-bottom: 16px;">
+                <div class="sub-tracker-hdr">
+                    <div class="sub-tracker-fraction" id="ov-tracker-fraction">
+                        <span class="sub-tracker-fraction-lbl">للتجديد قريباً</span>
+                    </div>
+                    <div class="sub-tracker-title-wrap">
+                        <div class="sub-tracker-title">متابعة الاشتراكات</div>
+                        <div class="sub-tracker-subtitle" id="ov-tracker-sub"></div>
                     </div>
                 </div>
-                <div id="ov-progress-list"></div>
-            </div>
-
-            <!-- Upcoming subscription renewals -->
-            <div class="card" style="margin-bottom: 16px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-                    <div class="card-title" style="margin-bottom:0">تجديدات الاشتراكات القادمة</div>
-                    <div id="ov-renew-count" style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace"></div>
-                </div>
-                <div id="ov-renewals"></div>
+                <div id="ov-tracker-list"></div>
             </div>
 
             <!-- Monthly Chart & Budget bars -->
@@ -1885,6 +2349,16 @@
                         <canvas id="lineChart" role="img" aria-label="المصاريف الشهرية"></canvas>
                     </div>
                 </div>
+            </div>
+
+            <!-- Monthly evaluation (at the bottom of the page) -->
+            <div class="card" style="margin-top: 14px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+                    <div class="card-title" style="margin-bottom:0">تقييم الشهر</div>
+                    <div id="eval-period"
+                        style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace"></div>
+                </div>
+                <div id="monthly-evaluation"></div>
             </div>
 
         </div>
@@ -2017,40 +2491,24 @@
         <!-- ── SUBSCRIPTIONS PAGE ── -->
         <div class="page" id="page-subscriptions">
             <div class="topbar">
-                <div class="page-title">الاشتراكات</div><button class="btn btn-primary btn-circle" onclick="openModal('addSub')">+</button>
+                <div class="page-title">الاشتراكات</div><button class="btn btn-primary btn-circle"
+                    onclick="openModal('addSub')">+</button>
             </div>
             <div class="metrics" id="sub-metrics"></div>
 
-            <!-- Days-to-renewal progress bars -->
-            <div class="card" style="margin-bottom:14px">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-                    <div class="card-title" style="margin-bottom:0">الأيام المتبقية لكل تجديد</div>
-                    <div style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">
-                        <span style="color:var(--green)">●</span> بعيد
-                        <span style="color:var(--amber);margin-right:8px">●</span> اقترب
-                        <span style="color:var(--red);margin-right:8px">●</span> وشيك
-                    </div>
-                </div>
-                <div id="sub-progress-list"></div>
-            </div>
-
-            <!-- Renewal list dashboard -->
-            <div class="card" style="margin-bottom:14px">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-                    <div class="card-title" style="margin-bottom:0">تجديدات قادمة (خلال 30 يوماً)</div>
-                    <div id="sub-renew-count" style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace"></div>
-                </div>
-                <div id="sub-renewals"></div>
-            </div>
-
-            <!-- Yearly subscriptions dashboard -->
+            <!-- Subscription tracker + category breakdown (side by side) -->
             <div class="grid-2" style="margin-bottom:14px">
                 <div class="card">
-                    <div class="card-title">التكلفة الشهرية المتوقعة (12 شهر)</div>
-                    <div style="position:relative;height:200px">
-                        <canvas id="subYearlyChart" role="img" aria-label="التكلفة الشهرية للاشتراكات"></canvas>
+                    <div class="sub-tracker-hdr">
+                        <div class="sub-tracker-fraction" id="sub-tracker-fraction">
+                            <span class="sub-tracker-fraction-lbl">للتجديد قريباً</span>
+                        </div>
+                        <div class="sub-tracker-title-wrap">
+                            <div class="sub-tracker-title">متابعة الاشتراكات</div>
+                            <div class="sub-tracker-subtitle" id="sub-tracker-sub"></div>
+                        </div>
                     </div>
-                    <div id="sub-yearly-stats" style="margin-top:12px;display:flex;justify-content:space-between;font-size:12px"></div>
+                    <div id="sub-tracker-list"></div>
                 </div>
                 <div class="card">
                     <div class="card-title">توزيع الاشتراكات حسب الفئة (سنوي)</div>
@@ -2060,7 +2518,8 @@
 
             <!-- Period report -->
             <div class="card" style="margin-bottom:14px">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:10px">
+                <div
+                    style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:10px">
                     <div class="card-title" style="margin-bottom:0">تقرير الفترة</div>
                     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
                         <input class="inp" type="date" id="sub-report-from" style="width:auto;min-width:140px" />
@@ -2091,7 +2550,8 @@
         <!-- ── LOANS PAGE ── -->
         <div class="page" id="page-loans">
             <div class="topbar">
-                <div class="page-title">القروض</div><button class="btn btn-primary btn-circle" onclick="openModal('addLoan')">+</button>
+                <div class="page-title">القروض</div><button class="btn btn-primary btn-circle"
+                    onclick="openModal('addLoan')">+</button>
             </div>
             <div class="metrics" id="loan-metrics"></div>
             <div id="loan-list"></div>
@@ -2279,7 +2739,8 @@
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
                     <div class="field">
-                        <label>المبلغ الشهري (د.أ)</label><input class="inp" type="number" id="e-inc-amount" step="0.01" />
+                        <label>المبلغ الشهري (د.أ)</label><input class="inp" type="number" id="e-inc-amount"
+                            step="0.01" />
                     </div>
                     <div class="field">
                         <label>النوع</label>
@@ -2345,8 +2806,10 @@
                         <label>تاريخ النهاية (اختياري)</label><input class="inp" type="date" id="m-sub-end" />
                     </div>
                 </div>
-                <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface2);border-radius:var(--r);border:1px solid var(--border);cursor:pointer;font-size:12px">
-                    <input type="checkbox" id="m-sub-renew" checked style="width:16px;height:16px;cursor:pointer;accent-color:var(--accent)" />
+                <label
+                    style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface2);border-radius:var(--r);border:1px solid var(--border);cursor:pointer;font-size:12px">
+                    <input type="checkbox" id="m-sub-renew" checked
+                        style="width:16px;height:16px;cursor:pointer;accent-color:var(--accent)" />
                     <span>تجديد تلقائي عند انتهاء الفترة</span>
                 </label>
                 <div class="field">
@@ -2403,8 +2866,10 @@
                         <label>تاريخ النهاية (اختياري)</label><input class="inp" type="date" id="e-sub-end" />
                     </div>
                 </div>
-                <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface2);border-radius:var(--r);border:1px solid var(--border);cursor:pointer;font-size:12px">
-                    <input type="checkbox" id="e-sub-renew" style="width:16px;height:16px;cursor:pointer;accent-color:var(--accent)" />
+                <label
+                    style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface2);border-radius:var(--r);border:1px solid var(--border);cursor:pointer;font-size:12px">
+                    <input type="checkbox" id="e-sub-renew"
+                        style="width:16px;height:16px;cursor:pointer;accent-color:var(--accent)" />
                     <span>تجديد تلقائي عند انتهاء الفترة</span>
                 </label>
                 <div class="field">
@@ -2425,16 +2890,19 @@
         <div class="modal">
             <div class="modal-title">✎ تعديل الاستقطاعات الثابتة</div>
             <div class="modal-body">
-                <div style="font-size:12px; font-weight:600; color:var(--accent2); margin-bottom:4px;">الضمان الاجتماعي</div>
+                <div style="font-size:12px; font-weight:600; color:var(--accent2); margin-bottom:4px;">الضمان الاجتماعي
+                </div>
                 <div class="field">
                     <label>المبلغ (شهرياً)</label>
                     <input class="inp" type="number" id="m-fixed-social-amt" placeholder="0.00" step="0.01" />
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                    <div class="field"><label>من تاريخ</label><input class="inp" type="date" id="m-fixed-social-start" /></div>
-                    <div class="field"><label>إلى تاريخ (اختياري)</label><input class="inp" type="date" id="m-fixed-social-end" /></div>
+                    <div class="field"><label>من تاريخ</label><input class="inp" type="date"
+                            id="m-fixed-social-start" /></div>
+                    <div class="field"><label>إلى تاريخ (اختياري)</label><input class="inp" type="date"
+                            id="m-fixed-social-end" /></div>
                 </div>
-                
+
                 <div class="divider" style="margin:12px 0;"></div>
 
                 <div style="font-size:12px; font-weight:600; color:var(--pink); margin-bottom:4px;">التأمين الصحي</div>
@@ -2443,8 +2911,10 @@
                     <input class="inp" type="number" id="m-fixed-health-amt" placeholder="0.00" step="0.01" />
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                    <div class="field"><label>من تاريخ</label><input class="inp" type="date" id="m-fixed-health-start" /></div>
-                    <div class="field"><label>إلى تاريخ (اختياري)</label><input class="inp" type="date" id="m-fixed-health-end" /></div>
+                    <div class="field"><label>من تاريخ</label><input class="inp" type="date"
+                            id="m-fixed-health-start" /></div>
+                    <div class="field"><label>إلى تاريخ (اختياري)</label><input class="inp" type="date"
+                            id="m-fixed-health-end" /></div>
                 </div>
             </div>
             <div class="modal-actions">
@@ -2765,7 +3235,7 @@
                     }
                     // Ensure every item has a valid subcat
                     updated.items.forEach(it => {
-                        if(!it.subcat) it.subcat = 'أخرى';
+                        if (!it.subcat) it.subcat = 'أخرى';
                     });
                     // Removed 'cat' to rely on items
                     delete updated.cat;
@@ -2933,8 +3403,8 @@
         //  PERIOD HELPERS
         // ═══════════════════════════════════════
         function inRange(dateStr) {
-            if(state.periodMode === 'all') return true;
-            
+            if (state.periodMode === 'all') return true;
+
             // Format string appropriately to avoid timezone offset shifts during Date parsing
             // Assuming dateStr is 'YYYY-MM-DD'
             const [y, m, d] = dateStr.split('-');
@@ -2962,7 +3432,7 @@
             }
             return { from: new Date(2000, 0, 1), to: new Date(2099, 11, 31) };
         }
-        
+
         function periodLabel() {
             const { periodMode: m, periodMonth, periodYear } = state;
             if (m === 'month') return MONTHS[periodMonth] + ' ' + periodYear;
@@ -3058,7 +3528,16 @@
             const totalAll = totalExp; const totalShop = 0;
             const inc = monthlyIncome();
             const subMonthly = calcSubMonthly();
-            
+            // Pure monthly subscriptions only — for the overview dashboard tile.
+            // Yearly subs are NOT divided by 12, and daily subs are NOT multiplied by 30 here.
+            const subPureMonthly = state.subscriptions
+                .filter(s => s.freq === 'monthly')
+                .reduce((sum, s) => sum + s.amount, 0);
+            // Pure yearly subscriptions (raw amount, not divided)
+            const subPureYearly = state.subscriptions
+                .filter(s => s.freq === 'yearly')
+                .reduce((sum, s) => sum + s.amount, 0);
+
             // Calculate Loans metrics
             let totalLoanAmt = 0;
             let totalLoanRem = 0;
@@ -3071,7 +3550,7 @@
             const paidLoan = Math.max(0, totalLoanAmt - totalLoanRem);
             const loanPct = totalLoanAmt > 0 ? (paidLoan / totalLoanAmt) * 100 : 0;
             const loanCol = loanPct === 100 ? 'var(--green)' : 'var(--accent)';
-            
+
             const totalAllExp = totalExp + subMonthly + loanMonthly;
             const net = inc.total - totalAllExp;
 
@@ -3084,22 +3563,31 @@
             const safePct = Math.min(spentPct, 100);
             const dashCol = spentPct > 90 ? 'var(--red)' : spentPct > 70 ? 'var(--orange)' : 'var(--green)';
             const offsetCons = circumference - (safePct / 100) * circumference;
-            
+            // Warning animation thresholds:
+            //   >= 80% → amber pulsing (approaching 85%)
+            //   >= 85% → red pulsing + shake (critical)
+            const consumeClass = spentPct >= 85 ? 'consume-critical'
+                : spentPct >= 80 ? 'consume-near'
+                : '';
+            const consumeTitle = spentPct >= 85 ? '⚠️ معدل الاستهلاك من الدخل'
+                : spentPct >= 80 ? '🔔 معدل الاستهلاك من الدخل'
+                : 'معدل الاستهلاك من الدخل';
+
             // 2. Render Loan Dashbaord
             const offsetLoan = circumference - (loanPct / 100) * circumference;
 
             document.getElementById('mini-dashboards').innerHTML = `
                 <!-- Dashboard 1: Consumption -->
                 <div class="card" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                    <div class="card-title" style="margin-bottom:20px; text-align:center;">معدل الاستهلاك من الدخل</div>
+                    <div class="card-title" style="margin-bottom:20px; text-align:center;">${consumeTitle}</div>
                     <div style="display:flex; justify-content:center; align-items:center; height:120px;">
-                        <div class="circ-prog-wrap">
+                        <div class="circ-prog-wrap ${consumeClass}">
                             <svg width="120" height="120" viewBox="0 0 120 120">
                                 <circle cx="60" cy="60" r="${radius}" fill="none" stroke="var(--surface3)" stroke-width="8" />
                                 <circle cx="60" cy="60" r="${radius}" fill="none" stroke="${dashCol}" stroke-width="8" stroke-dasharray="${circumference}" stroke-dashoffset="${offsetCons}" stroke-linecap="round" style="transition: stroke-dashoffset 1s ease-in-out;" />
                             </svg>
                             <div class="circ-content">
-                                <div class="circ-val">${spentPct.toFixed(1)}%</div>
+                                <div class="circ-val" style="color:${dashCol}">${spentPct.toFixed(1)}%</div>
                                 <div class="circ-lbl" style="color:${dashCol}">مستهلك</div>
                             </div>
                         </div>
@@ -3133,20 +3621,38 @@
                             </div>
                         </div>
                     </div>
+                    <div style="margin-top:14px; text-align:center;">
+                        <div style="font-size:10px; color:var(--text3); font-family:'JetBrains Mono', monospace; letter-spacing:.4px; margin-bottom:2px;">المبلغ المتبقي</div>
+                        <div style="font-size:16px; font-weight:600; color:var(--red); font-family:'JetBrains Mono', monospace; letter-spacing:-0.3px;">
+                            ${totalLoanRem.toLocaleString(undefined, { maximumFractionDigits: 0 })} <span style="font-size:11px; color:var(--text3); font-weight:400">د.أ</span>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Dashboard 4: Subscriptions -->
+                <!-- Dashboard 4: Subscriptions (Monthly + Yearly) -->
                 <div class="card" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                    <div class="card-title" style="margin-bottom:20px; text-align:center;">الاشتراكات الشهرية</div>
-                    <div style="display:flex; justify-content:center; align-items:center; height:120px;">
-                        <div class="circ-prog-wrap">
-                            <svg width="120" height="120" viewBox="0 0 120 120">
-                                <circle cx="60" cy="60" r="${radius}" fill="none" stroke="var(--accent2)" stroke-width="8" stroke-dasharray="4 6" opacity="0.3" />
-                                <circle cx="60" cy="60" r="${radius}" fill="none" stroke="var(--accent2)" stroke-width="2" />
+                    <div class="card-title" style="margin-bottom:20px; text-align:center;">الاشتراكات</div>
+                    <div style="display:flex; justify-content:center; align-items:center; gap:14px; height:120px;">
+                        <!-- Monthly -->
+                        <div class="circ-prog-wrap" style="width:100px;height:100px">
+                            <svg width="100" height="100" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="42" fill="none" stroke="var(--accent2)" stroke-width="6" stroke-dasharray="4 5" opacity="0.3" />
+                                <circle cx="50" cy="50" r="42" fill="none" stroke="var(--accent2)" stroke-width="2" />
                             </svg>
                             <div class="circ-content">
-                                <div class="circ-val">${subMonthly.toFixed(0)}</div>
-                                <div class="circ-lbl" style="color:var(--accent2)">د.أ / شهر</div>
+                                <div class="circ-val" style="font-size:15px">${subPureMonthly.toFixed(0)}</div>
+                                <div class="circ-lbl" style="color:var(--accent2);font-size:9px">شهري · د.أ</div>
+                            </div>
+                        </div>
+                        <!-- Yearly -->
+                        <div class="circ-prog-wrap" style="width:100px;height:100px">
+                            <svg width="100" height="100" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="42" fill="none" stroke="var(--teal)" stroke-width="6" stroke-dasharray="4 5" opacity="0.3" />
+                                <circle cx="50" cy="50" r="42" fill="none" stroke="var(--teal)" stroke-width="2" />
+                            </svg>
+                            <div class="circ-content">
+                                <div class="circ-val" style="font-size:15px">${subPureYearly.toFixed(0)}</div>
+                                <div class="circ-lbl" style="color:var(--teal);font-size:9px">سنوي · د.أ</div>
                             </div>
                         </div>
                     </div>
@@ -3156,8 +3662,8 @@
             renderDonut(exps);
             renderBudgetBars(exps);
             renderLine();
-            renderSubProgressBars('ov-progress-list');
-            renderRenewals('ov-renewals', 'ov-renew-count');
+            renderSubTracker('ov-tracker-list', 'ov-tracker-fraction', 'ov-tracker-sub');
+            renderMonthlyEvaluation();
 
         }
 
@@ -3168,94 +3674,112 @@
         // Check if subscription is active (not ended)
         function isSubActive(s) {
             if (!s.end) return true;
-            const endD = new Date(s.end); endD.setHours(0,0,0,0);
-            const today = new Date(); today.setHours(0,0,0,0);
+            const endD = new Date(s.end); endD.setHours(0, 0, 0, 0);
+            const today = new Date(); today.setHours(0, 0, 0, 0);
             return endD >= today;
         }
-        function renderSubProgressBars(listId) {
+        // ─── Merged subscription tracker ───
+        function renderSubTracker(listId, fractionId, subId) {
             const listEl = document.getElementById(listId);
             if (!listEl) return;
-            const today = new Date(); today.setHours(0,0,0,0);
+            const fractionEl = fractionId ? document.getElementById(fractionId) : null;
+            const subEl = subId ? document.getElementById(subId) : null;
+
+            const today = new Date(); today.setHours(0, 0, 0, 0);
             const items = (state.subscriptions || [])
                 .filter(s => s.next && isSubActive(s))
                 .map(s => {
-                    const next = new Date(s.next); next.setHours(0,0,0,0);
+                    const next = new Date(s.next); next.setHours(0, 0, 0, 0);
                     const cycleDays = subCycleDays(s);
                     const days = Math.round((next - today) / 86400000);
-                    // Progress: fraction of cycle remaining (0 = today, 1 = full cycle away)
                     const remainingFrac = Math.max(0, Math.min(1, days / cycleDays));
                     return { ...s, days, cycleDays, remainingFrac };
                 })
                 .sort((a, b) => a.days - b.days);
+
             if (!items.length) {
                 listEl.innerHTML = '<div class="empty">لا اشتراكات نشطة</div>';
+                if (fractionEl) fractionEl.innerHTML = `<span style="color:var(--text3)">0</span><span class="sub-tracker-fraction-total"> / 0</span><span class="sub-tracker-fraction-lbl">للتجديد قريباً</span>`;
+                if (subEl) subEl.textContent = '';
                 return;
             }
-            listEl.innerHTML = items.map(s => {
-                // Color based on remaining fraction (green when full, red when near 0)
-                let col, bgCol;
-                if (s.days < 0) { col = 'var(--red)'; bgCol = 'var(--red)'; }
-                else if (s.remainingFrac > 0.5) { col = 'var(--green)'; bgCol = 'var(--green)'; }
-                else if (s.remainingFrac > 0.25) { col = 'var(--amber)'; bgCol = 'var(--amber)'; }
-                else { col = 'var(--red)'; bgCol = 'var(--red)'; }
-                const fillPct = s.days < 0 ? 100 : Math.max(2, s.remainingFrac * 100);
-                const lbl = s.days < 0 ? `متأخر ${Math.abs(s.days)} يوم`
-                    : s.days === 0 ? 'اليوم'
-                    : s.days === 1 ? 'غداً'
-                    : `${s.days} يوم`;
-                return `<div class="renew-row">
-                    <div class="renew-name">
-                        <span style="font-size:16px">${s.icon || '📦'}</span>
-                        <span class="renew-name-text">${s.name}</span>
-                    </div>
-                    <div class="renew-bar-wrap">
-                        <div class="renew-bar-fill" style="width:${fillPct}%;background:linear-gradient(90deg, ${bgCol}, ${bgCol}cc)"></div>
-                    </div>
-                    <div class="renew-days" style="color:${col}">${lbl}</div>
-                </div>`;
-            }).join('');
-        }
-        function renderRenewals(listId, countId) {
-            const listEl = document.getElementById(listId);
-            const countEl = document.getElementById(countId);
-            if (!listEl) return;
-            const today = new Date();
-            today.setHours(0,0,0,0);
-            const horizon = new Date(today.getTime() + 30 * 86400000);
-            const items = (state.subscriptions || [])
-                .filter(s => s.next)
-                .map(s => {
-                    const d = new Date(s.next);
-                    d.setHours(0,0,0,0);
-                    const days = Math.round((d - today) / 86400000);
-                    return { ...s, dateObj: d, days };
-                })
-                .filter(s => s.dateObj <= horizon)
-                .sort((a, b) => a.dateObj - b.dateObj);
 
-            if (countEl) countEl.textContent = items.length ? `${items.length} اشتراك` : '';
-            if (!items.length) {
-                listEl.innerHTML = '<div class="empty">لا تجديدات قريبة خلال 30 يوماً</div>';
-                return;
+            // Header summary
+            const soonCount = items.filter(s => s.days <= 7).length;
+            const totalMonthly = items.reduce((sum, s) => {
+                if (s.freq === 'daily') return sum + s.amount * 30;
+                if (s.freq === 'monthly') return sum + s.amount;
+                return sum + s.amount / 12;
+            }, 0);
+            const soonColor = soonCount === 0 ? 'var(--green)' : soonCount <= 2 ? 'var(--amber)' : 'var(--red)';
+            if (fractionEl) {
+                fractionEl.innerHTML = `<span style="color:${soonColor}">${soonCount}</span><span class="sub-tracker-fraction-total"> / ${items.length}</span><span class="sub-tracker-fraction-lbl">للتجديد خلال أسبوع</span>`;
             }
+            if (subEl) {
+                subEl.textContent = `${items.length} اشتراك نشط · ${totalMonthly.toFixed(0)} د.أ/شهر`;
+            }
+
+            // List rows
+            const freqLbl = { daily: 'يومي', monthly: 'شهري', yearly: 'سنوي' };
             listEl.innerHTML = items.map(s => {
-                const overdue = s.days < 0;
-                const urgent = s.days >= 0 && s.days <= 3;
-                const soon = s.days > 3 && s.days <= 7;
-                const col = overdue ? 'var(--red)' : urgent ? 'var(--red)' : soon ? 'var(--amber)' : 'var(--accent2)';
-                const bg = overdue ? 'rgba(248,113,113,0.15)' : urgent ? 'rgba(248,113,113,0.15)' : soon ? 'rgba(251,191,36,0.15)' : 'rgba(124,109,250,0.15)';
-                const lbl = overdue ? `متأخر ${Math.abs(s.days)} يوم` : s.days === 0 ? 'اليوم' : s.days === 1 ? 'غداً' : `بعد ${s.days} يوم`;
-                const freqLbl = { daily: 'يومي', monthly: 'شهري', yearly: 'سنوي' }[s.freq] || '';
-                return `<div class="sub-item">
-                    <div class="sub-icon" style="background:${bg}">${s.icon || '📦'}</div>
-                    <div class="sub-info">
-                        <div class="sub-name">${s.name}</div>
-                        <div class="sub-meta" style="font-family:'JetBrains Mono',monospace">${s.next} · ${freqLbl}</div>
+                // INVERTED LOGIC: bar fills as renewal approaches.
+                // elapsedFrac = how much of the cycle has passed (0 = just renewed, 1 = renewal day)
+                const elapsedFrac = 1 - s.remainingFrac;
+
+                // Color based on how close we are to renewal:
+                //   elapsed < 0.5 (less than half of cycle passed)  → green (calm)
+                //   elapsed < 0.75 (over half passed)               → amber (heads up)
+                //   elapsed >= 0.75 OR overdue                      → red (urgent)
+                let col;
+                if (s.days < 0) col = 'var(--red)';
+                else if (elapsedFrac < 0.5) col = 'var(--green)';
+                else if (elapsedFrac < 0.75) col = 'var(--amber)';
+                else col = 'var(--red)';
+
+                // Fill fraction: at/past due = 100% full
+                const fillPct = s.days < 0 ? 100 : Math.max(2, elapsedFrac * 100);
+
+                // Urgent classification (visual pulse + badge):
+                //   days <= 1 → urgent (today / tomorrow / overdue)
+                //   days <= 7 → alert-week (shimmer animation right→left)
+                const isUrgent = s.days <= 1;
+                const isOverdue = s.days < 0;
+                const isAlertWeek = s.days <= 7;
+
+                const dayLbl = isOverdue ? `متأخر ${Math.abs(s.days)} يوم`
+                    : s.days === 0 ? 'يجدد اليوم'
+                        : s.days === 1 ? 'يجدد غداً'
+                            : `${s.days} يوم متبقي`;
+
+                const warnBadge = isOverdue
+                    ? `<span class="sub-tracker-warn-badge">⚠️ متأخر</span>`
+                    : s.days === 0
+                        ? `<span class="sub-tracker-warn-badge">⚠️ اليوم</span>`
+                        : s.days === 1
+                            ? `<span class="sub-tracker-warn-badge">⏰ غداً</span>`
+                            : s.days <= 7
+                                ? `<span class="sub-tracker-warn-badge" style="background:rgba(251,191,36,0.18);color:var(--amber)">🔔 خلال ${s.days} أيام</span>`
+                                : '';
+
+                const rowClasses = ['sub-tracker-row'];
+                if (isUrgent) rowClasses.push('urgent');
+                if (isAlertWeek) rowClasses.push('alert-week');
+
+                return `<div class="${rowClasses.join(' ')}">
+                    <div class="sub-tracker-body">
+                        <div class="sub-tracker-row-hdr">
+                            <div class="sub-tracker-pct" style="color:${col}">${dayLbl}</div>
+                            <div class="sub-tracker-name">${warnBadge}${s.name}</div>
+                        </div>
+                        <div class="sub-tracker-bar">
+                            <div class="sub-tracker-fill" style="width:${fillPct}%;background:${col}"></div>
+                        </div>
+                        <div class="sub-tracker-meta">
+                            <span>${s.amount.toFixed(2)} د.أ · مر ${Math.round(elapsedFrac * 100)}% من الدورة</span>
+                            <span>${freqLbl[s.freq] || ''} · يجدد ${s.next}</span>
+                        </div>
                     </div>
-                    <div style="text-align:left">
-                        <div class="sub-amt">${s.amount.toFixed(2)} د.أ</div>
-                        <div style="font-size:11px;font-weight:600;color:${col};margin-top:2px">${lbl}</div>
-                    </div>
+                    <div class="sub-tracker-icon" style="color:${col}">${s.icon || '📦'}</div>
                 </div>`;
             }).join('');
         }
@@ -3287,26 +3811,26 @@
             document.getElementById('donutTotal').textContent = total.toFixed(0);
             if (charts.donut) charts.donut.destroy();
             const ctx = document.getElementById('donutChart').getContext('2d');
-            charts.donut = new Chart(ctx, { 
-                type: 'doughnut', 
-                data: { 
-                    labels: cats, 
-                    datasets: [{ 
-                        data: vals, 
-                        backgroundColor: cats.map(c => catColor(c)), 
-                        borderWidth: 0, 
-                        hoverOffset: 4 
-                    }] 
-                }, 
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false, 
-                    cutout: '82%', 
-                    plugins: { 
-                        legend: { display: false }, 
-                        tooltip: { callbacks: { label: c => ' ' + c.label + ': ' + c.raw.toFixed(2) + ' د.أ' } } 
-                    } 
-                } 
+            charts.donut = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: cats,
+                    datasets: [{
+                        data: vals,
+                        backgroundColor: cats.map(c => catColor(c)),
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '82%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: c => ' ' + c.label + ': ' + c.raw.toFixed(2) + ' د.أ' } }
+                    }
+                }
             });
         }
         function renderBudgetBars(exps) {
@@ -3403,13 +3927,26 @@
             if (charts.stmtLine) charts.stmtLine.destroy();
             const ctx = document.getElementById('stmtLineIncome').getContext('2d');
             charts.stmtLine = new Chart(ctx, { type: 'line', data: { labels: lbls, datasets: [{ label: 'الدخل', data: incVals, borderColor: '#34d399', backgroundColor: 'rgba(52,211,153,0.08)', tension: 0.4, pointRadius: 3, fill: true, borderWidth: 2 }, { label: 'المصاريف', data: expVals, borderColor: '#f87171', backgroundColor: 'rgba(248,113,113,0.08)', tension: 0.4, pointRadius: 3, fill: true, borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#8e8d9a', font: { size: 11 } } }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + c.raw.toFixed(2) + ' د.أ' } } }, scales: { x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#55545f', font: { size: 10 } } }, y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#55545f', font: { size: 10 }, callback: v => v + 'د.أ' } } } } });
-            // table
+            // table — flat invoice-level rows (one row per invoice)
             const rows = exps.sort((a, b) => new Date(b.date) - new Date(a.date));
+            const flatRowsHtml = rows.map(e => {
+                const items = e.items || [];
+                const primaryCat = items[0]?.subcat || 'أخرى';
+                const hasMore = items.length > 1;
+                const catCol = catColor(primaryCat);
+                return `<tr>
+                    <td class="td-mono" style="font-size:11px">${e.date}</td>
+                    <td class="td-main">${e.desc}</td>
+                    <td><span class="badge" style="background:${catCol}22;color:${catCol}">${primaryCat}${hasMore ? ' +' : ''}</span></td>
+                    <td class="td-mono">${e.amount.toFixed(2)} د.أ</td>
+                </tr>`;
+            }).join('');
+
             document.getElementById('stmtTable').innerHTML = rows.length ? `
         <div class="table-hdr"><div class="table-title">تفاصيل المعاملات — ${MONTHS[fromM]} ${fromY} إلى ${MONTHS[toM]} ${toY}</div></div>
-        <table><thead><tr><th>التاريخ</th><th>الوصف</th><th>الفئة</th><th>المبلغ</th></tr></thead><tbody>
-        ${rows.map(e => `<tr><td class="td-mono" style="font-size:11px">${e.date}</td><td class="td-main">${e.desc}</td><td><span class="badge" style="background:var(--surface3);color:var(--text2)">${(e.items||[])[0]?.subcat || 'أخرى'}${(e.items||[]).length>1?' +':''}</span></td><td class="td-mono">${e.amount.toFixed(2)} د.أ</td></tr>`).join('')}
-        <tr style="font-weight:600"><td colspan="3" style="color:var(--text)">الإجمالي</td><td class="td-mono" style="color:var(--red)">${totalExp.toFixed(2)} د.أ</td></tr>
+        <table class="stmt-table"><thead><tr><th>التاريخ</th><th>الوصف</th><th>الفئة</th><th>المبلغ</th></tr></thead><tbody>
+        ${flatRowsHtml}
+        <tr class="stmt-grand-total"><td colspan="3">المجموع الكلي للفترة</td><td class="td-mono">${totalExp.toFixed(2)} د.أ</td></tr>
         </tbody></table>`: '<div class="empty">لا مصاريف في هذه الفترة</div>';
         }
         function printStatement() { window.print() }
@@ -3535,7 +4072,7 @@
             saveState(); closeModal('addIncome'); renderIncome(); renderOverview(); toast('تم إضافة مصدر الدخل ✓');
             document.getElementById('m-inc-name').value = ''; document.getElementById('m-inc-amount').value = '';
         }
-        
+
         let editingIncId = null;
         function openEditIncome(id) {
             const inc = state.incomeSources.find(i => i.id === id);
@@ -3602,7 +4139,7 @@
         function checkBudgetWarning(cat) {
             if (!state.budgets || !state.budgets[cat]) return;
             const limit = state.budgets[cat];
-            
+
             // Re-calculate spent on this specific subcat
             let spent = 0;
             state.expenses.filter(e => inRange(e.date)).forEach(e => {
@@ -3623,11 +4160,19 @@
             }
         }
 
-        function addInvItemRow() {
+        function addInvItemRow(prefill) {
             const container = document.getElementById('inv-items-container');
             const row = document.createElement('div');
             row.className = 'item-row';
             row.innerHTML = '<input class="inp" placeholder="اسم الصنف" oninput="updateInvTotal()" /><input class="inp" type="number" placeholder="1" value="1" min="0.01" step="0.01" oninput="updateInvTotal()" /><input class="inp" type="number" placeholder="0.00" min="0" step="0.01" oninput="updateInvTotal()" /><select class="inp">' + getCatOptions() + '</select><button class="remove-item-btn" onclick="this.closest(\'.item-row\').remove();updateInvTotal()">✕</button>';
+            if (prefill) {
+                const inputs = row.querySelectorAll('input');
+                const sel = row.querySelectorAll('select');
+                inputs[0].value = prefill.name || '';
+                inputs[1].value = prefill.qty ?? 1;
+                inputs[2].value = prefill.price ?? 0;
+                if (sel[0] && prefill.subcat) sel[0].value = prefill.subcat;
+            }
             container.appendChild(row);
             updateInvTotal();
         }
@@ -3643,7 +4188,7 @@
         }
 
         function saveExpenseFromModal() {
-            if(editingExpId) saveEditExpense();
+            if (editingExpId) saveEditExpense();
             else addExpense();
         }
 
@@ -3678,7 +4223,7 @@
             document.getElementById('m-exp-note').value = '';
             document.getElementById('inv-items-container').innerHTML = '';
             document.getElementById('inv-total-preview').textContent = '0.00 د.أ';
-            
+
             // Check budget for newly added subcats
             const modifiedCats = [...new Set(items.map(it => it.subcat))];
             modifiedCats.forEach(c => checkBudgetWarning(c));
@@ -3689,55 +4234,37 @@
             saveState(); renderExpTable(); renderOverview(); toast('تم الحذف');
         }
 
+        // Edit reuses the same modal as Add (modal-addExpense). The mode is
+        // distinguished by the `editingExpId` variable (null → add, id → edit).
         function openEditExpense(id) {
             const exp = state.expenses.find(e => e.id === id);
             if (!exp) return;
             editingExpId = id;
-            document.getElementById('e-exp-desc').value = exp.desc;
-            document.getElementById('e-exp-date').value = exp.date;
-            document.getElementById('e-exp-payment').value = exp.payment || 'نقدي';
-            document.getElementById('e-exp-note').value = exp.note || '';
-            const container = document.getElementById('einv-items-container');
+            document.getElementById('m-exp-desc').value = exp.desc || '';
+            document.getElementById('m-exp-date').value = exp.date || td();
+            document.getElementById('m-exp-payment').value = exp.payment || 'نقدي';
+            document.getElementById('m-exp-note').value = exp.note || '';
+            const container = document.getElementById('inv-items-container');
             container.innerHTML = '';
-            (exp.items || []).forEach(it => addEInvItemRow(it));
-            updateEInvTotal();
-            openModal('editExpense');
-        }
-
-        function addEInvItemRow(prefill) {
-            const container = document.getElementById('einv-items-container');
-            const row = document.createElement('div');
-            row.className = 'item-row';
-            row.innerHTML = '<input class="inp" placeholder="اسم الصنف" oninput="updateEInvTotal()" /><input class="inp" type="number" placeholder="1" value="1" min="0.01" step="0.01" oninput="updateEInvTotal()" /><input class="inp" type="number" placeholder="0.00" min="0" step="0.01" oninput="updateEInvTotal()" /><select class="inp">' + getCatOptions() + '</select><button class="remove-item-btn" onclick="this.closest(\'.item-row\').remove();updateEInvTotal()">✕</button>';
-            const inputs = row.querySelectorAll('input');
-            const sel = row.querySelectorAll('select');
-            if (prefill) { inputs[0].value = prefill.name; inputs[1].value = prefill.qty; inputs[2].value = prefill.price; sel[0].value = prefill.subcat; }
-            container.appendChild(row);
-            updateEInvTotal();
-        }
-
-        function updateEInvTotal() {
-            let total = 0;
-            document.querySelectorAll('#einv-items-container .item-row').forEach(row => {
-                const inputs = row.querySelectorAll('input');
-                total += (parseFloat(inputs[1]?.value) || 0) * (parseFloat(inputs[2]?.value) || 0);
-            });
-            const el = document.getElementById('einv-total-preview');
-            if (el) el.textContent = total.toFixed(2) + ' د.أ';
+            (exp.items || []).forEach(it => addInvItemRow(it));
+            if (!(exp.items || []).length) addInvItemRow();
+            updateInvTotal();
+            document.querySelector('#modal-addExpense .modal-title').textContent = 'تعديل مصروف تفصيلي';
+            document.getElementById('modal-addExpense').classList.add('open');
         }
 
         function saveEditExpense() {
             const exp = state.expenses.find(e => e.id === editingExpId);
             if (!exp) return;
-            const desc = document.getElementById('e-exp-desc').value.trim();
-            const date = document.getElementById('e-exp-date').value || td();
-            const payment = document.getElementById('e-exp-payment').value;
-            const note = document.getElementById('e-exp-note').value.trim();
+            const desc = document.getElementById('m-exp-desc').value.trim();
+            const date = document.getElementById('m-exp-date').value || td();
+            const payment = document.getElementById('m-exp-payment').value;
+            const note = document.getElementById('m-exp-note').value.trim();
 
             if (!desc) { toast('أدخل الوصف'); return; }
             const items = [];
             let valid = true;
-            document.querySelectorAll('#einv-items-container .item-row').forEach(row => {
+            document.querySelectorAll('#inv-items-container .item-row').forEach(row => {
                 const inputs = row.querySelectorAll('input');
                 const sel = row.querySelectorAll('select');
                 const name = inputs[0]?.value.trim();
@@ -3752,7 +4279,7 @@
 
             exp.desc = desc; exp.date = date; exp.payment = payment; exp.note = note; exp.items = items; exp.amount = amount;
 
-            saveState(); closeModal('editExpense'); editingExpId = null; renderExpTable(); renderOverview(); toast('تم التعديل ✓');
+            saveState(); closeModal('addExpense'); editingExpId = null; renderExpTable(); renderOverview(); toast('تم التعديل ✓');
         }
 
         function setShopFilter(subcat) { shopFilterCat = subcat; renderExpTable(); }
@@ -3816,7 +4343,7 @@
         function printFilteredExpenses() {
             const q = (document.getElementById('exp-search') || {}).value || '';
             let invoices = state.expenses.filter(e => {
-                return inRange(e.date) && (!q || (e.desc + (e.note || '') + (e.items||[]).map(i=>i.subcat).join('')).includes(q));
+                return inRange(e.date) && (!q || (e.desc + (e.note || '') + (e.items || []).map(i => i.subcat).join('')).includes(q));
             });
             const filtered = (shopFilterCat === 'all' ? invoices : invoices.filter(inv => (inv.items || []).some(it => it.subcat === shopFilterCat))).sort((a, b) => new Date(b.date) - new Date(a.date));
             const win = window.open('', '_blank');
@@ -3827,7 +4354,7 @@
             filtered.forEach(e => {
                 let amt = shopFilterCat === 'all' ? e.amount : (e.items || []).filter(it => it.subcat === shopFilterCat).reduce((s, it) => s + it.qty * it.price, 0);
                 t += amt;
-                win.document.write('<tr><td>' + e.date + '</td><td>' + e.desc + '</td><td>' + ((e.items||[])[0]?.subcat||'أخرى') + '</td><td>' + (e.payment || 'نقدي') + '</td><td>' + amt.toFixed(2) + ' د.أ</td></tr>');
+                win.document.write('<tr><td>' + e.date + '</td><td>' + e.desc + '</td><td>' + ((e.items || [])[0]?.subcat || 'أخرى') + '</td><td>' + (e.payment || 'نقدي') + '</td><td>' + amt.toFixed(2) + ' د.أ</td></tr>');
             });
             win.document.write('</tbody><tfoot><tr><th colspan="4">الإجمالي</th><th>' + t.toFixed(2) + ' د.أ</th></tr></tfoot></table><script>window.print();<\/script></body></html>');
             win.document.close();
@@ -3856,7 +4383,7 @@
             win.document.write(`<div class="hdr">
         <div>
             <h2>${inv.desc}</h2>
-            <div>الفئة: ${(inv.items||[])[0]?.subcat||'أخرى'} | الدفع: ${inv.payment || 'نقدي'}</div>
+            <div>الفئة: ${(inv.items || [])[0]?.subcat || 'أخرى'} | الدفع: ${inv.payment || 'نقدي'}</div>
         </div>
         <div>
             <h3>${inv.date}</h3>
@@ -3899,7 +4426,7 @@
             const q = (document.getElementById('exp-search') || {}).value || '';
 
             let invoices = state.expenses.filter(e => {
-                return inRange(e.date) && (!q || (e.desc + (e.note || '') + (e.items||[]).map(i=>i.subcat).join('')).includes(q));
+                return inRange(e.date) && (!q || (e.desc + (e.note || '') + (e.items || []).map(i => i.subcat).join('')).includes(q));
             }); const allSubcats = [...new
                 Set(invoices.flatMap(inv => (inv.items || []).map(it => it.subcat)))];
             const allAmt = invoices.reduce((s, inv) => s + inv.amount, 0);
@@ -3925,10 +4452,10 @@
             style="background:${col}22;color:${col}">${it.subcat}</span><span class="inv-item-price">${(it.qty * it.price).toFixed(2)} د.أ</span>
     </div>`;
                 }).join('');
-                
+
                 // Get primary subcat for badge
-                const primaryCat = (inv.items||[])[0]?.subcat || 'أخرى';
-                const hasMore = (inv.items||[]).length > 1;
+                const primaryCat = (inv.items || [])[0]?.subcat || 'أخرى';
+                const hasMore = (inv.items || []).length > 1;
 
                 return `<div class="invoice-card">
         <div class="invoice-hdr" onclick="toggleInvoice(${inv.id})">
@@ -3936,7 +4463,7 @@
             </div>
             <div class="invoice-info">
                 <div class="invoice-title">${inv.desc}</div>
-                <div class="invoice-meta">${inv.date} · ${primaryCat}${hasMore?' (+ متعدد)':''} · ${inv.payment || 'نقدي'}${inv.note ? ' · ' + inv.note : ''} · ${(inv.items || []).length} صنف</div>
+                <div class="invoice-meta">${inv.date} · ${primaryCat}${hasMore ? ' (+ متعدد)' : ''} · ${inv.payment || 'نقدي'}${inv.note ? ' · ' + inv.note : ''} · ${(inv.items || []).length} صنف</div>
             </div>
             <div class="invoice-total">${(shopFilterCat === 'all' ? inv.amount.toFixed(2) : displayTotal.toFixed(2))} د.أ</div><button class="del-btn" style="color:var(--text);margin-inline-end:4px"
                 onclick="event.stopPropagation();printInvoice(${inv.id})" title="تصدير">🖨</button><button
@@ -4046,9 +4573,7 @@
             </div>
         </div>`).join('') : `<div class="empty">لا اشتراكات ${freqLabel[freq]}ة</div>`;
             });
-            renderSubProgressBars('sub-progress-list');
-            renderRenewals('sub-renewals', 'sub-renew-count');
-            renderSubYearly();
+            renderSubTracker('sub-tracker-list', 'sub-tracker-fraction', 'sub-tracker-sub');
             renderSubCatBreakdown();
             // Init period inputs with month start/end if empty
             const fromEl = document.getElementById('sub-report-from');
@@ -4066,84 +4591,6 @@
             const m = String(d.getMonth() + 1).padStart(2, '0');
             const day = String(d.getDate()).padStart(2, '0');
             return `${d.getFullYear()}-${m}-${day}`;
-        }
-        let subYearlyChart = null;
-        function renderSubYearly() {
-            const canvas = document.getElementById('subYearlyChart');
-            if (!canvas) return;
-            const today = new Date();
-            const labels = [];
-            const dataDaily = [], dataMonthly = [], dataYearly = [];
-            // Build 12 months starting from current month
-            for (let i = 0; i < 12; i++) {
-                const m = new Date(today.getFullYear(), today.getMonth() + i, 1);
-                labels.push(MONTHS_SHORT[m.getMonth()] + ' ' + String(m.getFullYear()).slice(2));
-                const monthStart = new Date(m.getFullYear(), m.getMonth(), 1);
-                const monthEnd = new Date(m.getFullYear(), m.getMonth() + 1, 0);
-                let d = 0, mo = 0, y = 0;
-                (state.subscriptions || []).forEach(s => {
-                    if (!isSubInRange(s, monthStart, monthEnd)) return;
-                    if (s.freq === 'daily') d += s.amount * (monthEnd.getDate());
-                    else if (s.freq === 'monthly') mo += s.amount;
-                    else if (s.freq === 'yearly') {
-                        // Yearly: hits the month containing s.next (or future renewals)
-                        if (subRenewsInMonth(s, m)) y += s.amount;
-                    }
-                });
-                dataDaily.push(d);
-                dataMonthly.push(mo);
-                dataYearly.push(y);
-            }
-            if (subYearlyChart) subYearlyChart.destroy();
-            const ctx = canvas.getContext('2d');
-            subYearlyChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels,
-                    datasets: [
-                        { label: 'يومي', data: dataDaily, backgroundColor: '#f87171' },
-                        { label: 'شهري', data: dataMonthly, backgroundColor: '#7c6dfa' },
-                        { label: 'سنوي', data: dataYearly, backgroundColor: '#34d399' }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { font: { size: 11 } } },
-                        tooltip: { callbacks: { label: c => c.dataset.label + ': ' + c.raw.toFixed(2) + ' د.أ' } }
-                    },
-                    scales: {
-                        x: { stacked: true, ticks: { font: { size: 10 } } },
-                        y: { stacked: true, beginAtZero: true, ticks: { font: { size: 10 }, callback: v => v + ' د.أ' } }
-                    }
-                }
-            });
-            // Stats below
-            const total12 = dataDaily.concat(dataMonthly, dataYearly).reduce((s, v) => s + v, 0);
-            const avg = total12 / 12;
-            const peakIdx = dataDaily.map((d, i) => d + dataMonthly[i] + dataYearly[i])
-                .reduce((p, v, i, arr) => v > arr[p] ? i : p, 0);
-            const statsEl = document.getElementById('sub-yearly-stats');
-            if (statsEl) {
-                statsEl.innerHTML = `
-                    <div><span style="color:var(--text3)">الإجمالي السنوي:</span> <strong style="color:var(--accent2)">${total12.toFixed(0)} د.أ</strong></div>
-                    <div><span style="color:var(--text3)">متوسط شهري:</span> <strong>${avg.toFixed(0)} د.أ</strong></div>
-                    <div><span style="color:var(--text3)">أعلى شهر:</span> <strong style="color:var(--amber)">${labels[peakIdx]}</strong></div>
-                `;
-            }
-        }
-        function subRenewsInMonth(s, monthDate) {
-            // Determine if a yearly sub renews in given month
-            if (!s.next) return false;
-            const next = new Date(s.next);
-            const yearAhead = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
-            // Walk forward from s.next by 12 months until we hit/pass monthDate
-            let cur = new Date(next);
-            while (cur < new Date(yearAhead.getFullYear(), yearAhead.getMonth(), 1)) {
-                cur.setFullYear(cur.getFullYear() + 1);
-            }
-            return cur.getFullYear() === monthDate.getFullYear() && cur.getMonth() === monthDate.getMonth();
         }
         function isSubInRange(s, from, to) {
             // Sub is active in the range if start<=to and (end>=from or no end)
@@ -4504,7 +4951,7 @@
             const exps = state.expenses.filter(e => inRange(e.date));
             const byCat = {};
             exps.forEach(e => {
-                (e.items||[]).forEach(it => {
+                (e.items || []).forEach(it => {
                     const c = normCat(it.subcat);
                     byCat[c] = (byCat[c] || 0) + (it.qty * it.price);
                 });
@@ -4564,7 +5011,7 @@
         function renderCategories() {
             const byCat = {};
             state.expenses.forEach(e => {
-                (e.items||[]).forEach(it => {
+                (e.items || []).forEach(it => {
                     byCat[it.subcat] = (byCat[it.subcat] || 0) + 1;
                 });
             });
@@ -4590,7 +5037,7 @@
             document.getElementById('new-cat-name').value = '';
         }
         function delCat(name) {
-            if (state.expenses.some(e => (e.items||[]).some(it=>it.subcat===name))) { toast('لا يمكن حذف فئة بها مصاريف'); return; }
+            if (state.expenses.some(e => (e.items || []).some(it => it.subcat === name))) { toast('لا يمكن حذف فئة بها مصاريف'); return; }
             state.categories = state.categories.filter(c => c.name !== name);
             delete state.budgets[name];
             saveState(); populateCatSelects(); renderCategories();
@@ -4616,7 +5063,7 @@
             if (newName !== editingCatName) {
                 if (state.categories.find(x => x.name === newName)) { toast('الاسم موجود مسبقاً'); return; }
                 state.expenses.forEach(e => {
-                    (e.items||[]).forEach(it => { if(it.subcat === editingCatName) it.subcat = newName; });
+                    (e.items || []).forEach(it => { if (it.subcat === editingCatName) it.subcat = newName; });
                 });
                 if (state.subscriptions) state.subscriptions.forEach(s => {
                     if (s.cat === editingCatName) s.cat = newName;
@@ -4651,9 +5098,9 @@
             const cat = document.getElementById('exp-cat-sel')?.value || 'all';
             return state.expenses.filter(e => {
                 const [y, m] = e.date.split('-');
-                if (p === 'month' && (parseInt(m)-1 !== state.periodMonth || parseInt(y) !== state.periodYear)) return false;
+                if (p === 'month' && (parseInt(m) - 1 !== state.periodMonth || parseInt(y) !== state.periodYear)) return false;
                 if (p === 'year' && parseInt(y) !== state.periodYear) return false;
-                if (cat !== 'all' && !(e.items||[]).some(it=>it.subcat===cat)) return false;
+                if (cat !== 'all' && !(e.items || []).some(it => it.subcat === cat)) return false;
                 return true;
             });
         }
@@ -4673,7 +5120,7 @@
                 URL.createObjectURL(new Blob([content], { type })); a.download = filename; a.click();
         }
         function exportCSV() {
-            const rows = [['التاريخ', 'الوصف', 'الفئة', 'المبلغ'], ...getExpData().map(e => [e.date, e.desc, (e.items||[])[0]?.subcat||'أخرى',
+            const rows = [['التاريخ', 'الوصف', 'الفئة', 'المبلغ'], ...getExpData().map(e => [e.date, e.desc, (e.items || [])[0]?.subcat || 'أخرى',
             e.amount])];
             dl('\uFEFF' + rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n'), 'مصاريف.csv',
                 'text/csv;charset=utf-8');
@@ -4686,7 +5133,7 @@
         }
         function exportHTML() {
             const data = getExpData(); const total = data.reduce((s, e) => s + e.amount, 0);
-            const byCat = {}; data.forEach(e => { (e.items||[]).forEach(it=>{ byCat[it.subcat] = (byCat[it.subcat] || 0) + (it.qty*it.price); }) });
+            const byCat = {}; data.forEach(e => { (e.items || []).forEach(it => { byCat[it.subcat] = (byCat[it.subcat] || 0) + (it.qty * it.price); }) });
             const inc = monthlyIncome();
             const html = `
             <!DOCTYPE html>
@@ -4810,7 +5257,7 @@
                         ${data.sort((a, b) => new Date(b.date) - new Date(a.date)).map(e => `<tr>
                             <td>${e.date}</td>
                             <td>${e.desc}</td>
-                            <td>${(e.items||[])[0]?.subcat||'أخرى'}</td>
+                            <td>${(e.items || [])[0]?.subcat || 'أخرى'}</td>
                             <td>${e.amount.toFixed(2)} د.أ</td>
                         </tr>`).join('')}
                         <tr style="font-weight:700">
@@ -4859,9 +5306,9 @@
         // MODALS + TOAST
         // ═══════════════════════════════════════
         function openModal(name) {
-            if (name === 'addExpense') { 
+            if (name === 'addExpense') {
                 document.getElementById('m-exp-date').value = td();
-                editingExpId = null; 
+                editingExpId = null;
                 document.getElementById('m-exp-desc').value = '';
                 document.getElementById('m-exp-note').value = '';
                 document.getElementById('inv-items-container').innerHTML = '';
@@ -4938,31 +5385,246 @@
         function toggleTheme() {
             const cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
             const next = cur === 'light' ? 'dark' : 'light';
-            try { localStorage.setItem('theme', next); } catch (e) {}
+            try { localStorage.setItem('theme', next); } catch (e) { }
             applyTheme(next);
         }
         (function initTheme() {
             let saved = 'light';
-            try { saved = localStorage.getItem('theme') || 'light'; } catch (e) {}
+            try { saved = localStorage.getItem('theme') || 'light'; } catch (e) { }
             applyTheme(saved);
         })();
+
+        // ═══════════════════════════════════════
+        // NOTIFICATIONS
+        // ═══════════════════════════════════════
+        function notifSupported() { return 'Notification' in window; }
+        function updateNotifBtn() {
+            const ic = document.getElementById('notifIcon');
+            const lb = document.getElementById('notifLbl');
+            if (!ic || !lb) return;
+            if (!notifSupported()) { ic.textContent = '🔕'; lb.textContent = 'غير مدعوم'; return; }
+            if (Notification.permission === 'granted') { ic.textContent = '🔔'; lb.textContent = 'التنبيهات مفعّلة'; }
+            else if (Notification.permission === 'denied') { ic.textContent = '🔕'; lb.textContent = 'التنبيهات محظورة'; }
+            else { ic.textContent = '🔔'; lb.textContent = 'تفعيل التنبيهات'; }
+        }
+        async function toggleNotifications() {
+            if (!notifSupported()) { toast('المتصفح لا يدعم التنبيهات'); return; }
+            if (Notification.permission === 'granted') {
+                toast('التنبيهات مفعّلة بالفعل ✓');
+                checkSubscriptionAlerts(true);
+                return;
+            }
+            if (Notification.permission === 'denied') {
+                toast('التنبيهات محظورة — فعّلها من إعدادات المتصفح');
+                return;
+            }
+            const result = await Notification.requestPermission();
+            updateNotifBtn();
+            if (result === 'granted') {
+                toast('تم تفعيل التنبيهات ✓');
+                // Show a confirmation notification
+                try {
+                    new Notification('مصاريفي', {
+                        body: 'تم تفعيل التنبيهات. ستصلك إشعارات قبل تجديد الاشتراكات بأسبوع.',
+                        icon: undefined,
+                        tag: 'notif-enabled'
+                    });
+                } catch (e) { }
+                checkSubscriptionAlerts(true);
+            } else {
+                toast('لم يتم منح الإذن');
+            }
+        }
+        function showSubNotification(s, days) {
+            const dayLbl = days < 0 ? `متأخر ${Math.abs(days)} يوم`
+                : days === 0 ? 'اليوم'
+                    : days === 1 ? 'غداً'
+                        : `بعد ${days} أيام`;
+            const title = `🔔 تذكير: ${s.name}`;
+            const body = `يتجدد ${dayLbl} — ${s.amount.toFixed(2)} د.أ`;
+            if (notifSupported() && Notification.permission === 'granted') {
+                try {
+                    new Notification(title, { body, tag: `sub-${s.id}-${days}` });
+                    return;
+                } catch (e) { }
+            }
+            // Fallback to in-app toast
+            toast(`${title} — ${body}`);
+        }
+        // Returns array of trigger days (7, 5, 3, 1, 0) when alerts should fire.
+        const ALERT_DAYS = [7, 5, 3, 1, 0];
+        function checkSubscriptionAlerts(force) {
+            const today = new Date(); today.setHours(0, 0, 0, 0);
+            const todayKey = ymd(today);
+            const storageKey = 'subAlerts_' + todayKey;
+            let shown = {};
+            try { shown = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch (e) { }
+
+            // Clean up old day keys (>2 days back)
+            try {
+                for (let i = 0; i < localStorage.length; i++) {
+                    const k = localStorage.key(i);
+                    if (k && k.startsWith('subAlerts_') && k !== storageKey) {
+                        const dk = k.replace('subAlerts_', '');
+                        const dDate = new Date(dk);
+                        if (!isNaN(dDate) && (today - dDate) > 2 * 86400000) {
+                            localStorage.removeItem(k); i--;
+                        }
+                    }
+                }
+            } catch (e) { }
+
+            (state.subscriptions || []).filter(s => s.next && isSubActive(s)).forEach(s => {
+                const next = new Date(s.next); next.setHours(0, 0, 0, 0);
+                const days = Math.round((next - today) / 86400000);
+                if (!ALERT_DAYS.includes(days) && days >= 0) return;
+                const overdue = days < 0;
+                const triggerKey = `${s.id}_${overdue ? 'over' : days}`;
+                if (shown[triggerKey] && !force) return;
+                showSubNotification(s, days);
+                shown[triggerKey] = Date.now();
+            });
+            try { localStorage.setItem(storageKey, JSON.stringify(shown)); } catch (e) { }
+        }
+
+        // ═══════════════════════════════════════
+        // MONTHLY EVALUATION
+        // ═══════════════════════════════════════
+        function renderMonthlyEvaluation() {
+            const el = document.getElementById('monthly-evaluation');
+            const periodEl = document.getElementById('eval-period');
+            if (!el) return;
+
+            // Always evaluate the CURRENT calendar month regardless of period filter
+            const now = new Date();
+            const curY = now.getFullYear(), curM = now.getMonth();
+            const curYM = `${curY}-${String(curM + 1).padStart(2, '0')}`;
+            const prevDate = new Date(curY, curM - 1, 1);
+            const prevYM = `${prevDate.getFullYear()}-${String(prevDate.getMonth() + 1).padStart(2, '0')}`;
+
+            if (periodEl) periodEl.textContent = `${MONTHS[curM]} ${curY}`;
+
+            const curExps = state.expenses.filter(e => e.date.startsWith(curYM));
+            const prevExps = state.expenses.filter(e => e.date.startsWith(prevYM));
+            const curTotal = curExps.reduce((s, e) => s + e.amount, 0);
+            const prevTotal = prevExps.reduce((s, e) => s + e.amount, 0);
+            const subMonthly = calcSubMonthly();
+            const loanMonthly = state.loans ? state.loans.reduce((s, l) => s + l.monthly, 0) : 0;
+            const inc = state.incomeSources.reduce((s, src) => s + src.amount, 0) - calcFixedDeductions();
+            const totalOut = curTotal + subMonthly + loanMonthly;
+            const savings = inc - totalOut;
+            const savingsRate = inc > 0 ? (savings / inc * 100) : 0;
+
+            // Per-category spending current month
+            const curByCat = {};
+            curExps.forEach(e => (e.items || []).forEach(it => {
+                const c = normCat(it.subcat);
+                curByCat[c] = (curByCat[c] || 0) + (it.qty * it.price);
+            }));
+            const prevByCat = {};
+            prevExps.forEach(e => (e.items || []).forEach(it => {
+                const c = normCat(it.subcat);
+                prevByCat[c] = (prevByCat[c] || 0) + (it.qty * it.price);
+            }));
+
+            // Find wasteful (>110% of budget)
+            const wasteful = [];
+            Object.keys(state.budgets || {}).forEach(cat => {
+                const spent = curByCat[cat] || 0;
+                const bud = parseFloat(state.budgets[cat]) || 0;
+                if (bud <= 0) return;
+                const pct = spent / bud * 100;
+                const diff = spent - bud;
+                if (pct > 110) wasteful.push({ cat, spent, bud, pct, diff });
+            });
+            wasteful.sort((a, b) => b.diff - a.diff);
+
+            // Biggest month-over-month changes (only categories with prev > 0)
+            const movers = [];
+            Object.keys(curByCat).forEach(c => {
+                const cur = curByCat[c] || 0;
+                const prev = prevByCat[c] || 0;
+                if (prev <= 0) return;
+                movers.push({ cat: c, cur, prev, diff: cur - prev, pct: ((cur - prev) / prev) * 100 });
+            });
+            movers.sort((a, b) => Math.abs(b.diff) - Math.abs(a.diff));
+            const topRise = movers.filter(m => m.diff > 0)[0];
+            const topDrop = movers.filter(m => m.diff < 0)[0];
+
+            // Overall grade
+            let grade, gradeCol, gradeLbl, gradeBg;
+            if (savings < 0) { grade = 'D'; gradeCol = 'var(--red)'; gradeLbl = 'يحتاج مراجعة'; gradeBg = 'rgba(248,113,113,0.15)'; }
+            else if (savingsRate < 10) { grade = 'C'; gradeCol = 'var(--orange)'; gradeLbl = 'مقبول'; gradeBg = 'rgba(251,146,60,0.15)'; }
+            else if (savingsRate < 20) { grade = 'B'; gradeCol = 'var(--amber)'; gradeLbl = 'جيد'; gradeBg = 'rgba(251,191,36,0.15)'; }
+            else if (savingsRate < 35) { grade = 'A'; gradeCol = 'var(--green)'; gradeLbl = 'جيد جداً'; gradeBg = 'rgba(52,211,153,0.15)'; }
+            else { grade = 'A+'; gradeCol = 'var(--green)'; gradeLbl = 'ممتاز'; gradeBg = 'rgba(52,211,153,0.2)'; }
+
+            const monthDiff = curTotal - prevTotal;
+            const monthDiffPct = prevTotal > 0 ? (monthDiff / prevTotal) * 100 : 0;
+            const cmpIcon = monthDiff > 0 ? '⬆️' : monthDiff < 0 ? '⬇️' : '➡️';
+            const cmpCol = monthDiff > 0 ? 'var(--red)' : monthDiff < 0 ? 'var(--green)' : 'var(--text3)';
+            const cmpLbl = prevTotal > 0 ? `${cmpIcon} ${monthDiff > 0 ? '+' : ''}${monthDiffPct.toFixed(0)}%` : '—';
+
+            const wastefulHtml = wasteful.length ? wasteful.slice(0, 6).map(w => `
+                <div class="eval-item">
+                    <div class="eval-item-name"><span style="color:${catColor(w.cat)}">●</span> ${w.cat}</div>
+                    <div class="eval-item-val" style="color:var(--red)">+${w.diff.toFixed(0)} د.أ (${(w.pct - 100).toFixed(0)}%)</div>
+                </div>`).join('') : '<div style="font-size:11px;color:var(--text3);padding:6px 0">لا تجاوزات هذا الشهر 🎉</div>';
+
+            const moversHtml = (topRise || topDrop) ? `
+                <div style="margin-top:14px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;font-size:12px;display:flex;flex-direction:column;gap:6px">
+                    <div style="font-weight:600;color:var(--text2);font-size:11px;font-family:'JetBrains Mono',monospace;letter-spacing:.3px;margin-bottom:4px">مقارنة بالشهر السابق</div>
+                    ${topRise ? `<div style="display:flex;justify-content:space-between"><span>⬆️ زيادة في ${topRise.cat}</span><span style="color:var(--red);font-family:'JetBrains Mono',monospace">+${topRise.diff.toFixed(0)} د.أ</span></div>` : ''}
+                    ${topDrop ? `<div style="display:flex;justify-content:space-between"><span>⬇️ نقص في ${topDrop.cat}</span><span style="color:var(--green);font-family:'JetBrains Mono',monospace">-${Math.abs(topDrop.diff).toFixed(0)} د.أ</span></div>` : ''}
+                </div>` : '';
+
+            el.innerHTML = `
+                <div class="eval-wrap">
+                    <div class="eval-grade" style="background:${gradeBg};color:${gradeCol};border:2px solid ${gradeCol}">
+                        <div class="eval-grade-letter">${grade}</div>
+                        <div class="eval-grade-lbl">${gradeLbl}</div>
+                    </div>
+                    <div class="eval-stats">
+                        <div class="eval-stat">
+                            <div class="eval-stat-lbl">معدل التوفير</div>
+                            <div class="eval-stat-val" style="color:${savings >= 0 ? 'var(--green)' : 'var(--red)'}">${savingsRate.toFixed(0)}%</div>
+                        </div>
+                        <div class="eval-stat">
+                            <div class="eval-stat-lbl">المدّخر</div>
+                            <div class="eval-stat-val" style="color:${savings >= 0 ? 'var(--green)' : 'var(--red)'}">${savings.toFixed(0)}<span style="font-size:11px;color:var(--text3);font-weight:500"> د.أ</span></div>
+                        </div>
+                        <div class="eval-stat">
+                            <div class="eval-stat-lbl">vs الشهر السابق</div>
+                            <div class="eval-stat-val" style="color:${cmpCol}">${cmpLbl}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="eval-lists eval-lists--single">
+                    <div class="eval-list">
+                        <div class="eval-list-title" style="color:var(--red)">⚠️ تبذير (تجاوز الميزانية)</div>
+                        ${wastefulHtml}
+                    </div>
+                </div>
+                ${moversHtml}
+            `;
+        }
 
         // ═══════════════════════════════════════
         // INIT
         // ═══════════════════════════════════════
         function processAutoRenewals() {
             // For subscriptions with autoRenew, advance the next date forward if it's in the past
-            const today = new Date(); today.setHours(0,0,0,0);
+            const today = new Date(); today.setHours(0, 0, 0, 0);
             let changed = false;
             (state.subscriptions || []).forEach(s => {
                 if (s.autoRenew === false) return; // explicit opt-out
                 if (!s.next) return;
                 // If subscription has an end date and it's already passed, do not renew
                 if (s.end) {
-                    const endD = new Date(s.end); endD.setHours(0,0,0,0);
+                    const endD = new Date(s.end); endD.setHours(0, 0, 0, 0);
                     if (endD < today) return;
                 }
-                let next = new Date(s.next); next.setHours(0,0,0,0);
+                let next = new Date(s.next); next.setHours(0, 0, 0, 0);
                 while (next < today) {
                     if (s.freq === 'daily') next.setDate(next.getDate() + 1);
                     else if (s.freq === 'yearly') next.setFullYear(next.getFullYear() + 1);
@@ -4991,6 +5653,11 @@
             else renderOverview();
             // re-apply theme labels after DOM ready
             applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
+            // Sync notification button label + run alerts (silent if not granted)
+            updateNotifBtn();
+            checkSubscriptionAlerts();
+            // Re-check every 30 minutes so new alerts fire while the app is open
+            setInterval(checkSubscriptionAlerts, 30 * 60 * 1000);
         }
         initApp();
     </script>
