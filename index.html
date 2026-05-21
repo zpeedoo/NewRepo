@@ -593,34 +593,70 @@
 
         /* Consumption-rate warning animations (escalate as we approach/cross 85%) */
         @keyframes consumptionWarnPulse {
-            0%, 100% { box-shadow: 0 0 0 0 var(--warn-col, rgba(251, 146, 60, 0.55)); }
-            50%      { box-shadow: 0 0 0 14px rgba(0, 0, 0, 0); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 var(--warn-col, rgba(251, 146, 60, 0.55));
+            }
+
+            50% {
+                box-shadow: 0 0 0 14px rgba(0, 0, 0, 0);
+            }
         }
+
         @keyframes consumptionWarnShake {
-            0%, 100% { transform: translateX(0); }
-            20%      { transform: translateX(-3px); }
-            40%      { transform: translateX(3px); }
-            60%      { transform: translateX(-2px); }
-            80%      { transform: translateX(2px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20% {
+                transform: translateX(-3px);
+            }
+
+            40% {
+                transform: translateX(3px);
+            }
+
+            60% {
+                transform: translateX(-2px);
+            }
+
+            80% {
+                transform: translateX(2px);
+            }
         }
+
         @keyframes consumptionTextGlow {
-            0%, 100% { text-shadow: 0 0 0 transparent; }
-            50%      { text-shadow: 0 0 12px var(--warn-col, rgba(251, 146, 60, 0.8)); }
+
+            0%,
+            100% {
+                text-shadow: 0 0 0 transparent;
+            }
+
+            50% {
+                text-shadow: 0 0 12px var(--warn-col, rgba(251, 146, 60, 0.8));
+            }
         }
+
         .circ-prog-wrap.consume-near {
             --warn-col: rgba(251, 146, 60, 0.55);
             border-radius: 50%;
             animation: consumptionWarnPulse 1.8s ease-out infinite;
         }
+
         .circ-prog-wrap.consume-near .circ-val {
             animation: consumptionTextGlow 1.8s ease-in-out infinite;
         }
+
         .circ-prog-wrap.consume-critical {
             --warn-col: rgba(248, 113, 113, 0.65);
             border-radius: 50%;
             animation: consumptionWarnPulse 1.1s ease-out infinite,
-                       consumptionWarnShake 0.9s ease-in-out infinite;
+                consumptionWarnShake 0.9s ease-in-out infinite;
         }
+
         .circ-prog-wrap.consume-critical .circ-val {
             animation: consumptionTextGlow 1.1s ease-in-out infinite;
         }
@@ -1757,8 +1793,27 @@
         .sub-tracker-title {
             font-size: 14px;
             font-weight: 600;
-            color: var(--text);
             margin-bottom: 2px;
+            background: linear-gradient(90deg, var(--text) 0%, var(--text) 40%, var(--accent2) 50%, var(--text) 60%, var(--text) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShimmer 10s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes textShimmer {
+            0% {
+                background-position: 200% center;
+            }
+
+            12% {
+                background-position: -200% center;
+            }
+
+            100% {
+                background-position: -200% center;
+            }
         }
 
         .sub-tracker-subtitle {
@@ -2099,6 +2154,7 @@
             gap: 12px;
             margin-top: 18px;
         }
+
         .eval-lists.eval-lists--single {
             grid-template-columns: 1fr;
         }
@@ -3174,6 +3230,49 @@
         const db = firebase.database();
 
         async function loadState() {
+            // ── CATEGORY MIGRATION v2 HELPERS ──
+            const CAT_MIGRATION = {
+                'طعام': 'بقالة وسوبرماركت',
+                'مواصلات': 'وقود ومواصلات',
+                'فواتير': 'فواتير وخدمات',
+                'ترفيه': 'ترفيه وسفر',
+                'صحة': 'صحة وأدوية',
+                'تعليم': 'مصاريف الأولاد والمدارس',
+                'تسوق': 'تسوق وملابس',
+                'سيارة': 'صيانة السيارة وتأمينها',
+                'إيجار': 'إيجار / قسط البيت',
+                'ديون': 'قروض وأقساط',
+                'المصاريف الشهرية': 'فواتير وخدمات',
+                'مصاريف السيارة': 'صيانة السيارة وتأمينها',
+                'مصاريف المدارس': 'مصاريف الأولاد والمدارس',
+                'الحارس': 'خدم منزلية',
+                'اخرى': 'أخرى',
+                'غير مصنفة': 'أخرى'
+            };
+            const NEW_CATS = [
+                { name: 'إيجار / قسط البيت', color: '#818cf8' },
+                { name: 'فواتير وخدمات', color: '#fb923c' },
+                { name: 'صيانة المنزل', color: '#0ea5e9' },
+                { name: 'بقالة وسوبرماركت', color: '#34d399' },
+                { name: 'مطاعم وقهوة', color: '#f59e0b' },
+                { name: 'خدم منزلية', color: '#8b5cf6' },
+                { name: 'وقود ومواصلات', color: '#06b6d4' },
+                { name: 'صيانة السيارة وتأمينها', color: '#fb7185' },
+                { name: 'مصاريف الأولاد والمدارس', color: '#3b82f6' },
+                { name: 'صحة وأدوية', color: '#10b981' },
+                { name: 'تسوق وملابس', color: '#a78bfa' },
+                { name: 'ترفيه وسفر', color: '#f472b6' },
+                { name: 'قروض وأقساط', color: '#facc15' },
+                { name: 'أخرى', color: '#94a3b8' }
+            ];
+            const NEW_CAT_SET = new Set(NEW_CATS.map(c => c.name));
+            const remap = name => {
+                const n = (name || '').toString().trim();
+                if (NEW_CAT_SET.has(n)) return n;
+                if (CAT_MIGRATION[n]) return CAT_MIGRATION[n];
+                return 'أخرى';
+            };
+
             const processLoadedState = (p) => {
                 state.expenses = p.expenses ? Object.values(p.expenses) : [];
                 state.freelanceLog = p.freelanceLog ? Object.values(p.freelanceLog) : [];
@@ -3279,6 +3378,91 @@
                     });
                 });
                 if (p.nextId && p.nextId > state.nextId) state.nextId = p.nextId;
+
+                // ── MIGRATIONS TO RUN ON LOAD ──
+
+                // Migrate categories list to new schema (preserve user-added custom categories)
+                const hasOldCats = state.categories.some(c => CAT_MIGRATION[c.name] !== undefined);
+                const missingNew = NEW_CATS.some(nc => !state.categories.find(c => c.name === nc.name));
+                if (hasOldCats || missingNew) {
+                    const customCats = state.categories.filter(c =>
+                        !NEW_CAT_SET.has(c.name) && CAT_MIGRATION[c.name] === undefined
+                    );
+                    state.categories = [...NEW_CATS, ...customCats];
+                    updatedIds = true;
+                }
+
+                // Migrate expense item subcategories
+                state.expenses.forEach(e => {
+                    (e.items || []).forEach(it => {
+                        const before = it.subcat;
+                        const after = remap(before);
+                        if (before !== after) { it.subcat = after; updatedIds = true; }
+
+                        // Clean up any legacy corrupt 'بنزين' -> 'اتصالات' mappings in their historical database
+                        if (it.name && it.name.trim().toLowerCase().includes('بنزين') && it.subcat !== 'بنزين / وقود') {
+                            it.subcat = 'بنزين / وقود';
+                            updatedIds = true;
+                        }
+                    });
+                });
+
+                // Migrate generic expense subcategories to granular detailed subcategories based on keywords
+                let migratedDetailedCount = 0;
+                state.expenses.forEach(e => {
+                    (e.items || []).forEach(it => {
+                        const isMainOrGeneric = !it.subcat ||
+                            it.subcat === 'أخرى' ||
+                            it.subcat === 'اخرى' ||
+                            state.categories.some(c => c.name === it.subcat);
+
+                        if (isMainOrGeneric && it.name) {
+                            const nameLower = it.name.trim().toLowerCase();
+                            for (const mapping of ITEM_AUTO_MAP) {
+                                for (const kw of mapping.keywords) {
+                                    if (nameLower.includes(kw)) {
+                                        const oldSub = it.subcat;
+                                        it.subcat = mapping.subcat;
+                                        if (oldSub !== it.subcat) {
+                                            migratedDetailedCount++;
+                                            updatedIds = true;
+                                        }
+                                        return; // matched, skip other keywords
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+                if (migratedDetailedCount > 0) {
+                    console.log(`Migrated ${migratedDetailedCount} old invoice items to granular subcategories!`);
+                }
+
+                // Migrate subscription categories
+                (state.subscriptions || []).forEach(s => {
+                    const before = s.cat;
+                    const after = remap(before);
+                    if (before !== after) { s.cat = after; updatedIds = true; }
+                });
+
+                // Migrate budget keys
+                if (state.budgets) {
+                    const newBudgets = {};
+                    let budgetChanged = false;
+                    Object.keys(state.budgets).forEach(k => {
+                        const nk = remap(k);
+                        if (nk !== k) budgetChanged = true;
+                        newBudgets[nk] = (newBudgets[nk] || 0) + (parseFloat(state.budgets[k]) || 0);
+                    });
+                    if (budgetChanged) {
+                        state.budgets = newBudgets;
+                        updatedIds = true;
+                    }
+                }
+
+                // Train the self-learning model
+                trainModel();
+
                 return updatedIds;
             };
 
@@ -3294,7 +3478,8 @@
             db.ref('state').once('value').then(snapshot => {
                 const p = snapshot.val();
                 if (p) {
-                    processLoadedState(p);
+                    const dbNeedsSave = processLoadedState(p);
+                    if (dbNeedsSave) saveState();
                     const active = document.querySelector('.page.active');
                     if (active) {
                         const id = active.id.replace('page-', '');
@@ -3306,92 +3491,11 @@
                 console.error("Firebase fetch error", err);
             });
 
-            // ── CATEGORY MIGRATION v2 ──
-            // Map old category names to the new unified list
-            const CAT_MIGRATION = {
-                'طعام': 'بقالة وسوبرماركت',
-                'مواصلات': 'وقود ومواصلات',
-                'فواتير': 'فواتير وخدمات',
-                'ترفيه': 'ترفيه وسفر',
-                'صحة': 'صحة وأدوية',
-                'تعليم': 'مصاريف الأولاد والمدارس',
-                'تسوق': 'تسوق وملابس',
-                'سيارة': 'صيانة السيارة وتأمينها',
-                'إيجار': 'إيجار / قسط البيت',
-                'ديون': 'قروض وأقساط',
-                'المصاريف الشهرية': 'فواتير وخدمات',
-                'مصاريف السيارة': 'صيانة السيارة وتأمينها',
-                'مصاريف المدارس': 'مصاريف الأولاد والمدارس',
-                'الحارس': 'خدم منزلية',
-                'اخرى': 'أخرى',
-                'غير مصنفة': 'أخرى'
-            };
-            const NEW_CATS = [
-                { name: 'إيجار / قسط البيت', color: '#818cf8' },
-                { name: 'فواتير وخدمات', color: '#fb923c' },
-                { name: 'صيانة المنزل', color: '#0ea5e9' },
-                { name: 'بقالة وسوبرماركت', color: '#34d399' },
-                { name: 'مطاعم وقهوة', color: '#f59e0b' },
-                { name: 'خدم منزلية', color: '#8b5cf6' },
-                { name: 'وقود ومواصلات', color: '#06b6d4' },
-                { name: 'صيانة السيارة وتأمينها', color: '#fb7185' },
-                { name: 'مصاريف الأولاد والمدارس', color: '#3b82f6' },
-                { name: 'صحة وأدوية', color: '#10b981' },
-                { name: 'تسوق وملابس', color: '#a78bfa' },
-                { name: 'ترفيه وسفر', color: '#f472b6' },
-                { name: 'قروض وأقساط', color: '#facc15' },
-                { name: 'أخرى', color: '#94a3b8' }
-            ];
-            const NEW_CAT_SET = new Set(NEW_CATS.map(c => c.name));
-            const remap = name => {
-                const n = (name || '').toString().trim();
-                if (NEW_CAT_SET.has(n)) return n;
-                if (CAT_MIGRATION[n]) return CAT_MIGRATION[n];
-                return 'أخرى';
-            };
-
-            // Migrate categories list to new schema (preserve user-added custom categories)
-            const hasOldCats = state.categories.some(c => CAT_MIGRATION[c.name] !== undefined);
-            const missingNew = NEW_CATS.some(nc => !state.categories.find(c => c.name === nc.name));
-            if (hasOldCats || missingNew) {
-                // Keep custom categories that user added (not in old list and not in new list)
-                const customCats = state.categories.filter(c =>
-                    !NEW_CAT_SET.has(c.name) && CAT_MIGRATION[c.name] === undefined
-                );
-                state.categories = [...NEW_CATS, ...customCats];
-                needsSave = true;
-            }
-
-            // Migrate expense item subcategories
-            state.expenses.forEach(e => {
-                (e.items || []).forEach(it => {
-                    const before = it.subcat;
-                    const after = remap(before);
-                    if (before !== after) { it.subcat = after; needsSave = true; }
-                });
-            });
-
-            // Migrate subscription categories
-            (state.subscriptions || []).forEach(s => {
-                const before = s.cat;
-                const after = remap(before);
-                if (before !== after) { s.cat = after; needsSave = true; }
-            });
-
-            // Migrate budget keys
-            if (state.budgets) {
-                const newBudgets = {};
-                Object.keys(state.budgets).forEach(k => {
-                    const nk = remap(k);
-                    newBudgets[nk] = (newBudgets[nk] || 0) + (parseFloat(state.budgets[k]) || 0);
-                });
-                state.budgets = newBudgets;
-            }
-
             if (needsSave) saveState();
         }
 
         async function saveState() {
+            trainModel();
             try {
                 await db.ref('state').set(state);
             } catch (e) { console.error("Firebase save error", e); }
@@ -3568,10 +3672,10 @@
             //   >= 85% → red pulsing + shake (critical)
             const consumeClass = spentPct >= 85 ? 'consume-critical'
                 : spentPct >= 80 ? 'consume-near'
-                : '';
+                    : '';
             const consumeTitle = spentPct >= 85 ? '⚠️ معدل الاستهلاك من الدخل'
                 : spentPct >= 80 ? '🔔 معدل الاستهلاك من الدخل'
-                : 'معدل الاستهلاك من الدخل';
+                    : 'معدل الاستهلاك من الدخل';
 
             // 2. Render Loan Dashbaord
             const offsetLoan = circumference - (loanPct / 100) * circumference;
@@ -3584,7 +3688,7 @@
                         <div class="circ-prog-wrap ${consumeClass}">
                             <svg width="120" height="120" viewBox="0 0 120 120">
                                 <circle cx="60" cy="60" r="${radius}" fill="none" stroke="var(--surface3)" stroke-width="8" />
-                                <circle cx="60" cy="60" r="${radius}" fill="none" stroke="${dashCol}" stroke-width="8" stroke-dasharray="${circumference}" stroke-dashoffset="${offsetCons}" stroke-linecap="round" style="transition: stroke-dashoffset 1s ease-in-out;" />
+                                <circle cx="60" cy="60" r="${radius}" fill="none" stroke="${dashCol}" stroke-width="8" stroke-dasharray="${circumference}" stroke-dashoffset="${offsetCons}" stroke-linecap="round" style="transition: stroke-dashoffset 2.5s ease-in-out;" />
                             </svg>
                             <div class="circ-content">
                                 <div class="circ-val" style="color:${dashCol}">${spentPct.toFixed(1)}%</div>
@@ -3613,7 +3717,7 @@
                         <div class="circ-prog-wrap">
                             <svg width="120" height="120" viewBox="0 0 120 120">
                                 <circle cx="60" cy="60" r="${radius}" fill="none" stroke="var(--surface3)" stroke-width="8" />
-                                <circle cx="60" cy="60" r="${radius}" fill="none" stroke="${loanCol}" stroke-width="8" stroke-dasharray="${circumference}" stroke-dashoffset="${offsetLoan}" stroke-linecap="round" style="transition: stroke-dashoffset 1s ease-in-out;" />
+                                <circle cx="60" cy="60" r="${radius}" fill="none" stroke="${loanCol}" stroke-width="8" stroke-dasharray="${circumference}" stroke-dashoffset="${offsetLoan}" stroke-linecap="round" style="transition: stroke-dashoffset 2.5s ease-in-out;" />
                             </svg>
                             <div class="circ-content">
                                 <div class="circ-val">${loanPct.toFixed(1)}%</div>
@@ -3786,7 +3890,9 @@
         function normCat(name) {
             const v = (name || '').toString().trim();
             if (v === 'undefined' || v === 'null' || !v || v === 'غير مصنفة' || v === 'اخرى') return 'أخرى';
-            return v;
+            if (SUB_TO_MAIN_CAT[v]) return SUB_TO_MAIN_CAT[v];
+            if (state.categories.find(c => c.name === v)) return v;
+            return 'أخرى';
         }
         function catColor(name) { return (state.categories.find(c => c.name === name) || { color: '#888' }).color }
         function renderDonut(exps, shopInvoices) {
@@ -4118,9 +4224,352 @@
         // ═══════════════════════════════════════
         //  EXPENSES (DETAILED)
         // ═══════════════════════════════════════
-        function shopSubcatColor(n) { return catColor(n); }
-        function shopSubcatIcon(n) { return '🏷️'; }
-        function getCatOptions() { return state.categories.map(c => '<option value="' + c.name + '">' + c.name + '</option>').join(''); }
+        const SUB_TO_MAIN_CAT = {
+            // بقالة وسوبرماركت
+            'خضار وفواكه': 'بقالة وسوبرماركت',
+            'ألبان وأجبان': 'بقالة وسوبرماركت',
+            'مخابز ومعجنات': 'بقالة وسوبرماركت',
+            'لحوم ودواجن': 'بقالة وسوبرماركت',
+            'معلبات ومواد تموينية': 'بقالة وسوبرماركت',
+            'حلويات وتسالي': 'بقالة وسوبرماركت',
+            'مشروبات ومياه': 'بقالة وسوبرماركت',
+            'منظفات وعناية شخصية': 'بقالة وسوبرماركت',
+            'أدوات منزلية': 'بقالة وسوبرماركت',
+
+            // مطاعم وقهوة
+            'وجبات سريعة': 'مطاعم وقهوة',
+            'كافيهات وقهوة': 'مطاعم وقهوة',
+            'مطاعم شعبية': 'مطاعم وقهوة',
+            'حلويات ومخابز': 'مطاعم وقهوة',
+
+            // فواتير وخدمات
+            'كهرباء': 'فواتير وخدمات',
+            'مياه': 'فواتير وخدمات',
+            'إنترنت واتصالات': 'فواتير وخدمات',
+            'اشتراكات وخدمات': 'فواتير وخدمات',
+
+            // وقود ومواصلات
+            'بنزين / وقود': 'وقود ومواصلات',
+            'مواصلات عامة وتكسي': 'وقود ومواصلات',
+            'ترخيص ورسوم': 'وقود ومواصلات',
+
+            // صيانة السيارة وتأمينها
+            'قطع غيار وتصليح': 'صيانة السيارة وتأمينها',
+            'غسيل وتنظيف': 'صيانة السيارة وتأمينها',
+            'تأمين وترخيص': 'صيانة السيارة وتأمينها',
+
+            // صحة وأدوية
+            'أدوية وصيدلية': 'صحة وأدوية',
+            'عيادات وأطباء': 'صحة وأدوية',
+            'تحاليل وفحوصات': 'صحة وأدوية',
+
+            // تسوق وملابس
+            'ملابس وأحذية': 'تسوق وملابس',
+            'إلكترونيات وأجهزة': 'تسوق وملابس',
+            'هدايا وإكسسوارات': 'تسوق وملابس',
+
+            // ترفيه وسفر
+            'سينما وألعاب': 'ترفيه وسفر',
+            'رحلات وسفر': 'ترفيه وسفر',
+            'أنشطة ترفيهية': 'ترفيه وسفر',
+
+            // صيانة المنزل
+            'أدوات ومواد بناء': 'صيانة المنزل',
+            'فني وصيانة': 'صيانة المنزل',
+            'أثاث وديكور': 'صيانة المنزل',
+
+            // مصاريف الأولاد والمدارس
+            'أقساط مدرسية': 'مصاريف الأولاد والمدارس',
+            'قرطاسية وكتب': 'مصاريف الأولاد والمدارس',
+            'ألعاب وملابس أطفال': 'مصاريف الأولاد والمدارس',
+
+            // إيجار / قسط البيت
+            'إيجار شهري': 'إيجار / قسط البيت',
+            'قسط عقاري': 'إيجار / قسط البيت',
+
+            // قروض وأقساط
+            'قروض بنكية': 'قروض وأقساط',
+            'أقساط سيارات': 'قروض وأقساط',
+            'ديون شخصية': 'قروض وأقساط',
+
+            // خدم منزلية
+            'أجر الحارس / الحماية': 'خدم منزلية',
+            'تنظيف وخدمات منزلية': 'خدم منزلية',
+
+            // أخرى
+            'مصاريف طارئة': 'أخرى',
+            'أخرى': 'أخرى'
+        };
+
+        const ITEM_AUTO_MAP = [
+            // بقالة وسوبرماركت
+            { keywords: ['خضار', 'خضره', 'خضرة', 'فواكه', 'موز', 'تفاح', 'برتقال', 'بطاطا', 'جزر', 'حشائش', 'خس', 'بندورة', 'خيار', 'اجاص', 'بصل', 'ثوم', 'ليمون', 'فريز', 'بطيخ', 'تمر', 'شمام', 'فراولة', 'عنب', 'دراق', 'خوخ', 'نجاص', 'فطر', 'سبانخ', 'ملفوف', 'قرنبيط', 'زهرة', 'كوسا', 'باذنجان', 'فليفلة', 'فلفل', 'بقدونس', 'نعنع', 'كزبرة', 'جرجير'], subcat: 'خضار وفواكه' },
+            { keywords: ['لبن', 'لبنة', 'جبن', 'أجبان', 'حليب', 'دانيت', 'قشطة', 'زبدة', 'سمن', 'كشك', 'شنينة', 'موزاريلا', 'كرافت', 'بوك', 'المراعي', 'بلدنا', 'سنيورة', 'كريمة', 'لبن بلدنا', 'لبنة طرية'], subcat: 'ألبان وأجبان' },
+            { keywords: ['خبز', 'كعك', 'توست', 'مفرود', 'حمام', 'مخبز', 'مخابز', 'شراك', 'صمون', 'بيتا', 'عجين', 'عجينة', 'مناقيش', 'توست', 'روتي', 'باغيت', 'كرواسون'], subcat: 'مخابز ومعجنات' },
+            { keywords: ['لحم', 'لحوم', 'دجاج', 'جناح', 'فخذ', 'ستيك', 'سمك', 'أسماك', 'روبيان', 'كفتة', 'سجق', 'همبرغر', 'كباب', 'شقف', 'فيليه', 'سردين', 'طون', 'كوارع', 'لية', 'شيش', 'طاووق'], subcat: 'لحوم ودواجن' },
+            { keywords: ['شوفان', 'رز', 'أرز', 'سكر', 'ملح', 'زيت', 'طحين', 'عدس', 'فريكة', 'سنيورة', 'معلبات', 'صلصة', 'تونة', 'فول', 'حمص', 'حبوب', 'فاصولياء', 'بازيلاء', 'مفتول', 'برغل', 'معكرونة', 'اندومي', 'مكرونة', 'بهارات', 'هيل', 'زعتر', 'كاتشب', 'مايونيز', 'خردل', 'شطة', 'خل', 'نشا', 'خميرة', 'بيكنج', 'فانيلا', 'بشار'], subcat: 'معلبات ومواد تموينية' },
+            { keywords: ['شيبس', 'بوزة', 'ايس كريم', 'أيس كريم', 'علكة', 'حلويات', 'شوكولاته', 'شوكولاتة', 'بزر', 'مخلوطة', 'مكسرات', 'فستق', 'فصدق', 'ذرة', 'مولتو', 'مارشميلو', 'بسكت', 'بسكويت', 'سوس', 'جيلو', 'توفي', 'نوتيلا', 'كندر', 'جالكسي', 'كيتكات', 'سنيكرز', 'مارس', 'باونتي', 'تويكس', 'شيبسات', 'فشار'], subcat: 'حلويات وتسالي' },
+            { keywords: ['عصير', 'مياه', 'ماء', 'قارورة', 'قوارير', 'مياسي', 'غازية', 'بيبسي', 'كولا', 'شاي', 'قهوة', 'نسكافيه', 'كابتشينو', 'مشروب', 'سفن', 'فانتا', 'ريدبول', 'مكثف', 'مشروبات', 'عصائر', 'شراب', 'ميرندا', 'سبرايت'], subcat: 'مشروبات ومياه' },
+            { keywords: ['منظف', 'صابون', 'شامبو', 'هايجين', 'اسفنج', 'جلي', 'العملاق', 'مزيل', 'عرق', 'اكس', 'كلور', 'ديتول', 'معجون', 'فرشاة', 'فاين', 'محارم', 'كلينكس', 'شفرة', 'شفرات', 'حلاقة', 'فوط', 'حفاضات', 'معطر', 'ملين', 'غسيل', 'ديودرنت', 'شاور', 'جل', 'سائل', 'مطبخ', 'مطهر', 'سلكة'], subcat: 'منظفات وعناية شخصية' },
+            { keywords: ['بطارية', 'بطاريات', 'لمبة', 'سلك', 'وصلة', 'شاحن', 'ابريق', 'كاسة', 'كاسات', 'صحون', 'شوك', 'سكين', 'طنجرة', 'قلاية', 'فنجان', 'مطبخ'], subcat: 'أدوات منزلية' },
+
+            // مطاعم وقهوة
+            { keywords: ['شاورما', 'فلافل', 'برقر', 'برجر', 'وجبة', 'سندويش', 'سندويشة', 'بيتزا', 'معجنات', 'مطعم', 'سناجق', 'بروستد', 'كريب', 'وافل', 'دونر', 'صاج', 'فتوش', 'تبولة', 'حمص مطعم', 'فطور', 'غداء', 'عشاء', 'سناك', 'كنتاكي', 'ماكدونالدز', 'شاورماجي'], subcat: 'وجبات سريعة' },
+            { keywords: ['قهوة', 'كافيه', 'كابتشينو', 'اسبريسو', 'لاتيه', 'شاي', 'جبران', 'ستاربكس', 'اسبرسو', 'موكا', 'امريكانو', 'دبل', 'ماكياتو', 'مقهى'], subcat: 'كافيهات وقهوة' },
+
+            // فواتير وخدمات
+            { keywords: ['كهرباء', 'كهربا', 'فلس الريف', 'فاتورة كهرباء'], subcat: 'كهرباء' },
+            { keywords: ['مياه', 'ميه', 'سلطة المياه', 'الماء', 'صرف صحي', 'فاتورة مياه'], subcat: 'مياه' },
+            { keywords: ['إنترنت', 'انترنت', 'خلوي', 'شحن', 'رصيد', 'أمنية', 'زين', 'أورانج', 'اورنج', 'فايبر', 'اشتراك نت', 'تلفون', 'هاتف', 'فاتورة نت', 'اشتراك شهري'], subcat: 'إنترنت واتصالات' },
+
+            // وقود ومواصلات
+            { keywords: ['بنزين', 'سولار', 'ديزل', 'وقود', 'محطة', 'تعبئة', 'كازية', 'مناصير', 'توتال', 'تعبئة وقود', 'فل بنزين'], subcat: 'بنزين / وقود' },
+            { keywords: ['تكسي', 'تاكسي', 'أوبر', 'كريم', 'باص', 'مواصلات', 'سرفيس', 'مترو', 'قطار', 'رحلة', 'سرفيس', 'مواقف', 'تعرفة', 'أجرة الباص'], subcat: 'مواصلات عامة وتكسي' },
+
+            // صيانة السيارة
+            { keywords: ['تصليح', 'غيار', 'ميكانيكي', 'كوشوك', 'إطار', 'بواجي', 'فيلتر', 'فرامل', 'صيانة سيارة', 'كراج', 'قطع غيار', 'بناشر', 'بنشري', 'زيت سيارة', 'كهربائي سيارات'], subcat: 'قطع غيار وتصليح' },
+            { keywords: ['غسيل', 'تغسيل', 'دراي كلين', 'تلميع', 'غسيل سيارة', 'تنظيف سيارة'], subcat: 'غسيل وتنظيف' },
+
+            // صحة وأدوية
+            { keywords: ['دواء', 'أدوية', 'ادوية', 'علاج', 'صيدلية', 'بخاخ', 'حبوب', 'بندول', 'فيتامين', 'مرهم', 'قطرة', 'مسكن', 'شراب دواء'], subcat: 'أدوية وصيدلية' },
+            { keywords: ['دكتور', 'طبيب', 'عيادة', 'مستشفى', 'مراجعة', 'كشفية', 'طوارئ', 'اسنان', 'أخصائي', 'طبيب اسنان', 'تحليل'], subcat: 'عيادات وأطباء' }
+        ];
+
+        let exactMatchTrained = {};
+        let wordTrainedFreq = {};
+
+        function trainModel() {
+            exactMatchTrained = {};
+            wordTrainedFreq = {};
+
+            if (!state || !state.expenses) return;
+
+            state.expenses.forEach(e => {
+                (e.items || []).forEach(it => {
+                    if (!it.name || !it.subcat || it.subcat === 'أخرى' || it.subcat === 'اخرى') return;
+
+                    const nameNorm = it.name.trim().toLowerCase();
+                    const subcat = it.subcat;
+
+                    // 1. Train exact match mapping
+                    exactMatchTrained[nameNorm] = subcat;
+
+                    // 2. Train word-level frequencies
+                    const words = nameNorm.split(/[\s\-_,\.\/\(\)]+/).filter(w => w.length > 2);
+                    words.forEach(w => {
+                        if (!wordTrainedFreq[w]) {
+                            wordTrainedFreq[w] = {};
+                        }
+                        wordTrainedFreq[w][subcat] = (wordTrainedFreq[w][subcat] || 0) + 1;
+                    });
+                });
+            });
+        }
+
+        function autoMapItemSubcat(inputEl) {
+            const name = inputEl.value.trim().toLowerCase();
+            if (!name) return;
+            const row = inputEl.closest('.item-row');
+            if (!row) return;
+            const selectEl = row.querySelector('select');
+            if (!selectEl) return;
+
+            // --- LEVEL 0: Self-Learning AI Predictions ---
+            // A. Check exact trained match
+            if (exactMatchTrained[name]) {
+                selectEl.value = exactMatchTrained[name];
+                return;
+            }
+
+            // B. Check word-level trained association frequencies
+            const nameWords = name.split(/[\s\-_,\.\/\(\)]+/).filter(Boolean);
+            const trainedWords = nameWords.filter(w => w.length > 2);
+            let bestSubcat = null;
+            let highestFreq = 0;
+
+            for (const w of trainedWords) {
+                if (wordTrainedFreq[w]) {
+                    Object.keys(wordTrainedFreq[w]).forEach(sub => {
+                        const freq = wordTrainedFreq[w][sub];
+                        if (freq > highestFreq) {
+                            highestFreq = freq;
+                            bestSubcat = sub;
+                        }
+                    });
+                }
+            }
+
+            if (bestSubcat && highestFreq >= 1) {
+                selectEl.value = bestSubcat;
+                return;
+            }
+
+            // Helper to check if a keyword matches the input name safely
+            const isMatch = (kw) => {
+                // If the keyword is a brand or a short word, we want exact word match to avoid substring collisions (e.g. 'بنزين' containing 'زين')
+                if (kw.length <= 4 || kw === 'زين' || kw === 'ماء' || kw === 'رز' || kw === 'ملح' || kw === 'كول') {
+                    return nameWords.includes(kw);
+                }
+                // Otherwise, standard substring includes is fine for longer specific terms
+                return name.includes(kw);
+            };
+
+            // 1. Direct comprehensive keywords search
+            for (const mapping of ITEM_AUTO_MAP) {
+                for (const kw of mapping.keywords) {
+                    if (isMatch(kw)) {
+                        selectEl.value = mapping.subcat;
+                        return;
+                    }
+                }
+            }
+
+            // 2. Intelligent Substring & Fuzzy matching fallback against subcategory options themselves
+            const options = Array.from(selectEl.options).map(opt => opt.value);
+
+            // Phase A: check if the input contains any subcategory name, or a subcategory name contains the input
+            for (const sub of options) {
+                if (sub.includes(name) || name.includes(sub)) {
+                    selectEl.value = sub;
+                    return;
+                }
+            }
+
+            // Phase B: split the input into words (len > 2) and check if any word matches a subcategory
+            const words = name.split(/\s+/).filter(w => w.length > 2);
+            for (const w of words) {
+                for (const sub of options) {
+                    if (sub.includes(w)) {
+                        selectEl.value = sub;
+                        return;
+                    }
+                }
+            }
+        }
+
+        function shopSubcatColor(n) { return catColor(normCat(n)); }
+
+        function shopSubcatIcon(n) {
+            const icons = {
+                // بقالة وسوبرماركت
+                'خضار وفواكه': '🍎',
+                'ألبان وأجبان': '🧀',
+                'مخابز ومعجنات': '🍞',
+                'لحوم ودواجن': '🥩',
+                'معلبات ومواد تموينية': '🥫',
+                'حلويات وتسالي': '🍫',
+                'مشروبات ومياه': '🥤',
+                'منظفات وعناية شخصية': '🧴',
+                'أدوات منزلية': '🧹',
+
+                // مطاعم وقهوة
+                'وجبات سريعة': '🍔',
+                'كافيهات وقهوة': '☕',
+                'مطاعم شعبية': '🍲',
+                'حلويات ومخابز': '🍰',
+
+                // فواتير وخدمات
+                'كهرباء': '⚡',
+                'مياه': '💧',
+                'إنترنت واتصالات': '🌐',
+                'اشتراكات وخدمات': '💳',
+
+                // وقود ومواصلات
+                'بنزين / وقود': '⛽',
+                'مواصلات عامة وتكسي': '🚕',
+                'ترخيص ورسوم': '📄',
+
+                // صيانة السيارة
+                'قطع غيار وتصليح': '🔧',
+                'غسيل وتنظيف': '🧼',
+                'تأمين وترخيص': '🛡️',
+
+                // صحة وأدوية
+                'أدوية وصيدلية': '💊',
+                'عيادات وأطباء': '🩺',
+                'تحاليل وفحوصات': '🧪',
+
+                // تسوق وملابس
+                'ملابس وأحذية': '👕',
+                'إلكترونيات وأجهزة': '💻',
+                'هدايا وإكسسوارات': '🎁',
+
+                // ترفيه وسفر
+                'سينما وألعاب': '🎮',
+                'رحلات وسفر': '✈️',
+                'أنشطة ترفيهية': '🎡',
+
+                // صيانة المنزل
+                'أدوات ومواد بناء': '🔨',
+                'فني وصيانة': '🛠️',
+                'أثاث وديكور': '🛋️',
+
+                // مصاريف الأولاد
+                'أقساط مدرسية': '🏫',
+                'قرطاسية وكتب': '📚',
+                'ألعاب وملابس أطفال': '🧸',
+
+                // إيجار
+                'إيجار شهري': '🏠',
+                'قسط عقاري': '🏦',
+
+                // قروض
+                'قروض بنكية': '📉',
+                'أقساط سيارات': '🚗',
+                'ديون شخصية': '🤝',
+
+                // خدم منزلية
+                'أجر الحارس / الحماية': '💂',
+                'تنظيف وخدمات منزلية': '🧹',
+
+                // أخرى
+                'مصاريف طارئة': '🚨',
+                'أخرى': '🏷️',
+                'اخرى': '🏷️',
+
+                // Fallbacks for main category names
+                'بقالة وسوبرماركت': '🛒',
+                'مطاعم وقهوة': '🍕',
+                'فواتير وخدمات': '🔌',
+                'وقود ومواصلات': '🚗',
+                'صيانة السيارة وتأمينها': '🔧',
+                'صحة وأدوية': '🏥',
+                'تسوق وملابس': '🛍️',
+                'ترفيه وسفر': '🎈',
+                'صيانة المنزل': '🏠',
+                'مصاريف الأولاد والمدارس': '👶',
+                'إيجار / قسط البيت': '🏠',
+                'قروض وأقساط': '💸',
+                'خدم منزلية': '🧹'
+            };
+            return icons[n] || '🏷️';
+        }
+
+        function getCatOptions() {
+            const subcatsByMain = {};
+            state.categories.forEach(c => {
+                subcatsByMain[c.name] = [];
+            });
+            Object.entries(SUB_TO_MAIN_CAT).forEach(([sub, main]) => {
+                if (subcatsByMain[main]) {
+                    subcatsByMain[main].push(sub);
+                }
+            });
+            let html = '';
+            state.categories.forEach(c => {
+                const subs = subcatsByMain[c.name] || [];
+                if (subs.length > 0) {
+                    html += `<optgroup label="${c.name}">`;
+                    subs.forEach(sub => {
+                        html += `<option value="${sub}">${sub}</option>`;
+                    });
+                    html += `</optgroup>`;
+                } else {
+                    html += `<option value="${c.name}">${c.name}</option>`;
+                }
+            });
+            return html;
+        }
 
         let shopFilterCat = 'all';
         let expDashChart = null;
@@ -4164,7 +4613,7 @@
             const container = document.getElementById('inv-items-container');
             const row = document.createElement('div');
             row.className = 'item-row';
-            row.innerHTML = '<input class="inp" placeholder="اسم الصنف" oninput="updateInvTotal()" /><input class="inp" type="number" placeholder="1" value="1" min="0.01" step="0.01" oninput="updateInvTotal()" /><input class="inp" type="number" placeholder="0.00" min="0" step="0.01" oninput="updateInvTotal()" /><select class="inp">' + getCatOptions() + '</select><button class="remove-item-btn" onclick="this.closest(\'.item-row\').remove();updateInvTotal()">✕</button>';
+            row.innerHTML = '<input class="inp" placeholder="اسم الصنف" oninput="autoMapItemSubcat(this); updateInvTotal()" /><input class="inp" type="number" placeholder="1" value="1" min="0.01" step="0.01" oninput="updateInvTotal()" /><input class="inp" type="number" placeholder="0.00" min="0" step="0.01" oninput="updateInvTotal()" /><select class="inp">' + getCatOptions() + '</select><button class="remove-item-btn" onclick="this.closest(\'.item-row\').remove();updateInvTotal()">✕</button>';
             if (prefill) {
                 const inputs = row.querySelectorAll('input');
                 const sel = row.querySelectorAll('select');
