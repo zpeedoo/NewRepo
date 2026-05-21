@@ -38,40 +38,36 @@
         }
 
         [data-theme="light"] {
-            --bg: #f4eef9;
-            --surface: rgba(255, 255, 255, 0.75);
-            --surface2: rgba(255, 255, 255, 0.55);
-            --surface3: rgba(167, 139, 250, 0.12);
-            --border: rgba(167, 139, 250, 0.16);
-            --border2: rgba(167, 139, 250, 0.28);
-            --text: #2b2154;
-            --text2: #5b528a;
-            --text3: #8e85b8;
-            --accent: #a78bfa;
-            --accent2: #7c6dfa;
-            --green: #34d399;
-            --red: #fb7185;
-            --amber: #fbbf24;
-            --cyan: #22d3ee;
-            --pink: #f472b6;
-            --orange: #fb923c;
-            --teal: #2dd4bf;
-            --hover-row: rgba(167, 139, 250, 0.06);
-            --shadow-card: 0 4px 24px rgba(167, 139, 250, 0.12), 0 1px 2px rgba(167, 139, 250, 0.06);
-            --shadow-lg: 0 10px 40px rgba(167, 139, 250, 0.18);
+            --bg: #f8f9fa;
+            --surface: #ffffff;
+            --surface2: #f1f5f9;
+            --surface3: #f8fafc;
+            --border: #e2e8f0;
+            --border2: #cbd5e1;
+            --text: #0f172a;
+            --text2: #334155;
+            --text3: #64748b;
+            --accent: #0f172a;
+            --accent2: #1e293b;
+            --green: #10b981;
+            --red: #ef4444;
+            --amber: #f59e0b;
+            --cyan: #06b6d4;
+            --pink: #ec4899;
+            --orange: #f97316;
+            --teal: #14b8a6;
+            --hover-row: #f8fafc;
+            --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.02), 0 1px 3px rgba(0, 0, 0, 0.01);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.01);
             --r: 14px;
-            --r2: 20px;
-            --r3: 26px;
+            --r2: 18px;
+            --r3: 24px;
         }
 
-        /* ─── LIGHT THEME GLASSMORPHISM ─── */
+        /* ─── LIGHT THEME COMPLIX-STYLE MINI-MALIST AESTHETICS ─── */
         [data-theme="light"] html,
         [data-theme="light"] body {
-            background: radial-gradient(circle at 15% 10%, #fce7f3 0%, transparent 45%),
-                radial-gradient(circle at 85% 20%, #ddd6fe 0%, transparent 50%),
-                radial-gradient(circle at 75% 90%, #cffafe 0%, transparent 45%),
-                radial-gradient(circle at 20% 80%, #fef3c7 0%, transparent 40%),
-                linear-gradient(135deg, #faf8ff 0%, #fff5f9 100%);
+            background: #f8f9fa;
             background-attachment: fixed;
         }
 
@@ -80,11 +76,9 @@
         }
 
         [data-theme="light"] .sidebar {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-left: 1px solid rgba(167, 139, 250, 0.12);
-            box-shadow: 0 8px 32px rgba(167, 139, 250, 0.06);
+            background: #ffffff;
+            border-left: 1px solid #e2e8f0;
+            box-shadow: 4px 0 30px rgba(0, 0, 0, 0.01);
         }
 
         [data-theme="light"] .card,
@@ -93,90 +87,100 @@
         [data-theme="light"] .loan-card,
         [data-theme="light"] .table-card,
         [data-theme="light"] .modal {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            background: #ffffff;
+            border: 1px solid #f1f5f9;
             box-shadow: var(--shadow-card);
+            border-radius: var(--r3);
         }
 
         [data-theme="light"] .metric {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            background: #ffffff;
+            border: 1px solid #f1f5f9;
             box-shadow: var(--shadow-card);
+            border-radius: var(--r2);
         }
 
         [data-theme="light"] .income-source,
         [data-theme="light"] .sub-item,
         [data-theme="light"] .maint-item {
-            background: rgba(255, 255, 255, 0.6);
-            border: 1px solid rgba(167, 139, 250, 0.1);
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
         }
 
         [data-theme="light"] .inp,
         [data-theme="light"] .period-sel,
         [data-theme="light"] select.inp option {
-            background: rgba(255, 255, 255, 0.7);
-            border-color: rgba(167, 139, 250, 0.18);
+            background: #f8f9fa;
+            border-color: #e2e8f0;
             color: var(--text);
+            border-radius: 12px;
         }
 
         [data-theme="light"] .inp:focus {
-            border-color: var(--accent2);
-            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15);
+            background: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.05);
         }
 
         [data-theme="light"] .btn {
-            background: rgba(255, 255, 255, 0.7);
-            border-color: rgba(167, 139, 250, 0.2);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
             color: var(--text);
-            box-shadow: 0 2px 8px rgba(167, 139, 250, 0.06);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+            border-radius: 9999px;
+            font-weight: 500;
         }
 
         [data-theme="light"] .btn:hover {
-            background: rgba(255, 255, 255, 0.95);
+            background: #f8fafc;
+            border-color: #cbd5e1;
         }
 
         [data-theme="light"] .btn-primary {
-            background: linear-gradient(135deg, #a78bfa 0%, #7c6dfa 100%);
-            border-color: transparent;
-            color: #fff;
-            box-shadow: 0 4px 14px rgba(124, 109, 250, 0.35);
+            background: #0f172a;
+            border-color: #0f172a;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
         }
 
         [data-theme="light"] .btn-primary:hover {
-            background: linear-gradient(135deg, #b89cff 0%, #8d7efb 100%);
+            background: #1e293b;
+            border-color: #1e293b;
         }
 
         [data-theme="light"] .chip {
-            background: rgba(255, 255, 255, 0.6);
-            border-color: rgba(167, 139, 250, 0.15);
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
             color: var(--text2);
+            border-radius: 9999px;
+            padding: 6px 16px;
+            font-weight: 500;
         }
 
         [data-theme="light"] .chip:hover,
         [data-theme="light"] .chip.active {
-            background: rgba(167, 139, 250, 0.18);
-            border-color: rgba(167, 139, 250, 0.35);
-            color: var(--accent2);
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            color: var(--accent);
         }
 
         [data-theme="light"] .nav-item.active {
-            background: linear-gradient(90deg, rgba(167, 139, 250, 0.16), rgba(167, 139, 250, 0.06));
-            color: var(--accent2);
+            background: #f1f5f9;
+            color: var(--accent);
+            font-weight: 600;
             border-right-color: var(--accent);
         }
 
         [data-theme="light"] .nav-item:hover {
-            background: rgba(167, 139, 250, 0.08);
-            color: var(--accent2);
+            background: #f8fafc;
+            color: var(--accent);
         }
 
         [data-theme="light"] th {
-            background: rgba(167, 139, 250, 0.08);
+            background: #f8fafc;
             color: var(--text2);
+            border-bottom: 2px solid #e2e8f0;
         }
 
         [data-theme="light"] td {
@@ -190,55 +194,59 @@
         [data-theme="light"] .bbar-bg,
         [data-theme="light"] .progress-bg,
         [data-theme="light"] .sub-tracker-bar {
-            background: rgba(167, 139, 250, 0.12);
+            background: #e2e8f0;
         }
 
         [data-theme="light"] .shop-tab {
-            background: rgba(255, 255, 255, 0.6);
-            border-color: rgba(167, 139, 250, 0.15);
+            background: #f8fafc;
+            border-color: #e2e8f0;
+            color: var(--text2);
         }
 
         [data-theme="light"] .shop-tab.active {
-            background: rgba(167, 139, 250, 0.18);
-            border-color: rgba(167, 139, 250, 0.4);
-            color: var(--accent2);
+            background: #e2ff80; /* Soft lime-yellow from the image! */
+            border-color: #c4e650;
+            color: #1c1e15;
+            font-weight: 600;
         }
 
         [data-theme="light"] .toast {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(167, 139, 250, 0.2);
-            box-shadow: 0 10px 40px rgba(167, 139, 250, 0.2);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            color: var(--text);
         }
 
         [data-theme="light"] .logo {
-            border-bottom-color: rgba(167, 139, 250, 0.12);
+            border-bottom-color: #e2e8f0;
         }
 
         [data-theme="light"] .logo-title {
-            background: linear-gradient(135deg, #7c6dfa 0%, #f472b6 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
+            background: none;
+            -webkit-text-fill-color: initial;
+            color: var(--text);
             font-weight: 700;
         }
 
         [data-theme="light"] .period-badge {
-            background: rgba(255, 255, 255, 0.7);
-            border-color: rgba(167, 139, 250, 0.15);
+            background: #ffffff;
+            border-color: #e2e8f0;
+            color: var(--text2);
         }
 
         [data-theme="light"] .badge {
-            background: rgba(167, 139, 250, 0.12);
-            color: var(--accent2);
+            background: #ebe0ff; /* Soft lavender pill from the image! */
+            color: #2e1e4a;
+            border-radius: 9999px;
+            font-weight: 500;
         }
 
         [data-theme="light"] ::-webkit-scrollbar-thumb {
-            background: rgba(167, 139, 250, 0.3);
+            background: #cbd5e1;
         }
 
         [data-theme="light"] .divider {
-            background: rgba(167, 139, 250, 0.15);
+            background: #e2e8f0;
         }
 
         [data-theme="light"] .empty {
@@ -246,15 +254,14 @@
         }
 
         [data-theme="light"] .bottom-nav {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(167, 139, 250, 0.1);
-            box-shadow: 0 -4px 20px rgba(167, 139, 250, 0.08);
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.02);
         }
 
         [data-theme="light"] .bnav-item.active {
-            background: rgba(167, 139, 250, 0.14);
-            color: var(--accent2);
+            background: #f1f5f9;
+            color: var(--accent);
         }
 
         [data-theme="light"] .bnav-item {
@@ -262,10 +269,9 @@
         }
 
         [data-theme="light"] .page-title {
-            background: linear-gradient(135deg, #2b2154 0%, #7c6dfa 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
+            background: none;
+            -webkit-text-fill-color: initial;
+            color: var(--text);
             font-weight: 700;
         }
 
@@ -871,7 +877,12 @@
         .bbar-fill {
             height: 100%;
             border-radius: 3px;
-            transition: width .4s
+            transition: width .4s;
+            animation: bbarFillGrow 1.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes bbarFillGrow {
+            from { width: 0%; }
         }
 
         .warn {
@@ -1529,6 +1540,92 @@
             background: rgba(124, 109, 250, 0.08);
         }
 
+        /* ─── Luxury Animations & Effects ─── */
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page.active .card, 
+        .page.active .metric,
+        .page.active .grid-4 > div,
+        .page.active .grid-2 > div {
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .page.active .card:nth-child(1), .page.active .grid-4 > div:nth-child(1) { animation-delay: 0.04s; }
+        .page.active .card:nth-child(2), .page.active .grid-4 > div:nth-child(2) { animation-delay: 0.08s; }
+        .page.active .card:nth-child(3), .page.active .grid-4 > div:nth-child(3) { animation-delay: 0.12s; }
+        .page.active .card:nth-child(4), .page.active .grid-4 > div:nth-child(4) { animation-delay: 0.16s; }
+        .page.active .card:nth-child(5) { animation-delay: 0.20s; }
+        .page.active .card:nth-child(6) { animation-delay: 0.24s; }
+
+        /* Floating background ambient lights for modern glassmorphism */
+        .ambient-glow-1 {
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(124, 109, 250, 0.07) 0%, rgba(124, 109, 250, 0) 70%);
+            top: -100px;
+            right: -100px;
+            z-index: -1;
+            filter: blur(50px);
+            animation: floatGlow1 22s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+
+        .ambient-glow-2 {
+            position: absolute;
+            width: 550px;
+            height: 550px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(52, 211, 153, 0.05) 0%, rgba(52, 211, 153, 0) 70%);
+            bottom: 10%;
+            left: -150px;
+            z-index: -1;
+            filter: blur(60px);
+            animation: floatGlow2 28s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes floatGlow1 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-80px, 100px) scale(1.15); }
+        }
+
+        @keyframes floatGlow2 {
+            0% { transform: translate(0, 0) scale(1.1); }
+            100% { transform: translate(100px, -80px) scale(0.9); }
+        }
+
+        /* Hover lift and glow effects on cards */
+        .card, .metric {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+
+        .card:hover, .metric:hover {
+            transform: translateY(-4px) scale(1.005);
+            box-shadow: 0 16px 32px rgba(124, 109, 250, 0.06) !important;
+            border-color: rgba(124, 109, 250, 0.15) !important;
+        }
+
+        [data-theme="light"] .card:hover, [data-theme="light"] .metric:hover {
+            box-shadow: 0 16px 32px rgba(15, 23, 42, 0.03) !important;
+            border-color: rgba(15, 23, 42, 0.05) !important;
+        }
+
+        /* Gauge custom animations */
+        .circ-prog-wrap svg circle {
+            transition: stroke-dashoffset 2.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+
         @media(max-width:900px) {
             .sidebar {
                 display: none
@@ -1929,6 +2026,27 @@
             border-bottom-color: transparent;
         }
 
+        .stmt-table tr.stmt-inv-item {
+            display: none;
+        }
+
+        .stmt-table tr.stmt-inv-item.expanded {
+            display: table-row;
+        }
+
+        .toggle-arrow {
+            display: inline-block;
+            transition: transform 0.2s ease;
+            font-size: 9px;
+            color: var(--text3);
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .stmt-inv-hdr.active .toggle-arrow {
+            transform: rotate(90deg);
+        }
+
         .stmt-table tr.stmt-inv-item td {
             border-bottom-color: rgba(255, 255, 255, 0.05);
         }
@@ -1977,26 +2095,45 @@
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+                box-shadow: none !important;
             }
 
             html,
             body {
+                display: block !important;
                 background: #fff !important;
                 color: #000 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                overflow: visible !important;
             }
 
             .sidebar,
             .bottom-nav,
             .topbar-right,
-            .stmt-filters button,
+            .stmt-filters,
             #themeToggleBtn,
-            .period-box {
+            .period-box,
+            .ambient-glow-1,
+            .ambient-glow-2 {
                 display: none !important;
             }
 
             .main {
+                display: block !important;
                 margin: 0 !important;
                 padding: 12px !important;
+                width: 100% !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
+
+            .page.active {
+                display: block !important;
+                width: 100% !important;
+                height: auto !important;
                 overflow: visible !important;
             }
 
@@ -2006,13 +2143,29 @@
 
             .card,
             .table-card {
-                page-break-inside: avoid;
+                page-break-inside: auto !important;
                 box-shadow: none !important;
-                border-color: #ddd !important;
+                border: 1px solid #eee !important;
+                background: #fff !important;
+                overflow: visible !important;
+                height: auto !important;
+            }
+
+            .stmt-table {
+                width: 100% !important;
+                border-collapse: collapse !important;
             }
 
             .stmt-table tr {
-                page-break-inside: avoid;
+                page-break-inside: avoid !important;
+            }
+
+            .stmt-table tr.stmt-inv-item {
+                display: table-row !important;
+            }
+
+            .toggle-arrow {
+                display: none !important;
             }
 
             canvas {
@@ -2239,6 +2392,10 @@
 </head>
 
 <body>
+
+    <!-- Ambient glowing lights background -->
+    <div class="ambient-glow-1"></div>
+    <div class="ambient-glow-2"></div>
 
     <!-- ═══ SIDEBAR ═══ -->
     <div class="sidebar">
@@ -2718,6 +2875,11 @@
                     <path
                         d="M3 4.5a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0 3a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0 3a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5z" />
                 </svg><span>المصاريف</span>
+            </div>
+            <div class="bnav-item" data-page="budget" onclick="goPage(this)">
+                <svg viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M4 10.781c.148 1.667 1.513 2.855 3.591 3.087V15h1.043v-1.166c2.11-.252 3.46-1.44 3.46-3.003 0-1.564-1.01-2.486-2.584-2.81l-.924-.199c-1.347-.287-1.93-.779-1.93-1.52 0-.733.599-1.23 1.608-1.328V3.11h-.97v1.125c-1.637.21-2.702 1.3-2.702 2.785 0 1.42.868 2.247 2.127 2.505l.925.195c1.479.314 2.11.83 2.11 1.652 0 .857-.71 1.428-1.805 1.514v-1.15h-.98v1.144c-1.748-.22-2.748-1.28-2.819-2.733H4z"/>
+                </svg><span>الميزانية</span>
             </div>
             <div class="bnav-item" data-page="income" onclick="goPage(this)">
                 <svg viewBox="0 0 16 16" fill="currentColor">
@@ -3688,7 +3850,7 @@
                         <div class="circ-prog-wrap ${consumeClass}">
                             <svg width="120" height="120" viewBox="0 0 120 120">
                                 <circle cx="60" cy="60" r="${radius}" fill="none" stroke="var(--surface3)" stroke-width="8" />
-                                <circle cx="60" cy="60" r="${radius}" fill="none" stroke="${dashCol}" stroke-width="8" stroke-dasharray="${circumference}" stroke-dashoffset="${offsetCons}" stroke-linecap="round" style="transition: stroke-dashoffset 2.5s ease-in-out;" />
+                                <circle id="consumeCircle" cx="60" cy="60" r="${radius}" fill="none" stroke="${dashCol}" stroke-width="8" stroke-dasharray="${circumference}" stroke-dashoffset="${circumference}" stroke-linecap="round" />
                             </svg>
                             <div class="circ-content">
                                 <div class="circ-val" style="color:${dashCol}">${spentPct.toFixed(1)}%</div>
@@ -3717,7 +3879,7 @@
                         <div class="circ-prog-wrap">
                             <svg width="120" height="120" viewBox="0 0 120 120">
                                 <circle cx="60" cy="60" r="${radius}" fill="none" stroke="var(--surface3)" stroke-width="8" />
-                                <circle cx="60" cy="60" r="${radius}" fill="none" stroke="${loanCol}" stroke-width="8" stroke-dasharray="${circumference}" stroke-dashoffset="${offsetLoan}" stroke-linecap="round" style="transition: stroke-dashoffset 2.5s ease-in-out;" />
+                                <circle id="loanCircle" cx="60" cy="60" r="${radius}" fill="none" stroke="${loanCol}" stroke-width="8" stroke-dasharray="${circumference}" stroke-dashoffset="${circumference}" stroke-linecap="round" />
                             </svg>
                             <div class="circ-content">
                                 <div class="circ-val">${loanPct.toFixed(1)}%</div>
@@ -3762,6 +3924,14 @@
                     </div>
                 </div>
             `;
+
+            // Slowly animate circular progress tracks after render to create premium feeling
+            setTimeout(() => {
+                const cCircle = document.getElementById('consumeCircle');
+                if (cCircle) cCircle.setAttribute('stroke-dashoffset', offsetCons);
+                const lCircle = document.getElementById('loanCircle');
+                if (lCircle) lCircle.setAttribute('stroke-dashoffset', offsetLoan);
+            }, 60);
 
             renderDonut(exps);
             renderBudgetBars(exps);
@@ -3998,10 +4168,114 @@
             const fromY = parseInt(document.getElementById('stmtFromYear').value);
             const toM = parseInt(document.getElementById('stmtToMonth').value);
             const toY = parseInt(document.getElementById('stmtToYear').value);
-            const from = new Date(fromY, fromM, 1);
-            const to = new Date(toY, toM + 1, 0);
-            const exps = state.expenses.filter(e => { const d = new Date(e.date); return d >= from && d <= to });
-            const fls = state.freelanceLog.filter(f => { const d = new Date(f.date); return d >= from && d <= to });
+            const from = new Date(fromY, fromM, 1, 0, 0, 0, 0);
+            const to = new Date(toY, toM + 1, 0, 23, 59, 59, 999);
+
+            const parseLocalDate = (dateStr) => {
+                if (!dateStr) return new Date(0);
+                const parts = dateStr.split('-');
+                if (parts.length < 3) return new Date(dateStr);
+                return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]), 12, 0, 0);
+            };
+
+            // 1. Gather Daily Expenses & Shopping Invoices
+            const baseExps = state.expenses.filter(e => {
+                const d = parseLocalDate(e.date);
+                return d >= from && d <= to;
+            }).map(e => ({
+                id: e.id,
+                date: e.date,
+                desc: e.desc,
+                amount: parseFloat(e.amount) || 0,
+                items: e.items || [],
+                type: 'invoice'
+            }));
+
+            // 2. Gather Done Maintenance Expenses
+            const maintExps = (state.maintenance || [])
+                .filter(m => {
+                    if (m.status !== 'done' || !m.date) return false;
+                    const d = parseLocalDate(m.date);
+                    return d >= from && d <= to;
+                })
+                .map(m => ({
+                    id: 'maint-' + m.id,
+                    date: m.date,
+                    desc: `🛠️ صيانة: ${m.desc}`,
+                    amount: parseFloat(m.cost) || 0,
+                    items: [],
+                    type: 'maintenance',
+                    cat: m.cat || 'صيانة وإصلاح'
+                }));
+
+            // 3. Gather Active Subscriptions (generate recurring monthly entries)
+            const subExps = [];
+            let tempDate = new Date(fromY, fromM, 1);
+            while (tempDate <= to) {
+                const curY = tempDate.getFullYear();
+                const curM = tempDate.getMonth(); // 0-indexed
+                const curYMStr = `${curY}-${String(curM + 1).padStart(2, '0')}`;
+                
+                (state.subscriptions || []).forEach(sub => {
+                    const startD = parseLocalDate(sub.start);
+                    const endD = sub.end ? parseLocalDate(sub.end) : null;
+                    const thisMonthStart = new Date(curY, curM, 1);
+                    const thisMonthEnd = new Date(curY, curM + 1, 0);
+                    
+                    if (startD <= thisMonthEnd && (!endD || endD >= thisMonthStart)) {
+                        const dayPart = startD.getDate();
+                        const finalDay = Math.min(dayPart, thisMonthEnd.getDate());
+                        const dateStr = `${curY}-${String(curM + 1).padStart(2, '0')}-${String(finalDay).padStart(2, '0')}`;
+                        
+                        subExps.push({
+                            id: `sub-${sub.id}-${curYMStr}`,
+                            date: dateStr,
+                            desc: `🔄 اشتراك: ${sub.name}`,
+                            amount: parseFloat(sub.amount) || 0,
+                            items: [],
+                            type: 'subscription',
+                            cat: sub.cat || 'اشتراكات ورسوم'
+                        });
+                    }
+                });
+                tempDate.setMonth(tempDate.getMonth() + 1);
+            }
+
+            // 4. Gather Active Loans (generate monthly installments)
+            const loanExps = [];
+            tempDate = new Date(fromY, fromM, 1);
+            while (tempDate <= to) {
+                const curY = tempDate.getFullYear();
+                const curM = tempDate.getMonth();
+                const curYMStr = `${curY}-${String(curM + 1).padStart(2, '0')}`;
+                
+                (state.loans || []).forEach(loan => {
+                    const startD = parseLocalDate(loan.start || td());
+                    const thisMonthEnd = new Date(curY, curM + 1, 0);
+                    
+                    if (startD <= thisMonthEnd && loan.remaining > 0) {
+                        const dateStr = `${curY}-${String(curM + 1).padStart(2, '0')}-01`;
+                        loanExps.push({
+                            id: `loan-${loan.id}-${curYMStr}`,
+                            date: dateStr,
+                            desc: `💸 قروض: ${loan.name}`,
+                            amount: parseFloat(loan.monthly) || 0,
+                            items: [],
+                            type: 'loan',
+                            cat: 'قروض والتزامات'
+                        });
+                    }
+                });
+                tempDate.setMonth(tempDate.getMonth() + 1);
+            }
+
+            // Combine all into unified list
+            const exps = [...baseExps, ...maintExps, ...subExps, ...loanExps];
+
+            const fls = state.freelanceLog.filter(f => {
+                const d = parseLocalDate(f.date);
+                return d >= from && d <= to;
+            });
             const totalExp = exps.reduce((s, e) => s + e.amount, 0);
             const totalFl = fls.reduce((s, f) => s + f.amount, 0);
             // count months
@@ -4033,22 +4307,94 @@
             if (charts.stmtLine) charts.stmtLine.destroy();
             const ctx = document.getElementById('stmtLineIncome').getContext('2d');
             charts.stmtLine = new Chart(ctx, { type: 'line', data: { labels: lbls, datasets: [{ label: 'الدخل', data: incVals, borderColor: '#34d399', backgroundColor: 'rgba(52,211,153,0.08)', tension: 0.4, pointRadius: 3, fill: true, borderWidth: 2 }, { label: 'المصاريف', data: expVals, borderColor: '#f87171', backgroundColor: 'rgba(248,113,113,0.08)', tension: 0.4, pointRadius: 3, fill: true, borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#8e8d9a', font: { size: 11 } } }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + c.raw.toFixed(2) + ' د.أ' } } }, scales: { x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#55545f', font: { size: 10 } } }, y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#55545f', font: { size: 10 }, callback: v => v + 'د.أ' } } } } });
-            // table — flat invoice-level rows (one row per invoice)
-            const rows = exps.sort((a, b) => new Date(b.date) - new Date(a.date));
-            const flatRowsHtml = rows.map(e => {
-                const items = e.items || [];
-                const primaryCat = items[0]?.subcat || 'أخرى';
-                const hasMore = items.length > 1;
-                const catCol = catColor(primaryCat);
-                return `<tr>
-                    <td class="td-mono" style="font-size:11px">${e.date}</td>
-                    <td class="td-main">${e.desc}</td>
-                    <td><span class="badge" style="background:${catCol}22;color:${catCol}">${primaryCat}${hasMore ? ' +' : ''}</span></td>
-                    <td class="td-mono">${e.amount.toFixed(2)} د.أ</td>
-                </tr>`;
-            }).join('');
+            // table — grouped by main category to ensure cleaner reporting and easier print view reading
+            const groups = {};
+            state.categories.forEach(c => {
+                groups[c.name] = [];
+            });
+            groups['أخرى'] = groups['أخرى'] || [];
 
-            document.getElementById('stmtTable').innerHTML = rows.length ? `
+            exps.forEach(e => {
+                let cat = 'أخرى';
+                if (e.type === 'invoice') {
+                    const primarySub = e.items?.[0]?.subcat || 'أخرى';
+                    cat = normCat(primarySub);
+                } else {
+                    cat = normCat(e.cat);
+                }
+                if (!groups[cat]) groups[cat] = [];
+                groups[cat].push(e);
+            });
+
+            let flatRowsHtml = '';
+            const orderedCats = [...state.categories.map(c => c.name), 'أخرى'];
+            const uniqueCats = Array.from(new Set(orderedCats));
+
+            uniqueCats.forEach(catName => {
+                const groupExps = groups[catName] || [];
+                if (groupExps.length === 0) return;
+
+                // Sort items in this group by date descending
+                groupExps.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                // Calculate group total
+                const groupTotal = groupExps.reduce((sum, e) => sum + e.amount, 0);
+                const catCol = catColor(catName);
+
+                // Add Category Header Row
+                flatRowsHtml += `
+                    <tr class="stmt-cat-group-hdr" style="background: ${catCol}10; color: ${catCol}; font-weight: 700; font-size: 13px; border-top: 2px solid ${catCol}33; page-break-inside: avoid;">
+                        <td colspan="3" style="padding: 12px 16px; font-weight: 700; font-size: 13.5px;"><span style="margin-left: 8px;">📁</span>${catName} <span style="font-size: 11px; color: var(--text3); font-weight: 400; margin-right: 8px;">(${groupExps.length} معاملات)</span></td>
+                        <td class="td-mono" style="padding: 12px 16px; text-align: left; font-size: 14px; font-weight: 800; color: ${catCol};">${groupTotal.toFixed(2)} د.أ</td>
+                    </tr>
+                `;
+
+                // Add expenses in this group
+                groupExps.forEach(e => {
+                    const items = e.items || [];
+
+                    if (e.type !== 'invoice' || items.length === 0) {
+                        const specificCat = e.type === 'invoice' ? (items[0]?.subcat || 'أخرى') : (e.cat || 'أخرى');
+                        const specificCol = catColor(specificCat);
+                        flatRowsHtml += `
+                            <tr class="stmt-inv-hdr" style="font-weight:600; border-top: 1px solid var(--border);">
+                                <td class="td-mono" style="font-size:11px; padding-right: 24px;">${e.date}</td>
+                                <td class="td-main">${e.desc}</td>
+                                <td><span class="badge" style="background:${specificCol}15;color:${specificCol}">${specificCat}</span></td>
+                                <td class="td-mono">${e.amount.toFixed(2)} د.أ</td>
+                            </tr>
+                        `;
+                        return;
+                    }
+
+                    // Parent Invoice Header (Collapsible)
+                    const hdrHtml = `
+                        <tr class="stmt-inv-hdr" style="background: rgba(124, 109, 250, 0.02); font-weight:600; border-top: 1px solid var(--border); cursor: pointer;" onclick="toggleStmtInvoice('${e.id}', this)">
+                            <td class="td-mono" style="font-size:11px; padding-right: 24px;">${e.date}</td>
+                            <td class="td-main" style="color:var(--text); font-weight: 600;"><span class="toggle-arrow">▶</span><span style="margin-left:6px;">🧾</span>${e.desc}</td>
+                            <td><span class="badge" style="background:var(--border); color:var(--text3); font-weight:500; font-size:10px;">فاتورة تفصيلية</span></td>
+                            <td class="td-mono" style="font-weight:700; color:var(--accent); font-size:13px;">${e.amount.toFixed(2)} د.أ</td>
+                        </tr>
+                    `;
+
+                    // Child Item Rows (Hidden on screen until expanded, forced visible on print)
+                    const itemsHtml = items.map(it => {
+                        const itemCol = catColor(it.subcat || 'أخرى');
+                        return `
+                            <tr class="stmt-inv-item child-of-${e.id}" style="font-size:11px; opacity: 0.95;">
+                                <td class="td-mono" style="color: var(--text3); font-size:10px; text-align:center; padding: 6px 16px;">↳</td>
+                                <td style="padding-right: 28px; color: var(--text2); font-weight: 400; padding: 6px 16px;">• ${it.name}</td>
+                                <td style="padding: 6px 16px;"><span class="badge" style="background:${itemCol}15; color:${itemCol}; font-size:10px; padding:2px 8px;">${it.subcat || 'أخرى'}</span></td>
+                                <td class="td-mono" style="font-size:11.5px; color: var(--text2); padding: 6px 16px;">${(it.price || 0).toFixed(2)} د.أ</td>
+                            </tr>
+                        `;
+                    }).join('');
+
+                    flatRowsHtml += (hdrHtml + itemsHtml);
+                });
+            });
+
+            document.getElementById('stmtTable').innerHTML = exps.length ? `
         <div class="table-hdr"><div class="table-title">تفاصيل المعاملات — ${MONTHS[fromM]} ${fromY} إلى ${MONTHS[toM]} ${toY}</div></div>
         <table class="stmt-table"><thead><tr><th>التاريخ</th><th>الوصف</th><th>الفئة</th><th>المبلغ</th></tr></thead><tbody>
         ${flatRowsHtml}
@@ -4056,6 +4402,13 @@
         </tbody></table>`: '<div class="empty">لا مصاريف في هذه الفترة</div>';
         }
         function printStatement() { window.print() }
+        function toggleStmtInvoice(invId, hdrEl) {
+            hdrEl.classList.toggle('active');
+            const children = document.querySelectorAll(`.child-of-${invId}`);
+            children.forEach(el => {
+                el.classList.toggle('expanded');
+            });
+        }
 
         // ═══════════════════════════════════════
         //  INCOME
