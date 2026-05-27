@@ -3687,7 +3687,19 @@
                     const serverTime = p.lastUpdated || 0;
                     const localTime = state.lastUpdated || 0;
 
-                    if (localTime > serverTime) {
+                    let shouldSyncLocal = localTime > serverTime;
+
+                    if (localTime === 0 && serverTime === 0) {
+                        const localCount = (state.expenses || []).length;
+                        const serverCount = (p.expenses ? Object.values(p.expenses) : []).length;
+                        if (localCount > serverCount) {
+                            console.log("Both times are 0, but local has more expenses. Choosing local.", localCount, serverCount);
+                            state.lastUpdated = Date.now();
+                            shouldSyncLocal = true;
+                        }
+                    }
+
+                    if (shouldSyncLocal) {
                         console.log("Local state is newer than server. Syncing local to server.", localTime, serverTime);
                         db.ref('state').set(state)
                             .then(() => console.log("Offline data successfully synced to Firebase!"))
