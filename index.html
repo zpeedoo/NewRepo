@@ -3686,44 +3686,51 @@
                 } catch (e) { }
             }
 
-            db.ref('state').once('value').then(snapshot => {
+            // Use .on() instead of .once() for REAL-TIME sync across devices
+            // This means whenever data changes on Firebase (from any device),
+            // this callback fires automatically and updates the current device's UI
+            let isSaving = false; // prevent feedback loop when we ourselves write to Firebase
+
+            db.ref('state').on('value', snapshot => {
                 const p = snapshot.val();
-                if (p) {
-                    const serverTime = p.lastUpdated || 0;
-                    const localTime = state.lastUpdated || 0;
+                if (!p) return;
 
-                    let shouldSyncLocal = localTime > serverTime;
+                // Ignore Firebase updates triggered by our own saveState() call
+                if (isSaving) return;
 
-                    if (localTime === 0 && serverTime === 0) {
-                        const localCount = (state.expenses || []).length;
-                        const serverCount = (p.expenses ? Object.values(p.expenses) : []).length;
-                        if (localCount > serverCount) {
-                            console.log("Both times are 0, but local has more expenses. Choosing local.", localCount, serverCount);
-                            state.lastUpdated = Date.now();
-                            shouldSyncLocal = true;
-                        }
-                    }
+                const serverTime = p.lastUpdated || 0;
+                const localTime = state.lastUpdated || 0;
 
-                    if (shouldSyncLocal) {
-                        console.log("Local state is newer than server. Syncing local to server.", localTime, serverTime);
-                        db.ref('state').set(state)
-                            .then(() => console.log("Offline data successfully synced to Firebase!"))
-                            .catch(err => console.error("Sync to server failed", err));
-                    } else {
-                        console.log("Server state is newer or equal. Loading server state.", serverTime, localTime);
-                        const dbNeedsSave = processLoadedState(p);
-                        if (p.lastUpdated !== undefined) {
-                            state.lastUpdated = p.lastUpdated;
-                        }
-                        if (dbNeedsSave) {
-                            saveState();
-                        } else {
-                            renderCurrentPage();
-                        }
+                let shouldSyncLocal = localTime > serverTime;
+
+                if (localTime === 0 && serverTime === 0) {
+                    const localCount = (state.expenses || []).length;
+                    const serverCount = (p.expenses ? Object.values(p.expenses) : []).length;
+                    if (localCount > serverCount) {
+                        state.lastUpdated = Date.now();
+                        shouldSyncLocal = true;
                     }
                 }
-            }).catch(err => {
-                console.error("Firebase fetch error", err);
+
+                if (shouldSyncLocal) {
+                    console.log('Local is newer → pushing to server');
+                    isSaving = true;
+                    db.ref('state').set({ ...state, budgets: encodeBudgetsForFirebase(state.budgets) })
+                        .then(() => { isSaving = false; console.log('Pushed local to server ✅'); })
+                        .catch(err => { isSaving = false; console.error('Push failed', err); });
+                } else {
+                    console.log('Server updated → pulling to device ✅');
+                    const dbNeedsSave = processLoadedState(p);
+                    if (p.lastUpdated !== undefined) state.lastUpdated = p.lastUpdated;
+                    if (dbNeedsSave) {
+                        saveState();
+                    } else {
+                        localStorage.setItem('mwsarify_v3', JSON.stringify(state));
+                        renderCurrentPage();
+                    }
+                }
+            }, err => {
+                console.error('Firebase realtime listener error', err);
             });
 
             if (needsSave) saveState();
