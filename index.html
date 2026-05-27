@@ -3437,6 +3437,11 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        // Global flag to prevent Firebase listener feedback loop:
+        // When WE write to Firebase, the .on() listener fires again with our own data.
+        // We use this flag to skip that echo and avoid infinite loops.
+        let isSaving = false;
+
         async function loadState() {
             // ── CATEGORY MIGRATION v2 HELPERS ──
             const CAT_MIGRATION = {
@@ -3686,11 +3691,7 @@
                 } catch (e) { }
             }
 
-            // Use .on() instead of .once() for REAL-TIME sync across devices
-            // This means whenever data changes on Firebase (from any device),
-            // this callback fires automatically and updates the current device's UI
-            let isSaving = false; // prevent feedback loop when we ourselves write to Firebase
-
+            // Use .on() for REAL-TIME sync: fires automatically on any change from any device
             db.ref('state').on('value', snapshot => {
                 const p = snapshot.val();
                 if (!p) return;
@@ -3793,16 +3794,17 @@
         async function saveState() {
             trainModel();
             state.lastUpdated = Date.now();
+            isSaving = true; // block the .on() listener from reacting to our own write
             try {
-                // Encode budgets keys before sending to Firebase to avoid forbidden characters
                 const firebaseState = { ...state, budgets: encodeBudgetsForFirebase(state.budgets) };
                 await db.ref('state').set(firebaseState);
                 console.log('Firebase save OK');
             } catch (e) {
                 console.error('Firebase save error', e);
-                // Show visible error on screen for mobile diagnosis
                 toast('⚠️ خطأ في المزامنة: ' + (e.message || e.code || 'تحقق من الاتصال بالنت'));
             }
+            // Allow listener again after a short delay (Firebase echo arrives ~100-300ms later)
+            setTimeout(() => { isSaving = false; }, 500);
             localStorage.setItem('mwsarify_v3', JSON.stringify(state));
             updateDatalists();
         }
