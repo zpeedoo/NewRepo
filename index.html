@@ -3789,7 +3789,12 @@
                 // Encode budgets keys before sending to Firebase to avoid forbidden characters
                 const firebaseState = { ...state, budgets: encodeBudgetsForFirebase(state.budgets) };
                 await db.ref('state').set(firebaseState);
-            } catch (e) { console.error("Firebase save error", e); }
+                console.log('Firebase save OK');
+            } catch (e) {
+                console.error('Firebase save error', e);
+                // Show visible error on screen for mobile diagnosis
+                toast('⚠️ خطأ في المزامنة: ' + (e.message || e.code || 'تحقق من الاتصال بالنت'));
+            }
             localStorage.setItem('mwsarify_v3', JSON.stringify(state));
             updateDatalists();
         }
