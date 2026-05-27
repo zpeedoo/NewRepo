@@ -3486,7 +3486,7 @@
                 state.maintenance = p.maintenance ? Object.values(p.maintenance) : [];
                 state.loans = p.loans ? Object.values(p.loans) : [];
                 if (p.categories) state.categories = p.categories;
-                if (p.budgets) state.budgets = p.budgets;
+                if (p.budgets) state.budgets = decodeBudgetsFromFirebase(p.budgets);
                 if (p.periodMode) state.periodMode = p.periodMode;
                 if (p.periodMonth !== undefined) state.periodMonth = p.periodMonth;
                 state.periodYear = p.periodYear || new Date().getFullYear();
@@ -3743,11 +3743,48 @@
             }
         }
 
+        // Encode budgets object keys (category names) to be Firebase-safe
+        // Firebase forbids keys with: . # $ / [ ]
+        function encodeBudgetsForFirebase(budgets) {
+            if (!budgets || typeof budgets !== 'object') return budgets;
+            const encoded = {};
+            for (const key in budgets) {
+                const safeKey = key
+                    .replace(/\./g, '__DOT__')
+                    .replace(/#/g, '__HASH__')
+                    .replace(/\$/g, '__DOLLAR__')
+                    .replace(/\//g, '__SLASH__')
+                    .replace(/\[/g, '__LBRACKET__')
+                    .replace(/\]/g, '__RBRACKET__');
+                encoded[safeKey] = budgets[key];
+            }
+            return encoded;
+        }
+
+        // Decode Firebase-safe keys back to original category names
+        function decodeBudgetsFromFirebase(budgets) {
+            if (!budgets || typeof budgets !== 'object') return budgets;
+            const decoded = {};
+            for (const key in budgets) {
+                const origKey = key
+                    .replace(/__DOT__/g, '.')
+                    .replace(/__HASH__/g, '#')
+                    .replace(/__DOLLAR__/g, '$')
+                    .replace(/__SLASH__/g, '/')
+                    .replace(/__LBRACKET__/g, '[')
+                    .replace(/__RBRACKET__/g, ']');
+                decoded[origKey] = budgets[key];
+            }
+            return decoded;
+        }
+
         async function saveState() {
             trainModel();
             state.lastUpdated = Date.now();
             try {
-                await db.ref('state').set(state);
+                // Encode budgets keys before sending to Firebase to avoid forbidden characters
+                const firebaseState = { ...state, budgets: encodeBudgetsForFirebase(state.budgets) };
+                await db.ref('state').set(firebaseState);
             } catch (e) { console.error("Firebase save error", e); }
             localStorage.setItem('mwsarify_v3', JSON.stringify(state));
             updateDatalists();
