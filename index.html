@@ -204,7 +204,8 @@
         }
 
         [data-theme="light"] .shop-tab.active {
-            background: #e2ff80; /* Soft lime-yellow from the image! */
+            background: #e2ff80;
+            /* Soft lime-yellow from the image! */
             border-color: #c4e650;
             color: #1c1e15;
             font-weight: 600;
@@ -235,7 +236,8 @@
         }
 
         [data-theme="light"] .badge {
-            background: #ebe0ff; /* Soft lavender pill from the image! */
+            background: #ebe0ff;
+            /* Soft lavender pill from the image! */
             color: #2e1e4a;
             border-radius: 9999px;
             font-weight: 500;
@@ -882,7 +884,9 @@
         }
 
         @keyframes bbarFillGrow {
-            from { width: 0%; }
+            from {
+                width: 0%;
+            }
         }
 
         .warn {
@@ -1546,25 +1550,47 @@
                 opacity: 0;
                 transform: translateY(16px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        .page.active .card, 
+        .page.active .card,
         .page.active .metric,
-        .page.active .grid-4 > div,
-        .page.active .grid-2 > div {
+        .page.active .grid-4>div,
+        .page.active .grid-2>div {
             animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
 
-        .page.active .card:nth-child(1), .page.active .grid-4 > div:nth-child(1) { animation-delay: 0.04s; }
-        .page.active .card:nth-child(2), .page.active .grid-4 > div:nth-child(2) { animation-delay: 0.08s; }
-        .page.active .card:nth-child(3), .page.active .grid-4 > div:nth-child(3) { animation-delay: 0.12s; }
-        .page.active .card:nth-child(4), .page.active .grid-4 > div:nth-child(4) { animation-delay: 0.16s; }
-        .page.active .card:nth-child(5) { animation-delay: 0.20s; }
-        .page.active .card:nth-child(6) { animation-delay: 0.24s; }
+        .page.active .card:nth-child(1),
+        .page.active .grid-4>div:nth-child(1) {
+            animation-delay: 0.04s;
+        }
+
+        .page.active .card:nth-child(2),
+        .page.active .grid-4>div:nth-child(2) {
+            animation-delay: 0.08s;
+        }
+
+        .page.active .card:nth-child(3),
+        .page.active .grid-4>div:nth-child(3) {
+            animation-delay: 0.12s;
+        }
+
+        .page.active .card:nth-child(4),
+        .page.active .grid-4>div:nth-child(4) {
+            animation-delay: 0.16s;
+        }
+
+        .page.active .card:nth-child(5) {
+            animation-delay: 0.20s;
+        }
+
+        .page.active .card:nth-child(6) {
+            animation-delay: 0.24s;
+        }
 
         /* Floating background ambient lights for modern glassmorphism */
         .ambient-glow-1 {
@@ -1596,27 +1622,40 @@
         }
 
         @keyframes floatGlow1 {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(-80px, 100px) scale(1.15); }
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(-80px, 100px) scale(1.15);
+            }
         }
 
         @keyframes floatGlow2 {
-            0% { transform: translate(0, 0) scale(1.1); }
-            100% { transform: translate(100px, -80px) scale(0.9); }
+            0% {
+                transform: translate(0, 0) scale(1.1);
+            }
+
+            100% {
+                transform: translate(100px, -80px) scale(0.9);
+            }
         }
 
         /* Hover lift and glow effects on cards */
-        .card, .metric {
+        .card,
+        .metric {
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
 
-        .card:hover, .metric:hover {
+        .card:hover,
+        .metric:hover {
             transform: translateY(-4px) scale(1.005);
             box-shadow: 0 16px 32px rgba(124, 109, 250, 0.06) !important;
             border-color: rgba(124, 109, 250, 0.15) !important;
         }
 
-        [data-theme="light"] .card:hover, [data-theme="light"] .metric:hover {
+        [data-theme="light"] .card:hover,
+        [data-theme="light"] .metric:hover {
             box-shadow: 0 16px 32px rgba(15, 23, 42, 0.03) !important;
             border-color: rgba(15, 23, 42, 0.05) !important;
         }
@@ -2878,7 +2917,8 @@
             </div>
             <div class="bnav-item" data-page="budget" onclick="goPage(this)">
                 <svg viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M4 10.781c.148 1.667 1.513 2.855 3.591 3.087V15h1.043v-1.166c2.11-.252 3.46-1.44 3.46-3.003 0-1.564-1.01-2.486-2.584-2.81l-.924-.199c-1.347-.287-1.93-.779-1.93-1.52 0-.733.599-1.23 1.608-1.328V3.11h-.97v1.125c-1.637.21-2.702 1.3-2.702 2.785 0 1.42.868 2.247 2.127 2.505l.925.195c1.479.314 2.11.83 2.11 1.652 0 .857-.71 1.428-1.805 1.514v-1.15h-.98v1.144c-1.748-.22-2.748-1.28-2.819-2.733H4z"/>
+                    <path
+                        d="M4 10.781c.148 1.667 1.513 2.855 3.591 3.087V15h1.043v-1.166c2.11-.252 3.46-1.44 3.46-3.003 0-1.564-1.01-2.486-2.584-2.81l-.924-.199c-1.347-.287-1.93-.779-1.93-1.52 0-.733.599-1.23 1.608-1.328V3.11h-.97v1.125c-1.637.21-2.702 1.3-2.702 2.785 0 1.42.868 2.247 2.127 2.505l.925.195c1.479.314 2.11.83 2.11 1.652 0 .857-.71 1.428-1.805 1.514v-1.15h-.98v1.144c-1.748-.22-2.748-1.28-2.819-2.733H4z" />
                 </svg><span>الميزانية</span>
             </div>
             <div class="bnav-item" data-page="income" onclick="goPage(this)">
@@ -3377,6 +3417,7 @@
             periodMode: 'month', // month | year | all
             periodMonth: new Date().getMonth(),
             periodYear: new Date().getFullYear(),
+            lastUpdated: 0,
         };
 
         const firebaseConfig = {
@@ -3634,19 +3675,34 @@
                 try {
                     const p = JSON.parse(s);
                     needsSave = processLoadedState(p);
+                    if (p.lastUpdated !== undefined) {
+                        state.lastUpdated = p.lastUpdated;
+                    }
                 } catch (e) { }
             }
 
             db.ref('state').once('value').then(snapshot => {
                 const p = snapshot.val();
                 if (p) {
-                    const dbNeedsSave = processLoadedState(p);
-                    if (dbNeedsSave) saveState();
-                    const active = document.querySelector('.page.active');
-                    if (active) {
-                        const id = active.id.replace('page-', '');
-                        const renders = { overview: renderOverview, statement: renderStatement, income: renderIncome, transactions: renderExpTable, subscriptions: renderSubs, loans: renderLoans, budget: renderBudget, categories: renderCategories, export: renderExport };
-                        if (renders[id]) renders[id]();
+                    const serverTime = p.lastUpdated || 0;
+                    const localTime = state.lastUpdated || 0;
+
+                    if (localTime > serverTime) {
+                        console.log("Local state is newer than server. Syncing local to server.", localTime, serverTime);
+                        db.ref('state').set(state)
+                            .then(() => console.log("Offline data successfully synced to Firebase!"))
+                            .catch(err => console.error("Sync to server failed", err));
+                    } else {
+                        console.log("Server state is newer or equal. Loading server state.", serverTime, localTime);
+                        const dbNeedsSave = processLoadedState(p);
+                        if (p.lastUpdated !== undefined) {
+                            state.lastUpdated = p.lastUpdated;
+                        }
+                        if (dbNeedsSave) {
+                            saveState();
+                        } else {
+                            renderCurrentPage();
+                        }
                     }
                 }
             }).catch(err => {
@@ -3656,8 +3712,28 @@
             if (needsSave) saveState();
         }
 
+        function renderCurrentPage() {
+            const active = document.querySelector('.page.active');
+            if (active) {
+                const id = active.id.replace('page-', '');
+                const renders = { 
+                    overview: renderOverview, 
+                    statement: renderStatement, 
+                    income: renderIncome, 
+                    transactions: renderExpTable, 
+                    subscriptions: renderSubs, 
+                    loans: renderLoans, 
+                    budget: renderBudget, 
+                    categories: renderCategories, 
+                    export: renderExport 
+                };
+                if (renders[id]) renders[id]();
+            }
+        }
+
         async function saveState() {
             trainModel();
+            state.lastUpdated = Date.now();
             try {
                 await db.ref('state').set(state);
             } catch (e) { console.error("Firebase save error", e); }
@@ -4215,18 +4291,18 @@
                 const curY = tempDate.getFullYear();
                 const curM = tempDate.getMonth(); // 0-indexed
                 const curYMStr = `${curY}-${String(curM + 1).padStart(2, '0')}`;
-                
+
                 (state.subscriptions || []).forEach(sub => {
                     const startD = parseLocalDate(sub.start);
                     const endD = sub.end ? parseLocalDate(sub.end) : null;
                     const thisMonthStart = new Date(curY, curM, 1);
                     const thisMonthEnd = new Date(curY, curM + 1, 0);
-                    
+
                     if (startD <= thisMonthEnd && (!endD || endD >= thisMonthStart)) {
                         const dayPart = startD.getDate();
                         const finalDay = Math.min(dayPart, thisMonthEnd.getDate());
                         const dateStr = `${curY}-${String(curM + 1).padStart(2, '0')}-${String(finalDay).padStart(2, '0')}`;
-                        
+
                         subExps.push({
                             id: `sub-${sub.id}-${curYMStr}`,
                             date: dateStr,
@@ -4248,11 +4324,11 @@
                 const curY = tempDate.getFullYear();
                 const curM = tempDate.getMonth();
                 const curYMStr = `${curY}-${String(curM + 1).padStart(2, '0')}`;
-                
+
                 (state.loans || []).forEach(loan => {
                     const startD = parseLocalDate(loan.start || td());
                     const thisMonthEnd = new Date(curY, curM + 1, 0);
-                    
+
                     if (startD <= thisMonthEnd && loan.remaining > 0) {
                         const dateStr = `${curY}-${String(curM + 1).padStart(2, '0')}-01`;
                         loanExps.push({
