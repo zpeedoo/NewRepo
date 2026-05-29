@@ -2548,6 +2548,10 @@
                 <button class="chip" id="chip-year" onclick="setQuickPeriod('year',this)">سنة</button>
                 <button class="chip" id="chip-all" onclick="setQuickPeriod('all',this)">الكل</button>
             </div>
+            <div style="margin-top:10px; display:flex; align-items:center; justify-content:space-between; gap:6px; background:var(--surface2); padding:6px 10px; border-radius:var(--r); border:1px solid var(--border);">
+                <span style="font-size:11px; color:var(--text2); font-weight:600;">بداية الشهر المالي:</span>
+                <select class="period-sel" id="selStartDay" onchange="updateStartDay()" style="max-width:90px; padding:2px 6px; font-size:11px; border-radius:4px;"></select>
+            </div>
             <button class="btn" id="themeToggleBtn" onclick="toggleTheme()"
                 style="margin-top:10px;width:100%;justify-content:center;gap:8px;">
                 <span id="themeToggleIcon">☀️</span>
@@ -3421,6 +3425,7 @@
             periodMode: 'month', // month | year | all
             periodMonth: new Date().getMonth(),
             periodYear: new Date().getFullYear(),
+            financialMonthStartDay: 27, // defaults to 27 as requested
             lastUpdated: 0,
         };
 
@@ -3500,6 +3505,7 @@
                 if (p.periodMode) state.periodMode = p.periodMode;
                 if (p.periodMonth !== undefined) state.periodMonth = p.periodMonth;
                 state.periodYear = p.periodYear || new Date().getFullYear();
+                state.financialMonthStartDay = p.financialMonthStartDay !== undefined ? parseInt(p.financialMonthStartDay) : 27;
 
                 // Migrate fixedSubs to new object structure with dates
                 if (p.fixedSubs) {
@@ -3812,14 +3818,34 @@
         // ═══════════════════════════════════════
         //  PERIOD HELPERS
         // ═══════════════════════════════════════
+        function getFinancialMonthAndYear(dateStr) {
+            const [y, m, d] = dateStr.split('-').map(Number);
+            const year = y;
+            const month = m - 1; // 0-indexed calendar month
+            const day = d;
+
+            const startDay = state.financialMonthStartDay || 27;
+            if (startDay === 1) {
+                return { month, year };
+            }
+
+            if (day >= startDay) {
+                let finMonth = month + 1;
+                let finYear = year;
+                if (finMonth > 11) {
+                    finMonth = 0;
+                    finYear += 1;
+                }
+                return { month: finMonth, year: finYear };
+            } else {
+                return { month: month, year: year };
+            }
+        }
+
         function inRange(dateStr) {
             if (state.periodMode === 'all') return true;
 
-            // Format string appropriately to avoid timezone offset shifts during Date parsing
-            // Assuming dateStr is 'YYYY-MM-DD'
-            const [y, m, d] = dateStr.split('-');
-            const year = parseInt(y);
-            const month = parseInt(m) - 1; // 0-indexed
+            const { month, year } = getFinancialMonthAndYear(dateStr);
 
             if (state.periodMode === 'year') {
                 return year === state.periodYear;
@@ -3832,20 +3858,39 @@
 
         function getDateRange() {
             const { periodMode: m, periodMonth, periodYear } = state;
+            const startDay = state.financialMonthStartDay || 27;
             if (m === 'month') {
-                const from = new Date(periodYear, periodMonth, 1);
-                const to = new Date(periodYear, periodMonth + 1, 0);
-                return { from, to };
+                if (startDay === 1) {
+                    const from = new Date(periodYear, periodMonth, 1);
+                    const to = new Date(periodYear, periodMonth + 1, 0);
+                    return { from, to };
+                } else {
+                    const from = new Date(periodYear, periodMonth - 1, startDay);
+                    const to = new Date(periodYear, periodMonth, startDay - 1);
+                    return { from, to };
+                }
             }
             if (m === 'year') {
-                return { from: new Date(periodYear, 0, 1), to: new Date(periodYear, 11, 31) };
+                if (startDay === 1) {
+                    return { from: new Date(periodYear, 0, 1), to: new Date(periodYear, 11, 31) };
+                } else {
+                    return { from: new Date(periodYear - 1, 11, startDay), to: new Date(periodYear, 11, startDay - 1) };
+                }
             }
             return { from: new Date(2000, 0, 1), to: new Date(2099, 11, 31) };
         }
 
         function periodLabel() {
             const { periodMode: m, periodMonth, periodYear } = state;
-            if (m === 'month') return MONTHS[periodMonth] + ' ' + periodYear;
+            const startDay = state.financialMonthStartDay || 27;
+            if (m === 'month') {
+                let lbl = MONTHS[periodMonth] + ' ' + periodYear;
+                if (startDay > 1) {
+                    const prevMonth = periodMonth === 0 ? 11 : periodMonth - 1;
+                    lbl += ` (${startDay}/${prevMonth + 1} - ${startDay - 1}/${periodMonth + 1})`;
+                }
+                return lbl;
+            }
             if (m === 'year') return 'سنة ' + periodYear;
             return 'كل الفترات';
         }
@@ -3881,6 +3926,11 @@
             state.periodYear = parseInt(document.getElementById('selYear').value);
             renderCurrent();
         }
+        function updateStartDay() {
+            state.financialMonthStartDay = parseInt(document.getElementById('selStartDay').value) || 27;
+            saveState();
+            renderCurrent();
+        }
         function setQuickPeriod(mode, btn) {
             state.periodMode = mode;
             document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
@@ -3909,6 +3959,18 @@
                 o.value = y; o.textContent = y;
                 if (y === now.getFullYear()) o.selected = true;
                 ySel.appendChild(o);
+            }
+            // Populate financial month start day select
+            const startDaySel = document.getElementById('selStartDay');
+            if (startDaySel) {
+                startDaySel.innerHTML = '';
+                for (let d = 1; d <= 28; d++) {
+                    const o = document.createElement('option');
+                    o.value = d;
+                    o.textContent = d === 1 ? '1 (التقويم)' : `يوم ${d}`;
+                    if (d === (state.financialMonthStartDay || 27)) o.selected = true;
+                    startDaySel.appendChild(o);
+                }
             }
             // statement selects
             ['stmtFromMonth', 'stmtToMonth'].forEach(id => {
@@ -4283,9 +4345,14 @@
             for (let i = 11; i >= 0; i--) {
                 const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
                 labels.push(MONTHS_SHORT[d.getMonth()]);
-                // using string startswith to bypass timezone differences safely
-                const targetYM = ym(d).slice(0, 7);
-                vals.push(state.expenses.filter(e => e.date.startsWith(targetYM)).reduce((s, e) => s + e.amount, 0));
+                const targetMonth = d.getMonth();
+                const targetYear = d.getFullYear();
+
+                const filtered = state.expenses.filter(e => {
+                    const { month, year } = getFinancialMonthAndYear(e.date);
+                    return month === targetMonth && year === targetYear;
+                });
+                vals.push(filtered.reduce((s, e) => s + e.amount, 0));
             }
             if (charts.line) charts.line.destroy();
             const ctx = document.getElementById('lineChart').getContext('2d');
@@ -5276,8 +5343,14 @@
             for (let i = 11; i >= 0; i--) {
                 const d = new Date(now3.getFullYear(), now3.getMonth() - i, 1);
                 lbls3.push(MONTHS_SHORT[d.getMonth()]);
-                const targetYM = ym(d).slice(0, 7);
-                vals3.push(state.expenses.filter(e => e.date.startsWith(targetYM)).reduce((s, e) => s + e.amount, 0));
+                const targetMonth = d.getMonth();
+                const targetYear = d.getFullYear();
+
+                const filtered = state.expenses.filter(e => {
+                    const { month, year } = getFinancialMonthAndYear(e.date);
+                    return month === targetMonth && year === targetYear;
+                });
+                vals3.push(filtered.reduce((s, e) => s + e.amount, 0));
             }
             if (expDashChart) expDashChart.destroy();
             const lineEl = document.getElementById('expDashLine');
@@ -6441,17 +6514,36 @@
             const periodEl = document.getElementById('eval-period');
             if (!el) return;
 
-            // Always evaluate the CURRENT calendar month regardless of period filter
-            const now = new Date();
-            const curY = now.getFullYear(), curM = now.getMonth();
-            const curYM = `${curY}-${String(curM + 1).padStart(2, '0')}`;
-            const prevDate = new Date(curY, curM - 1, 1);
-            const prevYM = `${prevDate.getFullYear()}-${String(prevDate.getMonth() + 1).padStart(2, '0')}`;
+            // Evaluate the CURRENT financial month based on cycleStartDay
+            const currentCycle = getFinancialMonthAndYear(td());
+            const curM = currentCycle.month;
+            const curY = currentCycle.year;
 
-            if (periodEl) periodEl.textContent = `${MONTHS[curM]} ${curY}`;
+            let prevM = curM - 1;
+            let prevY = curY;
+            if (prevM < 0) {
+                prevM = 11;
+                prevY = curY - 1;
+            }
 
-            const curExps = state.expenses.filter(e => e.date.startsWith(curYM));
-            const prevExps = state.expenses.filter(e => e.date.startsWith(prevYM));
+            const startDay = state.financialMonthStartDay || 27;
+            if (periodEl) {
+                let lbl = `${MONTHS[curM]} ${curY}`;
+                if (startDay > 1) {
+                    const prevMonthVal = curM === 0 ? 11 : curM - 1;
+                    lbl += ` (${startDay}/${prevMonthVal + 1} - ${startDay - 1}/${curM + 1})`;
+                }
+                periodEl.textContent = lbl;
+            }
+
+            const curExps = state.expenses.filter(e => {
+                const { month, year } = getFinancialMonthAndYear(e.date);
+                return month === curM && year === curY;
+            });
+            const prevExps = state.expenses.filter(e => {
+                const { month, year } = getFinancialMonthAndYear(e.date);
+                return month === prevM && year === prevY;
+            });
             const curTotal = curExps.reduce((s, e) => s + e.amount, 0);
             const prevTotal = prevExps.reduce((s, e) => s + e.amount, 0);
             const subMonthly = calcSubMonthly();
