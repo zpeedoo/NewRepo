@@ -2445,7 +2445,8 @@
         <div class="logo">
             <div class="logo-title">💸 مصاريفي</div>
             <div class="logo-sub">personal finance v3.5 - المزامنة الذكية</div>
-            <button class="btn btn-sm" onclick="forceRESTSync()" style="margin-top:8px; width:100%; font-size:10px; padding:4px 8px; justify-content:center; gap:4px; height: 28px; background:rgba(52,211,153,0.1); color:#34d399; border-color:rgba(52,211,153,0.2);">
+            <button class="btn btn-sm" onclick="forceRESTSync()"
+                style="margin-top:8px; width:100%; font-size:10px; padding:4px 8px; justify-content:center; gap:4px; height: 28px; background:rgba(52,211,153,0.1); color:#34d399; border-color:rgba(52,211,153,0.2);">
                 🔄 مزامنة سحابية مباشرة
             </button>
         </div>
@@ -2551,9 +2552,11 @@
                 <button class="chip" id="chip-year" onclick="setQuickPeriod('year',this)">سنة</button>
                 <button class="chip" id="chip-all" onclick="setQuickPeriod('all',this)">الكل</button>
             </div>
-            <div style="margin-top:10px; display:flex; align-items:center; justify-content:space-between; gap:6px; background:var(--surface2); padding:6px 10px; border-radius:var(--r); border:1px solid var(--border);">
+            <div
+                style="margin-top:10px; display:flex; align-items:center; justify-content:space-between; gap:6px; background:var(--surface2); padding:6px 10px; border-radius:var(--r); border:1px solid var(--border);">
                 <span style="font-size:11px; color:var(--text2); font-weight:600;">بداية الشهر المالي:</span>
-                <select class="period-sel" id="selStartDay" onchange="updateStartDay()" style="max-width:90px; padding:2px 6px; font-size:11px; border-radius:4px;"></select>
+                <select class="period-sel" id="selStartDay" onchange="updateStartDay()"
+                    style="max-width:90px; padding:2px 6px; font-size:11px; border-radius:4px;"></select>
             </div>
             <button class="btn" id="themeToggleBtn" onclick="toggleTheme()"
                 style="margin-top:10px;width:100%;justify-content:center;gap:8px;">
@@ -2574,10 +2577,13 @@
         <!-- ── OVERVIEW PAGE ── -->
         <div class="page active" id="page-overview">
             <div class="topbar">
-                <div class="page-title">نظرة عامة <span class="badge" style="font-size: 11px; padding: 2px 8px; margin-right: 8px; font-weight: 600; background: rgba(124, 109, 250, 0.15); color: var(--accent2); vertical-align: middle;">v3.5 - المزامنة الذكية</span></div>
+                <div class="page-title">نظرة عامة <span class="badge"
+                        style="font-size: 11px; padding: 2px 8px; margin-right: 8px; font-weight: 600; background: rgba(124, 109, 250, 0.15); color: var(--accent2); vertical-align: middle;">v3.5
+                        - المزامنة الذكية</span></div>
                 <div class="topbar-right" style="gap: 8px; align-items: center;">
                     <span class="period-badge" id="periodBadge">...</span>
-                    <button class="btn btn-sm" onclick="forceRESTSync()" style="padding: 6px 12px; font-size: 11px; gap: 4px; display: inline-flex; align-items: center; background:rgba(52,211,153,0.1); color:#34d399; border-color:rgba(52,211,153,0.2); height: 28px;">
+                    <button class="btn btn-sm" onclick="forceRESTSync()"
+                        style="padding: 6px 12px; font-size: 11px; gap: 4px; display: inline-flex; align-items: center; background:rgba(52,211,153,0.1); color:#34d399; border-color:rgba(52,211,153,0.2); height: 28px;">
                         🔄 مزامنة سحابية
                     </button>
                     <button class="btn btn-primary btn-circle" onclick="openModal('addExpense')">+</button>
@@ -2656,8 +2662,11 @@
             </div>
 
             <!-- Quick statement period selectors -->
-            <div class="stmt-quick-chips" style="display:flex; gap:8px; flex-wrap:wrap; margin: 0 0 16px 0; background: var(--surface2); padding: 8px 12px; border-radius: var(--r); border: 1px solid var(--border);">
-                <span style="font-size:11px; color:var(--text2); display:flex; align-items:center; font-weight:600; margin-left:6px;">📊 اختصار الفترة:</span>
+            <div class="stmt-quick-chips"
+                style="display:flex; gap:8px; flex-wrap:wrap; margin: 0 0 16px 0; background: var(--surface2); padding: 8px 12px; border-radius: var(--r); border: 1px solid var(--border);">
+                <span
+                    style="font-size:11px; color:var(--text2); display:flex; align-items:center; font-weight:600; margin-left:6px;">📊
+                    اختصار الفترة:</span>
                 <button class="chip" onclick="setStatementPeriod('currentMonth')">الشهر الحالي</button>
                 <button class="chip" onclick="setStatementPeriod('prevMonth')">الشهر السابق</button>
                 <button class="chip" onclick="setStatementPeriod('last3Months')">آخر 3 أشهر</button>
@@ -3781,7 +3790,7 @@
                         .catch(err => { isSaving = false; console.error('Push failed', err); });
                 } else {
                     console.log('Server updated → pulling to device ✅');
-                    
+
                     // Backup local state to prevent data loss if there are any local transactions
                     const currentLocal = localStorage.getItem('mwsarify_v3');
                     if (currentLocal) {
@@ -3814,16 +3823,16 @@
             const active = document.querySelector('.page.active');
             if (active) {
                 const id = active.id.replace('page-', '');
-                const renders = { 
-                    overview: renderOverview, 
-                    statement: renderStatement, 
-                    income: renderIncome, 
-                    transactions: renderExpTable, 
-                    subscriptions: renderSubs, 
-                    loans: renderLoans, 
-                    budget: renderBudget, 
-                    categories: renderCategories, 
-                    export: renderExport 
+                const renders = {
+                    overview: renderOverview,
+                    statement: renderStatement,
+                    income: renderIncome,
+                    transactions: renderExpTable,
+                    subscriptions: renderSubs,
+                    loans: renderLoans,
+                    budget: renderBudget,
+                    categories: renderCategories,
+                    export: renderExport
                 };
                 if (renders[id]) renders[id]();
             }
@@ -3962,22 +3971,12 @@
             return 'كل الفترات';
         }
         function monthlyIncome() {
-            // Only 'salary' is recurring every month automatically as requested by the user
-            const fixedSalary = state.incomeSources
-                .filter(src => src.type === 'salary')
-                .reduce((s, src) => s + src.amount, 0);
-            
-            // Other fixed incomes are treated as one-off based on their start date falling within the selected range
-            const otherFixed = state.incomeSources
-                .filter(src => src.type !== 'salary' && inRange(src.start))
-                .reduce((s, src) => s + src.amount, 0);
-            
-            const totalFixed = fixedSalary + otherFixed;
+            const fixed = state.incomeSources.reduce((s, src) => s + src.amount, 0);
             const fl = state.freelanceLog.filter(f => inRange(f.date)).reduce((s, f) => s + f.amount, 0);
             const deds = calcFixedDeductions();
-            const netFixed = totalFixed - deds;
+            const netFixed = fixed - deds;
             // total = net available income (used by overview/budget calculations)
-            return { fixed: totalFixed, fl, deds, netFixed, total: netFixed + fl, gross: totalFixed + fl };
+            return { fixed, fl, deds, netFixed, total: netFixed + fl, gross: fixed + fl };
         }
 
         // ═══════════════════════════════════════
@@ -4029,7 +4028,7 @@
         function initPeriodSelects() {
             const now = new Date();
             const fin = getFinancialMonthAndYear(td());
-            
+
             if (state.periodMonth === undefined) state.periodMonth = fin.month;
             if (state.periodYear === undefined) state.periodYear = fin.year;
 
@@ -4472,9 +4471,9 @@
             const now = new Date();
             const currentMonth = now.getMonth();
             const currentYear = now.getFullYear();
-            
+
             let fromM, fromY, toM, toY;
-            
+
             switch (rangeKey) {
                 case 'currentMonth':
                     fromM = currentMonth;
@@ -4522,23 +4521,23 @@
                     toY = currentYear + 2;
                     break;
             }
-            
+
             const sfm = document.getElementById('stmtFromMonth');
             const sfy = document.getElementById('stmtFromYear');
             const stm = document.getElementById('stmtToMonth');
             const sty = document.getElementById('stmtToYear');
-            
+
             if (sfm) sfm.value = fromM;
             if (sfy) sfy.value = fromY;
             if (stm) stm.value = toM;
             if (sty) sty.value = toY;
-            
+
             // Highlight active chip
             document.querySelectorAll('.stmt-quick-chips .chip').forEach(c => c.classList.remove('active'));
             if (window.event && window.event.currentTarget) {
                 window.event.currentTarget.classList.add('active');
             }
-            
+
             renderStatement();
         }
 
@@ -6496,29 +6495,29 @@
                 const res = await fetch('https://express-bb53b-default-rtdb.firebaseio.com/state.json');
                 if (!res.ok) throw new Error('فشل جلب البيانات من السيرفر');
                 const serverData = await res.json();
-                
+
                 if (serverData) {
                     // Decode budgets key if needed
                     if (serverData.budgets) {
                         serverData.budgets = decodeBudgetsFromFirebase(serverData.budgets);
                     }
-                    
+
                     // Smart merge incoming server data with current local data
                     window.processLoadedState(serverData);
-                    
+
                     // Update and save state to trigger immediate screen render and server PUT push
                     state.lastUpdated = Date.now();
                     const firebaseState = { ...state, budgets: encodeBudgetsForFirebase(state.budgets) };
-                    
+
                     // REST PUT request uploads the merged state safely over HTTPS REST
                     const putRes = await fetch('https://express-bb53b-default-rtdb.firebaseio.com/state.json', {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(firebaseState)
                     });
-                    
+
                     if (!putRes.ok) throw new Error('فشل رفع البيانات المدمجة للسيرفر');
-                    
+
                     localStorage.setItem('mwsarify_v3', JSON.stringify(state));
                     renderCurrentPage();
                     toast('✅ تمت المزامنة السحابية المدمجة بنجاح!');
@@ -6541,7 +6540,7 @@
             try {
                 const data = JSON.parse(backupStr);
                 let mergedCount = 0;
-                
+
                 // Helper to merge arrays without duplicate IDs
                 const mergeArray = (localArr, backupArr) => {
                     const existingIds = new Set(localArr.map(item => item.id));
@@ -6561,7 +6560,7 @@
                 if (data.loans) mergedCount += mergeArray(state.loans, Object.values(data.loans));
                 if (data.subscriptions) mergedCount += mergeArray(state.subscriptions, Object.values(data.subscriptions));
                 if (data.incomeSources) mergeArray(state.incomeSources, Object.values(data.incomeSources));
-                
+
                 if (mergedCount > 0) {
                     saveState();
                     renderOverview();
@@ -6931,12 +6930,12 @@
         async function initApp() {
             await loadState();
             processAutoRenewals();
-            
+
             // Default to 'month' period mode so it focuses on the current financial month
             if (!state.periodMode || state.periodMode === 'all') {
                 state.periodMode = 'month';
             }
-            
+
             // Set initial periodMonth and periodYear to the active financial month
             const fin = getFinancialMonthAndYear(td());
             state.periodMonth = fin.month;
