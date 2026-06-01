@@ -3736,6 +3736,7 @@
 
                 return updatedIds;
             };
+            window.processLoadedState = processLoadedState;
 
             let needsSave = false;
             const s = localStorage.getItem('mwsarify_v3');
@@ -6492,7 +6493,7 @@
                     }
                     
                     // Smart merge incoming server data with current local data
-                    processLoadedState(serverData);
+                    window.processLoadedState(serverData);
                     
                     // Update and save state to trigger immediate screen render and server PUT push
                     state.lastUpdated = Date.now();
