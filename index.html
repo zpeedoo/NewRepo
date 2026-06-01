@@ -2628,7 +2628,7 @@
             <div class="topbar">
                 <div class="page-title">كشف الحساب</div>
             </div>
-            <div class="stmt-filters">
+            <div class="stmt-filters" style="margin-bottom:10px;">
                 <div class="field" style="min-width:130px">
                     <label>من شهر</label>
                     <select class="inp" id="stmtFromMonth"></select>
@@ -2647,6 +2647,18 @@
                 </div>
                 <button class="btn btn-primary" onclick="renderStatement()">عرض الكشف</button>
                 <button class="btn" onclick="printStatement()">🖨️ طباعة</button>
+            </div>
+
+            <!-- Quick statement period selectors -->
+            <div class="stmt-quick-chips" style="display:flex; gap:8px; flex-wrap:wrap; margin: 0 0 16px 0; background: var(--surface2); padding: 8px 12px; border-radius: var(--r); border: 1px solid var(--border);">
+                <span style="font-size:11px; color:var(--text2); display:flex; align-items:center; font-weight:600; margin-left:6px;">📊 اختصار الفترة:</span>
+                <button class="chip" onclick="setStatementPeriod('currentMonth')">الشهر الحالي</button>
+                <button class="chip" onclick="setStatementPeriod('prevMonth')">الشهر السابق</button>
+                <button class="chip" onclick="setStatementPeriod('last3Months')">آخر 3 أشهر</button>
+                <button class="chip" onclick="setStatementPeriod('last6Months')">آخر 6 أشهر</button>
+                <button class="chip" onclick="setStatementPeriod('currentYear')">السنة الحالية</button>
+                <button class="chip" onclick="setStatementPeriod('prevYear')">السنة السابقة</button>
+                <button class="chip" onclick="setStatementPeriod('allTime')">كل الأوقات</button>
             </div>
             <div class="stmt-summary" id="stmtSummary"></div>
             <div class="card" style="margin-bottom:14px">
@@ -2904,6 +2916,11 @@
                     <div class="export-icon">📥</div>
                     <div class="export-name">استيراد JSON</div>
                     <div class="export-desc">استعادة نسخة احتياطية</div>
+                </div>
+                <div class="export-card" onclick="restoreLocalBackup()" style="border-color: var(--red);">
+                    <div class="export-icon">🎒</div>
+                    <div class="export-name" style="color: var(--red); font-weight: 700;">استرجاع كاش الهاتف</div>
+                    <div class="export-desc">استرداد أي مدخلات فُقدت بسبب تزامن الأجهزة</div>
                 </div>
             </div>
             <input type="file" id="importFile" accept=".json" style="display:none" onchange="handleImport(event)" />
@@ -3492,14 +3509,43 @@
             };
 
             const processLoadedState = (p) => {
-                state.expenses = p.expenses ? Object.values(p.expenses) : [];
-                state.freelanceLog = p.freelanceLog ? Object.values(p.freelanceLog) : [];
+                // Safeguard critical transaction arrays with Smart Merge
+                const localExpenses = state.expenses || [];
+                const localFreelance = state.freelanceLog || [];
+                const localMaint = state.maintenance || [];
+                const localLoans = state.loans || [];
+                const localSubs = state.subscriptions || [];
+
+                const serverExpenses = p.expenses ? Object.values(p.expenses) : [];
+                const serverFreelance = p.freelanceLog ? Object.values(p.freelanceLog) : [];
+                const serverMaint = p.maintenance ? Object.values(p.maintenance) : [];
+                const serverLoans = p.loans ? Object.values(p.loans) : [];
+                const serverSubs = p.subscriptions ? Object.values(p.subscriptions) : [];
+
+                const smartMerge = (localArr, serverArr) => {
+                    const mergedMap = new Map();
+                    // 1. Server represents authoritative updates/deletions, add server items first
+                    serverArr.forEach(item => {
+                        if (item && item.id !== undefined) mergedMap.set(item.id, item);
+                    });
+                    // 2. Add local items with unique IDs that don't exist on server (offline-created items)
+                    localArr.forEach(item => {
+                        if (item && item.id !== undefined && !mergedMap.has(item.id)) {
+                            mergedMap.set(item.id, item);
+                        }
+                    });
+                    return Array.from(mergedMap.values());
+                };
+
+                state.expenses = smartMerge(localExpenses, serverExpenses);
+                state.freelanceLog = smartMerge(localFreelance, serverFreelance);
+                state.maintenance = smartMerge(localMaint, serverMaint);
+                state.loans = smartMerge(localLoans, serverLoans);
+                state.subscriptions = smartMerge(localSubs, serverSubs);
+
                 state.incomeSources = p.incomeSources ? Object.values(p.incomeSources) : [];
-                state.subscriptions = p.subscriptions ? Object.values(p.subscriptions) : [];
                 state.shopping = p.shopping ? Object.values(p.shopping) : [];
                 state.incomeDeductions = p.incomeDeductions ? Object.values(p.incomeDeductions) : [];
-                state.maintenance = p.maintenance ? Object.values(p.maintenance) : [];
-                state.loans = p.loans ? Object.values(p.loans) : [];
                 if (p.categories) state.categories = p.categories;
                 if (p.budgets) state.budgets = decodeBudgetsFromFirebase(p.budgets);
                 if (p.periodMode) state.periodMode = p.periodMode;
@@ -3727,6 +3773,19 @@
                         .catch(err => { isSaving = false; console.error('Push failed', err); });
                 } else {
                     console.log('Server updated → pulling to device ✅');
+                    
+                    // Backup local state to prevent data loss if there are any local transactions
+                    const currentLocal = localStorage.getItem('mwsarify_v3');
+                    if (currentLocal) {
+                        try {
+                            const parsed = JSON.parse(currentLocal);
+                            if (parsed.expenses && parsed.expenses.length > 0) {
+                                localStorage.setItem('mwsarify_v3_backup', currentLocal);
+                                console.log('Backed up local state to prevent sync data loss 🎒');
+                            }
+                        } catch (e) { }
+                    }
+
                     const dbNeedsSave = processLoadedState(p);
                     if (p.lastUpdated !== undefined) state.lastUpdated = p.lastUpdated;
                     if (dbNeedsSave) {
@@ -4391,6 +4450,80 @@
         // ═══════════════════════════════════════
         //  STATEMENT
         // ═══════════════════════════════════════
+        function setStatementPeriod(rangeKey) {
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            let fromM, fromY, toM, toY;
+            
+            switch (rangeKey) {
+                case 'currentMonth':
+                    fromM = currentMonth;
+                    fromY = currentYear;
+                    toM = currentMonth;
+                    toY = currentYear;
+                    break;
+                case 'prevMonth':
+                    const prev = new Date(currentYear, currentMonth - 1, 1);
+                    fromM = prev.getMonth();
+                    fromY = prev.getFullYear();
+                    toM = fromM;
+                    toY = fromY;
+                    break;
+                case 'last3Months':
+                    const threeAgo = new Date(currentYear, currentMonth - 2, 1);
+                    fromM = threeAgo.getMonth();
+                    fromY = threeAgo.getFullYear();
+                    toM = currentMonth;
+                    toY = currentYear;
+                    break;
+                case 'last6Months':
+                    const sixAgo = new Date(currentYear, currentMonth - 5, 1);
+                    fromM = sixAgo.getMonth();
+                    fromY = sixAgo.getFullYear();
+                    toM = currentMonth;
+                    toY = currentYear;
+                    break;
+                case 'currentYear':
+                    fromM = 0;
+                    fromY = currentYear;
+                    toM = 11;
+                    toY = currentYear;
+                    break;
+                case 'prevYear':
+                    fromM = 0;
+                    fromY = currentYear - 1;
+                    toM = 11;
+                    toY = currentYear - 1;
+                    break;
+                case 'allTime':
+                    fromM = 0;
+                    fromY = currentYear - 5;
+                    toM = 11;
+                    toY = currentYear + 2;
+                    break;
+            }
+            
+            const sfm = document.getElementById('stmtFromMonth');
+            const sfy = document.getElementById('stmtFromYear');
+            const stm = document.getElementById('stmtToMonth');
+            const sty = document.getElementById('stmtToYear');
+            
+            if (sfm) sfm.value = fromM;
+            if (sfy) sfy.value = fromY;
+            if (stm) stm.value = toM;
+            if (sty) sty.value = toY;
+            
+            // Highlight active chip
+            document.querySelectorAll('.stmt-quick-chips .chip').forEach(c => c.classList.remove('active'));
+            if (window.event && window.event.currentTarget) {
+                window.event.currentTarget.classList.add('active');
+            }
+            
+            renderStatement();
+        }
+
         function renderStatement() {
             const fromM = parseInt(document.getElementById('stmtFromMonth').value);
             const fromY = parseInt(document.getElementById('stmtFromYear').value);
@@ -6336,6 +6469,48 @@
                 } catch { toast('خطأ في قراءة الملف'); }
             };
             reader.readAsText(file);
+        }
+
+        function restoreLocalBackup() {
+            const backupStr = localStorage.getItem('mwsarify_v3_backup');
+            if (!backupStr) {
+                toast('⚠️ لا توجد نسخة احتياطية سابقة محفوظة على متصفح هذا الهاتف حالياً');
+                return;
+            }
+            try {
+                const data = JSON.parse(backupStr);
+                let mergedCount = 0;
+                
+                // Helper to merge arrays without duplicate IDs
+                const mergeArray = (localArr, backupArr) => {
+                    const existingIds = new Set(localArr.map(item => item.id));
+                    let added = 0;
+                    backupArr.forEach(item => {
+                        if (item && item.id !== undefined && !existingIds.has(item.id)) {
+                            localArr.push(item);
+                            added++;
+                        }
+                    });
+                    return added;
+                };
+
+                if (data.expenses) mergedCount += mergeArray(state.expenses, Object.values(data.expenses));
+                if (data.freelanceLog) mergedCount += mergeArray(state.freelanceLog, Object.values(data.freelanceLog));
+                if (data.maintenance) mergedCount += mergeArray(state.maintenance, Object.values(data.maintenance));
+                if (data.loans) mergedCount += mergeArray(state.loans, Object.values(data.loans));
+                if (data.subscriptions) mergedCount += mergeArray(state.subscriptions, Object.values(data.subscriptions));
+                if (data.incomeSources) mergeArray(state.incomeSources, Object.values(data.incomeSources));
+                
+                if (mergedCount > 0) {
+                    saveState();
+                    renderOverview();
+                    toast(`✅ تم بنجاح استعادة ودمج ${mergedCount} معاملات مفقودة!`);
+                } else {
+                    toast('ℹ️ جميع البيانات الموجودة في النسخة الاحتياطية متوفرة بالفعل بحسابك');
+                }
+            } catch (e) {
+                toast('⚠️ خطأ في قراءة النسخة الاحتياطية المحلية');
+            }
         }
 
         // ═══════════════════════════════════════
