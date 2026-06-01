@@ -5410,14 +5410,14 @@
         }
 
         function delExpense(id) {
-            state.expenses = state.expenses.filter(e => e.id !== id);
+            state.expenses = state.expenses.filter(e => String(e.id) !== String(id));
             saveState(); renderExpTable(); renderOverview(); toast('تم الحذف');
         }
 
         // Edit reuses the same modal as Add (modal-addExpense). The mode is
         // distinguished by the `editingExpId` variable (null → add, id → edit).
         function openEditExpense(id) {
-            const exp = state.expenses.find(e => e.id === id);
+            const exp = state.expenses.find(e => String(e.id) === String(id));
             if (!exp) return;
             editingExpId = id;
             document.getElementById('m-exp-desc').value = exp.desc || '';
@@ -5434,7 +5434,7 @@
         }
 
         function saveEditExpense() {
-            const exp = state.expenses.find(e => e.id === editingExpId);
+            const exp = state.expenses.find(e => String(e.id) === String(editingExpId));
             if (!exp) return;
             const desc = document.getElementById('m-exp-desc').value.trim();
             const date = document.getElementById('m-exp-date').value || td();
@@ -5692,7 +5692,7 @@
             document.getElementById('m-sub-renew').checked = true;
         }
         function delSub(id) {
-            state.subscriptions = state.subscriptions.filter(s => s.id !== id); saveState();
+            state.subscriptions = state.subscriptions.filter(s => String(s.id) !== String(id)); saveState();
             renderSubs(); renderOverview(); toast('تم الحذف');
         }
         function updateFixedSubs() {
@@ -5867,7 +5867,7 @@
         // ═══════════════════════════════════════
         let editingSubId = null;
         function openEditSub(id) {
-            const s = state.subscriptions.find(x => x.id === id);
+            const s = state.subscriptions.find(x => String(x.id) === String(id));
             if (!s) return;
             editingSubId = id;
             document.getElementById('e-sub-name').value = s.name;
@@ -5883,7 +5883,7 @@
             openModal('editSub');
         }
         function saveEditSub() {
-            const s = state.subscriptions.find(x => x.id === editingSubId);
+            const s = state.subscriptions.find(x => String(x.id) === String(editingSubId));
             if (!s) return;
             s.name = document.getElementById('e-sub-name').value.trim();
             s.icon = document.getElementById('e-sub-icon').value || '📦';
@@ -5918,11 +5918,11 @@
             ['m-maint-desc', 'm-maint-cost', 'm-maint-note'].forEach(id => document.getElementById(id).value = '');
         }
         function delMaint(id) {
-            state.maintenance = state.maintenance.filter(m => m.id !== id); saveState();
+            state.maintenance = state.maintenance.filter(m => String(m.id) !== String(id)); saveState();
             renderMaint(); renderOverview();
         }
         function doneMaint(id) {
-            const m = state.maintenance.find(x => x.id === id); if (m) {
+            const m = state.maintenance.find(x => String(x.id) === String(id)); if (m) {
                 m.status = 'done';
                 saveState(); renderMaint(); renderOverview(); toast('تم تحديد الصيانة كمنجزة ✓');
             }
@@ -6021,12 +6021,12 @@
                 'm-loan-end'].forEach(id => document.getElementById(id).value = '');
         }
         function delLoan(id) {
-            state.loans = state.loans.filter(l => l.id !== id); saveState(); renderLoans();
+            state.loans = state.loans.filter(l => String(l.id) !== String(id)); saveState(); renderLoans();
             renderOverview();
         }
         let editingLoanId = null;
         function openEditLoan(id) {
-            const l = state.loans.find(x => x.id === id);
+            const l = state.loans.find(x => String(x.id) === String(id));
             if (!l) return;
             editingLoanId = id;
             document.getElementById('e-loan-name').value = l.name;
@@ -6040,7 +6040,7 @@
             openModal('editLoan');
         }
         function saveEditLoan() {
-            const l = state.loans.find(x => x.id === editingLoanId);
+            const l = state.loans.find(x => String(x.id) === String(editingLoanId));
             if (!l) return;
             const name = document.getElementById('e-loan-name').value.trim();
             const total = parseFloat(document.getElementById('e-loan-total').value);
@@ -6056,7 +6056,7 @@
             saveState(); closeModal('editLoan'); renderLoans(); renderOverview(); toast('تم التعديل ✓');
         }
         function payLoan(id) {
-            const l = state.loans.find(x => x.id === id);
+            const l = state.loans.find(x => String(x.id) === String(id));
             if (!l) return;
             const pay = prompt('أدخل مبلغ الدفعة (د.أ):');
             const amt = parseFloat(pay);
