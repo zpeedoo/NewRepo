@@ -3547,7 +3547,8 @@
                 state.freelanceLog = smartMerge(localFreelance, serverFreelance);
                 state.maintenance = smartMerge(localMaint, serverMaint);
                 state.loans = smartMerge(localLoans, serverLoans);
-                state.subscriptions = smartMerge(localSubs, serverSubs);
+                // Filter out any yearly subscriptions from the recurring list as requested by the user
+                state.subscriptions = smartMerge(localSubs, serverSubs).filter(s => s.freq !== 'yearly');
 
                 state.incomeSources = p.incomeSources ? Object.values(p.incomeSources) : [];
                 state.shopping = p.shopping ? Object.values(p.shopping) : [];
@@ -3961,12 +3962,22 @@
             return 'كل الفترات';
         }
         function monthlyIncome() {
-            const fixed = state.incomeSources.reduce((s, src) => s + src.amount, 0);
+            // Only 'salary' is recurring every month automatically as requested by the user
+            const fixedSalary = state.incomeSources
+                .filter(src => src.type === 'salary')
+                .reduce((s, src) => s + src.amount, 0);
+            
+            // Other fixed incomes are treated as one-off based on their start date falling within the selected range
+            const otherFixed = state.incomeSources
+                .filter(src => src.type !== 'salary' && inRange(src.start))
+                .reduce((s, src) => s + src.amount, 0);
+            
+            const totalFixed = fixedSalary + otherFixed;
             const fl = state.freelanceLog.filter(f => inRange(f.date)).reduce((s, f) => s + f.amount, 0);
             const deds = calcFixedDeductions();
-            const netFixed = fixed - deds;
+            const netFixed = totalFixed - deds;
             // total = net available income (used by overview/budget calculations)
-            return { fixed, fl, deds, netFixed, total: netFixed + fl, gross: fixed + fl };
+            return { fixed: totalFixed, fl, deds, netFixed, total: netFixed + fl, gross: totalFixed + fl };
         }
 
         // ═══════════════════════════════════════
@@ -4445,7 +4456,7 @@
             return state.subscriptions.reduce((s, sub) => {
                 if (sub.freq === 'daily') return s + sub.amount * 30;
                 if (sub.freq === 'monthly') return s + sub.amount;
-                if (sub.freq === 'yearly') return s + sub.amount / 12;
+                // Yearly subscriptions are treated as one-off in their respective month, not divided monthly
                 return s;
             }, 0);
         }
