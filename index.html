@@ -4901,7 +4901,7 @@
 
         let editingIncId = null;
         function openEditIncome(id) {
-            const inc = state.incomeSources.find(i => i.id === id);
+            const inc = state.incomeSources.find(i => String(i.id) === String(id));
             if (!inc) return;
             editingIncId = id;
             document.getElementById('e-inc-name').value = inc.name;
@@ -4911,7 +4911,7 @@
             openModal('editIncome');
         }
         function saveEditIncome() {
-            const inc = state.incomeSources.find(i => i.id === editingIncId);
+            const inc = state.incomeSources.find(i => String(i.id) === String(editingIncId));
             if (!inc) return;
             inc.name = document.getElementById('e-inc-name').value.trim();
             inc.amount = parseFloat(document.getElementById('e-inc-amount').value) || 0;
@@ -4919,7 +4919,7 @@
             inc.start = document.getElementById('e-inc-start').value;
             saveState(); closeModal('editIncome'); renderIncome(); renderOverview(); toast('تم التعديل ✓');
         }
-        function delIncomeSource(id) { state.incomeSources = state.incomeSources.filter(s => s.id !== id); saveState(); renderIncome(); renderOverview(); toast('تم الحذف'); }
+        function delIncomeSource(id) { state.incomeSources = state.incomeSources.filter(s => String(s.id) !== String(id)); saveState(); renderIncome(); renderOverview(); toast('تم الحذف'); }
         function addDeduction() {
             const name = document.getElementById('m-ded-name').value.trim();
             const amount = parseFloat(document.getElementById('m-ded-amount').value);
@@ -4929,7 +4929,7 @@
             saveState(); renderIncome(); renderOverview(); toast('تم إضافة الاستقطاع ✓');
             document.getElementById('m-ded-name').value = ''; document.getElementById('m-ded-amount').value = '';
         }
-        function delDeduction(id) { state.incomeDeductions = state.incomeDeductions.filter(d => d.id !== id); saveState(); renderIncome(); renderOverview(); toast('تم الحذف'); }
+        function delDeduction(id) { state.incomeDeductions = state.incomeDeductions.filter(d => String(d.id) !== String(id)); saveState(); renderIncome(); renderOverview(); toast('تم الحذف'); }
         function addFreelance() {
             const desc = document.getElementById('fl-desc').value.trim();
             const amount = parseFloat(document.getElementById('fl-amount').value);
@@ -4939,7 +4939,7 @@
             saveState(); renderIncome(); renderOverview(); toast('تم التسجيل ✓');
             document.getElementById('fl-desc').value = ''; document.getElementById('fl-amount').value = '';
         }
-        function delFL(id) { state.freelanceLog = state.freelanceLog.filter(f => f.id !== id); saveState(); renderFLTable(); }
+        function delFL(id) { state.freelanceLog = state.freelanceLog.filter(f => String(f.id) !== String(id)); saveState(); renderFLTable(); }
 
         // ═══════════════════════════════════════
         //  EXPENSES (DETAILED)
