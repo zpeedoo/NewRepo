@@ -4044,9 +4044,28 @@
             return 'كل الفترات';
         }
         function monthlyIncome() {
-            const fixed = state.incomeSources.reduce((s, src) => s + src.amount, 0);
+            let numMonths = 1;
+            if (state.periodMode === 'last3') numMonths = 3;
+            else if (state.periodMode === 'last6') numMonths = 6;
+            else if (state.periodMode === 'year') numMonths = 12;
+            else if (state.periodMode === 'all') {
+                if (state.expenses && state.expenses.length > 0) {
+                    const dates = state.expenses.map(e => new Date(e.date).getTime()).filter(Boolean);
+                    if (dates.length > 0) {
+                        const oldest = new Date(Math.min(...dates));
+                        const newest = new Date();
+                        numMonths = Math.max(1, (newest.getFullYear() - oldest.getFullYear()) * 12 + (newest.getMonth() - oldest.getMonth()) + 1);
+                    } else {
+                        numMonths = 12;
+                    }
+                } else {
+                    numMonths = 12;
+                }
+            }
+
+            const fixed = state.incomeSources.reduce((s, src) => s + src.amount, 0) * numMonths;
             const fl = state.freelanceLog.filter(f => inRange(f.date)).reduce((s, f) => s + f.amount, 0);
-            const deds = calcFixedDeductions();
+            const deds = calcFixedDeductions() * numMonths;
             const netFixed = fixed - deds;
             // total = net available income (used by overview/budget calculations)
             return { fixed, fl, deds, netFixed, total: netFixed + fl, gross: fixed + fl };
@@ -4189,7 +4208,26 @@
             const loanPct = totalLoanAmt > 0 ? (paidLoan / totalLoanAmt) * 100 : 0;
             const loanCol = loanPct === 100 ? 'var(--green)' : 'var(--accent)';
 
-            const totalAllExp = totalExp + subMonthly + loanMonthly;
+            let numMonths = 1;
+            if (state.periodMode === 'last3') numMonths = 3;
+            else if (state.periodMode === 'last6') numMonths = 6;
+            else if (state.periodMode === 'year') numMonths = 12;
+            else if (state.periodMode === 'all') {
+                if (state.expenses && state.expenses.length > 0) {
+                    const dates = state.expenses.map(e => new Date(e.date).getTime()).filter(Boolean);
+                    if (dates.length > 0) {
+                        const oldest = new Date(Math.min(...dates));
+                        const newest = new Date();
+                        numMonths = Math.max(1, (newest.getFullYear() - oldest.getFullYear()) * 12 + (newest.getMonth() - oldest.getMonth()) + 1);
+                    } else {
+                        numMonths = 12;
+                    }
+                } else {
+                    numMonths = 12;
+                }
+            }
+
+            const totalAllExp = totalExp + (subMonthly * numMonths) + (loanMonthly * numMonths);
             const net = inc.total - totalAllExp;
 
             // Common SVGs details for circular progress
@@ -4438,6 +4476,25 @@
         }
         function catColor(name) { return (state.categories.find(c => c.name === name) || { color: '#888' }).color }
         function renderDonut(exps, shopInvoices) {
+            let numMonths = 1;
+            if (state.periodMode === 'last3') numMonths = 3;
+            else if (state.periodMode === 'last6') numMonths = 6;
+            else if (state.periodMode === 'year') numMonths = 12;
+            else if (state.periodMode === 'all') {
+                if (state.expenses && state.expenses.length > 0) {
+                    const dates = state.expenses.map(e => new Date(e.date).getTime()).filter(Boolean);
+                    if (dates.length > 0) {
+                        const oldest = new Date(Math.min(...dates));
+                        const newest = new Date();
+                        numMonths = Math.max(1, (newest.getFullYear() - oldest.getFullYear()) * 12 + (newest.getMonth() - oldest.getMonth()) + 1);
+                    } else {
+                        numMonths = 12;
+                    }
+                } else {
+                    numMonths = 12;
+                }
+            }
+
             const byCat = {};
             exps.forEach(e => {
                 (e.items || []).forEach(it => {
@@ -4446,12 +4503,12 @@
                 });
             });
             if (state.subscriptions) state.subscriptions.forEach(s => {
-                const amt = s.freq === 'daily' ? s.amount * 30 : s.freq === 'monthly' ? s.amount : s.amount / 12;
+                const amt = (s.freq === 'daily' ? s.amount * 30 : s.freq === 'monthly' ? s.amount : s.amount / 12) * numMonths;
                 const cat = normCat(s.cat);
                 byCat[cat] = (byCat[cat] || 0) + amt;
             });
             if (state.loans) state.loans.forEach(l => {
-                byCat['ديون'] = (byCat['ديون'] || 0) + l.monthly;
+                byCat['ديون'] = (byCat['ديون'] || 0) + (l.monthly * numMonths);
             });
             const cats = Object.keys(byCat).sort((a, b) => byCat[b] - byCat[a]);
             const vals = cats.map(c => byCat[c]);
