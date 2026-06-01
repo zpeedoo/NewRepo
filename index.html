@@ -3458,6 +3458,7 @@
             periodMonth: new Date().getMonth(),
             periodYear: new Date().getFullYear(),
             financialMonthStartDay: 27, // defaults to 27 as requested
+            deletedIds: {},
             lastUpdated: 0,
         };
 
@@ -3525,6 +3526,8 @@
 
             const processLoadedState = (p) => {
                 // Safeguard critical transaction arrays with Smart Merge
+                state.deletedIds = { ...(state.deletedIds || {}), ...(p.deletedIds || {}) };
+
                 const localExpenses = state.expenses || [];
                 const localFreelance = state.freelanceLog || [];
                 const localMaint = state.maintenance || [];
@@ -3539,14 +3542,22 @@
 
                 const smartMerge = (localArr, serverArr) => {
                     const mergedMap = new Map();
-                    // 1. Server represents authoritative updates/deletions, add server items first
+                    // 1. Server represents authoritative updates/deletions, add server items first (skipping deleted ones)
                     serverArr.forEach(item => {
-                        if (item && item.id !== undefined) mergedMap.set(item.id, item);
+                        if (item && item.id !== undefined) {
+                            const isDeleted = state.deletedIds && (state.deletedIds[item.id] || state.deletedIds[String(item.id)]);
+                            if (!isDeleted) {
+                                mergedMap.set(item.id, item);
+                            }
+                        }
                     });
-                    // 2. Add local items with unique IDs that don't exist on server (offline-created items)
+                    // 2. Add local items with unique IDs that don't exist on server (offline-created items, skipping deleted ones)
                     localArr.forEach(item => {
                         if (item && item.id !== undefined && !mergedMap.has(item.id)) {
-                            mergedMap.set(item.id, item);
+                            const isDeleted = state.deletedIds && (state.deletedIds[item.id] || state.deletedIds[String(item.id)]);
+                            if (!isDeleted) {
+                                mergedMap.set(item.id, item);
+                            }
                         }
                     });
                     return Array.from(mergedMap.values());
@@ -4930,7 +4941,11 @@
             inc.start = document.getElementById('e-inc-start').value;
             saveState(); closeModal('editIncome'); renderIncome(); renderOverview(); toast('تم التعديل ✓');
         }
-        function delIncomeSource(id) { state.incomeSources = state.incomeSources.filter(s => String(s.id) !== String(id)); saveState(); renderIncome(); renderOverview(); toast('تم الحذف'); }
+        function delIncomeSource(id) {
+            state.deletedIds = state.deletedIds || {};
+            state.deletedIds[String(id)] = true;
+            state.incomeSources = state.incomeSources.filter(s => String(s.id) !== String(id)); saveState(); renderIncome(); renderOverview(); toast('تم الحذف');
+        }
         function addDeduction() {
             const name = document.getElementById('m-ded-name').value.trim();
             const amount = parseFloat(document.getElementById('m-ded-amount').value);
@@ -4940,7 +4955,11 @@
             saveState(); renderIncome(); renderOverview(); toast('تم إضافة الاستقطاع ✓');
             document.getElementById('m-ded-name').value = ''; document.getElementById('m-ded-amount').value = '';
         }
-        function delDeduction(id) { state.incomeDeductions = state.incomeDeductions.filter(d => String(d.id) !== String(id)); saveState(); renderIncome(); renderOverview(); toast('تم الحذف'); }
+        function delDeduction(id) {
+            state.deletedIds = state.deletedIds || {};
+            state.deletedIds[String(id)] = true;
+            state.incomeDeductions = state.incomeDeductions.filter(d => String(d.id) !== String(id)); saveState(); renderIncome(); renderOverview(); toast('تم الحذف');
+        }
         function addFreelance() {
             const desc = document.getElementById('fl-desc').value.trim();
             const amount = parseFloat(document.getElementById('fl-amount').value);
@@ -4950,7 +4969,11 @@
             saveState(); renderIncome(); renderOverview(); toast('تم التسجيل ✓');
             document.getElementById('fl-desc').value = ''; document.getElementById('fl-amount').value = '';
         }
-        function delFL(id) { state.freelanceLog = state.freelanceLog.filter(f => String(f.id) !== String(id)); saveState(); renderFLTable(); }
+        function delFL(id) {
+            state.deletedIds = state.deletedIds || {};
+            state.deletedIds[String(id)] = true;
+            state.freelanceLog = state.freelanceLog.filter(f => String(f.id) !== String(id)); saveState(); renderFLTable();
+        }
 
         // ═══════════════════════════════════════
         //  EXPENSES (DETAILED)
@@ -5410,6 +5433,8 @@
         }
 
         function delExpense(id) {
+            state.deletedIds = state.deletedIds || {};
+            state.deletedIds[String(id)] = true;
             state.expenses = state.expenses.filter(e => String(e.id) !== String(id));
             saveState(); renderExpTable(); renderOverview(); toast('تم الحذف');
         }
@@ -5692,6 +5717,8 @@
             document.getElementById('m-sub-renew').checked = true;
         }
         function delSub(id) {
+            state.deletedIds = state.deletedIds || {};
+            state.deletedIds[String(id)] = true;
             state.subscriptions = state.subscriptions.filter(s => String(s.id) !== String(id)); saveState();
             renderSubs(); renderOverview(); toast('تم الحذف');
         }
@@ -5918,6 +5945,8 @@
             ['m-maint-desc', 'm-maint-cost', 'm-maint-note'].forEach(id => document.getElementById(id).value = '');
         }
         function delMaint(id) {
+            state.deletedIds = state.deletedIds || {};
+            state.deletedIds[String(id)] = true;
             state.maintenance = state.maintenance.filter(m => String(m.id) !== String(id)); saveState();
             renderMaint(); renderOverview();
         }
@@ -6021,6 +6050,8 @@
                 'm-loan-end'].forEach(id => document.getElementById(id).value = '');
         }
         function delLoan(id) {
+            state.deletedIds = state.deletedIds || {};
+            state.deletedIds[String(id)] = true;
             state.loans = state.loans.filter(l => String(l.id) !== String(id)); saveState(); renderLoans();
             renderOverview();
         }
