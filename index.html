@@ -2553,6 +2553,8 @@
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
                 <button class="chip active" id="chip-month" onclick="setQuickPeriod('month',this)">شهر</button>
+                <button class="chip" id="chip-last3" onclick="setQuickPeriod('last3',this)">٣ أشهر</button>
+                <button class="chip" id="chip-last6" onclick="setQuickPeriod('last6',this)">٦ أشهر</button>
                 <button class="chip" id="chip-year" onclick="setQuickPeriod('year',this)">سنة</button>
                 <button class="chip" id="chip-all" onclick="setQuickPeriod('all',this)">الكل</button>
             </div>
@@ -2890,6 +2892,8 @@
                     </div>
                 </div>
             </div>
+            <!-- مركز التحليل الذكي وتطوير التصنيفات -->
+            <div class="card" style="margin-top: 16px; border: 1.5px solid var(--accent2);" id="smart-categories-center"></div>
         </div>
 
         <!-- ── EXPORT PAGE ── -->
@@ -3960,6 +3964,16 @@
             if (state.periodMode === 'month') {
                 return year === state.periodYear && month === state.periodMonth;
             }
+            if (state.periodMode === 'last3') {
+                const selAbs = state.periodYear * 12 + state.periodMonth;
+                const itemAbs = year * 12 + month;
+                return itemAbs <= selAbs && itemAbs >= (selAbs - 2);
+            }
+            if (state.periodMode === 'last6') {
+                const selAbs = state.periodYear * 12 + state.periodMonth;
+                const itemAbs = year * 12 + month;
+                return itemAbs <= selAbs && itemAbs >= (selAbs - 5);
+            }
             return true;
         }
 
@@ -3973,6 +3987,28 @@
                     return { from, to };
                 } else {
                     const from = new Date(periodYear, periodMonth - 1, startDay);
+                    const to = new Date(periodYear, periodMonth, startDay - 1);
+                    return { from, to };
+                }
+            }
+            if (m === 'last3') {
+                if (startDay === 1) {
+                    const from = new Date(periodYear, periodMonth - 2, 1);
+                    const to = new Date(periodYear, periodMonth + 1, 0);
+                    return { from, to };
+                } else {
+                    const from = new Date(periodYear, periodMonth - 3, startDay);
+                    const to = new Date(periodYear, periodMonth, startDay - 1);
+                    return { from, to };
+                }
+            }
+            if (m === 'last6') {
+                if (startDay === 1) {
+                    const from = new Date(periodYear, periodMonth - 5, 1);
+                    const to = new Date(periodYear, periodMonth + 1, 0);
+                    return { from, to };
+                } else {
+                    const from = new Date(periodYear, periodMonth - 6, startDay);
                     const to = new Date(periodYear, periodMonth, startDay - 1);
                     return { from, to };
                 }
@@ -3997,6 +4033,12 @@
                     lbl += ` (${startDay}/${prevMonth + 1} - ${startDay - 1}/${periodMonth + 1})`;
                 }
                 return lbl;
+            }
+            if (m === 'last3') {
+                return `آخر ٣ أشهر (حتى ${MONTHS[periodMonth]} ${periodYear})`;
+            }
+            if (m === 'last6') {
+                return `آخر ٦ أشهر (حتى ${MONTHS[periodMonth]} ${periodYear})`;
             }
             if (m === 'year') return 'سنة ' + periodYear;
             return 'كل الفترات';
@@ -6276,6 +6318,377 @@
                     title="تعديل">✎</button>
                 ${i >= 9 ? `<button class="del-btn" onclick="delCat('${c.name}')">✕</button>` : ''}
             </div>`).join('');
+
+            // Call the Smart Analytics Center render
+            renderSmartCategoriesCenter();
+        }
+
+        function renderSmartCategoriesCenter() {
+            const el = document.getElementById('smart-categories-center');
+            if (!el) return;
+
+            // 1. SUGGESTION ENGINE:
+            // Scan state.expenses items for potential micro-categories
+            const SUGGEST_RULES = [
+                {
+                    name: 'مستلزمات أطفال 👶',
+                    keywords: ['حفاض', 'بامبرز', 'حليب أطفال', 'سيريلاك', 'لهاية', 'رضاعة', 'ألعاب أطفال', 'فوط أطفال'],
+                    defaultColor: '#2dd4bf',
+                    desc: 'تم رصد مواد رعاية أطفال مكررة في فواتيرك'
+                },
+                {
+                    name: 'منظفات وعناية شخصية 🧼',
+                    keywords: ['صابون', 'شامبو', 'كلور', 'ديتول', 'غسيل', 'منظف', 'فاين', 'محارم', 'معجون'],
+                    defaultColor: '#38bdf8',
+                    desc: 'تم رصد أدوات تنظيف ومواد صحية مكررة'
+                },
+                {
+                    name: 'صيدلية وأدوية 💊',
+                    keywords: ['دواء', 'علاج', 'بندول', 'مسكن', 'فيتامين', 'شراب دواء', 'بخاخ'],
+                    defaultColor: '#f87171',
+                    desc: 'تم رصد مشتريات طبية وصيدلانية مكررة'
+                },
+                {
+                    name: 'وجبات سريعة 🍔',
+                    keywords: ['شاورما', 'برجر', 'بيتزا', 'وجبة', 'سندويش', 'كنتاكي', 'ماكدونالدز'],
+                    defaultColor: '#fb923c',
+                    desc: 'تم رصد مشتريات مطاعم ووجبات سريعة مكررة'
+                }
+            ];
+
+            let suggestionsHtml = '';
+            SUGGEST_RULES.forEach(rule => {
+                if (state.categories.some(c => c.name === rule.name || c.name.includes(rule.name.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDC00-\uDFFF]/g, '').trim()))) return;
+
+                const matchingItems = [];
+                state.expenses.forEach(e => {
+                    (e.items || []).forEach(it => {
+                        if (!it.name || (it.subcat !== 'أخرى' && it.subcat !== 'اخرى' && it.subcat !== 'بقالة وسوبرماركت')) return;
+                        const nameLower = it.name.trim().toLowerCase();
+                        if (rule.keywords.some(kw => nameLower.includes(kw))) {
+                            matchingItems.push(it.name);
+                        }
+                    });
+                });
+
+                if (matchingItems.length >= 3) {
+                    const uniqueExamples = Array.from(new Set(matchingItems)).slice(0, 3);
+                    suggestionsHtml += `
+                        <div class="eval-item" style="background:var(--surface3); border:1px solid var(--border2); padding:12px; border-radius:var(--r); margin-bottom:10px; display:flex; flex-direction:column; gap:8px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-weight:600; color:var(--text); font-size:13px;">💡 اقتراح فئة جديدة: <span style="color:${rule.defaultColor}; font-weight:700;">${rule.name}</span></span>
+                                <button class="btn btn-sm btn-green" onclick="applySmartCategorySuggestion('${rule.name}', ${JSON.stringify(rule.keywords).replace(/"/g, '&quot;')}, '${rule.defaultColor}')" style="padding:4px 8px; font-size:11px; border-radius:6px; cursor:pointer;">إنشاء وتصنيف تلقائي ⚡</button>
+                            </div>
+                            <div style="font-size:11.5px; color:var(--text2);">${rule.desc}. تم رصد ${matchingItems.length} مشتريات مثل: <span style="font-family:'JetBrains Mono',monospace; color:var(--text3); font-size:11px;">(${uniqueExamples.join('، ')})</span></div>
+                        </div>
+                    `;
+                }
+            });
+
+            if (!suggestionsHtml) {
+                suggestionsHtml = `<div style="font-size:11.5px; color:var(--text3); padding:10px 0; text-align:center;">🔍 لا توجد اقتراحات لتفريع فئات جديدة حالياً. هيكل الحسابات لديك متوافق مع مشترياتك!</div>`;
+            }
+
+            // 2. GROCERY BREAKDOWN:
+            const currentCycle = getFinancialMonthAndYear(td());
+            const curM = currentCycle.month;
+            const curY = currentCycle.year;
+
+            const curExps = state.expenses.filter(e => {
+                const { month, year } = getFinancialMonthAndYear(e.date);
+                return month === curM && year === curY;
+            });
+
+            const GROCERY_SUBCATS = {
+                'خضار وفواكه': { color: '#4ade80', spent: 0 },
+                'ألبان وأجبان': { color: '#60a5fa', spent: 0 },
+                'لحوم ودواجن': { color: '#f87171', spent: 0 },
+                'معلبات ومواد تموينية': { color: '#fb923c', spent: 0 },
+                'حلويات وتسالي': { color: '#f472b6', spent: 0 },
+                'مشروبات ومياه': { color: '#38bdf8', spent: 0 },
+                'منظفات وعناية شخصية': { color: '#c084fc', spent: 0 },
+                'أدوات منزلية': { color: '#94a3b8', spent: 0 }
+            };
+
+            let totalGrocery = 0;
+            curExps.forEach(e => {
+                (e.items || []).forEach(it => {
+                    const sub = it.subcat;
+                    if (GROCERY_SUBCATS[sub]) {
+                        const amt = (it.qty || 1) * (it.price || 0);
+                        GROCERY_SUBCATS[sub].spent += amt;
+                        totalGrocery += amt;
+                    }
+                });
+            });
+
+            let groceryBreakdownHtml = '';
+            let adviceHtml = '';
+
+            if (totalGrocery > 0) {
+                const sortedSubs = Object.keys(GROCERY_SUBCATS).sort((a, b) => GROCERY_SUBCATS[b].spent - GROCERY_SUBCATS[a].spent);
+                groceryBreakdownHtml = sortedSubs.map(sub => {
+                    const info = GROCERY_SUBCATS[sub];
+                    if (info.spent <= 0) return '';
+                    const pct = (info.spent / totalGrocery) * 100;
+                    return `
+                        <div class="bbar" style="margin-bottom:8px;">
+                            <div class="bbar-hdr" style="font-size:11.5px;">
+                                <div class="bbar-name">
+                                    <div class="leg-dot" style="background:${info.color}; width:8px; height:8px;"></div>${sub}
+                                </div>
+                                <div class="bbar-nums" style="font-family:'JetBrains Mono',monospace;">${info.spent.toFixed(1)} د.أ (${pct.toFixed(0)}%)</div>
+                            </div>
+                            <div class="bbar-bg" style="height:6px; background:var(--surface3);">
+                                <div class="bbar-fill" style="width:${pct}%; background:${info.color}; height:6px;"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                const snacksInfo = GROCERY_SUBCATS['حلويات وتسالي'];
+                const snacksPct = (snacksInfo.spent / totalGrocery) * 100;
+                if (snacksPct > 15) {
+                    adviceHtml += `
+                        <div style="background:rgba(244,114,182,0.08); border-right:3px solid #f472b6; padding:8px 12px; border-radius:4px; font-size:11.5px; color:var(--text); margin-bottom:8px;">
+                            ⚠️ **تنبيه ترشيد الاستهلاك**: مشتريات 'حلويات وتسالي 🍫' مرتفعة هذا الشهر وتشكل <strong>${snacksPct.toFixed(0)}%</strong> من إجمالي البقالة (${snacksInfo.spent.toFixed(0)} د.أ). تقليلها لـ 5% سيوفر لك حوالي <strong>${(snacksInfo.spent - (totalGrocery * 0.05)).toFixed(0)} د.أ</strong>!
+                        </div>
+                    `;
+                }
+
+                const cleanInfo = GROCERY_SUBCATS['منظفات وعناية شخصية'];
+                const cleanPct = (cleanInfo.spent / totalGrocery) * 100;
+                if (cleanPct > 20) {
+                    adviceHtml += `
+                        <div style="background:rgba(192,132,252,0.08); border-right:3px solid #c084fc; padding:8px 12px; border-radius:4px; font-size:11.5px; color:var(--text); margin-bottom:8px;">
+                            💡 **نصيحة الشراء الذكي**: المنظفات وأدوات العناية تشكل <strong>${cleanPct.toFixed(0)}%</strong> من مشترياتك. نقترح شراء عبوات التوفير العائلية أو من تجار الجملة لتوفير ما يقارب 15% إلى 20% شهرياً!
+                        </div>
+                    `;
+                }
+
+                const meatInfo = GROCERY_SUBCATS['لحوم ودواجن'];
+                const meatPct = (meatInfo.spent / totalGrocery) * 100;
+                if (meatPct > 35) {
+                    adviceHtml += `
+                        <div style="background:rgba(248,113,113,0.08); border-right:3px solid #f87171; padding:8px 12px; border-radius:4px; font-size:11.5px; color:var(--text); margin-bottom:8px;">
+                            🥩 **توصية ميزانية**: تشكل اللحوم والدواجن <strong>${meatPct.toFixed(0)}%</strong> من فاتورة البقالة. نقترح تعيين ميزانية فرعية شهرية لها بقيمة <strong>${Math.max(50, Math.round(meatInfo.spent * 0.8))} د.أ</strong> للتحكم الأفضل في المصاريف الغذائية.
+                        </div>
+                    `;
+                }
+
+                if (!adviceHtml) {
+                    adviceHtml = `<div style="font-size:11.5px; color:var(--green); font-weight:600; padding:4px 0;">🎉 توزيع استهلاك البقالة متوازن ومثالي جداً هذا الشهر! لا توجد انحرافات إنفاقية.</div>`;
+                }
+            } else {
+                groceryBreakdownHtml = `<div class="empty" style="padding:15px; font-size:11px;">لا توجد مشتريات بقالة مفصلة في هذا الشهر المالي حتى الآن.</div>`;
+                adviceHtml = `<div style="font-size:11.5px; color:var(--text3);">سيظهر التحليل فور تسجيل الفواتير والمواد التفصيلية.</div>`;
+            }
+
+            // 3. AI BRAIN STATUS:
+            const exactCount = Object.keys(exactMatchTrained || {}).length;
+            const wordCount = Object.keys(wordTrainedFreq || {}).length;
+            const learnedPercent = Math.min(100, Math.round((exactCount + wordCount) * 1.5));
+            let brainLevel = 'مبتدئ';
+            let brainIcon = '👶';
+            if (learnedPercent >= 80) { brainLevel = 'عبقري مالي خارق'; brainIcon = '🧠⚡'; }
+            else if (learnedPercent >= 50) { brainLevel = 'محلل مالي متقدم'; brainIcon = '📊🧠'; }
+            else if (learnedPercent >= 20) { brainLevel = 'متعلم نشط'; brainIcon = '📖🧠'; }
+
+            el.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid var(--border); padding-bottom:10px;">
+                    <div>
+                        <div style="font-size:15px; font-weight:700; color:var(--text); display:flex; align-items:center; gap:6px;">
+                            <span>🧠</span> مركز التحليل الذكي وتطوير التصنيفات
+                        </div>
+                        <div style="font-size:11px; color:var(--text3); margin-top:2px;">تحليل فواتيرك التاريخية وتطوير الفئات فرعياً بشكل تلقائي ومستمر</div>
+                    </div>
+                    <span class="badge" style="background:rgba(124, 109, 250, 0.15); color:var(--accent2); font-weight:600; font-size:10.5px; padding:3px 8px; border-radius:20px;">
+                        ${brainIcon} مستوى ذكاء المحرك: ${brainLevel} (${learnedPercent}%)
+                    </span>
+                </div>
+
+                <div class="grid-2" style="gap:16px;">
+                    <div style="display:flex; flex-direction:column; gap:16px;">
+                        <div>
+                            <div style="font-size:13px; font-weight:600; color:var(--accent2); margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+                                <span>💡</span> مقترحات الفئات الفرعية الموصى بها
+                            </div>
+                            <div id="smart-suggestions-list">${suggestionsHtml}</div>
+                        </div>
+
+                        <div style="border-top:1px solid var(--border); padding-top:12px;">
+                            <div style="font-size:13px; font-weight:600; color:var(--accent2); margin-bottom:10px; display:flex; align-items:center; justify-content:space-between;">
+                                <span>🛒</span> تفاصيل استهلاك البقالة والسوبرماركت
+                                <span style="font-size:10.5px; color:var(--text3); font-weight:400; font-family:'JetBrains Mono',monospace;">إجمالي البقالة: ${totalGrocery.toFixed(1)} د.أ</span>
+                            </div>
+                            <div id="grocery-breakdown-container">${groceryBreakdownHtml}</div>
+                            <div style="margin-top:14px; font-size:12px; display:flex; flex-direction:column; gap:6px;">
+                                <div style="font-weight:600; color:var(--text2); font-size:11px;">💡 نصائح ترشيد وتوفير السوبرماركت:</div>
+                                <div id="grocery-advice-container">${adviceHtml}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background:var(--surface2); border:1px solid var(--border); padding:14px; border-radius:var(--r2); display:flex; flex-direction:column; gap:12px;">
+                        <div style="font-size:13px; font-weight:600; color:var(--text); border-bottom:1px solid var(--border); padding-bottom:8px; display:flex; align-items:center; gap:6px;">
+                            <span>🔮</span> اختبار وتدريب نموذج الذكاء الاصطناعي (AI Brain)
+                        </div>
+                        
+                        <div style="display:flex; flex-direction:column; gap:6px;">
+                            <label style="font-size:11px; color:var(--text2); font-weight:600;">🔍 جرب اختبار المحرك الذكي (Live Testing):</label>
+                            <div style="display:flex; gap:8px;">
+                                <input class="inp" id="test-item-input" placeholder="اكتب اسم سلعة (مثال: دجاج نات، لبن المراعي)" oninput="predictItemSubcatTest()" style="flex:1; font-size:12px;" />
+                            </div>
+                            <div id="test-prediction-result" style="font-size:11.5px; color:var(--text3); padding:8px 10px; background:var(--surface3); border-radius:var(--r); min-height:36px; display:flex; align-items:center;">
+                                💡 ابدأ الكتابة لرؤية توقع المحرك الذكي وفئة الصنف فوراً...
+                            </div>
+                        </div>
+
+                        <div class="divider" style="margin:4px 0;"></div>
+
+                        <div style="display:flex; flex-direction:column; gap:6px;">
+                            <label style="font-size:11px; color:var(--text2); font-weight:600;">🧠 تدريب مخصص وإضافة قاعدة ذكية (Manual Training):</label>
+                            <div class="field" style="margin-bottom:6px;">
+                                <input class="inp" id="train-keyword-input" placeholder="اسم السلعة أو الكلمة المفتاحية (مثال: المنظف السحري)" style="font-size:12px;" />
+                            </div>
+                            <div style="display:flex; gap:8px;">
+                                <select class="inp" id="train-subcat-select" style="flex:1; font-size:12px;"></select>
+                                <button class="btn btn-primary" onclick="trainManualKeywordRule()" style="font-size:11px; padding:6px 12px; cursor:pointer;">تدريب المحرك 🧠</button>
+                            </div>
+                        </div>
+
+                        <div style="font-size:10px; color:var(--text3); line-height:1.4; margin-top:6px; background:rgba(124, 109, 250, 0.05); padding:8px; border-radius:6px; border:1px dashed rgba(124, 109, 250, 0.2);">
+                            ℹ️ <strong>كيف يعمل؟</strong> يتعلم المحرك تلقائياً من الفواتير التاريخية وتصنيفك للسلع. عندما تضيف فاتورة جديدة بالمستقبل، سيتعرف المحرك الذكي تلقائياً على كل بند ويصنفه فوراً دون أي تدخل منك!
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const selectEl = document.getElementById('train-subcat-select');
+            if (selectEl) {
+                selectEl.innerHTML = `
+                    <option value="" disabled selected>اختر الصنف المناسب...</option>
+                    ${Object.keys(SUB_TO_MAIN_CAT).map(sub => `<option value="${sub}">${sub} (${SUB_TO_MAIN_CAT[sub]})</option>`).join('')}
+                `;
+            }
+        }
+
+        function applySmartCategorySuggestion(catName, itemKeywords, defaultColor) {
+            const cleanName = catName.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDC00-\uDFFF]/g, '').trim();
+            let catObj = state.categories.find(c => c.name === catName || c.name === cleanName);
+            if (!catObj) {
+                state.categories.push({ name: catName, color: defaultColor });
+            }
+
+            let remappedCount = 0;
+            state.expenses.forEach(e => {
+                (e.items || []).forEach(it => {
+                    if (!it.name || (it.subcat !== 'أخرى' && it.subcat !== 'اخرى' && it.subcat !== 'بقالة وسوبرماركت')) return;
+                    const nameLower = it.name.trim().toLowerCase();
+                    if (itemKeywords.some(kw => nameLower.includes(kw))) {
+                        it.subcat = catName;
+                        remappedCount++;
+                    }
+                });
+            });
+
+            saveState();
+            populateCatSelects();
+            renderCategories();
+            toast(`🎉 تم إنشاء فئة "${catName}" وتصنيف ${remappedCount} معاملات إليها بنجاح!`);
+        }
+
+        function predictItemSubcatTest() {
+            const input = document.getElementById('test-item-input');
+            const resultEl = document.getElementById('test-prediction-result');
+            if (!input || !resultEl) return;
+            const name = input.value.trim().toLowerCase();
+            if (!name) {
+                resultEl.innerHTML = `💡 ابدأ الكتابة لرؤية توقع المحرك الذكي وفئة الصنف فوراً...`;
+                return;
+            }
+
+            if (exactMatchTrained[name]) {
+                const sub = exactMatchTrained[name];
+                const main = SUB_TO_MAIN_CAT[sub] || 'أخرى';
+                resultEl.innerHTML = `🔮 الفئة المتوقعة: <strong style="color:var(--green); font-size:12.5px;">${sub}</strong> <span style="color:var(--text3); font-size:11px;">(${main})</span> <span style="color:var(--accent2); margin-right:8px; font-size:10.5px;">(مطابقة دقيقة 100% 🎯)</span>`;
+                return;
+            }
+
+            const nameWords = name.split(/[\s\-_,\.\/\(\)]+/).filter(Boolean);
+            const trainedWords = nameWords.filter(w => w.length > 2);
+            let bestSubcat = null;
+            let highestFreq = 0;
+
+            for (const w of trainedWords) {
+                if (wordTrainedFreq[w]) {
+                    Object.keys(wordTrainedFreq[w]).forEach(sub => {
+                        const freq = wordTrainedFreq[w][sub];
+                        if (freq > highestFreq) {
+                            highestFreq = freq;
+                            bestSubcat = sub;
+                        }
+                    });
+                }
+            }
+
+            if (bestSubcat && highestFreq >= 1) {
+                const main = SUB_TO_MAIN_CAT[bestSubcat] || 'أخرى';
+                resultEl.innerHTML = `🔮 الفئة المتوقعة: <strong style="color:var(--green); font-size:12.5px;">${bestSubcat}</strong> <span style="color:var(--text3); font-size:11px;">(${main})</span> <span style="color:var(--accent2); margin-right:8px; font-size:10.5px;">(ثقة عالية بناءً على تكرار الكلمات 🧠)</span>`;
+                return;
+            }
+
+            const isMatch = (kw) => {
+                if (kw.length <= 4 || kw === 'زين' || kw === 'ماء' || kw === 'رز' || kw === 'ملح' || kw === 'كول') {
+                    return nameWords.includes(kw);
+                }
+                return name.includes(kw);
+            };
+
+            for (const mapping of ITEM_AUTO_MAP) {
+                for (const kw of mapping.keywords) {
+                    if (isMatch(kw)) {
+                        const sub = mapping.subcat;
+                        const main = SUB_TO_MAIN_CAT[sub] || 'أخرى';
+                        resultEl.innerHTML = `🔮 الفئة المتوقعة: <strong style="color:var(--green); font-size:12.5px;">${sub}</strong> <span style="color:var(--text3); font-size:11px;">(${main})</span> <span style="color:var(--text3); margin-right:8px; font-size:10.5px;">(مطابقة كلمات مفتاحية 🔍)</span>`;
+                        return;
+                    }
+                }
+            }
+
+            resultEl.innerHTML = `❓ الصنف المتوقع: <strong style="color:var(--text3); font-size:12px;">أخرى</strong> <span style="color:var(--text3); font-size:10.5px;">(لم يتم العثور على نمط مطابق، سيتم استخدام التصنيف العام)</span>`;
+        }
+
+        function trainManualKeywordRule() {
+            const keywordEl = document.getElementById('train-keyword-input');
+            const subcatEl = document.getElementById('train-subcat-select');
+            if (!keywordEl || !subcatEl) return;
+
+            const kw = keywordEl.value.trim().toLowerCase();
+            const sub = subcatEl.value;
+
+            if (!kw || !sub) {
+                toast('⚠️ يرجى كتابة الكلمة المفتاحية واختيار الفئة الفرعية أولاً!');
+                return;
+            }
+
+            state.expenses.push({
+                id: state.nextId++,
+                desc: '🧠 تدريب تلقائي للذكاء الاصطناعي',
+                amount: 0,
+                date: td(),
+                payment: 'نقدي',
+                note: 'بند تم تعليمه يدوياً لمحرك الفرز التلقائي',
+                items: [{ name: kw, qty: 1, price: 0, subcat: sub }]
+            });
+
+            saveState();
+            trainModel();
+            renderCategories();
+
+            keywordEl.value = '';
+            subcatEl.value = '';
+            toast(`🧠 تم تدريب المحرك الذكي بنجاح! سيتعرف على "${kw}" كـ "${sub}" في أي فواتير قادمة!`);
         }
         function addCategory() {
             const name = document.getElementById('new-cat-name').value.trim();
