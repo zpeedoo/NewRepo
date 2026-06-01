@@ -3951,14 +3951,23 @@
         }
         function initPeriodSelects() {
             const now = new Date();
+            const fin = getFinancialMonthAndYear(td());
+            
+            if (state.periodMonth === undefined) state.periodMonth = fin.month;
+            if (state.periodYear === undefined) state.periodYear = fin.year;
+
             const mSel = document.getElementById('selMonth');
-            mSel.value = now.getMonth();
+            if (mSel) mSel.value = state.periodMonth;
+
             const ySel = document.getElementById('selYear');
-            for (let y = now.getFullYear() - 5; y <= now.getFullYear() + 2; y++) {
-                const o = document.createElement('option');
-                o.value = y; o.textContent = y;
-                if (y === now.getFullYear()) o.selected = true;
-                ySel.appendChild(o);
+            if (ySel) {
+                ySel.innerHTML = '';
+                for (let y = now.getFullYear() - 5; y <= now.getFullYear() + 2; y++) {
+                    const o = document.createElement('option');
+                    o.value = y; o.textContent = y;
+                    if (y === state.periodYear) o.selected = true;
+                    ySel.appendChild(o);
+                }
             }
             // Populate financial month start day select
             const startDaySel = document.getElementById('selStartDay');
@@ -3975,18 +3984,26 @@
             // statement selects
             ['stmtFromMonth', 'stmtToMonth'].forEach(id => {
                 const sel = document.getElementById(id);
-                MONTHS.forEach((m, i) => { const o = document.createElement('option'); o.value = i; o.textContent = m; sel.appendChild(o) });
+                if (sel) {
+                    sel.innerHTML = '';
+                    MONTHS.forEach((m, i) => { const o = document.createElement('option'); o.value = i; o.textContent = m; sel.appendChild(o) });
+                }
             });
             ['stmtFromYear', 'stmtToYear'].forEach(id => {
                 const sel = document.getElementById(id);
-                for (let y = now.getFullYear() - 5; y <= now.getFullYear() + 2; y++) {
-                    const o = document.createElement('option'); o.value = y; o.textContent = y;
-                    if (y === now.getFullYear()) o.selected = true;
-                    sel.appendChild(o);
+                if (sel) {
+                    sel.innerHTML = '';
+                    for (let y = now.getFullYear() - 5; y <= now.getFullYear() + 2; y++) {
+                        const o = document.createElement('option'); o.value = y; o.textContent = y;
+                        if (y === now.getFullYear()) o.selected = true;
+                        sel.appendChild(o);
+                    }
                 }
             });
-            document.getElementById('stmtFromMonth').value = now.getMonth();
-            document.getElementById('stmtToMonth').value = now.getMonth();
+            const sfm = document.getElementById('stmtFromMonth');
+            if (sfm) sfm.value = now.getMonth();
+            const stm = document.getElementById('stmtToMonth');
+            if (stm) stm.value = now.getMonth();
         }
 
         // ═══════════════════════════════════════
@@ -6678,8 +6695,18 @@
         async function initApp() {
             await loadState();
             processAutoRenewals();
+            
+            // Default to 'month' period mode so it focuses on the current financial month
+            if (!state.periodMode || state.periodMode === 'all') {
+                state.periodMode = 'month';
+            }
+            
+            // Set initial periodMonth and periodYear to the active financial month
+            const fin = getFinancialMonthAndYear(td());
+            state.periodMonth = fin.month;
+            state.periodYear = fin.year;
+
             initPeriodSelects();
-            state.periodMode = 'all';
             syncPeriodChips();
             if (document.getElementById('exp-date')) document.getElementById('exp-date').value = td();
             if (document.getElementById('m-exp-date')) document.getElementById('m-exp-date').value = td();
