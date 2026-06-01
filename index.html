@@ -2445,6 +2445,9 @@
         <div class="logo">
             <div class="logo-title">💸 مصاريفي</div>
             <div class="logo-sub">personal finance v3.5 - المزامنة الذكية</div>
+            <button class="btn btn-sm" onclick="forceRESTSync()" style="margin-top:8px; width:100%; font-size:10px; padding:4px 8px; justify-content:center; gap:4px; height: 28px; background:rgba(52,211,153,0.1); color:#34d399; border-color:rgba(52,211,153,0.2);">
+                🔄 مزامنة سحابية مباشرة
+            </button>
         </div>
 
         <div class="nav-section">الرئيسية</div>
@@ -2572,8 +2575,11 @@
         <div class="page active" id="page-overview">
             <div class="topbar">
                 <div class="page-title">نظرة عامة <span class="badge" style="font-size: 11px; padding: 2px 8px; margin-right: 8px; font-weight: 600; background: rgba(124, 109, 250, 0.15); color: var(--accent2); vertical-align: middle;">v3.5 - المزامنة الذكية</span></div>
-                <div class="topbar-right">
+                <div class="topbar-right" style="gap: 8px; align-items: center;">
                     <span class="period-badge" id="periodBadge">...</span>
+                    <button class="btn btn-sm" onclick="forceRESTSync()" style="padding: 6px 12px; font-size: 11px; gap: 4px; display: inline-flex; align-items: center; background:rgba(52,211,153,0.1); color:#34d399; border-color:rgba(52,211,153,0.2); height: 28px;">
+                        🔄 مزامنة سحابية
+                    </button>
                     <button class="btn btn-primary btn-circle" onclick="openModal('addExpense')">+</button>
                 </div>
             </div>
@@ -6469,6 +6475,49 @@
                 } catch { toast('خطأ في قراءة الملف'); }
             };
             reader.readAsText(file);
+        }
+
+        async function forceRESTSync() {
+            toast('🔄 جاري الاتصال المباشر بالسحابة...');
+            try {
+                // REST GET request bypasses ISP blocks on WebSockets completely!
+                const res = await fetch('https://express-bb53b-default-rtdb.firebaseio.com/state.json');
+                if (!res.ok) throw new Error('فشل جلب البيانات من السيرفر');
+                const serverData = await res.json();
+                
+                if (serverData) {
+                    // Decode budgets key if needed
+                    if (serverData.budgets) {
+                        serverData.budgets = decodeBudgetsFromFirebase(serverData.budgets);
+                    }
+                    
+                    // Smart merge incoming server data with current local data
+                    processLoadedState(serverData);
+                    
+                    // Update and save state to trigger immediate screen render and server PUT push
+                    state.lastUpdated = Date.now();
+                    const firebaseState = { ...state, budgets: encodeBudgetsForFirebase(state.budgets) };
+                    
+                    // REST PUT request uploads the merged state safely over HTTPS REST
+                    const putRes = await fetch('https://express-bb53b-default-rtdb.firebaseio.com/state.json', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(firebaseState)
+                    });
+                    
+                    if (!putRes.ok) throw new Error('فشل رفع البيانات المدمجة للسيرفر');
+                    
+                    localStorage.setItem('mwsarify_v3', JSON.stringify(state));
+                    renderCurrentPage();
+                    toast('✅ تمت المزامنة السحابية المدمجة بنجاح!');
+                } else {
+                    toast('⚠️ السيرفر فارغ، تم رفع البيانات المحلية الحالية كنسخة أساسية');
+                    saveState();
+                }
+            } catch (e) {
+                console.error(e);
+                toast('⚠️ فشلت المزامنة المباشرة: ' + e.message);
+            }
         }
 
         function restoreLocalBackup() {
