@@ -4,6 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://www.gstatic.com">
     <!-- Prevent browser caching to always load latest version -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -2769,7 +2773,7 @@
                 <div class="table-hdr">
                     <div class="table-title">سجل المصاريف</div>
                     <input class="search-inp" id="exp-search" placeholder="بحث باسم أو فئة..."
-                        oninput="renderExpTable()" />
+                        oninput="debouncedSearch()" />
                 </div>
                 <div id="exp-table"></div>
             </div>
@@ -3423,6 +3427,22 @@
 
         function td() { return new Date().toISOString().split('T')[0] }
         function ym(d) { const x = d || new Date(); return x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') }
+
+        let expLimit = 20;
+        let searchTimeout = null;
+
+        function debouncedSearch() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                expLimit = 20;
+                renderExpTable();
+            }, 150);
+        }
+
+        function loadMoreExpenses() {
+            expLimit += 20;
+            renderExpTable();
+        }
 
         let state = {
             expenses: [],
@@ -5487,7 +5507,7 @@
             saveState(); closeModal('addExpense'); editingExpId = null; renderExpTable(); renderOverview(); toast('تم التعديل ✓');
         }
 
-        function setShopFilter(subcat) { shopFilterCat = subcat; renderExpTable(); }
+        function setShopFilter(subcat) { shopFilterCat = subcat; expLimit = 20; renderExpTable(); }
 
         function toggleInvoice(id) { const b = document.getElementById('inv-body-' + id); if (b) b.classList.toggle('open'); }
 
@@ -5652,7 +5672,9 @@
             const filtered = (shopFilterCat === 'all' ? invoices : invoices.filter(inv => (inv.items || []).some(it => it.subcat
                 === shopFilterCat))).sort((a, b) => new Date(b.date) - new Date(a.date));
 
-            document.getElementById('exp-table').innerHTML = filtered.length ? filtered.map(inv => {
+            const visible = filtered.slice(0, expLimit);
+
+            let html = visible.length ? visible.map(inv => {
                 const items2show = shopFilterCat === 'all' ? (inv.items || []) : (inv.items || []).filter(it => it.subcat ===
                     shopFilterCat);
                 const displayTotal = items2show.reduce((s, it) => s + it.qty * it.price, 0);
@@ -5690,6 +5712,17 @@
         </div>
     </div>`;
             }).join('') : '<div class="empty">لا مصاريف في هذه الفترة — أضف مصروف جديد</div>';
+
+            if (filtered.length > expLimit) {
+                html += `<div class="show-more-container" style="display:flex;justify-content:center;margin-top:20px;margin-bottom:10px;">
+                    <button class="btn btn-primary" style="padding:10px 24px;border-radius:30px;font-size:14px;background:var(--accent);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 15px rgba(124,109,250,0.25);" onclick="loadMoreExpenses()">
+                        <span>📥 عرض المزيد من المصاريف</span>
+                        <span style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:10px;font-size:11px;">${filtered.length - expLimit} إضافي</span>
+                    </button>
+                </div>`;
+            }
+
+            document.getElementById('exp-table').innerHTML = html;
         }
 
         // ═══════════════════════════════════════
