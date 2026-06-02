@@ -4075,6 +4075,10 @@
         }
         function monthlyIncome() {
             let numMonths = 1;
+            let finM = state.periodMonth;
+            let finY = state.periodYear;
+            const startDay = state.financialMonthStartDay || 27;
+
             if (state.periodMode === 'last3') numMonths = 3;
             else if (state.periodMode === 'last6') numMonths = 6;
             else if (state.periodMode === 'year') numMonths = 12;
@@ -4085,6 +4089,9 @@
                         const oldest = new Date(Math.min(...dates));
                         const newest = new Date();
                         numMonths = Math.max(1, (newest.getFullYear() - oldest.getFullYear()) * 12 + (newest.getMonth() - oldest.getMonth()) + 1);
+                        const currentCycle = getFinancialMonthAndYear(td());
+                        finM = currentCycle.month;
+                        finY = currentCycle.year;
                     } else {
                         numMonths = 12;
                     }
@@ -4093,7 +4100,32 @@
                 }
             }
 
-            const fixed = state.incomeSources.reduce((s, src) => s + src.amount, 0) * numMonths;
+            let fixed = 0;
+            let curM = finM;
+            let curY = finY;
+            
+            for (let i = 0; i < numMonths; i++) {
+                let cycleEnd;
+                if (startDay === 1) {
+                    cycleEnd = new Date(curY, curM + 1, 0);
+                } else {
+                    cycleEnd = new Date(curY, curM, startDay - 1);
+                }
+
+                (state.incomeSources || []).forEach(src => {
+                    const startD = parseLocalDate(src.start || td());
+                    if (startD <= cycleEnd) {
+                        fixed += parseFloat(src.amount) || 0;
+                    }
+                });
+
+                curM--;
+                if (curM < 0) {
+                    curM = 11;
+                    curY--;
+                }
+            }
+
             const fl = state.freelanceLog.filter(f => inRange(f.date)).reduce((s, f) => s + f.amount, 0);
             const deds = calcFixedDeductions() * numMonths;
             const netFixed = fixed - deds;
