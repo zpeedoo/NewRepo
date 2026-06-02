@@ -2646,10 +2646,16 @@
         <div class="page" id="page-statement">
             <div class="topbar">
                 <div class="page-title">كشف الحساب</div>
-                <button class="btn btn-green" onclick="openModal('addExpense')"
-                    style="padding: 8px 16px; font-size: 12px; font-weight: 600; gap: 6px; display: inline-flex; align-items: center; border-radius: var(--r);">
-                    ➕ إضافة مصروف جديد
-                </button>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn btn-green" onclick="openModal('addExpense')"
+                        style="padding: 8px 16px; font-size: 12px; font-weight: 600; gap: 6px; display: inline-flex; align-items: center; border-radius: var(--r);">
+                        ➕ إضافة مصروف
+                    </button>
+                    <button class="btn" onclick="openModal('addFLFromStmt'); document.getElementById('n-fl-date').value=td();"
+                        style="padding: 8px 16px; font-size: 12px; font-weight: 600; gap: 6px; display: inline-flex; align-items: center; border-radius: var(--r); background: var(--surface2); color: var(--text1); border: 1px solid var(--border);">
+                        ➕ إضافة دخل
+                    </button>
+                </div>
             </div>
             <div class="stmt-filters" style="margin-bottom:10px;">
                 <div class="field" style="min-width:130px">
@@ -3094,6 +3100,30 @@
             <div class="modal-actions">
                 <button class="btn" onclick="closeModal('editFL')">إلغاء</button>
                 <button class="btn btn-primary" onclick="saveEditFL()">حفظ التعديل</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Freelance Income from Statement -->
+    <div class="modal-ov" id="modal-addFLFromStmt">
+        <div class="modal">
+            <div class="modal-title">إضافة دخل جديد</div>
+            <div class="modal-body">
+                <div class="field">
+                    <label>الوصف</label><input class="inp" id="n-fl-desc" autocomplete="off" placeholder="مثال: بيع، استشارة، مكافأة..." />
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                    <div class="field">
+                        <label>المبلغ (د.أ)</label><input class="inp" type="number" id="n-fl-amount" step="0.01" />
+                    </div>
+                    <div class="field">
+                        <label>التاريخ</label><input class="inp" type="date" id="n-fl-date" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn" onclick="closeModal('addFLFromStmt')">إلغاء</button>
+                <button class="btn btn-primary" onclick="saveNewFLFromStmt()">إضافة الدخل</button>
             </div>
         </div>
     </div>
@@ -5287,6 +5317,21 @@
             const active = document.querySelector('.page.active');
             if (active && active.id === 'page-statement') renderStatement();
             toast('تم تعديل الدخل ✓');
+        }
+        function saveNewFLFromStmt() {
+            const desc = document.getElementById('n-fl-desc').value.trim();
+            const amount = parseFloat(document.getElementById('n-fl-amount').value);
+            const date = document.getElementById('n-fl-date').value || td();
+            if (!desc || isNaN(amount) || amount <= 0) { toast('أدخل البيانات بشكل صحيح'); return; }
+            if (!state.freelanceLog) state.freelanceLog = [];
+            state.freelanceLog.push({ id: state.nextId++, desc, amount, date });
+            saveState(); closeModal('addFLFromStmt'); renderIncome(); renderOverview();
+            const active = document.querySelector('.page.active');
+            if (active && active.id === 'page-statement') renderStatement();
+            toast('تم إضافة الدخل بنجاح ✓');
+            document.getElementById('n-fl-desc').value = '';
+            document.getElementById('n-fl-amount').value = '';
+            document.getElementById('n-fl-date').value = '';
         }
         function delFL(id) {
             state.deletedIds = state.deletedIds || {};
