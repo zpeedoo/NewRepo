@@ -4818,6 +4818,37 @@
                 tempDate.setMonth(tempDate.getMonth() + 1);
             }
 
+            // 5. Gather Fixed Incomes (generate monthly entries)
+            const fixedIncExps = [];
+            tempDate = new Date(fromY, fromM, 1);
+            while (tempDate <= to) {
+                const curY = tempDate.getFullYear();
+                const curM = tempDate.getMonth();
+                const curYMStr = `${curY}-${String(curM + 1).padStart(2, '0')}`;
+
+                (state.incomeSources || []).forEach(src => {
+                    const startD = parseLocalDate(src.start || td());
+                    const thisMonthEnd = new Date(curY, curM + 1, 0);
+
+                    if (startD <= thisMonthEnd) {
+                        const dayPart = startD.getDate();
+                        const finalDay = Math.min(dayPart, thisMonthEnd.getDate());
+                        const dateStr = `${curY}-${String(curM + 1).padStart(2, '0')}-${String(finalDay).padStart(2, '0')}`;
+                        fixedIncExps.push({
+                            id: `fixedinc-${src.id}-${curYMStr}`,
+                            origId: src.id,
+                            date: dateStr,
+                            desc: `💵 مصدر دخل: ${src.name}`,
+                            amount: parseFloat(src.amount) || 0,
+                            items: [],
+                            type: 'fixed_income',
+                            cat: 'دخل'
+                        });
+                    }
+                });
+                tempDate.setMonth(tempDate.getMonth() + 1);
+            }
+
             // Combine all into unified list
             let exps = [...baseExps, ...maintExps, ...subExps, ...loanExps];
 
@@ -4835,22 +4866,24 @@
                 type: 'income',
                 cat: 'دخل'
             }));
-            exps = exps.concat(incExps).sort((a, b) => parseLocalDate(a.date) - parseLocalDate(b.date));
+            
+            exps = exps.concat(incExps, fixedIncExps).sort((a, b) => parseLocalDate(a.date) - parseLocalDate(b.date));
 
-            const totalExp = exps.filter(e => e.type !== 'income').reduce((s, e) => s + e.amount, 0);
+            const totalExp = exps.filter(e => e.type !== 'income' && e.type !== 'fixed_income').reduce((s, e) => s + e.amount, 0);
             const totalFl = fls.reduce((s, f) => s + f.amount, 0);
+            const fixedIncomeThisPeriod = fixedIncExps.reduce((s, e) => s + e.amount, 0);
+            const totalIncome = fixedIncomeThisPeriod + totalFl;
+            const net = totalIncome - totalExp;
+
             // count months
             let months = 0; let d = new Date(fromY, fromM, 1);
             while (d <= to) { months++; d.setMonth(d.getMonth() + 1) }
-            const fixedIncome = state.incomeSources.reduce((s, src) => s + src.amount, 0) * months;
-            const totalIncome = fixedIncome + totalFl;
-            const net = totalIncome - totalExp;
 
             document.getElementById('stmtSummary').innerHTML = `
         <div class="stmt-box"><div class="stmt-box-lbl">إجمالي الدخل</div><div class="stmt-box-val metric-pos">${totalIncome.toFixed(2)} د.أ</div></div>
         <div class="stmt-box"><div class="stmt-box-lbl">إجمالي المصاريف</div><div class="stmt-box-val metric-neg">${totalExp.toFixed(2)} د.أ</div></div>
         <div class="stmt-box"><div class="stmt-box-lbl">صافي الفترة</div><div class="stmt-box-val ${net >= 0 ? 'metric-pos' : 'metric-neg'}">${net.toFixed(2)} د.أ</div></div>
-        <div class="stmt-box"><div class="stmt-box-lbl">عدد المعاملات</div><div class="stmt-box-val">${exps.length}</div></div>
+        <div class="stmt-box"><div class="stmt-box-lbl">عدد المعاملات</div><div class="stmt-box-val">${exps.filter(e => e.type !== 'income' && e.type !== 'fixed_income').length}</div></div>
         <div class="stmt-box"><div class="stmt-box-lbl">دخل فري لانس</div><div class="stmt-box-val">${totalFl.toFixed(2)} د.أ</div></div>
         <div class="stmt-box"><div class="stmt-box-lbl">متوسط الإنفاق/شهر</div><div class="stmt-box-val">${months > 0 ? (totalExp / months).toFixed(2) : 0} د.أ</div></div>
       `;
@@ -4860,9 +4893,10 @@
             while (cur <= to) {
                 lbls.push(MONTHS_SHORT[cur.getMonth()] + ' ' + String(cur.getFullYear()).slice(2));
                 const targetYM = ym(cur).slice(0, 7);
-                expVals.push(exps.filter(e => e.date.startsWith(targetYM)).reduce((s, e) => s + e.amount, 0));
+                expVals.push(exps.filter(e => e.type !== 'income' && e.type !== 'fixed_income' && e.date.startsWith(targetYM)).reduce((s, e) => s + e.amount, 0));
                 const fl2 = fls.filter(f => f.date.startsWith(targetYM)).reduce((s, f) => s + f.amount, 0);
-                incVals.push(state.incomeSources.reduce((s, src) => s + src.amount, 0) + fl2);
+                const fix2 = fixedIncExps.filter(e => e.date.startsWith(targetYM)).reduce((s, e) => s + e.amount, 0);
+                incVals.push(fix2 + fl2);
                 cur.setMonth(cur.getMonth() + 1);
             }
             if (charts.stmtLine) charts.stmtLine.destroy();
@@ -4881,7 +4915,7 @@
                 if (e.type === 'invoice') {
                     const primarySub = e.items?.[0]?.subcat || 'أخرى';
                     cat = normCat(primarySub);
-                } else if (e.type === 'income') {
+                } else if (e.type === 'income' || e.type === 'fixed_income') {
                     cat = 'دخل';
                 } else {
                     cat = normCat(e.cat);
@@ -4941,6 +4975,11 @@
                                 <button class="del-btn" style="color:var(--accent2); margin-inline-end: 8px; font-size: 13px;" onclick="event.stopPropagation(); openEditFL(${e.origId})" title="تعديل">✎</button>
                                 <button class="del-btn" style="color:var(--red); font-size: 13px;" onclick="event.stopPropagation(); if(confirm('هل أنت متأكد من حذف هذا الدخل؟')) { delFL(${e.origId}); renderStatement(); }" title="حذف">✕</button>
                             `;
+                        } else if (e.type === 'fixed_income') {
+                            actionHtml = `
+                                <button class="del-btn" style="color:var(--accent2); margin-inline-end: 8px; font-size: 13px;" onclick="event.stopPropagation(); openEditIncome(${e.origId})" title="تعديل">✎</button>
+                                <button class="del-btn" style="color:var(--red); font-size: 13px;" onclick="event.stopPropagation(); if(confirm('هل أنت متأكد من حذف هذا المصدر الثابت؟')) { delIncomeSource(${e.origId}); renderStatement(); }" title="حذف">✕</button>
+                            `;
                         } else if (e.type === 'loan') {
                             actionHtml = `
                                 <button class="del-btn" style="color:var(--red); font-size: 13px;" onclick="event.stopPropagation(); if(confirm('هل أنت متأكد من حذف هذا القرض بالكامل؟')) { delLoan(${String(e.id).split('-')[1]}); renderStatement(); }" title="حذف القرض">✕</button>
@@ -4949,7 +4988,7 @@
 
                         let amtDisplay = `${e.amount.toFixed(2)} د.أ`;
                         let amtStyle = '';
-                        if (e.type === 'income') {
+                        if (e.type === 'income' || e.type === 'fixed_income') {
                             amtDisplay = `+${e.amount.toFixed(2)} د.أ`;
                             amtStyle = 'color:var(--green);';
                         }
@@ -5156,12 +5195,18 @@
             inc.amount = parseFloat(document.getElementById('e-inc-amount').value) || 0;
             inc.type = document.getElementById('e-inc-type').value;
             inc.start = document.getElementById('e-inc-start').value;
-            saveState(); closeModal('editIncome'); renderIncome(); renderOverview(); toast('تم التعديل ✓');
+            saveState(); closeModal('editIncome'); renderIncome(); renderOverview();
+            const active = document.querySelector('.page.active');
+            if (active && active.id === 'page-statement') renderStatement();
+            toast('تم التعديل ✓');
         }
         function delIncomeSource(id) {
             state.deletedIds = state.deletedIds || {};
             state.deletedIds[String(id)] = true;
-            state.incomeSources = state.incomeSources.filter(s => String(s.id) !== String(id)); saveState(); renderIncome(); renderOverview(); toast('تم الحذف');
+            state.incomeSources = state.incomeSources.filter(s => String(s.id) !== String(id)); saveState(); renderIncome(); renderOverview();
+            const active = document.querySelector('.page.active');
+            if (active && active.id === 'page-statement') renderStatement();
+            toast('تم الحذف');
         }
         function addDeduction() {
             const name = document.getElementById('m-ded-name').value.trim();
