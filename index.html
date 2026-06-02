@@ -5444,11 +5444,19 @@
                 </div>
             </div>`;
             }
-            document.getElementById('income-fixed-list').innerHTML = state.incomeSources.length ? state.incomeSources.map(src => `
+            document.getElementById('income-fixed-list').innerHTML = state.incomeSources.length ? state.incomeSources.map(src => {
+                let nextDate = new Date();
+                if (nextDate.getDate() > 28) {
+                    nextDate.setMonth(nextDate.getMonth() + 1);
+                }
+                nextDate.setDate(28);
+                const nextStr = ymd(nextDate);
+                
+                return `
         <div class="income-source">
           <div>
             <div class="income-source-name">${src.name}</div>
-            <div class="income-source-type">${INC_TYPES[src.type] || src.type} — منذ ${src.start}</div>
+            <div class="income-source-type">${INC_TYPES[src.type] || src.type} — يستحق يوم 28 (القادم: <span style="color:var(--accent)">${nextStr}</span>)</div>
           </div>
           <div style="text-align:left">
             <div class="income-source-amt">+${src.amount.toFixed(2)} د.أ</div>
@@ -5458,7 +5466,8 @@
             <button class="del-btn" style="color:var(--accent2);" onclick="openEditIncome(${src.id})" title="تعديل">✎</button>
             <button class="del-btn" onclick="delIncomeSource(${src.id})" title="حذف">✕</button>
           </div>
-        </div>`).join('') : '<div class="empty">لا مصادر دخل ثابتة — أضف من الأعلى</div>';
+        </div>`;
+            }).join('') : '<div class="empty">لا مصادر دخل ثابتة — أضف من الأعلى</div>';
             // freelance in period
             const flList = state.freelanceLog.filter(f => inRange(f.date)).sort((a, b) => new Date(b.date) - new Date(a.date));
             document.getElementById('income-var-list').innerHTML = flList.length ? flList.slice(0, 5).map(f => `
@@ -7719,7 +7728,7 @@
             if (!notifSupported()) { toast('المتصفح لا يدعم التنبيهات'); return; }
             if (Notification.permission === 'granted') {
                 toast('التنبيهات مفعّلة بالفعل ✓');
-                checkSubscriptionAlerts(true);
+                checkAllAlerts(true);
                 return;
             }
             if (Notification.permission === 'denied') {
@@ -7733,38 +7742,35 @@
                 // Show a confirmation notification
                 try {
                     new Notification('مصاريفي', {
-                        body: 'تم تفعيل التنبيهات. ستصلك إشعارات قبل تجديد الاشتراكات بأسبوع.',
+                        body: 'تم تفعيل التنبيهات الذكية. ستصلك إشعارات للميزانية والديون والاشتراكات.',
                         icon: undefined,
                         tag: 'notif-enabled'
                     });
                 } catch (e) { }
-                checkSubscriptionAlerts(true);
+                checkAllAlerts(true);
             } else {
                 toast('لم يتم منح الإذن');
             }
         }
-        function showSubNotification(s, days) {
-            const dayLbl = days < 0 ? `متأخر ${Math.abs(days)} يوم`
-                : days === 0 ? 'اليوم'
-                    : days === 1 ? 'غداً'
-                        : `بعد ${days} أيام`;
-            const title = `🔔 تذكير: ${s.name}`;
-            const body = `يتجدد ${dayLbl} — ${s.amount.toFixed(2)} د.أ`;
+        function showSystemNotification(title, body, tag) {
             if (notifSupported() && Notification.permission === 'granted') {
                 try {
-                    new Notification(title, { body, tag: `sub-${s.id}-${days}` });
+                    new Notification(title, { body, tag });
                     return;
                 } catch (e) { }
             }
             // Fallback to in-app toast
             toast(`${title} — ${body}`);
         }
-        // Returns array of trigger days (7, 5, 3, 1, 0) when alerts should fire.
+
+        // Returns array of trigger days when alerts should fire.
         const ALERT_DAYS = [7, 5, 3, 1, 0];
-        function checkSubscriptionAlerts(force) {
+        const LOAN_ALERT_DAYS = [3, 1, 0];
+
+        function checkAllAlerts(force) {
             const today = new Date(); today.setHours(0, 0, 0, 0);
             const todayKey = ymd(today);
-            const storageKey = 'subAlerts_' + todayKey;
+            const storageKey = 'sysAlerts_' + todayKey;
             let shown = {};
             try { shown = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch (e) { }
 
@@ -7772,8 +7778,8 @@
             try {
                 for (let i = 0; i < localStorage.length; i++) {
                     const k = localStorage.key(i);
-                    if (k && k.startsWith('subAlerts_') && k !== storageKey) {
-                        const dk = k.replace('subAlerts_', '');
+                    if (k && k.startsWith('sysAlerts_') && k !== storageKey) {
+                        const dk = k.replace('sysAlerts_', '');
                         const dDate = new Date(dk);
                         if (!isNaN(dDate) && (today - dDate) > 2 * 86400000) {
                             localStorage.removeItem(k); i--;
@@ -7782,16 +7788,71 @@
                 }
             } catch (e) { }
 
+            // 1. SUBSCRIPTIONS
             (state.subscriptions || []).filter(s => s.next && isSubActive(s)).forEach(s => {
                 const next = new Date(s.next); next.setHours(0, 0, 0, 0);
                 const days = Math.round((next - today) / 86400000);
                 if (!ALERT_DAYS.includes(days) && days >= 0) return;
                 const overdue = days < 0;
-                const triggerKey = `${s.id}_${overdue ? 'over' : days}`;
+                const triggerKey = `sub_${s.id}_${overdue ? 'over' : days}`;
                 if (shown[triggerKey] && !force) return;
-                showSubNotification(s, days);
+                
+                const dayLbl = overdue ? `متأخر ${Math.abs(days)} يوم` : days === 0 ? 'اليوم' : days === 1 ? 'غداً' : `بعد ${days} أيام`;
+                showSystemNotification(`🔔 تذكير: ${s.name}`, `يتجدد ${dayLbl} — ${s.amount.toFixed(2)} د.أ`, triggerKey);
                 shown[triggerKey] = Date.now();
             });
+
+            // 2. LOANS
+            (state.loans || []).filter(l => l.remaining > 0).forEach(l => {
+                if(!l.start) return;
+                const startD = new Date(l.start);
+                let nextDue = new Date(today.getFullYear(), today.getMonth(), startD.getDate());
+                nextDue.setHours(0,0,0,0);
+                if (nextDue < today) nextDue.setMonth(nextDue.getMonth() + 1); // move to next month if passed
+                
+                const days = Math.round((nextDue - today) / 86400000);
+                if (!LOAN_ALERT_DAYS.includes(days)) return; // Only warn on 3, 1, 0 days
+                
+                const triggerKey = `loan_${l.id}_${days}`;
+                if (shown[triggerKey] && !force) return;
+                
+                const dayLbl = days === 0 ? 'اليوم' : days === 1 ? 'غداً' : `بعد ${days} أيام`;
+                showSystemNotification(`💳 قسط القرض: ${l.name}`, `يستحق الدفع ${dayLbl} بقيمة ${l.monthly.toFixed(2)} د.أ`, triggerKey);
+                shown[triggerKey] = Date.now();
+            });
+
+            // 3. BUDGET LIMITS
+            if (state.budgets) {
+                const catSpent = {};
+                (state.expenses || []).forEach(e => {
+                    const ed = new Date(e.date);
+                    if (ed.getMonth() === today.getMonth() && ed.getFullYear() === today.getFullYear()) {
+                        catSpent[e.category] = (catSpent[e.category] || 0) + e.amount;
+                    }
+                });
+
+                Object.keys(state.budgets).forEach(cat => {
+                    const limit = state.budgets[cat];
+                    if (limit <= 0) return;
+                    const spent = catSpent[cat] || 0;
+                    const pct = (spent / limit) * 100;
+                    
+                    if (pct >= 100) {
+                        const triggerKey = `budg_${cat}_100`;
+                        if (!shown[triggerKey]) {
+                            showSystemNotification(`⚠️ تجاوز الميزانية`, `لقد تجاوزت ميزانية (${cat}) المحددة بـ ${limit} د.أ`, triggerKey);
+                            shown[triggerKey] = Date.now();
+                        }
+                    } else if (pct >= 90) {
+                        const triggerKey = `budg_${cat}_90`;
+                        if (!shown[triggerKey]) {
+                            showSystemNotification(`⚠️ اقتراب من الحد`, `اقتربت مصاريف (${cat}) من الحد الأقصى (${pct.toFixed(0)}%)`, triggerKey);
+                            shown[triggerKey] = Date.now();
+                        }
+                    }
+                });
+            }
+
             try { localStorage.setItem(storageKey, JSON.stringify(shown)); } catch (e) { }
         }
 
@@ -7999,8 +8060,8 @@
             else renderOverview();
             applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
             updateNotifBtn();
-            checkSubscriptionAlerts();
-            setInterval(checkSubscriptionAlerts, 30 * 60 * 1000);
+            checkAllAlerts();
+            setInterval(checkAllAlerts, 30 * 60 * 1000);
         }
 
         // Firebase Auth Implementation
