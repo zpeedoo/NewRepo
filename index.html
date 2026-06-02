@@ -2646,7 +2646,8 @@
         <div class="page" id="page-statement">
             <div class="topbar">
                 <div class="page-title">كشف الحساب</div>
-                <button class="btn btn-green" onclick="openModal('addExpense')" style="padding: 8px 16px; font-size: 12px; font-weight: 600; gap: 6px; display: inline-flex; align-items: center; border-radius: var(--r);">
+                <button class="btn btn-green" onclick="openModal('addExpense')"
+                    style="padding: 8px 16px; font-size: 12px; font-weight: 600; gap: 6px; display: inline-flex; align-items: center; border-radius: var(--r);">
                     ➕ إضافة مصروف جديد
                 </button>
             </div>
@@ -2897,7 +2898,8 @@
                 </div>
             </div>
             <!-- مركز التحليل الذكي وتطوير التصنيفات -->
-            <div class="card" style="margin-top: 16px; border: 1.5px solid var(--accent2);" id="smart-categories-center"></div>
+            <div class="card" style="margin-top: 16px; border: 1.5px solid var(--accent2);"
+                id="smart-categories-center"></div>
         </div>
 
         <!-- ── EXPORT PAGE ── -->
@@ -4357,7 +4359,15 @@
 
         // Compute period length in days for a subscription (cycle length)
         function subCycleDays(s) {
-            return s.freq === 'daily' ? 1 : s.freq === 'yearly' ? 365 : 30;
+            if (s.freq === 'daily') return 1;
+            if (s.freq === 'yearly') return 365;
+            if (s.next) {
+                const nextDate = new Date(s.next);
+                const prevDate = new Date(s.next);
+                prevDate.setMonth(prevDate.getMonth() - 1);
+                return Math.round((nextDate - prevDate) / 86400000);
+            }
+            return 30;
         }
         // Check if subscription is active (not ended)
         function isSubActive(s) {
@@ -4735,8 +4745,11 @@
                     const thisMonthEnd = new Date(curY, curM + 1, 0);
 
                     if (startD <= thisMonthEnd && (!endD || endD >= thisMonthStart)) {
-                        const dayPart = startD.getDate();
-                        const finalDay = Math.min(dayPart, thisMonthEnd.getDate());
+                        let finalDay = 1;
+                        if (sub.freq !== 'monthly') {
+                            const dayPart = startD.getDate();
+                            finalDay = Math.min(dayPart, thisMonthEnd.getDate());
+                        }
                         const dateStr = `${curY}-${String(curM + 1).padStart(2, '0')}-${String(finalDay).padStart(2, '0')}`;
 
                         subExps.push({
@@ -4869,7 +4882,7 @@
                     if (e.type !== 'invoice' || items.length === 0) {
                         const specificCat = e.type === 'invoice' ? (items[0]?.subcat || 'أخرى') : (e.cat || 'أخرى');
                         const specificCol = catColor(specificCat);
-                        
+
                         let actionHtml = '';
                         if (e.type === 'invoice') {
                             actionHtml = `
@@ -5868,7 +5881,12 @@
             const freq = document.getElementById('m-sub-freq').value;
             const cat = document.getElementById('m-sub-cat').value;
             const start = document.getElementById('m-sub-start').value || td();
-            const next = document.getElementById('m-sub-next').value || td();
+            let next = document.getElementById('m-sub-next').value || td();
+            if (freq === 'monthly' && next) {
+                const nextDate = new Date(next);
+                nextDate.setDate(1);
+                next = ymd(nextDate);
+            }
             const end = document.getElementById('m-sub-end').value || '';
             const autoRenew = document.getElementById('m-sub-renew').checked;
             const note = document.getElementById('m-sub-note').value;
@@ -6084,7 +6102,13 @@
             s.freq = document.getElementById('e-sub-freq').value;
             s.cat = document.getElementById('e-sub-cat').value;
             s.start = document.getElementById('e-sub-start').value;
-            s.next = document.getElementById('e-sub-next').value;
+            let next = document.getElementById('e-sub-next').value;
+            if (s.freq === 'monthly' && next) {
+                const nextDate = new Date(next);
+                nextDate.setDate(1);
+                next = ymd(nextDate);
+            }
+            s.next = next;
             s.end = document.getElementById('e-sub-end').value;
             s.autoRenew = document.getElementById('e-sub-renew').checked;
             s.note = document.getElementById('e-sub-note').value;
@@ -7473,7 +7497,7 @@
         function processAutoRenewals() {
             // For subscriptions with autoRenew, advance the next date forward if it's in the past
             const today = new Date(); today.setHours(0, 0, 0, 0);
-            let changed = false;
+            let anyChanged = false;
             (state.subscriptions || []).forEach(s => {
                 if (s.autoRenew === false) return; // explicit opt-out
                 if (!s.next) return;
@@ -7483,17 +7507,28 @@
                     if (endD < today) return;
                 }
                 let next = new Date(s.next); next.setHours(0, 0, 0, 0);
-                while (next < today) {
-                    if (s.freq === 'daily') next.setDate(next.getDate() + 1);
-                    else if (s.freq === 'yearly') next.setFullYear(next.getFullYear() + 1);
-                    else next.setMonth(next.getMonth() + 1);
-                    changed = true;
+                let subChanged = false;
+                if (s.freq === 'monthly' && next.getDate() !== 1) {
+                    next.setDate(1);
+                    subChanged = true;
                 }
-                if (changed) {
+                while (next <= today) {
+                    if (s.freq === 'daily') {
+                        next.setDate(next.getDate() + 1);
+                    } else if (s.freq === 'yearly') {
+                        next.setFullYear(next.getFullYear() + 1);
+                    } else {
+                        next.setMonth(next.getMonth() + 1);
+                        next.setDate(1);
+                    }
+                    subChanged = true;
+                }
+                if (subChanged) {
                     s.next = ymd(next);
+                    anyChanged = true;
                 }
             });
-            if (changed) saveState();
+            if (anyChanged) saveState();
         }
         async function initApp() {
             await loadState();
