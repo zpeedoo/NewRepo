@@ -4778,8 +4778,22 @@
             const fromY = parseInt(document.getElementById('stmtFromYear').value);
             const toM = parseInt(document.getElementById('stmtToMonth').value);
             const toY = parseInt(document.getElementById('stmtToYear').value);
-            const from = new Date(fromY, fromM, 1, 0, 0, 0, 0);
-            const to = new Date(toY, toM + 1, 0, 23, 59, 59, 999);
+            
+            const startDay = state.financialMonthStartDay || 27;
+
+            let from;
+            if (startDay === 1) {
+                from = new Date(fromY, fromM, 1, 0, 0, 0, 0);
+            } else {
+                from = new Date(fromY, fromM - 1, startDay, 0, 0, 0, 0);
+            }
+
+            let to;
+            if (startDay === 1) {
+                to = new Date(toY, toM + 1, 0, 23, 59, 59, 999);
+            } else {
+                to = new Date(toY, toM, startDay - 1, 23, 59, 59, 999);
+            }
 
             const parseLocalDate = (dateStr) => {
                 if (!dateStr) return new Date(0);
@@ -4818,10 +4832,13 @@
                     cat: m.cat || 'صيانة وإصلاح'
                 }));
 
+            const loopStart = new Date(fromY, fromM - 1, 1);
+            const loopEnd = new Date(toY, toM + 1, 1);
+
             // 3. Gather Active Subscriptions (generate recurring monthly entries)
             const subExps = [];
-            let tempDate = new Date(fromY, fromM, 1);
-            while (tempDate <= to) {
+            let tempDate = new Date(loopStart);
+            while (tempDate <= loopEnd) {
                 const curY = tempDate.getFullYear();
                 const curM = tempDate.getMonth(); // 0-indexed
                 const curYMStr = `${curY}-${String(curM + 1).padStart(2, '0')}`;
@@ -4840,15 +4857,18 @@
                         }
                         const dateStr = `${curY}-${String(curM + 1).padStart(2, '0')}-${String(finalDay).padStart(2, '0')}`;
 
-                        subExps.push({
-                            id: `sub-${sub.id}-${curYMStr}`,
-                            date: dateStr,
-                            desc: `🔄 اشتراك: ${sub.name}`,
-                            amount: parseFloat(sub.amount) || 0,
-                            items: [],
-                            type: 'subscription',
-                            cat: sub.cat || 'اشتراكات ورسوم'
-                        });
+                        const d = parseLocalDate(dateStr);
+                        if (d >= from && d <= to) {
+                            subExps.push({
+                                id: `sub-${sub.id}-${curYMStr}`,
+                                date: dateStr,
+                                desc: `🔄 اشتراك: ${sub.name}`,
+                                amount: parseFloat(sub.amount) || 0,
+                                items: [],
+                                type: 'subscription',
+                                cat: sub.cat || 'اشتراكات ورسوم'
+                            });
+                        }
                     }
                 });
                 tempDate.setMonth(tempDate.getMonth() + 1);
@@ -4856,8 +4876,8 @@
 
             // 4. Gather Active Loans (generate monthly installments)
             const loanExps = [];
-            tempDate = new Date(fromY, fromM, 1);
-            while (tempDate <= to) {
+            tempDate = new Date(loopStart);
+            while (tempDate <= loopEnd) {
                 const curY = tempDate.getFullYear();
                 const curM = tempDate.getMonth();
                 const curYMStr = `${curY}-${String(curM + 1).padStart(2, '0')}`;
@@ -4867,16 +4887,22 @@
                     const thisMonthEnd = new Date(curY, curM + 1, 0);
 
                     if (startD <= thisMonthEnd && loan.remaining > 0) {
-                        const dateStr = `${curY}-${String(curM + 1).padStart(2, '0')}-01`;
-                        loanExps.push({
-                            id: `loan-${loan.id}-${curYMStr}`,
-                            date: dateStr,
-                            desc: `💸 قروض: ${loan.name}`,
-                            amount: parseFloat(loan.monthly) || 0,
-                            items: [],
-                            type: 'loan',
-                            cat: 'قروض والتزامات'
-                        });
+                        const dayPart = startD.getDate();
+                        const finalDay = Math.min(dayPart, thisMonthEnd.getDate());
+                        const dateStr = `${curY}-${String(curM + 1).padStart(2, '0')}-${String(finalDay).padStart(2, '0')}`;
+                        
+                        const d = parseLocalDate(dateStr);
+                        if (d >= from && d <= to) {
+                            loanExps.push({
+                                id: `loan-${loan.id}-${curYMStr}`,
+                                date: dateStr,
+                                desc: `💸 قروض: ${loan.name}`,
+                                amount: parseFloat(loan.monthly) || 0,
+                                items: [],
+                                type: 'loan',
+                                cat: 'قروض والتزامات'
+                            });
+                        }
                     }
                 });
                 tempDate.setMonth(tempDate.getMonth() + 1);
@@ -4884,8 +4910,8 @@
 
             // 5. Gather Fixed Incomes (generate monthly entries)
             const fixedIncExps = [];
-            tempDate = new Date(fromY, fromM, 1);
-            while (tempDate <= to) {
+            tempDate = new Date(loopStart);
+            while (tempDate <= loopEnd) {
                 const curY = tempDate.getFullYear();
                 const curM = tempDate.getMonth();
                 const curYMStr = `${curY}-${String(curM + 1).padStart(2, '0')}`;
@@ -4898,16 +4924,20 @@
                         const dayPart = startD.getDate();
                         const finalDay = Math.min(dayPart, thisMonthEnd.getDate());
                         const dateStr = `${curY}-${String(curM + 1).padStart(2, '0')}-${String(finalDay).padStart(2, '0')}`;
-                        fixedIncExps.push({
-                            id: `fixedinc-${src.id}-${curYMStr}`,
-                            origId: src.id,
-                            date: dateStr,
-                            desc: `💵 مصدر دخل: ${src.name}`,
-                            amount: parseFloat(src.amount) || 0,
-                            items: [],
-                            type: 'fixed_income',
-                            cat: 'دخل'
-                        });
+                        
+                        const d = parseLocalDate(dateStr);
+                        if (d >= from && d <= to) {
+                            fixedIncExps.push({
+                                id: `fixedinc-${src.id}-${curYMStr}`,
+                                origId: src.id,
+                                date: dateStr,
+                                desc: `💵 مصدر دخل: ${src.name}`,
+                                amount: parseFloat(src.amount) || 0,
+                                items: [],
+                                type: 'fixed_income',
+                                cat: 'دخل'
+                            });
+                        }
                     }
                 });
                 tempDate.setMonth(tempDate.getMonth() + 1);
