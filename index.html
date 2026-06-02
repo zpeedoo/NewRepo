@@ -19,6 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <style>
         :root {
             --bg: #0f0f11;
@@ -2441,6 +2442,83 @@
 
 <body>
 
+    <!-- Login Overlay -->
+    <div id="loginOverlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg); z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        
+        <!-- LOGIN SECTION -->
+        <div class="card" id="authLoginSection" style="width: 320px; max-width: 90%; text-align:center; padding: 32px 24px;">
+            <div style="font-size: 36px; margin-bottom: 12px;">💸</div>
+            <h2 style="margin-bottom: 8px; color: var(--text);">تسجيل الدخول</h2>
+            <div style="color: var(--text3); font-size: 13px; margin-bottom: 24px;">أهلاً بك مجدداً في حسابك المالي</div>
+            
+            <form id="loginForm" onsubmit="doLogin(event)">
+                <div class="field" style="text-align:right;">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="loginEmail" class="inp" required style="direction:ltr; text-align:left;">
+                </div>
+                <div class="field" style="text-align:right;">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="loginPassword" class="inp" required style="direction:ltr; text-align:left;">
+                </div>
+                <div id="loginError" style="color: var(--red); font-size: 12px; margin-bottom: 12px; display:none;"></div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content:center; padding: 12px; font-size: 15px; margin-bottom: 16px;" id="loginBtn">دخول</button>
+                
+                <div style="font-size: 12px; color: var(--text3); margin-bottom: 8px;">
+                    <a href="#" onclick="switchAuthSection('forgot')" style="color: var(--accent); text-decoration: none;">نسيت كلمة السر؟</a>
+                </div>
+                <div style="font-size: 12px; color: var(--text3);">
+                    ليس لديك حساب؟ <a href="#" onclick="switchAuthSection('register')" style="color: var(--accent); text-decoration: none; font-weight: bold;">إنشاء حساب جديد</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- REGISTER SECTION -->
+        <div class="card" id="authRegisterSection" style="width: 320px; max-width: 90%; text-align:center; padding: 32px 24px; display:none;">
+            <div style="font-size: 36px; margin-bottom: 12px;">✨</div>
+            <h2 style="margin-bottom: 8px; color: var(--text);">إنشاء حساب</h2>
+            <div style="color: var(--text3); font-size: 13px; margin-bottom: 24px;">ابدأ بإدارة أموالك بسهولة</div>
+            
+            <form id="registerForm" onsubmit="doRegister(event)">
+                <div class="field" style="text-align:right;">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="regEmail" class="inp" required style="direction:ltr; text-align:left;">
+                </div>
+                <div class="field" style="text-align:right;">
+                    <label>كلمة المرور (6 أحرف على الأقل)</label>
+                    <input type="password" id="regPassword" class="inp" required style="direction:ltr; text-align:left;" minlength="6">
+                </div>
+                <div id="regError" style="color: var(--red); font-size: 12px; margin-bottom: 12px; display:none;"></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content:center; padding: 12px; font-size: 15px; margin-bottom: 16px;" id="regBtn">إنشاء الحساب</button>
+                
+                <div style="font-size: 12px; color: var(--text3);">
+                    لديك حساب بالفعل؟ <a href="#" onclick="switchAuthSection('login')" style="color: var(--accent); text-decoration: none; font-weight: bold;">تسجيل الدخول</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- FORGOT PASSWORD SECTION -->
+        <div class="card" id="authForgotSection" style="width: 320px; max-width: 90%; text-align:center; padding: 32px 24px; display:none;">
+            <div style="font-size: 36px; margin-bottom: 12px;">🔑</div>
+            <h2 style="margin-bottom: 8px; color: var(--text);">استعادة كلمة السر</h2>
+            <div style="color: var(--text3); font-size: 13px; margin-bottom: 24px;">أدخل إيميلك وسنرسل لك رابطاً للتعديل</div>
+            
+            <form id="forgotForm" onsubmit="doResetPassword(event)">
+                <div class="field" style="text-align:right;">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="forgotEmail" class="inp" required style="direction:ltr; text-align:left;">
+                </div>
+                <div id="forgotError" style="color: var(--red); font-size: 12px; margin-bottom: 12px; display:none;"></div>
+                <div id="forgotSuccess" style="color: #34d399; font-size: 12px; margin-bottom: 12px; display:none;"></div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content:center; padding: 12px; font-size: 15px; margin-bottom: 16px;" id="forgotBtn">إرسال الرابط</button>
+                
+                <div style="font-size: 12px; color: var(--text3);">
+                    <a href="#" onclick="switchAuthSection('login')" style="color: var(--text3); text-decoration: underline;">العودة لتسجيل الدخول</a>
+                </div>
+            </form>
+        </div>
+    </div>
     <!-- Ambient glowing lights background -->
     <div class="ambient-glow-1"></div>
     <div class="ambient-glow-2"></div>
@@ -2575,6 +2653,10 @@
                 <span id="notifIcon">🔔</span>
                 <span id="notifLbl">تفعيل التنبيهات</span>
             </button>
+            <button class="btn btn-sm" onclick="doLogout()"
+                style="margin-top:6px;width:100%;justify-content:center;gap:8px;background:rgba(248,113,113,0.1);color:#f87171;border-color:rgba(248,113,113,0.2);">
+                <span>🚪</span> تسجيل الخروج
+            </button>
         </div>
     </div>
 
@@ -2699,6 +2781,12 @@
                     <canvas id="stmtLineIncome" role="img" aria-label="الدخل الشهري"></canvas>
                 </div>
             </div>
+
+            <div style="margin-bottom: 12px; position: relative;">
+                <input type="text" id="stmtSearch" class="inp" placeholder="ابحث في المعاملات (الوصف، الفئة، المبلغ)..." style="width: 100%; padding-right: 36px; background: var(--surface); border: 1px solid var(--border);" onkeyup="filterStatementTable()">
+                <span style="position: absolute; right: 12px; top: 10px; color: var(--text3);">🔍</span>
+            </div>
+
             <div class="table-card" id="stmtTable"></div>
         </div>
 
@@ -3547,14 +3635,14 @@
         };
 
         const firebaseConfig = {
-            apiKey: "AIzaSyAH-pnX_uzAuBPbsQkMX39YA92I5qENtuI",
-            authDomain: "express-bb53b.firebaseapp.com",
-            databaseURL: "https://express-bb53b-default-rtdb.firebaseio.com",
-            projectId: "express-bb53b",
-            storageBucket: "express-bb53b.firebasestorage.app",
-            messagingSenderId: "155954393056",
-            appId: "1:155954393056:web:5daf9d0c36ca392f3c8585",
-            measurementId: "G-3VL3V9X124"
+            apiKey: "AIzaSyD5_r_wBDjy1y6Pm0oOwLIMdHyITiknSSw",
+            authDomain: "myexpenses-3b6f5.firebaseapp.com",
+            databaseURL: "https://myexpenses-3b6f5-default-rtdb.firebaseio.com",
+            projectId: "myexpenses-3b6f5",
+            storageBucket: "myexpenses-3b6f5.firebasestorage.app",
+            messagingSenderId: "321643278173",
+            appId: "1:321643278173:web:5dfb1ae0c644e97fe842b4",
+            measurementId: "G-MJZN5DXGRQ"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
@@ -4667,17 +4755,59 @@
         }
         function renderLine() {
             const now = new Date(); const labels = []; const vals = [];
+            
+            const startDay = state.financialMonthStartDay || 27;
+            const parseLocalDate = (dateStr) => {
+                if (!dateStr) return new Date(0);
+                const parts = dateStr.split('-');
+                if (parts.length < 3) return new Date(dateStr);
+                return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]), 12, 0, 0);
+            };
+
             for (let i = 11; i >= 0; i--) {
                 const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
                 labels.push(MONTHS_SHORT[d.getMonth()]);
                 const targetMonth = d.getMonth();
                 const targetYear = d.getFullYear();
 
-                const filtered = state.expenses.filter(e => {
+                const expSum = state.expenses.filter(e => {
                     const { month, year } = getFinancialMonthAndYear(e.date);
                     return month === targetMonth && year === targetYear;
-                });
-                vals.push(filtered.reduce((s, e) => s + e.amount, 0));
+                }).reduce((s, e) => s + e.amount, 0);
+
+                const maintSum = (state.maintenance || []).filter(m => {
+                    if (m.status !== 'done' || !m.date) return false;
+                    const { month, year } = getFinancialMonthAndYear(m.date);
+                    return month === targetMonth && year === targetYear;
+                }).reduce((s, m) => s + (parseFloat(m.cost) || 0), 0);
+
+                let cycleEnd, cycleStart;
+                if (startDay === 1) {
+                    cycleEnd = new Date(targetYear, targetMonth + 1, 0);
+                    cycleStart = new Date(targetYear, targetMonth, 1);
+                } else {
+                    cycleEnd = new Date(targetYear, targetMonth, startDay - 1);
+                    cycleStart = new Date(targetYear, targetMonth - 1, startDay);
+                }
+
+                const subSum = (state.subscriptions || []).reduce((s, sub) => {
+                    const startD = parseLocalDate(sub.start);
+                    const endD = sub.end ? parseLocalDate(sub.end) : null;
+                    if (startD <= cycleEnd && (!endD || endD >= cycleStart)) {
+                        return s + (parseFloat(sub.amount) || 0);
+                    }
+                    return s;
+                }, 0);
+
+                const loanSum = (state.loans || []).reduce((s, loan) => {
+                    const startD = parseLocalDate(loan.start || td());
+                    if (startD <= cycleEnd && loan.remaining > 0) {
+                        return s + (parseFloat(loan.monthly) || 0);
+                    }
+                    return s;
+                }, 0);
+
+                vals.push(expSum + maintSum + subSum + loanSum);
             }
             if (charts.line) charts.line.destroy();
             const ctx = document.getElementById('lineChart').getContext('2d');
@@ -4773,6 +4903,18 @@
             renderStatement();
         }
 
+        let stmtSortKey = 'cat';
+        let stmtSortOrder = 'desc';
+        function setStmtSort(key) {
+            if (stmtSortKey === key) {
+                stmtSortOrder = stmtSortOrder === 'desc' ? 'asc' : 'desc';
+            } else {
+                stmtSortKey = key;
+                stmtSortOrder = (key === 'date' || key === 'amount') ? 'desc' : 'asc';
+            }
+            renderStatement();
+        }
+        
         function renderStatement() {
             const fromM = parseInt(document.getElementById('stmtFromMonth').value);
             const fromY = parseInt(document.getElementById('stmtFromYear').value);
@@ -5019,28 +5161,49 @@
             });
 
             let flatRowsHtml = '';
-            const orderedCats = ['دخل', ...state.categories.map(c => c.name), 'أخرى'];
-            const uniqueCats = Array.from(new Set(orderedCats));
+            
+            let uniqueCats = [];
+            if (stmtSortKey === 'cat') {
+                const orderedCats = ['دخل', ...state.categories.map(c => c.name), 'أخرى'];
+                uniqueCats = Array.from(new Set(orderedCats));
+            } else {
+                groups['all'] = exps;
+                uniqueCats = ['all'];
+            }
 
             uniqueCats.forEach(catName => {
                 const groupExps = groups[catName] || [];
                 if (groupExps.length === 0) return;
 
-                // Sort items in this group by date descending
-                groupExps.sort((a, b) => new Date(b.date) - new Date(a.date));
+                groupExps.sort((a, b) => {
+                    let valA, valB;
+                    if (stmtSortKey === 'cat' || stmtSortKey === 'date') {
+                        valA = new Date(a.date).getTime();
+                        valB = new Date(b.date).getTime();
+                    } else if (stmtSortKey === 'desc') {
+                        valA = a.desc || '';
+                        valB = b.desc || '';
+                    } else if (stmtSortKey === 'amount') {
+                        valA = a.amount || 0;
+                        valB = b.amount || 0;
+                    }
+                    if (valA < valB) return stmtSortOrder === 'asc' ? -1 : 1;
+                    if (valA > valB) return stmtSortOrder === 'asc' ? 1 : -1;
+                    return 0;
+                });
 
-                // Calculate group total
-                const groupTotal = groupExps.reduce((sum, e) => sum + e.amount, 0);
-                const catCol = catColor(catName);
+                if (catName !== 'all') {
+                    const groupTotal = groupExps.reduce((sum, e) => sum + e.amount, 0);
+                    const catCol = catColor(catName);
 
-                // Add Category Header Row
-                flatRowsHtml += `
-                    <tr class="stmt-cat-group-hdr" style="background: ${catCol}10; color: ${catCol}; font-weight: 700; font-size: 13px; border-top: 2px solid ${catCol}33; page-break-inside: avoid;">
-                        <td colspan="3" style="padding: 12px 16px; font-weight: 700; font-size: 13.5px;"><span style="margin-left: 8px;">📁</span>${catName} <span style="font-size: 11px; color: var(--text3); font-weight: 400; margin-right: 8px;">(${groupExps.length} معاملات)</span></td>
-                        <td class="td-mono" style="padding: 12px 16px; text-align: left; font-size: 14px; font-weight: 800; color: ${catCol};">${groupTotal.toFixed(2)} د.أ</td>
-                        <td class="no-print"></td>
-                    </tr>
-                `;
+                    flatRowsHtml += `
+                        <tr class="stmt-cat-group-hdr" style="background: ${catCol}10; color: ${catCol}; font-weight: 700; font-size: 13px; border-top: 2px solid ${catCol}33; page-break-inside: avoid;">
+                            <td colspan="3" style="padding: 12px 16px; font-weight: 700; font-size: 13.5px;"><span style="margin-left: 8px;">📁</span>${catName} <span style="font-size: 11px; color: var(--text3); font-weight: 400; margin-right: 8px;">(${groupExps.length} معاملات)</span></td>
+                            <td class="td-mono" style="padding: 12px 16px; text-align: left; font-size: 14px; font-weight: 800; color: ${catCol};">${groupTotal.toFixed(2)} د.أ</td>
+                            <td class="no-print"></td>
+                        </tr>
+                    `;
+                }
 
                 // Add expenses in this group
                 groupExps.forEach(e => {
@@ -5133,12 +5296,25 @@
                 });
             });
 
+            const getSortIcon = (key) => {
+                if (stmtSortKey !== key) return '<span style="color:var(--text3); font-size:10px; opacity: 0.4; margin-right: 4px;">↕</span>';
+                return `<span style="color:var(--accent); font-size:12px; margin-right: 4px;">${stmtSortOrder === 'asc' ? '↑' : '↓'}</span>`;
+            };
+
             document.getElementById('stmtTable').innerHTML = exps.length ? `
         <div class="table-hdr"><div class="table-title">تفاصيل المعاملات — ${MONTHS[fromM]} ${fromY} إلى ${MONTHS[toM]} ${toY}</div></div>
-        <table class="stmt-table"><thead><tr><th>التاريخ</th><th>الوصف</th><th>الفئة</th><th>المبلغ</th><th class="no-print" style="width: 100px; text-align: left; padding-left: 20px;">العمليات</th></tr></thead><tbody>
+        <table class="stmt-table"><thead><tr>
+            <th onclick="setStmtSort('date')" style="cursor:pointer; user-select:none; transition: 0.2s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">التاريخ ${getSortIcon('date')}</th>
+            <th onclick="setStmtSort('desc')" style="cursor:pointer; user-select:none; transition: 0.2s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">الوصف ${getSortIcon('desc')}</th>
+            <th onclick="setStmtSort('cat')" style="cursor:pointer; user-select:none; transition: 0.2s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''" title="الترتيب حسب الفئة (مع تجميعها)">الفئة ${getSortIcon('cat')}</th>
+            <th onclick="setStmtSort('amount')" style="cursor:pointer; user-select:none; transition: 0.2s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">المبلغ ${getSortIcon('amount')}</th>
+            <th class="no-print" style="width: 100px; text-align: left; padding-left: 20px;">العمليات</th>
+        </tr></thead><tbody>
         ${flatRowsHtml}
         <tr class="stmt-grand-total"><td colspan="3">المجموع الكلي للفترة</td><td class="td-mono">${totalExp.toFixed(2)} د.أ</td><td class="no-print"></td></tr>
         </tbody></table>`: '<div class="empty">لا مصاريف في هذه الفترة</div>';
+
+            filterStatementTable();
         }
         function printStatement() { window.print() }
         function toggleStmtInvoice(invId, hdrEl) {
@@ -5146,6 +5322,45 @@
             const children = document.querySelectorAll(`.child-of-${invId}`);
             children.forEach(el => {
                 el.classList.toggle('expanded');
+            });
+        }
+        function filterStatementTable() {
+            const query = document.getElementById('stmtSearch').value.toLowerCase();
+            const tableBody = document.querySelector('.stmt-table tbody');
+            if (!tableBody) return;
+            
+            const rows = Array.from(tableBody.querySelectorAll('tr'));
+            
+            if (query === '') {
+                rows.forEach(row => row.style.display = '');
+                return;
+            }
+
+            let currentParentRow = null;
+            let parentMatches = false;
+
+            rows.forEach(row => {
+                if (row.classList.contains('stmt-grand-total')) return;
+                
+                const text = row.textContent.toLowerCase();
+                const isMatch = text.includes(query);
+                
+                if (row.classList.contains('stmt-inv-hdr')) {
+                    currentParentRow = row;
+                    parentMatches = isMatch;
+                    row.style.display = isMatch ? '' : 'none';
+                } else if (row.classList.contains('stmt-inv-item')) {
+                    if (isMatch) {
+                        row.style.display = '';
+                        if (currentParentRow) {
+                            currentParentRow.style.display = '';
+                            currentParentRow.classList.add('active');
+                            row.classList.add('expanded');
+                        }
+                    } else {
+                        row.style.display = parentMatches ? '' : 'none';
+                    }
+                }
             });
         }
 
@@ -7764,12 +7979,10 @@
             await loadState();
             processAutoRenewals();
 
-            // Default to 'month' period mode so it focuses on the current financial month
             if (!state.periodMode || state.periodMode === 'all') {
                 state.periodMode = 'month';
             }
 
-            // Set initial periodMonth and periodYear to the active financial month
             const fin = getFinancialMonthAndYear(td());
             state.periodMonth = fin.month;
             state.periodYear = fin.year;
@@ -7784,15 +7997,125 @@
             const overviewNav = document.querySelector('.nav-item[data-page="overview"]');
             if (overviewNav) goPage(overviewNav);
             else renderOverview();
-            // re-apply theme labels after DOM ready
             applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
-            // Sync notification button label + run alerts (silent if not granted)
             updateNotifBtn();
             checkSubscriptionAlerts();
-            // Re-check every 30 minutes so new alerts fire while the app is open
             setInterval(checkSubscriptionAlerts, 30 * 60 * 1000);
         }
-        initApp();
+
+        // Firebase Auth Implementation
+        const auth = firebase.auth();
+        let appInitialized = false;
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('loginOverlay').style.display = 'none';
+                if (!appInitialized) {
+                    appInitialized = true;
+                    initApp();
+                }
+            } else {
+                document.getElementById('loginOverlay').style.display = 'flex';
+                appInitialized = false;
+            }
+        });
+
+        function switchAuthSection(section) {
+            document.getElementById('authLoginSection').style.display = 'none';
+            document.getElementById('authRegisterSection').style.display = 'none';
+            document.getElementById('authForgotSection').style.display = 'none';
+
+            if (section === 'login') {
+                document.getElementById('authLoginSection').style.display = 'block';
+            } else if (section === 'register') {
+                document.getElementById('authRegisterSection').style.display = 'block';
+            } else if (section === 'forgot') {
+                document.getElementById('authForgotSection').style.display = 'block';
+            }
+        }
+
+        async function doRegister(e) {
+            if (e) e.preventDefault();
+            const email = document.getElementById('regEmail').value;
+            const pass = document.getElementById('regPassword').value;
+            const btn = document.getElementById('regBtn');
+            const err = document.getElementById('regError');
+            
+            btn.innerHTML = 'جاري الإنشاء...';
+            btn.disabled = true;
+            err.style.display = 'none';
+            
+            try {
+                await auth.createUserWithEmailAndPassword(email, pass);
+                // auto logs in, listener handles the rest
+            } catch (error) {
+                console.error(error);
+                let msg = error.message;
+                if(error.code === 'auth/email-already-in-use') msg = 'هذا الإيميل مسجل مسبقاً.';
+                else if(error.code === 'auth/weak-password') msg = 'كلمة المرور ضعيفة جداً (يجب أن تكون 6 أحرف على الأقل).';
+                else if(error.code === 'auth/invalid-email') msg = 'صيغة الإيميل غير صحيحة.';
+                
+                err.innerText = error.code + ': ' + msg;
+                err.style.display = 'block';
+                btn.innerHTML = 'إنشاء الحساب';
+                btn.disabled = false;
+            }
+        }
+
+        async function doResetPassword(e) {
+            if (e) e.preventDefault();
+            const email = document.getElementById('forgotEmail').value;
+            const err = document.getElementById('forgotError');
+            const succ = document.getElementById('forgotSuccess');
+            const btn = document.getElementById('forgotBtn');
+
+            err.style.display = 'none';
+            succ.style.display = 'none';
+            btn.innerHTML = 'جاري الإرسال...';
+            btn.disabled = true;
+
+            try {
+                await auth.sendPasswordResetEmail(email);
+                succ.innerText = 'تم إرسال رابط التعديل لبريدك. تفقد صندوق الوارد (أو Spam).';
+                succ.style.display = 'block';
+                btn.innerHTML = 'تم الإرسال ✓';
+            } catch (error) {
+                console.error(error);
+                err.innerText = 'حدث خطأ. تأكد أن الإيميل صحيح ومسجل.';
+                err.style.display = 'block';
+                btn.innerHTML = 'إرسال الرابط';
+                btn.disabled = false;
+            }
+        }
+
+        async function doLogin(e) {
+            if (e) e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPassword').value;
+            const btn = document.getElementById('loginBtn');
+            const err = document.getElementById('loginError');
+            
+            btn.innerHTML = 'جاري تسجيل الدخول...';
+            btn.disabled = true;
+            err.style.display = 'none';
+            
+            try {
+                await auth.signInWithEmailAndPassword(email, pass);
+            } catch (error) {
+                err.innerText = 'البيانات خاطئة. يرجى التأكد من كلمة المرور والإيميل.';
+                err.style.display = 'block';
+            }
+            
+            btn.innerHTML = 'دخول';
+            btn.disabled = false;
+        }
+
+        async function doLogout() {
+            if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+                await auth.signOut();
+                location.reload();
+            }
+        }
     </script>
 </body>
 
