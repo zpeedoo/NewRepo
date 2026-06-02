@@ -4113,7 +4113,9 @@
                 }
 
                 (state.incomeSources || []).forEach(src => {
-                    const startD = parseLocalDate(src.start || td());
+                    const ds = src.start || td();
+                    const [y, m, d] = ds.split('-').map(Number);
+                    const startD = new Date(y, m - 1, d);
                     if (startD <= cycleEnd) {
                         fixed += parseFloat(src.amount) || 0;
                     }
