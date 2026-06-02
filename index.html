@@ -3074,6 +3074,30 @@
         </div>
     </div>
 
+    <!-- Edit Freelance Income -->
+    <div class="modal-ov" id="modal-editFL">
+        <div class="modal">
+            <div class="modal-title">تعديل الدخل الحر</div>
+            <div class="modal-body">
+                <div class="field">
+                    <label>الوصف</label><input class="inp" id="e-fl-desc" autocomplete="off" />
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                    <div class="field">
+                        <label>المبلغ (د.أ)</label><input class="inp" type="number" id="e-fl-amount" step="0.01" />
+                    </div>
+                    <div class="field">
+                        <label>التاريخ</label><input class="inp" type="date" id="e-fl-date" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn" onclick="closeModal('editFL')">إلغاء</button>
+                <button class="btn btn-primary" onclick="saveEditFL()">حفظ التعديل</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Add Subscription -->
     <div class="modal-ov" id="modal-addSub">
         <div class="modal">
@@ -4795,13 +4819,25 @@
             }
 
             // Combine all into unified list
-            const exps = [...baseExps, ...maintExps, ...subExps, ...loanExps];
+            let exps = [...baseExps, ...maintExps, ...subExps, ...loanExps];
 
             const fls = state.freelanceLog.filter(f => {
                 const d = parseLocalDate(f.date);
                 return d >= from && d <= to;
             });
-            const totalExp = exps.reduce((s, e) => s + e.amount, 0);
+            const incExps = fls.map(f => ({
+                id: `inc-${f.id}`,
+                origId: f.id,
+                date: f.date,
+                desc: `💰 دخل حر: ${f.desc}`,
+                amount: parseFloat(f.amount) || 0,
+                items: [],
+                type: 'income',
+                cat: 'دخل'
+            }));
+            exps = exps.concat(incExps).sort((a, b) => parseLocalDate(a.date) - parseLocalDate(b.date));
+
+            const totalExp = exps.filter(e => e.type !== 'income').reduce((s, e) => s + e.amount, 0);
             const totalFl = fls.reduce((s, f) => s + f.amount, 0);
             // count months
             let months = 0; let d = new Date(fromY, fromM, 1);
@@ -4838,12 +4874,15 @@
                 groups[c.name] = [];
             });
             groups['أخرى'] = groups['أخرى'] || [];
+            groups['دخل'] = groups['دخل'] || [];
 
             exps.forEach(e => {
                 let cat = 'أخرى';
                 if (e.type === 'invoice') {
                     const primarySub = e.items?.[0]?.subcat || 'أخرى';
                     cat = normCat(primarySub);
+                } else if (e.type === 'income') {
+                    cat = 'دخل';
                 } else {
                     cat = normCat(e.cat);
                 }
@@ -4852,7 +4891,7 @@
             });
 
             let flatRowsHtml = '';
-            const orderedCats = [...state.categories.map(c => c.name), 'أخرى'];
+            const orderedCats = ['دخل', ...state.categories.map(c => c.name), 'أخرى'];
             const uniqueCats = Array.from(new Set(orderedCats));
 
             uniqueCats.forEach(catName => {
@@ -4897,10 +4936,22 @@
                             actionHtml = `
                                 <button class="del-btn" style="color:var(--red); font-size: 13px;" onclick="event.stopPropagation(); if(confirm('هل أنت متأكد من حذف هذا الاشتراك بالكامل؟')) { delSub(${String(e.id).split('-')[1]}); renderStatement(); }" title="حذف الاشتراك">✕</button>
                             `;
+                        } else if (e.type === 'income') {
+                            actionHtml = `
+                                <button class="del-btn" style="color:var(--accent2); margin-inline-end: 8px; font-size: 13px;" onclick="event.stopPropagation(); openEditFL(${e.origId})" title="تعديل">✎</button>
+                                <button class="del-btn" style="color:var(--red); font-size: 13px;" onclick="event.stopPropagation(); if(confirm('هل أنت متأكد من حذف هذا الدخل؟')) { delFL(${e.origId}); renderStatement(); }" title="حذف">✕</button>
+                            `;
                         } else if (e.type === 'loan') {
                             actionHtml = `
                                 <button class="del-btn" style="color:var(--red); font-size: 13px;" onclick="event.stopPropagation(); if(confirm('هل أنت متأكد من حذف هذا القرض بالكامل؟')) { delLoan(${String(e.id).split('-')[1]}); renderStatement(); }" title="حذف القرض">✕</button>
                             `;
+                        }
+
+                        let amtDisplay = `${e.amount.toFixed(2)} د.أ`;
+                        let amtStyle = '';
+                        if (e.type === 'income') {
+                            amtDisplay = `+${e.amount.toFixed(2)} د.أ`;
+                            amtStyle = 'color:var(--green);';
                         }
 
                         flatRowsHtml += `
@@ -4908,7 +4959,7 @@
                                 <td class="td-mono" style="font-size:11px; padding-right: 24px;">${e.date}</td>
                                 <td class="td-main">${e.desc}</td>
                                 <td><span class="badge" style="background:${specificCol}15;color:${specificCol}">${specificCat}</span></td>
-                                <td class="td-mono">${e.amount.toFixed(2)} د.أ</td>
+                                <td class="td-mono" style="${amtStyle}">${amtDisplay}</td>
                                 <td class="no-print" style="text-align: left; padding: 6px 12px; white-space: nowrap;">
                                     ${actionHtml}
                                 </td>
@@ -5073,7 +5124,7 @@
             const rows = state.freelanceLog.sort((a, b) => new Date(b.date) - new Date(a.date));
             document.getElementById('income-var-table').innerHTML = rows.length ? `
         <table><thead><tr><th>التاريخ</th><th>الوصف</th><th>المبلغ</th><th></th></tr></thead><tbody>
-        ${rows.map(f => `<tr><td class="td-mono" style="font-size:11px">${f.date}</td><td class="td-main">${f.desc}</td><td class="td-mono" style="color:var(--green)">+${f.amount.toFixed(2)} د.أ</td><td><button class="del-btn" onclick="delFL(${f.id})">✕</button></td></tr>`).join('')}
+        ${rows.map(f => `<tr><td class="td-mono" style="font-size:11px">${f.date}</td><td class="td-main">${f.desc}</td><td class="td-mono" style="color:var(--green)">+${f.amount.toFixed(2)} د.أ</td><td><button class="del-btn" style="color:var(--accent2);margin-inline-end:6px" onclick="openEditFL(${f.id})" title="تعديل">✎</button><button class="del-btn" onclick="delFL(${f.id})">✕</button></td></tr>`).join('')}
         </tbody></table>`: '<div class="empty">لا سجلات</div>';
         }
         function addIncomeSource() {
@@ -5135,10 +5186,35 @@
             saveState(); renderIncome(); renderOverview(); toast('تم التسجيل ✓');
             document.getElementById('fl-desc').value = ''; document.getElementById('fl-amount').value = '';
         }
+        let editingFLId = null;
+        function openEditFL(id) {
+            const f = state.freelanceLog.find(x => String(x.id) === String(id));
+            if (!f) return;
+            editingFLId = id;
+            document.getElementById('e-fl-desc').value = f.desc;
+            document.getElementById('e-fl-amount').value = f.amount;
+            document.getElementById('e-fl-date').value = f.date;
+            openModal('editFL');
+        }
+        function saveEditFL() {
+            const f = state.freelanceLog.find(x => String(x.id) === String(editingFLId));
+            if (!f) return;
+            const desc = document.getElementById('e-fl-desc').value.trim();
+            const amount = parseFloat(document.getElementById('e-fl-amount').value);
+            const date = document.getElementById('e-fl-date').value || td();
+            if (!desc || isNaN(amount) || amount <= 0) { toast('أدخل البيانات'); return; }
+            f.desc = desc; f.amount = amount; f.date = date;
+            saveState(); closeModal('editFL'); renderIncome(); renderOverview();
+            const active = document.querySelector('.page.active');
+            if (active && active.id === 'page-statement') renderStatement();
+            toast('تم تعديل الدخل ✓');
+        }
         function delFL(id) {
             state.deletedIds = state.deletedIds || {};
             state.deletedIds[String(id)] = true;
             state.freelanceLog = state.freelanceLog.filter(f => String(f.id) !== String(id)); saveState(); renderFLTable();
+            const active = document.querySelector('.page.active');
+            if (active && active.id === 'page-statement') renderStatement();
         }
 
         // ═══════════════════════════════════════
