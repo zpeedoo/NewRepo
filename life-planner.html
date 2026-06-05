@@ -1893,28 +1893,28 @@
     <!-- Daily Habits -->
     <div class="page active" id="page-daily">
 
-      <div class="add-bar">
-        <div style="font-weight:800; font-size:16px">العادات المجدولة لليوم</div>
-        <div style="display: flex; gap: 8px;">
-          <button class="btn btn-dark btn-circle"
-            style="background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); box-shadow:none; font-size:18px;"
-            onclick="goPage({dataset: {page: 'all-habits'}})" title="إدارة جميع العادات والإحصائيات">⚙️</button>
-          <button class="btn btn-dark btn-circle" onclick="openModal('habit')" title="إضافة عادة">+</button>
+            <div style="display: flex; gap: 15px; margin-bottom: 20px; align-items: stretch; flex-wrap: wrap;">
+        <div class="add-bar" style="flex: 1; margin-bottom: 0; min-width: 200px; padding: 15px; justify-content: space-between; align-items: center;">
+          <div style="font-weight:800; font-size:16px">العادات المجدولة لليوم</div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-dark btn-circle" style="background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); box-shadow:none; font-size:18px;" onclick="goPage({dataset: {page: 'all-habits'}})" title="إدارة جميع العادات والإحصائيات">⚙️</button>
+            <button class="btn btn-dark btn-circle" onclick="openModal('habit')" title="إضافة عادة">+</button>
+          </div>
         </div>
-      </div>
 
-            <div class="metric-card" style="margin-bottom: 20px;">
-        <div style="flex:1">
-          <div class="metric-icon-wrap" style="background:#e0f2fe; color:#0284c7">☀️</div>
-          <div class="metric-title">نسبة إنجاز اليوم</div>
-          <div class="metric-val" id="daily-pg-val">0/0</div>
-        </div>
-        <div class="circ-wrap">
-          <svg width="70" height="70" viewBox="0 0 70 70">
-            <circle class="circ-bg" cx="35" cy="35" r="30"></circle>
-            <circle class="circ-val" id="daily-pg-circ" cx="35" cy="35" r="30" stroke="#0284c7" stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle>
-          </svg>
-          <div class="circ-text" id="daily-pg-txt">0%</div>
+        <div class="metric-card" style="flex: 1; margin-bottom: 0; min-width: 200px; padding: 15px;">
+          <div style="flex:1">
+            <div class="metric-icon-wrap" style="background:#e0f2fe; color:#0284c7; width: 35px; height: 35px; font-size: 16px;">☀️</div>
+            <div class="metric-title" style="font-size: 12px;">نسبة إنجاز اليوم</div>
+            <div class="metric-val" id="daily-pg-val" style="font-size: 18px;">0/0</div>
+          </div>
+          <div class="circ-wrap" style="transform: scale(0.8); margin: -10px; transform-origin: left center;">
+            <svg width="70" height="70" viewBox="0 0 70 70">
+              <circle class="circ-bg" cx="35" cy="35" r="30"></circle>
+              <circle class="circ-val" id="daily-pg-circ" cx="35" cy="35" r="30" stroke="#0284c7" stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle>
+            </svg>
+            <div class="circ-text" id="daily-pg-txt" style="font-size: 14px;">0%</div>
+          </div>
         </div>
       </div>
       <div class="daily-layout">
