@@ -2110,6 +2110,7 @@
           <button class="btn btn-dark" style="background:#eab308; color:white; font-size: 18px; padding: 15px;" onclick="checkStroop('أصفر')">أصفر</button>
         </div>
         
+        <div id="stroop-bottom-timer" style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">00:00</div>
         <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
       </div>
 
@@ -2124,6 +2125,7 @@
           <!-- Grid items populated by JS -->
         </div>
         
+        <div id="visual-bottom-timer" style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">00:00</div>
         <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
       </div>
 
@@ -2145,6 +2147,7 @@
           <!-- Grid items populated by JS -->
         </div>
         
+        <div id="slide-bottom-timer" style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">00:00</div>
         <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
       </div>
 
@@ -2166,6 +2169,7 @@
           </div>
         </div>
         
+        <div id="ws-bottom-timer" style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">00:00</div>
         <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
       </div>
 
@@ -2193,6 +2197,7 @@
           <!-- Populated by JS -->
         </div>
 
+        <div id="inf-bottom-timer" style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">00:00</div>
         <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
       </div>
 
@@ -2224,6 +2229,7 @@
           <!-- Populated by JS -->
         </div>
 
+        <div id="mc-bottom-timer" style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">00:00</div>
         <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
       </div>
       
@@ -3401,6 +3407,12 @@
       { name: 'أصفر', hex: '#eab308' }
     ];
 
+    function formatGameTime(seconds) {
+      const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+      const s = (seconds % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
     function startStroopGame() {
       document.getElementById('focus-menu').style.display = 'none';
       document.getElementById('focus-visual-area').style.display = 'none';
@@ -3410,6 +3422,7 @@
       stroopTimeLeft = 60;
       document.getElementById('stroop-score').textContent = stroopScore;
       document.getElementById('stroop-time').textContent = stroopTimeLeft;
+      document.getElementById('stroop-bottom-timer').textContent = formatGameTime(stroopTimeLeft);
       
       nextStroopWord();
       
@@ -3417,6 +3430,7 @@
       focusTimer = setInterval(() => {
         stroopTimeLeft--;
         document.getElementById('stroop-time').textContent = stroopTimeLeft;
+      document.getElementById('stroop-bottom-timer').textContent = formatGameTime(stroopTimeLeft);
         if (stroopTimeLeft <= 0) {
           clearInterval(focusTimer);
           alert(`انتهى الوقت! نقاطك: ${stroopScore}`);
@@ -3472,6 +3486,7 @@
       visualTimeLeft = 15;
       document.getElementById('visual-level').textContent = visualLevel;
       document.getElementById('visual-time').textContent = visualTimeLeft;
+      document.getElementById('visual-bottom-timer').textContent = formatGameTime(visualTimeLeft);
       
       nextVisualLevel();
     }
@@ -3511,6 +3526,7 @@
               visualTimeLeft = Math.max(5, 15 - Math.floor(visualLevel / 2));
               document.getElementById('visual-level').textContent = visualLevel;
               document.getElementById('visual-time').textContent = visualTimeLeft;
+      document.getElementById('visual-bottom-timer').textContent = formatGameTime(visualTimeLeft);
               nextVisualLevel();
             }, 200);
           };
@@ -3526,6 +3542,7 @@
             }, 300);
             visualTimeLeft = Math.max(0, visualTimeLeft - 2); // penalty
             document.getElementById('visual-time').textContent = visualTimeLeft;
+      document.getElementById('visual-bottom-timer').textContent = formatGameTime(visualTimeLeft);
           };
         }
         gridEl.appendChild(div);
@@ -3534,6 +3551,7 @@
       focusTimer = setInterval(() => {
         visualTimeLeft--;
         document.getElementById('visual-time').textContent = visualTimeLeft;
+      document.getElementById('visual-bottom-timer').textContent = formatGameTime(visualTimeLeft);
         if (visualTimeLeft <= 0) {
           clearInterval(focusTimer);
           alert(`انتهى الوقت! وصلت للمستوى: ${visualLevel}`);
@@ -3601,6 +3619,7 @@
         const m = Math.floor(slideTime / 60).toString().padStart(2, '0');
         const s = (slideTime % 60).toString().padStart(2, '0');
         document.getElementById('slide-time').textContent = `${m}:${s}`;
+        document.getElementById('slide-bottom-timer').textContent = formatGameTime(slideTime);
       }, 1000);
     }
 
@@ -3702,6 +3721,7 @@
         const m = Math.floor(wsTime / 60).toString().padStart(2, '0');
         const s = (wsTime % 60).toString().padStart(2, '0');
         document.getElementById('ws-time').textContent = `${m}:${s}`;
+        document.getElementById('ws-bottom-timer').textContent = formatGameTime(wsTime);
       }, 1000);
     }
 
@@ -3969,6 +3989,7 @@
         const m = Math.floor(infTime / 60).toString().padStart(2, '0');
         const s = (infTime % 60).toString().padStart(2, '0');
         document.getElementById('inf-time').textContent = `${m}:${s}`;
+        document.getElementById('inf-bottom-timer').textContent = formatGameTime(infTime);
       }, 1000);
     }
 
@@ -4072,6 +4093,7 @@
         const m = Math.floor(infTime / 60).toString().padStart(2, '0');
         const s = (infTime % 60).toString().padStart(2, '0');
         document.getElementById('inf-time').textContent = `${m}:${s}`;
+        document.getElementById('inf-bottom-timer').textContent = formatGameTime(infTime);
         
         const dot = document.getElementById(`inf-node-${infCurrentNode}`);
         dot.style.transform = 'scale(1.3) translateX(5px)';
@@ -4084,6 +4106,8 @@
       1: '#ef4444', 2: '#eab308', 3: '#22c55e', 4: '#f97316',
       5: '#a855f7', 6: '#06b6d4', 7: '#ec4899', 8: '#1d4ed8', 9: '#71717a'
     };
+    let mcTime = 0;
+    let mcInterval = null;
     let mcLevel = 1;
     let mcScore = 0;
     let mcSequence = [];
@@ -4099,8 +4123,7 @@
       document.getElementById('focus-infinity-area').style.display = 'none';
       document.getElementById('focus-memory-area').style.display = 'block';
 
-      mcLevel = 1;
-      mcScore = 0;
+      mcLevel = 1; mcScore = 0; mcTime = 0; document.getElementById('mc-bottom-timer').textContent = "00:00"; if(mcInterval) clearInterval(mcInterval); mcInterval = setInterval(()=>{ mcTime++; document.getElementById('mc-bottom-timer').textContent = formatGameTime(mcTime); }, 1000);
       updateMCScoreboard();
       generateMCLegend();
       nextMCLevel();
@@ -4224,6 +4247,7 @@
     }
 
     function quitFocusGame() {
+      if(typeof mcInterval !== 'undefined' && mcInterval) clearInterval(mcInterval);
       if (focusTimer) clearInterval(focusTimer);
       if (slideInterval) clearInterval(slideInterval);
       if (wsInterval) clearInterval(wsInterval);
