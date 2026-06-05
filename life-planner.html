@@ -1709,8 +1709,8 @@
       <div class="logo-icon">P</div>
       <span>مخططي</span>
     </div>
-    <div class="nav-item active" data-page="dash" onclick="goPage(this)">📊 الملخص العام</div>
-    <div class="nav-item" data-page="daily" onclick="goPage(this)">☀️ عاداتي اليومية</div>
+    <div class="nav-item" data-page="dash" onclick="goPage(this)">📊 الملخص العام</div>
+    <div class="nav-item active" data-page="daily" onclick="goPage(this)">☀️ عاداتي اليومية</div>
     <div class="nav-item" data-page="goals" onclick="goPage(this)">🏆 أهداف السنة</div>
     <div class="nav-item" data-page="books" onclick="goPage(this)">📚 مكتبتي اليدوية</div>
     <div class="nav-item" data-page="reader" onclick="goPage(this)">📖 القارئ الذكي</div>
@@ -1742,12 +1742,13 @@
         <p>قم بتنظيم يومك وأهدافك بسهولة!</p>
       </div>
       <div class="header-actions">
+        <button class="circle-btn" onclick="openSettingsModal()" title="إعدادات الحساب">⚙️</button>
         <button class="circle-btn" onclick="requestNotification()" title="تفعيل التنبيهات">🔔</button>
       </div>
     </div>
 
     <!-- Dashboard -->
-    <div class="page active" id="page-dash">
+    <div class="page" id="page-dash">
       <div class="grid-4">
         <div class="metric-card">
           <div style="flex:1">
@@ -1836,7 +1837,7 @@
     </div>
 
     <!-- Daily Habits -->
-    <div class="page" id="page-daily">
+    <div class="page active" id="page-daily">
 
       <div class="add-bar">
         <div style="font-weight:800; font-size:16px">العادات المجدولة لليوم</div>
@@ -1848,6 +1849,20 @@
         </div>
       </div>
 
+            <div class="metric-card" style="margin-bottom: 20px;">
+        <div style="flex:1">
+          <div class="metric-icon-wrap" style="background:#e0f2fe; color:#0284c7">☀️</div>
+          <div class="metric-title">نسبة إنجاز اليوم</div>
+          <div class="metric-val" id="daily-pg-val">0/0</div>
+        </div>
+        <div class="circ-wrap">
+          <svg width="70" height="70" viewBox="0 0 70 70">
+            <circle class="circ-bg" cx="35" cy="35" r="30"></circle>
+            <circle class="circ-val" id="daily-pg-circ" cx="35" cy="35" r="30" stroke="#0284c7" stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle>
+          </svg>
+          <div class="circ-text" id="daily-pg-txt">0%</div>
+        </div>
+      </div>
       <div class="daily-layout">
         <div class="daily-main">
           <!-- Daily Breathing Card -->
@@ -2278,6 +2293,29 @@
   </div> <!-- End Main -->
 
   <!-- MODALS -->
+  <div class="modal-overlay" id="modal-settings">
+    <div class="modal">
+      <div class="modal-hdr">
+        <h3>إعدادات الحساب ⚙️</h3>
+        <span class="modal-close" onclick="closeModal('settings')">✕</span>
+      </div>
+      <div class="field">
+        <label>الاسم الكامل</label>
+        <input type="text" id="s-name" class="inp">
+      </div>
+      <div class="field">
+        <label>العمر</label>
+        <input type="number" id="s-age" class="inp" placeholder="مثال: 25">
+      </div>
+      <div class="field">
+        <label>البريد الإلكتروني (الحساب)</label>
+        <input type="email" id="s-email" class="inp" disabled style="background: var(--surface2); opacity: 0.7;">
+        <small style="color:var(--text3); font-size:11px;">ملاحظة: لا يمكن تغيير البريد الإلكتروني لأنه مرتبط بتسجيل الدخول.</small>
+      </div>
+      <button class="btn" style="width:100%" onclick="saveAccountSettings()">حفظ التغييرات ✓</button>
+    </div>
+  </div>
+
 
   <!-- Notification Settings Modal -->
   <div class="modal-ov" id="modal-notif">
@@ -2448,8 +2486,8 @@
 
   <!-- Mobile Bottom Nav -->
   <div class="bnav">
-    <div class="bnav-item active" data-page="dash" onclick="goPage(this)">📊<span>الملخص</span></div>
-    <div class="bnav-item" data-page="daily" onclick="goPage(this)">☀️<span>عاداتي</span></div>
+    <div class="bnav-item" data-page="dash" onclick="goPage(this)">📊<span>الملخص</span></div>
+    <div class="bnav-item active" data-page="daily" onclick="goPage(this)">☀️<span>عاداتي</span></div>
     <div class="bnav-item" data-page="goals" onclick="goPage(this)">🏆<span>أهدافي</span></div>
     <div class="bnav-item" data-page="books" onclick="goPage(this)">📚<span>ورقي</span></div>
     <div class="bnav-item" data-page="reader" onclick="goPage(this)">📖<span>القارئ</span></div>
@@ -2653,6 +2691,39 @@
         }
         populateGlobalSelectors(); renderAll();
       }, (err) => { document.getElementById('syncDot').classList.remove('on'); });
+    }
+
+    
+    function openSettingsModal() {
+      document.getElementById('s-name').value = state.settings.displayName || "صديقي";
+      document.getElementById('s-age').value = state.settings.age || "";
+      
+      const emailEl = document.getElementById('s-email');
+      if (auth && auth.currentUser) {
+        emailEl.value = auth.currentUser.email || "";
+      } else {
+        emailEl.value = "حساب محلي";
+      }
+      
+      openModal('settings');
+    }
+    
+    function saveAccountSettings() {
+      const name = document.getElementById('s-name').value.trim();
+      const age = document.getElementById('s-age').value.trim();
+      
+      if (name) {
+        state.settings.displayName = name;
+        document.getElementById('user-greeting-name').textContent = name;
+        document.title = `مخطط الحياة | ${name}`;
+      }
+      if (age) {
+        state.settings.age = age;
+      }
+      
+      saveState();
+      closeModal('settings');
+      toast('تم حفظ الإعدادات بنجاح ✅');
     }
 
     function changeUserName() {
