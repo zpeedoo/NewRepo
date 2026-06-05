@@ -2942,7 +2942,16 @@
       }
       
       if (!html) html = '<div class="empty">لا يوجد مهام اليوم</div>';
-      document.getElementById('habit-list').innerHTML = html;
+            document.getElementById('habit-list').innerHTML = html;
+      
+      const dDone = activeToday.filter(h => (state.history[today] || []).includes(h.id)).length;
+      const dPct = activeToday.length ? (dDone / activeToday.length * 100) : 0;
+      const valEl = document.getElementById('daily-pg-val');
+      const txtEl = document.getElementById('daily-pg-txt');
+      if(valEl) valEl.textContent = `${dDone}/${activeToday.length}`;
+      if(txtEl) txtEl.textContent = Math.round(dPct) + '%';
+      updateCircle('daily-pg-circ', dPct);
+
       renderDailyMiniDash();
     }
 
