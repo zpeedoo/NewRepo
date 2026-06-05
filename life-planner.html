@@ -12,7 +12,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
 
-  <title>مخطط الحياة | Life Dashboard</title>
+  <title>امسي | Amsy</title>
 
   <link
     href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=JetBrains+Mono:wght@300;400;700;800&family=Georgia&display=swap"
@@ -1681,7 +1681,7 @@
     <div class="auth-card">
       <div class="auth-logo">
         <div class="logo-icon">P</div>
-        <span>مخططي</span>
+        <span>امسي</span>
       </div>
       <h2 style="margin-top: 0; margin-bottom: 8px;">تسجيل الدخول</h2>
       <p style="font-size: 13px; color: var(--text2); margin-bottom: 30px;">يرجى تسجيل الدخول للوصول إلى مساحتك الآمنة
@@ -1705,9 +1705,14 @@
 
   <!-- Desktop Sidebar -->
   <div class="sidebar">
-    <div class="logo">
-      <div class="logo-icon">P</div>
-      <span>مخططي</span>
+    <div class="logo" style="flex-direction: column; gap: 5px;">
+      <div style="display:flex; align-items:center; justify-content:center; gap: 10px;">
+        <div class="logo-icon">A</div>
+        <span>امسي</span>
+      </div>
+      <div style="font-size:24px; cursor:pointer; color:var(--text3); margin-top:5px; transition:0.2s;" onclick="openSettingsModal()" title="إعدادات الحساب" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text3)'">
+        ⚙️
+      </div>
     </div>
     <div class="nav-item" data-page="dash" onclick="goPage(this)">📊 الملخص العام</div>
     <div class="nav-item active" data-page="daily" onclick="goPage(this)">☀️ عاداتي اليومية</div>
@@ -2536,7 +2541,7 @@
           // Fetch user name or email for greeting
           let displayName = user.email ? user.email.split('@')[0] : "صديقي";
           document.getElementById('user-greeting-name').textContent = displayName;
-          document.title = `مخطط الحياة | ${displayName}`;
+          document.title = `امسي | ${displayName}`;
 
           checkAndMigrateDataThenLoad(currentUserUID);
           setupNotifications();
@@ -2682,7 +2687,7 @@
         if (!state.history[today]) state.history[today] = [];
         if (state.settings && state.settings.displayName) {
           document.getElementById('user-greeting-name').textContent = state.settings.displayName;
-          document.title = `مخطط الحياة | ${state.settings.displayName}`;
+          document.title = `امسي | ${state.settings.displayName}`;
         }
         if (isInitialLoad) {
           document.getElementById('m-hab-start').value = today;
@@ -2715,7 +2720,7 @@
       if (name) {
         state.settings.displayName = name;
         document.getElementById('user-greeting-name').textContent = name;
-        document.title = `مخطط الحياة | ${name}`;
+        document.title = `امسي | ${name}`;
       }
       if (age) {
         state.settings.age = age;
@@ -2732,7 +2737,7 @@
       if (newName && newName.trim()) {
         state.settings.displayName = newName.trim();
         document.getElementById('user-greeting-name').textContent = state.settings.displayName;
-        document.title = `مخطط الحياة | ${state.settings.displayName}`;
+        document.title = `امسي | ${state.settings.displayName}`;
         saveState();
       }
     }
