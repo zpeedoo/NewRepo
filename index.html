@@ -22,32 +22,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <style>
         :root {
-            --bg: #0a0c10;
-            --surface: rgba(255, 255, 255, 0.03);
-            --surface2: rgba(255, 255, 255, 0.05);
-            --surface3: rgba(255, 255, 255, 0.08);
-            --border: rgba(255, 255, 255, 0.05);
-            --border2: rgba(255, 255, 255, 0.12);
-            --text: #ffffff;
-            --text2: #94a3b8;
-            --text3: #64748b;
-            --accent: #0ea5e9;
-            --accent2: #38bdf8;
-            --green: #22c55e;
-            --red: #ef4444;
-            --amber: #f59e0b;
-            --cyan: #06b6d4;
-            --pink: #ec4899;
-            --orange: #f97316;
-            --teal: #14b8a6;
-            --hover-row: rgba(255, 255, 255, 0.04);
-            --r: 12px;
-            --r2: 16px;
-            --r3: 20px;
-            --glass-blur: blur(16px);
-        }
 
-        [data-theme="light"] {
             --bg: #f8f9fa;
             --surface: #ffffff;
             --surface2: #f1f5f9;
@@ -72,68 +47,71 @@
             --r: 14px;
             --r2: 18px;
             --r3: 24px;
-        }
+        
+}
+
+        
 
         /* ─── LIGHT THEME COMPLIX-STYLE MINI-MALIST AESTHETICS ─── */
-        [data-theme="light"] html,
-        [data-theme="light"] body {
+        html,
+        body {
             background: #f8f9fa;
             background-attachment: fixed;
         }
 
-        [data-theme="light"] .main {
+        .main {
             background: transparent;
         }
 
-        [data-theme="light"] .sidebar {
+        .sidebar {
             background: #ffffff;
             border-left: 1px solid #e2e8f0;
             box-shadow: 4px 0 30px rgba(0, 0, 0, 0.01);
         }
 
-        [data-theme="light"] .card,
-        [data-theme="light"] .form-card,
-        [data-theme="light"] .invoice-card,
-        [data-theme="light"] .loan-card,
-        [data-theme="light"] .table-card,
-        [data-theme="light"] .modal {
+        .card,
+        .form-card,
+        .invoice-card,
+        .loan-card,
+        .table-card,
+        .modal {
             background: #ffffff;
             border: 1px solid #f1f5f9;
             box-shadow: var(--shadow-card);
             border-radius: var(--r3);
         }
 
-        [data-theme="light"] .metric {
+        .metric {
             background: #ffffff;
             border: 1px solid #f1f5f9;
             box-shadow: var(--shadow-card);
             border-radius: var(--r2);
         }
 
-        [data-theme="light"] .income-source,
-        [data-theme="light"] .sub-item,
-        [data-theme="light"] .maint-item {
+        .income-source,
+        .sub-item,
+        .maint-item {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 12px;
         }
 
-        [data-theme="light"] .inp,
-        [data-theme="light"] .period-sel,
-        [data-theme="light"] select.inp option {
+        .inp,
+        .period-sel,
+        select.inp option {
             background: #f8f9fa;
             border-color: #e2e8f0;
             color: var(--text);
             border-radius: 12px;
         }
 
-        [data-theme="light"] .inp:focus {
+        .inp:focus {
             background: #ffffff;
             border-color: var(--accent);
             box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.05);
         }
 
-        [data-theme="light"] .btn {
+        .btn {
             background: #ffffff;
             border: 1px solid #e2e8f0;
             color: var(--text);
@@ -142,24 +120,24 @@
             font-weight: 500;
         }
 
-        [data-theme="light"] .btn:hover {
+        .btn:hover {
             background: #f8fafc;
             border-color: #cbd5e1;
         }
 
-        [data-theme="light"] .btn-primary {
+        .btn-primary {
             background: #0f172a;
             border-color: #0f172a;
             color: #ffffff;
             box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
         }
 
-        [data-theme="light"] .btn-primary:hover {
+        .btn-primary:hover {
             background: #1e293b;
             border-color: #1e293b;
         }
 
-        [data-theme="light"] .chip {
+        .chip {
             background: #f1f5f9;
             border: 1px solid #e2e8f0;
             color: var(--text2);
@@ -168,52 +146,52 @@
             font-weight: 500;
         }
 
-        [data-theme="light"] .chip:hover,
-        [data-theme="light"] .chip.active {
+        .chip:hover,
+        .chip.active {
             background: #e2e8f0;
             border-color: #cbd5e1;
             color: var(--accent);
         }
 
-        [data-theme="light"] .nav-item.active {
+        .nav-item.active {
             background: #f1f5f9;
             color: var(--accent);
             font-weight: 600;
             border-right-color: var(--accent);
         }
 
-        [data-theme="light"] .nav-item:hover {
+        .nav-item:hover {
             background: #f8fafc;
             color: var(--accent);
         }
 
-        [data-theme="light"] th {
+        th {
             background: #f8fafc;
             color: var(--text2);
             border-bottom: 2px solid #e2e8f0;
         }
 
-        [data-theme="light"] td {
+        td {
             color: var(--text2);
         }
 
-        [data-theme="light"] .td-main {
+        .td-main {
             color: var(--text);
         }
 
-        [data-theme="light"] .bbar-bg,
-        [data-theme="light"] .progress-bg,
-        [data-theme="light"] .sub-tracker-bar {
+        .bbar-bg,
+        .progress-bg,
+        .sub-tracker-bar {
             background: #e2e8f0;
         }
 
-        [data-theme="light"] .shop-tab {
+        .shop-tab {
             background: #f8fafc;
             border-color: #e2e8f0;
             color: var(--text2);
         }
 
-        [data-theme="light"] .shop-tab.active {
+        .shop-tab.active {
             background: #e2ff80;
             /* Soft lime-yellow from the image! */
             border-color: #c4e650;
@@ -221,31 +199,31 @@
             font-weight: 600;
         }
 
-        [data-theme="light"] .toast {
+        .toast {
             background: #ffffff;
             border: 1px solid #e2e8f0;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
             color: var(--text);
         }
 
-        [data-theme="light"] .logo {
+        .logo {
             border-bottom-color: #e2e8f0;
         }
 
-        [data-theme="light"] .logo-title {
+        .logo-title {
             background: none;
             -webkit-text-fill-color: initial;
             color: var(--text);
             font-weight: 700;
         }
 
-        [data-theme="light"] .period-badge {
+        .period-badge {
             background: #ffffff;
             border-color: #e2e8f0;
             color: var(--text2);
         }
 
-        [data-theme="light"] .badge {
+        .badge {
             background: #ebe0ff;
             /* Soft lavender pill from the image! */
             color: #2e1e4a;
@@ -253,55 +231,55 @@
             font-weight: 500;
         }
 
-        [data-theme="light"] ::-webkit-scrollbar-thumb {
+        ::-webkit-scrollbar-thumb {
             background: #cbd5e1;
         }
 
-        [data-theme="light"] .divider {
+        .divider {
             background: #e2e8f0;
         }
 
-        [data-theme="light"] .empty {
+        .empty {
             color: var(--text3);
         }
 
-        [data-theme="light"] .bottom-nav {
+        .bottom-nav {
             background: #ffffff;
             border-top: 1px solid #e2e8f0;
             box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.02);
         }
 
-        [data-theme="light"] .bnav-item.active {
+        .bnav-item.active {
             background: #f1f5f9;
             color: var(--accent);
         }
 
-        [data-theme="light"] .bnav-item {
+        .bnav-item {
             color: var(--text3);
         }
 
-        [data-theme="light"] .page-title {
+        .page-title {
             background: none;
             -webkit-text-fill-color: initial;
             color: var(--text);
             font-weight: 700;
         }
 
-        [data-theme="light"] .card-title,
-        [data-theme="light"] .form-title,
-        [data-theme="light"] .sec-title {
+        .card-title,
+        .form-title,
+        .sec-title {
             color: var(--text3);
         }
 
-        [data-theme="light"] .metric-val {
+        .metric-val {
             color: var(--text);
         }
 
-        [data-theme="light"] .metric-pos {
+        .metric-pos {
             color: var(--green);
         }
 
-        [data-theme="light"] .metric-neg {
+        .metric-neg {
             color: var(--red);
         }
 
@@ -1392,7 +1370,7 @@
             z-index: 300
         }
 
-        [data-theme="light"] .modal-ov {
+        .modal-ov {
             background: rgba(15, 23, 42, 0.45);
         }
 
@@ -1666,8 +1644,8 @@
             border-color: rgba(14, 165, 233, 0.4) !important;
         }
 
-        [data-theme="light"] .card:hover,
-        [data-theme="light"] .metric:hover {
+        .card:hover,
+        .metric:hover {
             box-shadow: 0 16px 32px rgba(15, 23, 42, 0.03) !important;
             border-color: rgba(15, 23, 42, 0.05) !important;
         }
@@ -2134,7 +2112,7 @@
             border-bottom-color: rgba(255, 255, 255, 0.05);
         }
 
-        [data-theme="light"] .stmt-table tr.stmt-inv-item td {
+        .stmt-table tr.stmt-inv-item td {
             border-bottom-color: rgba(15, 23, 42, 0.03);
         }
 
@@ -2169,7 +2147,7 @@
             letter-spacing: -0.5px;
         }
 
-        [data-theme="light"] .stmt-table tr.stmt-grand-total td {
+        .stmt-table tr.stmt-grand-total td {
             background: linear-gradient(135deg, rgba(124, 109, 250, 0.14), rgba(244, 114, 182, 0.1));
         }
 
@@ -2305,7 +2283,7 @@
             pointer-events: none;
         }
 
-        [data-theme="light"] .sub-tracker-row.alert-week .sub-tracker-bar::after {
+        .sub-tracker-row.alert-week .sub-tracker-bar::after {
             background: linear-gradient(90deg,
                     transparent 0%,
                     rgba(255, 255, 255, 0.85) 50%,
