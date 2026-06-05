@@ -1855,21 +1855,7 @@
           </div>
         </div>
 
-        <div class="metric-card">
-          <div style="flex:1">
-            <div class="metric-icon-wrap" style="background:var(--surface2); color:var(--black)">🏆</div>
-            <div class="metric-title">تقدم أهداف السنة</div>
-            <div class="metric-val" id="dash-goals-val">0%</div>
-          </div>
-          <div class="circ-wrap">
-            <svg width="70" height="70" viewBox="0 0 70 70">
-              <circle class="circ-bg" cx="35" cy="35" r="30"></circle>
-              <circle class="circ-val" id="circ-goals" cx="35" cy="35" r="30" stroke="var(--black)"
-                stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle>
-            </svg>
-            <div class="circ-text" id="circ-txt-goals">0%</div>
-          </div>
-        </div>
+        
       </div>
 
       <div class="analytics-card">
@@ -1913,6 +1899,21 @@
               <circle class="circ-val" id="daily-pg-circ" cx="35" cy="35" r="30" stroke="#0284c7" stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle>
             </svg>
             <div class="circ-text" id="daily-pg-txt" style="font-size: 14px;">0%</div>
+          </div>
+        </div>
+        <div class="metric-card" style="flex: 1; margin-bottom: 0; min-width: 200px; padding: 15px;">
+          <div style="flex:1">
+            <div class="metric-icon-wrap" style="background:var(--surface2); color:var(--black)">🏆</div>
+            <div class="metric-title">تقدم أهداف السنة</div>
+            <div class="metric-val" id="dash-goals-val">0%</div>
+          </div>
+          <div class="circ-wrap" style="transform: scale(0.8); margin: -10px; transform-origin: left center;">
+            <svg width="70" height="70" viewBox="0 0 70 70">
+              <circle class="circ-bg" cx="35" cy="35" r="30"></circle>
+              <circle class="circ-val" id="circ-goals" cx="35" cy="35" r="30" stroke="var(--black)"
+                stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle>
+            </svg>
+            <div class="circ-text" id="circ-txt-goals">0%</div>
           </div>
         </div>
       </div>
