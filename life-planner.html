@@ -1743,11 +1743,27 @@
   <div class="sidebar">
     <div class="logo" style="flex-direction: column; gap: 5px;">
       <div style="display:flex; align-items:center; justify-content:center; gap: 10px;">
-        <div class="logo-icon" style="font-size: 16px; border-radius: 50%;">👋</div>
+        <div class="logo-icon" id="user-avatar-icon" style="font-size: 16px; border-radius: 50%; overflow: hidden;">👋</div>
         <span style="font-size: 16px;">مرحباً، <span id="user-greeting-name">صديقي</span></span>
       </div>
-      <div style="font-size:24px; cursor:pointer; color:var(--text3); margin-top:5px; transition:0.2s;" onclick="openSettingsModal()" title="إعدادات الحساب" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text3)'">
+      <div style="font-size:24px; cursor:pointer; color:var(--text3); margin-top:5px; transition:0.2s; position:relative;" onclick="toggleSettingsPopup()" title="إعدادات الحساب" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text3)'">
         ⚙️
+        <div id="settings-popup" style="display:none; position:absolute; top:40px; right:50%; transform:translateX(50%); background:var(--surface); padding:15px; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1); width:240px; z-index:1000; text-align:right; font-size:13px; border:1px solid var(--border); cursor:default;" onclick="event.stopPropagation()">
+            <div style="margin-bottom:10px; font-weight:bold; color:var(--black);">إعدادات الحساب</div>
+            <div class="field" style="margin-bottom:10px;">
+                <label>الصورة الشخصية</label>
+                <input type="file" id="s-pic" accept="image/*" style="font-size:11px; margin-top:5px;">
+            </div>
+            <div class="field" style="margin-bottom:10px;">
+                <label>الاسم الكامل</label>
+                <input type="text" id="s-name" class="inp" style="padding:6px; font-size:12px;">
+            </div>
+            <div class="field" style="margin-bottom:15px;">
+                <label>العمر</label>
+                <input type="number" id="s-age" class="inp" placeholder="مثال: 25" style="padding:6px; font-size:12px;">
+            </div>
+            <button class="btn" style="width:100%; padding:8px; font-size:12px;" onclick="saveAccountSettings()">حفظ ✓</button>
+        </div>
       </div>
     </div>
     <div class="nav-item active" data-page="daily" onclick="goPage(this)">☀️ عاداتي اليومية</div>\n    <div class="nav-item" data-page="dash" onclick="goPage(this)">📊 الملخص العام</div>
@@ -2331,28 +2347,7 @@
   </div> <!-- End Main -->
 
   <!-- MODALS -->
-  <div class="modal-overlay" id="modal-settings">
-    <div class="modal">
-      <div class="modal-hdr">
-        <h3>إعدادات الحساب ⚙️</h3>
-        <span class="modal-close" onclick="closeModal('settings')">✕</span>
-      </div>
-      <div class="field">
-        <label>الاسم الكامل</label>
-        <input type="text" id="s-name" class="inp">
-      </div>
-      <div class="field">
-        <label>العمر</label>
-        <input type="number" id="s-age" class="inp" placeholder="مثال: 25">
-      </div>
-      <div class="field">
-        <label>البريد الإلكتروني (الحساب)</label>
-        <input type="email" id="s-email" class="inp" disabled style="background: var(--surface2); opacity: 0.7;">
-        <small style="color:var(--text3); font-size:11px;">ملاحظة: لا يمكن تغيير البريد الإلكتروني لأنه مرتبط بتسجيل الدخول.</small>
-      </div>
-      <button class="btn" style="width:100%" onclick="saveAccountSettings()">حفظ التغييرات ✓</button>
-    </div>
-  </div>
+  
 
 
   <!-- Notification Settings Modal -->
@@ -2720,6 +2715,7 @@
         if (state.settings && state.settings.displayName) {
           document.getElementById('user-greeting-name').textContent = state.settings.displayName;
           document.title = `امسي | ${state.settings.displayName}`;
+          updateAvatarUI();
         }
         if (isInitialLoad) {
           document.getElementById('m-hab-start').value = today;
@@ -2731,23 +2727,21 @@
     }
 
     
-    function openSettingsModal() {
-      document.getElementById('s-name').value = state.settings.displayName || "صديقي";
-      document.getElementById('s-age').value = state.settings.age || "";
-      
-      const emailEl = document.getElementById('s-email');
-      if (auth && auth.currentUser) {
-        emailEl.value = auth.currentUser.email || "";
+    function toggleSettingsPopup() {
+      const popup = document.getElementById('settings-popup');
+      if (popup.style.display === 'block') {
+        popup.style.display = 'none';
       } else {
-        emailEl.value = "حساب محلي";
+        document.getElementById('s-name').value = state.settings.displayName || "صديقي";
+        document.getElementById('s-age').value = state.settings.age || "";
+        popup.style.display = 'block';
       }
-      
-      openModal('settings');
     }
     
     function saveAccountSettings() {
       const name = document.getElementById('s-name').value.trim();
       const age = document.getElementById('s-age').value.trim();
+      const fileInput = document.getElementById('s-pic');
       
       if (name) {
         state.settings.displayName = name;
@@ -2758,10 +2752,62 @@
         state.settings.age = age;
       }
       
+      if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = new Image();
+          img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 150;
+            let scaleSize = MAX_WIDTH / img.width;
+            if(scaleSize > 1) scaleSize = 1;
+            canvas.width = img.width * scaleSize;
+            canvas.height = img.height * scaleSize;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+            
+            state.settings.profilePic = dataUrl;
+            updateAvatarUI();
+            finishSaveSettings();
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        finishSaveSettings();
+      }
+    }
+
+    function finishSaveSettings() {
       saveState();
-      closeModal('settings');
+      document.getElementById('settings-popup').style.display = 'none';
       toast('تم حفظ الإعدادات بنجاح ✅');
     }
+
+    function updateAvatarUI() {
+      const iconDiv = document.getElementById('user-avatar-icon');
+      if(iconDiv) {
+        if(state.settings.profilePic) {
+          iconDiv.innerHTML = `<img src="${state.settings.profilePic}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+          iconDiv.style.background = 'transparent';
+        } else {
+          iconDiv.innerHTML = '👋';
+          iconDiv.style.background = 'var(--black)';
+        }
+      }
+    }
+    
+    // Close popup on outside click
+    document.addEventListener('click', function(e) {
+      const gearBtn = document.querySelector('[onclick="toggleSettingsPopup()"]');
+      const popup = document.getElementById('settings-popup');
+      if(popup && gearBtn && popup.style.display === 'block') {
+        if(!gearBtn.contains(e.target)) {
+          popup.style.display = 'none';
+        }
+      }
+    });
 
     function changeUserName() {
       const currentName = document.getElementById('user-greeting-name').textContent;
