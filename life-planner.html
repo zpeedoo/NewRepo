@@ -3945,6 +3945,8 @@
     let wsSize = 10;
     let wsFound = [];
     let wsTime = 0;
+    const wsColors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+    let wsColorIndex = 0;
     let wsInterval = null;
     let isDragging = false;
     let startCell = null;
@@ -4126,11 +4128,13 @@
       
       if(foundWord) {
         wsFound.push(foundWord);
+        const currentColor = wsColors[wsColorIndex % wsColors.length];
         selectedCells.forEach(c => {
-          c.style.background = 'var(--primary)';
+          c.style.background = currentColor;
           c.style.color = 'white';
           c.classList.add('found');
         });
+        wsColorIndex++;
         document.getElementById(`ws-word-${foundWord}`).style.textDecoration = 'line-through';
         document.getElementById(`ws-word-${foundWord}`).style.color = 'var(--text3)';
         document.getElementById('ws-remaining').textContent = wsWords.length - wsFound.length;
