@@ -1659,7 +1659,43 @@
       justify-content: space-between;
       align-items: center;
     }
-  </style>
+  
+    /* --- Dynamic UI Additions --- */
+    .metric-card, .list-item, .breathe-card, .hab-card, .btn, .circle-btn {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .metric-card:hover, .breathe-card:hover, .hab-card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .btn:active, .circle-btn:active {
+      transform: scale(0.95);
+    }
+    .btn:hover, .circle-btn:hover {
+      filter: brightness(1.1);
+    }
+    .list-item:hover {
+      background: var(--surface2);
+      transform: translateX(-5px);
+    }
+    .nav-item, .bnav-item {
+      transition: background-color 0.2s, color 0.2s, transform 0.2s;
+    }
+    .nav-item:hover {
+      transform: translateX(-5px);
+      background: var(--surface2);
+    }
+    .page.active {
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .circ-val {
+      transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+\n  </style>
 </head>
 
 <body>
@@ -1714,8 +1750,7 @@
         ⚙️
       </div>
     </div>
-    <div class="nav-item" data-page="dash" onclick="goPage(this)">📊 الملخص العام</div>
-    <div class="nav-item active" data-page="daily" onclick="goPage(this)">☀️ عاداتي اليومية</div>
+    <div class="nav-item active" data-page="daily" onclick="goPage(this)">☀️ عاداتي اليومية</div>\n    <div class="nav-item" data-page="dash" onclick="goPage(this)">📊 الملخص العام</div>
     <div class="nav-item" data-page="goals" onclick="goPage(this)">🏆 أهداف السنة</div>
     <div class="nav-item" data-page="books" onclick="goPage(this)">📚 مكتبتي اليدوية</div>
     <div class="nav-item" data-page="reader" onclick="goPage(this)">📖 القارئ الذكي</div>
@@ -2491,8 +2526,7 @@
 
   <!-- Mobile Bottom Nav -->
   <div class="bnav">
-    <div class="bnav-item" data-page="dash" onclick="goPage(this)">📊<span>الملخص</span></div>
-    <div class="bnav-item active" data-page="daily" onclick="goPage(this)">☀️<span>عاداتي</span></div>
+    <div class="bnav-item active" data-page="daily" onclick="goPage(this)">☀️<span>عاداتي</span></div>\n    <div class="bnav-item" data-page="dash" onclick="goPage(this)">📊<span>الملخص</span></div>
     <div class="bnav-item" data-page="goals" onclick="goPage(this)">🏆<span>أهدافي</span></div>
     <div class="bnav-item" data-page="books" onclick="goPage(this)">📚<span>ورقي</span></div>
     <div class="bnav-item" data-page="reader" onclick="goPage(this)">📖<span>القارئ</span></div>
