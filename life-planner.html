@@ -1743,17 +1743,15 @@
   <div class="sidebar">
     <div class="logo" style="flex-direction: column; gap: 5px;">
       <div style="display:flex; align-items:center; justify-content:center; gap: 10px;">
-        <div class="logo-icon" id="user-avatar-icon" style="font-size: 16px; border-radius: 50%; overflow: hidden;">👋</div>
+        <div class="logo-icon" id="user-avatar-icon" style="font-size: 16px; border-radius: 50%; overflow: hidden; cursor: pointer;" onclick="document.getElementById('hidden-pic-upload').click()" title="تغيير الصورة الشخصية">👋</div>
+        <input type="file" id="hidden-pic-upload" accept="image/*" style="display:none;" onchange="handleDirectPicUpload(this)">
         <span style="font-size: 16px;">مرحباً، <span id="user-greeting-name">صديقي</span></span>
       </div>
       <div style="font-size:24px; cursor:pointer; color:var(--text3); margin-top:5px; transition:0.2s; position:relative;" onclick="toggleSettingsPopup()" title="إعدادات الحساب" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text3)'">
         ⚙️
         <div id="settings-popup" style="display:none; position:absolute; top:40px; right:50%; transform:translateX(50%); background:var(--surface); padding:15px; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1); width:240px; z-index:1000; text-align:right; font-size:13px; border:1px solid var(--border); cursor:default;" onclick="event.stopPropagation()">
             <div style="margin-bottom:10px; font-weight:bold; color:var(--black);">إعدادات الحساب</div>
-            <div class="field" style="margin-bottom:10px;">
-                <label>الصورة الشخصية</label>
-                <input type="file" id="s-pic" accept="image/*" style="font-size:11px; margin-top:5px;">
-            </div>
+            
             <div class="field" style="margin-bottom:10px;">
                 <label>الاسم الكامل</label>
                 <input type="text" id="s-name" class="inp" style="padding:6px; font-size:12px;">
@@ -2741,8 +2739,6 @@
     function saveAccountSettings() {
       const name = document.getElementById('s-name').value.trim();
       const age = document.getElementById('s-age').value.trim();
-      const fileInput = document.getElementById('s-pic');
-      
       if (name) {
         state.settings.displayName = name;
         document.getElementById('user-greeting-name').textContent = name;
@@ -2752,6 +2748,10 @@
         state.settings.age = age;
       }
       
+      finishSaveSettings();
+    }
+
+        function handleDirectPicUpload(fileInput) {
       if (fileInput.files && fileInput.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -2769,13 +2769,12 @@
             
             state.settings.profilePic = dataUrl;
             updateAvatarUI();
-            finishSaveSettings();
+            saveState();
+            toast('تم تحديث الصورة بنجاح 🖼️');
           };
           img.src = e.target.result;
         };
         reader.readAsDataURL(fileInput.files[0]);
-      } else {
-        finishSaveSettings();
       }
     }
 
