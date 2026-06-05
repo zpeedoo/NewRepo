@@ -51,28 +51,7 @@
       --cal-empty: #f3f4f6;
     }
 
-    body.dark-theme {
-      --bg: #121212;
-      --surface: #1e1e1e;
-      --surface2: #2a2a2a;
-      --text: #e0e0e0;
-      --text2: #a0a0a0;
-      --text3: #6b7280;
-      --border: #333333;
-      --border-darker: #444444;
-      --primary: #ff7669;
-      --primary-light: rgba(230, 92, 79, 0.15);
-      --black: #ffffff;
-      --zaha: #6b63ff;
-      --zaha-light: rgba(79, 70, 229, 0.15);
-      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-      --nav-bg: rgba(30, 30, 30, 0.95);
 
-      --cal-full: #059669;
-      --cal-half: #047857;
-      --cal-low: #064e3b;
-      --cal-empty: #2a2a2a;
-    }
 
     * {
       margin: 0;
@@ -1596,6 +1575,68 @@
         height: 60vh;
       }
     }
+    .breathe-circle-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 30px 0;
+      height: 200px;
+    }
+    .breathe-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      border: 4px solid var(--primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      transition: transform 1s ease-in-out;
+      box-shadow: 0 10px 30px rgba(230, 92, 79, 0.3);
+    }
+    .breathe-circle.inhale {
+      transform: scale(1.8);
+      background: #d1fae5;
+      border-color: #10b981;
+      box-shadow: 0 10px 40px rgba(16, 185, 129, 0.4);
+    }
+    .breathe-circle.hold {
+      transform: scale(1.8);
+      background: #e0e7ff;
+      border-color: #4f46e5;
+      box-shadow: 0 10px 40px rgba(79, 70, 229, 0.4);
+    }
+    .breathe-circle.exhale {
+      transform: scale(1);
+      background: var(--primary-light);
+      border-color: var(--primary);
+      box-shadow: 0 10px 30px rgba(230, 92, 79, 0.3);
+    }
+    .breathe-text {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--black);
+      z-index: 2;
+    }
+    .breathe-timer {
+      font-size: 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      color: var(--black);
+      z-index: 2;
+    }
+    .breathe-card {
+      background: linear-gradient(135deg, var(--surface) 0%, var(--primary-light) 100%);
+      border: 1px solid var(--primary);
+      border-radius: var(--r);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
   </style>
 </head>
 
@@ -1678,7 +1719,6 @@
       </div>
       <div class="header-actions">
         <button class="circle-btn" onclick="requestNotification()" title="تفعيل التنبيهات">🔔</button>
-        <button class="circle-btn" onclick="toggleTheme()" title="تبديل الثيم">🌓</button>
       </div>
     </div>
 
@@ -1786,6 +1826,15 @@
 
       <div class="daily-layout">
         <div class="daily-main">
+          <!-- Daily Breathing Card -->
+          <div class="breathe-card">
+            <div>
+              <h3 style="margin-bottom: 8px; color: var(--black); font-weight: 800; font-size: 16px;">🫁 تمارين التنفس اليومية</h3>
+              <p style="font-size: 13px; color: var(--text2);">خصص 5 دقائق لصفاء ذهنك وتقليل التوتر</p>
+              <div id="breathe-status" style="margin-top: 10px; font-size: 12px; font-weight: 800; color: #10b981; display: none;">✅ تم إنجاز تمرين اليوم</div>
+            </div>
+            <button class="btn" onclick="openBreatheModal()">ابدأ التمرين ▶</button>
+          </div>
           <div id="habit-list"></div>
         </div>
 
@@ -2135,6 +2184,42 @@
     </div>
   </div>
 
+  <!-- Breathe Modal -->
+  <div class="modal-ov" id="modal-breathe">
+    <div class="modal" style="text-align: center;">
+      <div class="modal-title" style="color: var(--primary)">تمارين التنفس التفاعلية 🫁</div>
+      
+      <div class="field" style="text-align: center; margin-bottom: 20px;">
+        <label>اختر نوع التمرين:</label>
+        <select class="sel" id="breathe-type" style="width: 100%; margin-top: 8px;" onchange="resetBreathe()">
+          <option value="478">4-7-8 (استرخاء ونوم عميق)</option>
+          <option value="box">التنفس المربع (تركيز وهدوء)</option>
+          <option value="wimhof">فيم هوف (طاقة وحيوية)</option>
+        </select>
+      </div>
+
+      <div class="breathe-circle-wrap">
+        <div class="breathe-circle" id="breathe-circle">
+          <div class="breathe-text" id="breathe-text">مستعد؟</div>
+          <div class="breathe-timer" id="breathe-timer">--</div>
+        </div>
+      </div>
+
+      <div style="font-size: 13px; color: var(--text2); margin-bottom: 20px;" id="breathe-desc">
+        شهيق لـ 4 ثوانٍ، احبس لـ 7 ثوانٍ، زفير لـ 8 ثوانٍ.
+      </div>
+      
+      <div style="font-weight: 800; color: var(--primary); margin-bottom: 20px;">
+        الدورات المنجزة: <span id="breathe-cycles">0</span>
+      </div>
+
+      <div class="modal-actions" style="justify-content: center; gap: 15px;">
+        <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none" onclick="closeBreatheModal()">إغلاق</button>
+        <button class="btn" id="btn-start-breathe" onclick="startBreathe()">ابدأ ▶</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Mobile Bottom Nav -->
   <div class="bnav">
     <div class="bnav-item active" data-page="dash" onclick="goPage(this)">📊<span>الملخص</span></div>
@@ -2151,14 +2236,6 @@
     const APP_VER = "v28_Production_Auth_Restored";
 
     window.onerror = function (message, source, lineno, colno, error) { console.error("Global Error Caught:", message); return false; };
-
-    function toggleTheme() {
-      const isDark = document.body.classList.toggle('dark-theme');
-      localStorage.setItem('planner_theme', isDark ? 'dark' : 'light');
-      document.getElementById('theme-color-meta').content = isDark ? '#121212' : '#f4f6f8';
-      if (dashChart) renderChart();
-    }
-    if (localStorage.getItem('planner_theme') === 'dark') { document.body.classList.add('dark-theme'); document.getElementById('theme-color-meta').content = '#121212'; }
 
     const firebaseConfig = { apiKey: "AIzaSyD5_r_wBDjy1y6Pm0oOwLIMdHyITiknSSw", authDomain: "myexpenses-3b6f5.firebaseapp.com", projectId: "myexpenses-3b6f5", storageBucket: "myexpenses-3b6f5.firebasestorage.app", messagingSenderId: "321643278173", appId: "1:321643278173:web:5dfb1ae0c644e97fe842b4", measurementId: "G-MJZN5DXGRQ" };
 
@@ -2394,6 +2471,7 @@
       renderZaha();
       renderReaderLibrary();
       renderDashboard();
+      if(typeof renderBreatheStatus === 'function') renderBreatheStatus();
     }
 
     function getStreak(habitId) {
@@ -2870,6 +2948,152 @@
     });
 
     function scrollToTop() { document.getElementById('main').scrollTo({ top: 0, behavior: 'smooth' }); }
+
+    // --- Breathing Exercises Logic ---
+    let breatheInterval;
+    let breatheState = 0; // 0: stopped, 1: inhale, 2: hold, 3: exhale, 4: hold (for box)
+    let breatheTimeLeft = 0;
+    let currentBreathePhase = '';
+    let breatheCycles = 0;
+    let breatheConfig = { inhale: 4, hold1: 7, exhale: 8, hold2: 0 };
+    let currentBreatheType = '478';
+
+    function openBreatheModal() {
+      document.getElementById('modal-breathe').classList.add('show');
+      resetBreathe();
+    }
+    
+    function closeBreatheModal() {
+      document.getElementById('modal-breathe').classList.remove('show');
+      stopBreathe();
+    }
+    
+    function resetBreathe() {
+      stopBreathe();
+      breatheCycles = 0;
+      document.getElementById('breathe-cycles').textContent = '0';
+      document.getElementById('breathe-text').textContent = 'مستعد؟';
+      document.getElementById('breathe-timer').textContent = '--';
+      const type = document.getElementById('breathe-type').value;
+      currentBreatheType = type;
+      if (type === '478') {
+        breatheConfig = { inhale: 4, hold1: 7, exhale: 8, hold2: 0 };
+        document.getElementById('breathe-desc').textContent = 'شهيق لـ 4 ثوانٍ، احبس لـ 7 ثوانٍ، زفير لـ 8 ثوانٍ.';
+      } else if (type === 'box') {
+        breatheConfig = { inhale: 4, hold1: 4, exhale: 4, hold2: 4 };
+        document.getElementById('breathe-desc').textContent = 'شهيق لـ 4، احبس لـ 4، زفير لـ 4، احبس لـ 4.';
+      } else if (type === 'wimhof') {
+        breatheConfig = { inhale: 2, hold1: 0, exhale: 2, hold2: 15 };
+        document.getElementById('breathe-desc').textContent = 'تنفس سريع (شهيق/زفير)، ثم حبس النفس بالنهاية.';
+      }
+      const circle = document.getElementById('breathe-circle');
+      circle.className = 'breathe-circle';
+      circle.style.transition = 'transform 0.5s ease-in-out';
+      document.getElementById('btn-start-breathe').textContent = 'ابدأ ▶';
+      document.getElementById('btn-start-breathe').onclick = startBreathe;
+    }
+
+    function stopBreathe() {
+      if (breatheInterval) clearInterval(breatheInterval);
+      breatheState = 0;
+    }
+
+    function startBreathe() {
+      if (breatheState !== 0) {
+        resetBreathe();
+        return;
+      }
+      document.getElementById('btn-start-breathe').textContent = 'إيقاف ⏹';
+      document.getElementById('btn-start-breathe').onclick = resetBreathe;
+      runBreatheCycle();
+    }
+
+    function runBreatheCycle() {
+      if (breatheState === 0) breatheState = 1; // start inhale
+      
+      const circle = document.getElementById('breathe-circle');
+      const textEl = document.getElementById('breathe-text');
+      const timerEl = document.getElementById('breathe-timer');
+      
+      let duration = 0;
+      
+      if (breatheState === 1) { // Inhale
+        duration = breatheConfig.inhale;
+        currentBreathePhase = 'شهيق...';
+        circle.className = 'breathe-circle inhale';
+        circle.style.transition = `transform ${duration}s ease-in-out, background 0.5s`;
+      } else if (breatheState === 2) { // Hold 1
+        duration = breatheConfig.hold1;
+        if (duration === 0) {
+          breatheState = 3;
+          return runBreatheCycle();
+        }
+        currentBreathePhase = 'احبس...';
+        circle.className = 'breathe-circle hold';
+        circle.style.transition = `transform 0.5s ease-in-out, background 0.5s`;
+      } else if (breatheState === 3) { // Exhale
+        duration = breatheConfig.exhale;
+        currentBreathePhase = 'زفير...';
+        circle.className = 'breathe-circle exhale';
+        circle.style.transition = `transform ${duration}s ease-in-out, background 0.5s`;
+      } else if (breatheState === 4) { // Hold 2
+        duration = breatheConfig.hold2;
+        if (duration === 0) {
+          breatheState = 1;
+          breatheCycles++;
+          document.getElementById('breathe-cycles').textContent = breatheCycles;
+          checkBreatheGoal();
+          return runBreatheCycle();
+        }
+        currentBreathePhase = 'احبس...';
+        circle.className = 'breathe-circle hold';
+        circle.style.transition = `transform 0.5s ease-in-out, background 0.5s`;
+      }
+      
+      breatheTimeLeft = duration;
+      textEl.textContent = currentBreathePhase;
+      timerEl.textContent = breatheTimeLeft;
+      
+      if (breatheInterval) clearInterval(breatheInterval);
+      breatheInterval = setInterval(() => {
+        breatheTimeLeft--;
+        if (breatheTimeLeft > 0) {
+          timerEl.textContent = breatheTimeLeft;
+        } else {
+          clearInterval(breatheInterval);
+          breatheState++;
+          if (breatheState > 4) {
+            breatheState = 1;
+            breatheCycles++;
+            document.getElementById('breathe-cycles').textContent = breatheCycles;
+            checkBreatheGoal();
+          }
+          runBreatheCycle();
+        }
+      }, 1000);
+    }
+    
+    function checkBreatheGoal() {
+      // Mark as done for today if 4 cycles completed
+      if (breatheCycles === 4) {
+        if (!state.journal[today]) state.journal[today] = {};
+        state.journal[today].breatheDone = true;
+        saveState();
+        renderBreatheStatus();
+        toast('رائع! لقد أتممت تمرين التنفس اليومي 🎉');
+      }
+    }
+    
+    function renderBreatheStatus() {
+      const statusEl = document.getElementById('breathe-status');
+      if (statusEl) {
+        if (state.journal[today] && state.journal[today].breatheDone) {
+          statusEl.style.display = 'block';
+        } else {
+          statusEl.style.display = 'none';
+        }
+      }
+    }
   </script>
 </body>
 
