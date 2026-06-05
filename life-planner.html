@@ -3503,16 +3503,27 @@
         if (i === targetIndex) {
           div.textContent = pair.target;
           div.onclick = () => {
+            div.style.background = '#22c55e'; // Green
+            div.style.color = 'white';
             if(typeof playSound === 'function') playSound('soft');
-            visualLevel++;
-            visualTimeLeft = Math.max(5, 15 - Math.floor(visualLevel / 2)); // less time as level increases
-            document.getElementById('visual-level').textContent = visualLevel;
-            document.getElementById('visual-time').textContent = visualTimeLeft;
-            nextVisualLevel();
+            setTimeout(() => {
+              visualLevel++;
+              visualTimeLeft = Math.max(5, 15 - Math.floor(visualLevel / 2));
+              document.getElementById('visual-level').textContent = visualLevel;
+              document.getElementById('visual-time').textContent = visualTimeLeft;
+              nextVisualLevel();
+            }, 200);
           };
         } else {
           div.textContent = pair.base;
           div.onclick = () => {
+            if(typeof playSound === 'function') playSound('error');
+            div.style.background = '#ef4444'; // Red
+            div.style.color = 'white';
+            setTimeout(() => {
+              div.style.background = 'var(--surface)';
+              div.style.color = 'var(--text)';
+            }, 300);
             visualTimeLeft = Math.max(0, visualTimeLeft - 2); // penalty
             document.getElementById('visual-time').textContent = visualTimeLeft;
           };
@@ -3626,6 +3637,8 @@
         if(typeof playSound === 'function') playSound('soft');
         renderSlideGrid();
         checkSlideWin();
+      } else {
+        if(typeof playSound === 'function') playSound('error');
       }
     }
 
@@ -3880,6 +3893,19 @@
             alert(`تهانينا! اكتشفت كلمة السر: "${rawPassword}"\nالوقت: ${document.getElementById('ws-time').textContent}`);
             startWordSearchGame();
           }, 2000);
+        }
+      } else {
+        if(selectedCells.length > 1) {
+          if(typeof playSound === 'function') playSound('error');
+          selectedCells.forEach(c => {
+            c.style.background = '#ef4444';
+            c.style.color = 'white';
+          });
+          setTimeout(() => {
+            selectedCells = [];
+            highlightCells();
+          }, 300);
+          return;
         }
       }
       
