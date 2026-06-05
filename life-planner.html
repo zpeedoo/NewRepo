@@ -18,6 +18,7 @@
     href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=JetBrains+Mono:wght@300;400;700;800&family=Georgia&display=swap"
     rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js" crossorigin="anonymous"></script>
@@ -1579,52 +1580,73 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 30px 0;
-      height: 200px;
+      margin: 50px 0;
+      height: 250px;
+      position: relative;
     }
-    .breathe-circle {
+    .breathe-flower {
+      position: absolute;
       width: 100px;
       height: 100px;
-      border-radius: 50%;
-      background: var(--primary-light);
-      border: 4px solid var(--primary);
       display: flex;
       justify-content: center;
       align-items: center;
+      transition: transform var(--dur, 1s) ease-in-out;
+    }
+    .petal {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--primary);
+      opacity: 0.4;
+      mix-blend-mode: multiply;
+      transition: all var(--dur, 1s) ease-in-out;
+      transform-origin: center center;
+    }
+    .breathe-flower.inhale .petal:nth-child(1) { transform: rotate(0deg) translateY(-45px) scale(1.3); background: #10b981; }
+    .breathe-flower.inhale .petal:nth-child(2) { transform: rotate(60deg) translateY(-45px) scale(1.3); background: #34d399; }
+    .breathe-flower.inhale .petal:nth-child(3) { transform: rotate(120deg) translateY(-45px) scale(1.3); background: #10b981; }
+    .breathe-flower.inhale .petal:nth-child(4) { transform: rotate(180deg) translateY(-45px) scale(1.3); background: #34d399; }
+    .breathe-flower.inhale .petal:nth-child(5) { transform: rotate(240deg) translateY(-45px) scale(1.3); background: #10b981; }
+    .breathe-flower.inhale .petal:nth-child(6) { transform: rotate(300deg) translateY(-45px) scale(1.3); background: #34d399; }
+    .breathe-flower.inhale { transform: rotate(90deg); }
+
+    .breathe-flower.hold .petal:nth-child(1) { transform: rotate(15deg) translateY(-45px) scale(1.3); background: #4f46e5; }
+    .breathe-flower.hold .petal:nth-child(2) { transform: rotate(75deg) translateY(-45px) scale(1.3); background: #818cf8; }
+    .breathe-flower.hold .petal:nth-child(3) { transform: rotate(135deg) translateY(-45px) scale(1.3); background: #4f46e5; }
+    .breathe-flower.hold .petal:nth-child(4) { transform: rotate(195deg) translateY(-45px) scale(1.3); background: #818cf8; }
+    .breathe-flower.hold .petal:nth-child(5) { transform: rotate(255deg) translateY(-45px) scale(1.3); background: #4f46e5; }
+    .breathe-flower.hold .petal:nth-child(6) { transform: rotate(315deg) translateY(-45px) scale(1.3); background: #818cf8; }
+    .breathe-flower.hold { transform: rotate(180deg); }
+
+    .breathe-flower.exhale .petal { transform: rotate(0deg) translateY(0) scale(1); background: var(--primary); }
+    .breathe-flower.exhale { transform: rotate(0deg); }
+
+    .breathe-text-container {
+      position: absolute;
+      z-index: 10;
+      display: flex;
       flex-direction: column;
-      transition: transform 1s ease-in-out;
-      box-shadow: 0 10px 30px rgba(230, 92, 79, 0.3);
-    }
-    .breathe-circle.inhale {
-      transform: scale(1.8);
-      background: #d1fae5;
-      border-color: #10b981;
-      box-shadow: 0 10px 40px rgba(16, 185, 129, 0.4);
-    }
-    .breathe-circle.hold {
-      transform: scale(1.8);
-      background: #e0e7ff;
-      border-color: #4f46e5;
-      box-shadow: 0 10px 40px rgba(79, 70, 229, 0.4);
-    }
-    .breathe-circle.exhale {
-      transform: scale(1);
-      background: var(--primary-light);
-      border-color: var(--primary);
-      box-shadow: 0 10px 30px rgba(230, 92, 79, 0.3);
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(4px);
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
     .breathe-text {
       font-size: 14px;
       font-weight: 800;
       color: var(--black);
-      z-index: 2;
     }
     .breathe-timer {
-      font-size: 24px;
+      font-size: 30px;
       font-family: 'JetBrains Mono', monospace;
       font-weight: 800;
       color: var(--black);
-      z-index: 2;
     }
     .breathe-card {
       background: linear-gradient(135deg, var(--surface) 0%, var(--primary-light) 100%);
@@ -1693,6 +1715,8 @@
     <div class="nav-item" data-page="books" onclick="goPage(this)">📚 مكتبتي اليدوية</div>
     <div class="nav-item" data-page="reader" onclick="goPage(this)">📖 القارئ الذكي</div>
     <div class="nav-item" data-page="zaha" onclick="goPage(this)">🏛️ مركز زها</div>
+    <div class="nav-item" data-page="focus" onclick="goPage(this)">🧠 نادي التركيز</div>
+    <div class="nav-item" data-page="reports" onclick="goPage(this)">📈 التقارير</div>
     <div class="nav-item" data-page="all-habits" style="display:none;"></div>
 
     <div style="margin-top: auto; width: 100%;">
@@ -1841,33 +1865,7 @@
         <div class="daily-sidebar">
           <div class="mini-dash-card" id="mini-dash-content"></div>
 
-          <!-- Mini Calendar -->
-          <div class="mini-dash-card" style="margin-top: 20px; padding: 20px;">
-            <div style="text-align:center; font-size:15px; font-weight:800; margin-bottom: 15px; color: var(--black);"
-              id="cal-month-title"></div>
-            <div class="cal-header-days" style="font-size: 11px;">
-              <div>أحد</div>
-              <div>إثن</div>
-              <div>ثلا</div>
-              <div>أرب</div>
-              <div>خمي</div>
-              <div>جمع</div>
-              <div>سبت</div>
-            </div>
-            <div class="cal-grid" id="calendar-grid" style="gap: 4px;"></div>
-            <div
-              style="display:flex; justify-content:center; gap:10px; align-items:center; font-size:10px; font-weight:700; margin-top: 15px; color: var(--text2);">
-              <div style="display:flex; align-items:center; gap:4px;">
-                <div style="width:10px; height:10px; background:var(--cal-full); border-radius:3px;"></div> مكتمل
-              </div>
-              <div style="display:flex; align-items:center; gap:4px;">
-                <div style="width:10px; height:10px; background:var(--cal-half); border-radius:3px;"></div> جزئي
-              </div>
-              <div style="display:flex; align-items:center; gap:4px;">
-                <div style="width:10px; height:10px; background:var(--cal-low); border-radius:3px;"></div> قليل
-              </div>
-            </div>
-          </div>
+
 
         </div>
       </div>
@@ -2057,6 +2055,220 @@
       </div>
     </div>
 
+    <!-- FOCUS GYM PAGE -->
+    <div class="page" id="page-focus">
+      <div class="add-bar" style="border-color: #8b5cf6;">
+        <div style="font-weight:800; font-size:16px; color: #8b5cf6">نادي التركيز 🧠</div>
+      </div>
+      
+      <!-- Menu to choose game -->
+      <div id="focus-menu">
+        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #ef4444;" onclick="startStroopGame()">
+          <h3 style="margin-bottom: 5px; color: var(--black);">اختبار ستروب (Stroop) 🎨</h3>
+          <p style="font-size: 13px; color: var(--text2);">اضغط على لون الخط وليس الكلمة المكتوبة. يمرن قدرتك على كبح ردود الفعل التلقائية.</p>
+        </div>
+        
+        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #3b82f6;" onclick="startVisualSearchGame()">
+          <h3 style="margin-bottom: 5px; color: var(--black);">الصيد البصري 👁️</h3>
+          <p style="font-size: 13px; color: var(--text2);">اعثر على الشكل أو الحرف المختلف في الشبكة بأسرع وقت ممكن.</p>
+        </div>
+        
+        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #10b981;" onclick="startSlideGame()">
+          <h3 style="margin-bottom: 5px; color: var(--black);">لغز الألوان المنزلق 🧩</h3>
+          <p style="font-size: 13px; color: var(--text2);">رتب الدوائر الملونة لتطابق الهدف في الأعلى عبر تحريك المربع الفارغ.</p>
+        </div>
+        
+        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #f59e0b;" onclick="startWordSearchGame()">
+          <h3 style="margin-bottom: 5px; color: var(--black);">البحث عن الكلمات 🔎</h3>
+          <p style="font-size: 13px; color: var(--text2);">اسحب بإصبعك على الحروف لتشكيل الكلمات المطلوبة وشطبها من القائمة.</p>
+        </div>
+        
+        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #8b5cf6;" onclick="startInfinityGame()">
+          <h3 style="margin-bottom: 5px; color: var(--black);">مسار الانتباه ♾️</h3>
+          <p style="font-size: 13px; color: var(--text2);">تتبع المسار المضيء وانقر على الرقم المطابق له بأسرع وقت.</p>
+        </div>
+        
+        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #ec4899;" onclick="startMemoryConnectGame()">
+          <h3 style="margin-bottom: 5px; color: var(--black);">خريطة الألوان 🎨</h3>
+          <p style="font-size: 13px; color: var(--text2);">اربط الألوان بناءً على تسلسل الأرقام المحددة لاختبار ذاكرتك.</p>
+        </div>
+      </div>
+
+      <!-- Stroop Game Area -->
+      <div id="focus-stroop-area" style="display: none; text-align: center;">
+        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
+          <div style="font-weight: bold; color: var(--text2);">الوقت: <span id="stroop-time" style="color:var(--black);">60</span></div>
+          <div style="font-weight: bold; color: var(--text2);">النقاط: <span id="stroop-score" style="color:var(--primary);">0</span></div>
+        </div>
+        
+        <div id="stroop-word" style="font-size: 48px; font-weight: 900; margin: 40px 0; letter-spacing: -1px;">أحمر</div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <button class="btn btn-dark" style="background:#ef4444; color:white; font-size: 18px; padding: 15px;" onclick="checkStroop('أحمر')">أحمر</button>
+          <button class="btn btn-dark" style="background:#3b82f6; color:white; font-size: 18px; padding: 15px;" onclick="checkStroop('أزرق')">أزرق</button>
+          <button class="btn btn-dark" style="background:#22c55e; color:white; font-size: 18px; padding: 15px;" onclick="checkStroop('أخضر')">أخضر</button>
+          <button class="btn btn-dark" style="background:#eab308; color:white; font-size: 18px; padding: 15px;" onclick="checkStroop('أصفر')">أصفر</button>
+        </div>
+        
+        <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
+      </div>
+
+      <!-- Visual Search Game Area -->
+      <div id="focus-visual-area" style="display: none; text-align: center;">
+        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
+          <div style="font-weight: bold; color: var(--text2);">المستوى: <span id="visual-level" style="color:var(--black);">1</span></div>
+          <div style="font-weight: bold; color: var(--text2);">الوقت المتبقي: <span id="visual-time" style="color:#ef4444;">15</span></div>
+        </div>
+        
+        <div id="visual-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 20px 0; font-size: 24px; user-select: none;">
+          <!-- Grid items populated by JS -->
+        </div>
+        
+        <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
+      </div>
+
+      <!-- Color Slide Game Area -->
+      <div id="focus-slide-area" style="display: none; text-align: center;">
+        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
+          <div style="font-weight: bold; color: var(--text2);">الوقت: <span id="slide-time" style="color:var(--black);">00:00</span></div>
+          <div style="font-weight: bold; color: var(--text2);">الحركات: <span id="slide-moves" style="color:var(--primary);">0</span></div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 13px; color: var(--text2); margin-bottom: 5px;">الهدف (تطابق اللوحة مع هذا الشكل):</div>
+          <div id="slide-target" style="display: grid; grid-template-columns: repeat(3, 30px); gap: 4px; justify-content: center; opacity: 0.8;">
+            <!-- Target populated by JS -->
+          </div>
+        </div>
+        
+        <div id="slide-grid" style="display: grid; grid-template-columns: repeat(3, 80px); grid-template-rows: repeat(3, 80px); gap: 10px; justify-content: center; margin: 20px auto; background: var(--border); padding: 10px; border-radius: 12px; width:fit-content;">
+          <!-- Grid items populated by JS -->
+        </div>
+        
+        <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
+      </div>
+
+      <!-- Word Search Game Area -->
+      <div id="focus-wordsearch-area" style="display: none; text-align: center;">
+        <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
+          <div style="font-weight: bold; color: var(--text2);">الوقت: <span id="ws-time" style="color:var(--black);">00:00</span></div>
+          <div style="font-weight: bold; color: var(--text2);">الكلمات المتبقية: <span id="ws-remaining" style="color:var(--primary);">0</span></div>
+        </div>
+        
+        <div id="ws-grid" style="display: grid; gap: 4px; justify-content: center; margin: 20px auto; background: var(--surface2); padding: 10px; border-radius: 12px; width:fit-content; user-select: none; touch-action: none;">
+          <!-- Grid items populated by JS -->
+        </div>
+
+        <div style="margin-top: 15px;">
+          <div style="font-size: 14px; font-weight: 800; color: var(--black); margin-bottom: 10px;">الكلمات المطلوبة:</div>
+          <div id="ws-words" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; font-size: 13px;">
+             <!-- Words populated by JS -->
+          </div>
+        </div>
+        
+        <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
+      </div>
+
+      <!-- Infinity Path Game Area -->
+      <div id="focus-infinity-area" style="display: none; text-align: center;">
+        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
+          <div style="font-weight: bold; color: var(--text2);">الوقت: <span id="inf-time" style="color:var(--black);">00:00</span></div>
+          <div style="font-weight: bold; color: var(--text2);">الدورات: <span id="inf-loops" style="color:var(--primary);">0 / 3</span></div>
+        </div>
+
+        <div style="position: relative; width: 100%; max-width: 350px; height: 180px; margin: 0 auto 30px auto;">
+          <!-- SVG Infinity Path -->
+          <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" viewBox="0 0 100 50" preserveAspectRatio="none">
+             <path d="M 50 25 C 35 5, 5 5, 5 25 C 5 45, 35 45, 50 25 C 65 5, 95 5, 95 25 C 95 45, 65 45, 50 25" fill="none" stroke="var(--border-darker)" stroke-width="2" />
+          </svg>
+          <!-- Nodes Container -->
+          <div id="inf-nodes" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <div style="font-size: 14px; font-weight: bold; color: var(--text2); margin-bottom: 15px;">اختر الرقم المطابق للدائرة المضيئة:</div>
+        
+        <div id="inf-dice" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; justify-content: center; max-width: 300px; margin: 0 auto;">
+          <!-- Populated by JS -->
+        </div>
+
+        <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
+      </div>
+
+      <!-- Memory Connect Game Area -->
+      <div id="focus-memory-area" style="display: none; text-align: center;">
+        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
+          <div style="font-weight: bold; color: var(--text2);">المستوى: <span id="mc-level" style="color:var(--black);">1</span></div>
+          <div style="font-weight: bold; color: var(--text2);">النقاط: <span id="mc-score" style="color:var(--primary);">0</span></div>
+        </div>
+
+        <div style="font-size: 12px; font-weight: bold; color: var(--text2); margin-bottom: 10px;">مفتاح الألوان (تذكرها جيداً):</div>
+        <div id="mc-legend" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 20px; background: var(--surface2); padding: 10px; border-radius: 8px;">
+          <!-- Populated by JS -->
+        </div>
+
+        <div style="position: relative; width: 250px; height: 250px; margin: 0 auto 30px auto;">
+          <!-- SVG for drawing lines -->
+          <svg id="mc-lines" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+             <!-- Lines will be drawn here -->
+          </svg>
+          <!-- Nodes Container -->
+          <div id="mc-nodes" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <div style="font-size: 14px; font-weight: bold; color: var(--text2); margin-bottom: 10px;">انقر على الألوان لتطابق هذا التسلسل:</div>
+        <div id="mc-sequence" style="font-size: 24px; font-weight: 900; letter-spacing: 4px; color: var(--black); margin-bottom: 20px;">
+          <!-- Populated by JS -->
+        </div>
+
+        <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
+      </div>
+      
+    </div>
+
+    <!-- REPORTS PAGE -->
+    <div class="page" id="page-reports">
+      <div class="add-bar" style="border-color: var(--primary);">
+        <div style="font-weight:800; font-size:16px; color: var(--primary)">التقارير التفصيلية 📈</div>
+      </div>
+      
+      <div class="card-box" style="margin-bottom: 25px;">
+        <div class="field" style="margin-bottom: 0;">
+          <label>اختر الفترة الزمنية للتقرير:</label>
+          <div style="display:flex; gap:10px; margin-top:8px;">
+            <select class="sel" id="report-period" style="flex:1;">
+              <!-- Options populated dynamically -->
+            </select>
+            <button class="btn" onclick="generateReport()">إصدار التقرير 🚀</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="report-results" style="display:none;">
+        <div class="zaha-dash">
+          <div class="z-metric">
+            <div class="z-num-row"><span class="z-icon">🎯</span><span class="z-num" id="rep-habits-pct">0%</span></div>
+            <span class="z-lbl">إنجاز العادات</span>
+          </div>
+          <div class="z-metric">
+            <div class="z-num-row"><span class="z-icon">🏛️</span><span class="z-num" id="rep-zaha-hours">0</span></div>
+            <span class="z-lbl">ساعات زها</span>
+          </div>
+          <div class="z-metric">
+            <div class="z-num-row"><span class="z-icon">🫁</span><span class="z-num" id="rep-breathe-days">0</span></div>
+            <span class="z-lbl">أيام التنفس</span>
+          </div>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; font-weight:800; color: var(--black);">تفاصيل العادات (أنجزت / لم تنجز)</h3>
+        <div id="rep-habits-list"></div>
+        <button id="btn-export-pdf" class="btn btn-dark" style="margin-top:20px; width:100%; display:block; padding: 15px; background: var(--surface2); color: var(--text);" onclick="exportReportPDF()">تصدير التقرير كملف PDF 📥</button>
+      </div>
+    </div>
+
   </div> <!-- End Main -->
 
   <!-- MODALS -->
@@ -2198,8 +2410,16 @@
         </select>
       </div>
 
-      <div class="breathe-circle-wrap">
-        <div class="breathe-circle" id="breathe-circle">
+      <div class="breathe-circle-wrap" id="breathe-wrap">
+        <div class="breathe-flower" id="breathe-circle">
+          <div class="petal"></div>
+          <div class="petal"></div>
+          <div class="petal"></div>
+          <div class="petal"></div>
+          <div class="petal"></div>
+          <div class="petal"></div>
+        </div>
+        <div class="breathe-text-container">
           <div class="breathe-text" id="breathe-text">مستعد؟</div>
           <div class="breathe-timer" id="breathe-timer">--</div>
         </div>
@@ -2228,12 +2448,30 @@
     <div class="bnav-item" data-page="books" onclick="goPage(this)">📚<span>ورقي</span></div>
     <div class="bnav-item" data-page="reader" onclick="goPage(this)">📖<span>القارئ</span></div>
     <div class="bnav-item" data-page="zaha" onclick="goPage(this)">🏛️<span>زها</span></div>
+    <div class="bnav-item" data-page="focus" onclick="goPage(this)">🧠<span>التركيز</span></div>
+    <div class="bnav-item" data-page="reports" onclick="goPage(this)">📈<span>تقارير</span></div>
   </div>
 
   <div class="toast" id="toast">✨ <span id="toast-msg"></span></div>
 
   <script>
     const APP_VER = "v28_Production_Auth_Restored";
+
+    // --- Sound Effects ---
+    const sfxSoftUI = new Audio('sounds/SoftUI.aac');
+    const sfxRing = new Audio('sounds/Ring.aac');
+    const sfxAchievement = new Audio('sounds/Achievement.aac');
+    const sfxError = new Audio('sounds/Error.aac');
+    sfxError.onerror = () => { sfxError.src = 'sounds/Error.mp3'; };
+
+    function playSound(type) {
+      try {
+        if (type === 'soft') { sfxSoftUI.currentTime = 0; sfxSoftUI.play(); }
+        else if (type === 'ring') { sfxRing.currentTime = 0; sfxRing.play(); }
+        else if (type === 'achieve') { sfxAchievement.currentTime = 0; sfxAchievement.play(); }
+        else if (type === 'error') { sfxError.currentTime = 0; sfxError.play(); }
+      } catch(e) { console.warn('Sound error:', e); }
+    }
 
     window.onerror = function (message, source, lineno, colno, error) { console.error("Global Error Caught:", message); return false; };
 
@@ -2472,6 +2710,7 @@
       renderReaderLibrary();
       renderDashboard();
       if(typeof renderBreatheStatus === 'function') renderBreatheStatus();
+      if(typeof populateReportSelector === 'function') populateReportSelector();
     }
 
     function getStreak(habitId) {
@@ -2495,21 +2734,56 @@
 
     function toggleHabitDays(val, wrapId) { document.getElementById(wrapId).style.display = val === 'specific' ? 'block' : 'none'; }
     function saveHabit() { const id = document.getElementById('m-hab-id').value; const title = document.getElementById('m-hab-title').value.trim(); if (!title) { toast('أدخل اسم العادة'); return; } const freq = document.getElementById('m-hab-freq').value; let days = []; if (freq === 'specific') { document.querySelectorAll('#m-hab-days-wrap .day-btn.active').forEach(b => days.push(parseInt(b.dataset.day))); if (!days.length) { toast('اختر يوم واحد على الأقل'); return; } } if (id) { const h = state.habits.find(x => x.id == id); if (h) { h.title = title; h.start = document.getElementById('m-hab-start').value || today; h.end = document.getElementById('m-hab-end').value; h.freq = freq; h.days = days; h.goalId = document.getElementById('m-hab-goal').value; h.bookId = document.getElementById('m-hab-book').value; } } else { state.habits.push({ id: state.nextId++, title, start: document.getElementById('m-hab-start').value || today, end: document.getElementById('m-hab-end').value, freq, days, goalId: document.getElementById('m-hab-goal').value, bookId: document.getElementById('m-hab-book').value }); } saveState(); renderAll(); closeModal('habit'); toast('تم الحفظ ✓'); }
-    function delHabit(id) { if (confirm('تأكيد الحذف؟')) { state.habits = state.habits.filter(h => h.id !== id); saveState(); renderAll(); } }
-    function toggleHabit(id, bookId = null) { if (!state.history[today]) state.history[today] = []; if (state.history[today].includes(id)) { state.history[today] = state.history[today].filter(x => x !== id); } else { if (bookId) { const pagesInput = document.getElementById(`h-pages-${id}`); const b = state.books.find(x => x.id == bookId); if (pagesInput && pagesInput.value && b) { b.readPages = Math.min(b.readPages + parseInt(pagesInput.value), b.totalPages); toast(`تمت إضافة ${pagesInput.value} صفحة للكتاب ✓`); } } state.history[today].push(id); } saveState(); renderAll(); }
+    function delHabit(id) { if (confirm('تأكيد الحذف؟')) { state.habits = state.habits.filter(h => h.id != id); saveState(); renderAll(); } }
+    function toggleHabit(id, bookId = null) { 
+      if (!state.history[today]) state.history[today] = []; 
+      if (state.history[today].includes(id)) { 
+        state.history[today] = state.history[today].filter(x => x !== id); 
+      } else { 
+        if (bookId) { 
+          const pagesInput = document.getElementById(`h-pages-${id}`); 
+          const b = state.books.find(x => x.id == bookId); 
+          if (pagesInput && pagesInput.value && b) { 
+            b.readPages = Math.min(b.readPages + parseInt(pagesInput.value), b.totalPages); 
+            toast(`تمت إضافة ${pagesInput.value} صفحة للكتاب ✓`); 
+          } 
+        } 
+        state.history[today].push(id); 
+        if(typeof playSound === 'function') playSound('soft');
+        const active = getActiveHabitsForDate(today);
+        const doneCount = active.filter(h => state.history[today].includes(h.id)).length;
+        if (active.length > 0 && doneCount === active.length) {
+          if(typeof playSound === 'function') playSound('achieve');
+          toast('أتممت جميع عاداتك لليوم! عمل رائع! 🌟');
+        }
+      } 
+      saveState(); 
+      renderAll(); 
+    }
 
     function getActiveHabitsForDate(dateStr) { const d = new Date(dateStr); const dayIdx = d.getDay(); return state.habits.filter(h => { if (h.start && dateStr < h.start) return false; if (h.end && dateStr > h.end) return false; if (h.freq === 'specific' && !h.days.includes(dayIdx)) return false; return true; }); }
 
     function renderHabits() {
       const activeToday = getActiveHabitsForDate(today);
-      document.getElementById('habit-list').innerHTML = activeToday.length ? activeToday.map(h => {
+      let html = activeToday.length ? activeToday.map(h => {
         const done = (state.history[today] || []).includes(h.id);
         const gInfo = state.goals.find(g => g.id == h.goalId); const bInfo = h.bookId ? state.books.find(b => b.id == h.bookId) : null;
         let bInput = (bInfo && !done) ? `<input type="number" id="h-pages-${h.id}" class="inp" placeholder="كم صفحة؟" style="width:90px; padding:4px 8px; font-size:11px; height: 28px; margin-inline-end: 8px;" min="1" onclick="event.stopPropagation()">` : (bInfo && done) ? `<span style="font-size:11px; color:var(--primary); margin-inline-end: 8px; font-weight:bold;">تم التحديث ✓</span>` : '';
         const streak = getStreak(h.id);
         const streakHtml = streak > 0 ? `<span class="badge streak-badge">🔥 ${streak}</span>` : '';
         return `<div class="list-item ${done ? 'done' : ''}"><div class="check-btn ${done ? 'active' : ''}" onclick="toggleHabit(${h.id}, ${h.bookId ? `'${h.bookId}'` : 'null'})">${done ? '✓' : ''}</div>${bInput}<div class="item-info"><div class="item-title">${h.title}</div><div class="item-meta">${streakHtml}${gInfo ? `<span class="badge goal-badge">🎯 ${gInfo.title}</span>` : ''}${bInfo ? `<span class="badge" style="background:#e0f2fe; color:#0284c7">📖 ${bInfo.title}</span>` : ''}</div></div></div>`;
-      }).join('') : '<div class="empty">لا يوجد عادات اليوم</div>';
+      }).join('') : '';
+      
+      if (state.journal[today] && state.journal[today].breatheTime > 0) {
+        const totalSecs = state.journal[today].breatheTime;
+        const m = Math.floor(totalSecs / 60);
+        const s = totalSecs % 60;
+        const timeText = (m > 0 ? `${m} دقيقة و ` : '') + `${s} ثانية`;
+        html += `<div class="list-item done" style="border: 1px solid var(--primary);"><div class="check-btn active" style="background:var(--primary); color:white; border-color:var(--primary);">✓</div><div class="item-info"><div class="item-title">تمرين التنفس المنجز 🫁</div><div class="item-meta" style="color:var(--primary); font-weight:bold;">⏱ إجمالي الوقت: ${timeText}</div></div></div>`;
+      }
+      
+      if (!html) html = '<div class="empty">لا يوجد مهام اليوم</div>';
+      document.getElementById('habit-list').innerHTML = html;
       renderDailyMiniDash();
     }
 
@@ -2604,12 +2878,12 @@
 
     function getGoalProgressInfo(goalId) { const goal = state.goals.find(g => g.id == goalId); const linked = state.habits.filter(h => h.goalId == goalId); if (linked.length === 0) return { isAuto: false, pct: null, habitsTotal: 0 }; let exTot = 0; let dnTot = 0; let goalEndD = goal.endDate ? new Date(goal.endDate) : new Date(new Date().getFullYear(), 11, 31); linked.forEach(h => { let ex = 0; let dn = 0; let startD = new Date(h.start || today); let endD = h.end ? new Date(Math.min(new Date(h.end), goalEndD)) : goalEndD; let cur = new Date(startD); cur.setHours(0, 0, 0, 0); endD.setHours(0, 0, 0, 0); let daysInRange = 0; while (cur <= endD) { daysInRange++; if (h.freq === 'daily' || (h.freq === 'specific' && h.days.includes(cur.getDay()))) { ex++; } cur.setDate(cur.getDate() + 1); } if (h.freq === 'weekly') ex = Math.ceil(daysInRange / 7); if (h.freq === 'monthly') ex = Math.ceil(daysInRange / 30); if (h.freq === 'yearly') ex = Math.ceil(daysInRange / 365); Object.keys(state.history).forEach(d => { let histDate = new Date(d); if (histDate >= startD && histDate <= endD && state.history[d].includes(h.id)) dn++; }); exTot += ex; dnTot += dn; }); let pct = exTot > 0 ? Math.round((dnTot / exTot) * 100) : 0; return { isAuto: true, pct: Math.min(pct, 100), habitsTotal: linked.length }; }
     function saveGoal() { const id = document.getElementById('m-goal-id').value; const title = document.getElementById('m-goal-title').value.trim(); const endDate = document.getElementById('m-goal-end').value; if (!title) { toast('أدخل اسم الهدف'); return; } if (id) { const g = state.goals.find(x => x.id == id); if (g) { g.title = title; g.endDate = endDate; } } else { state.goals.push({ id: state.nextId++, title, endDate, progress: 0 }); } saveState(); populateGlobalSelectors(); renderAll(); closeModal('goal'); toast('تم الحفظ 🎯'); }
-    function delGoal(id) { if (confirm('تأكيد الحذف؟')) { state.goals = state.goals.filter(g => g.id !== id); state.habits.forEach(h => { if (h.goalId == id) h.goalId = ""; }); saveState(); populateGlobalSelectors(); renderAll(); } }
+    function delGoal(id) { if (confirm('تأكيد الحذف؟')) { state.goals = state.goals.filter(g => g.id != id); state.habits.forEach(h => { if (h.goalId == id) h.goalId = ""; }); saveState(); populateGlobalSelectors(); renderAll(); } }
     function updateGoalUI(id, val) { const g = state.goals.find(x => x.id === id); if (g && !getGoalProgressInfo(id).isAuto) { g.progress = parseInt(val); document.getElementById(`goal-pct-${id}`).textContent = g.progress + '%'; document.getElementById(`goal-fill-${id}`).style.width = g.progress + '%'; renderDashboard(); } }
     function saveGoalUI(id, val) { const g = state.goals.find(x => x.id === id); if (g && !getGoalProgressInfo(id).isAuto) { g.progress = parseInt(val); saveState(); renderDashboard(); } }
     function renderGoals() { document.getElementById('goal-list').innerHTML = state.goals.length ? state.goals.map(g => { const info = getGoalProgressInfo(g.id); const pct = info.isAuto ? info.pct : (g.progress || 0); const dateStr = g.endDate ? `📅 حتى: ${g.endDate}` : 'بدون تاريخ نهاية'; return `<div class="list-item" style="display:flex; flex-direction:column; align-items:stretch; padding: 20px; border-radius: 16px;"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;"><div style="display:flex; gap: 8px; align-items:center;"><button class="del-btn" style="width:32px; height:32px; border-radius:8px; background:var(--surface); border:1px solid var(--border-darker); font-size:12px;" onclick="delGoal(${g.id})">✕</button><button class="del-btn" style="width:32px; height:32px; border-radius:8px; background:var(--surface); border:1px solid var(--border-darker); font-size:12px;" onclick="openModal('goal', ${g.id})">✏️</button><div class="card-pct" style="margin:0; padding:6px 14px; font-size:14px; background:var(--primary-light); color:var(--primary); border-radius:20px; font-weight:800;">${pct}%</div></div><div style="text-align: right;"><div class="card-title" style="margin:0; font-size: 16px;">${g.title}</div></div></div><div class="prog-wrap" style="margin-top: 5px; margin-bottom: 8px;"><div class="prog-bg" style="height: 6px; background: var(--border-darker);"><div class="prog-fill" id="goal-fill-${g.id}" style="background:var(--primary); width:${pct}%;"></div></div></div><div style="display:flex; justify-content: space-between; align-items: center; margin-top: 8px;"><div style="font-size:10px; color:var(--text3); font-weight:700;">${dateStr}</div><div style="font-size:11px; color:var(--primary); font-weight:700;">${info.isAuto ? 'محسوبة تلقائياً 🔒' : 'تحديث يدوي ⚙️'}</div></div>${!info.isAuto ? `<input type="range" min="0" max="100" value="${pct}" style="width:100%; margin-top:15px;" oninput="updateGoalUI(${g.id}, this.value)" onchange="saveGoalUI(${g.id}, this.value)">` : ''}</div>`; }).join('') : '<div class="empty">لم تقم بإضافة أهداف</div>'; }
     function saveBook() { const id = document.getElementById('m-book-id').value; const title = document.getElementById('m-book-title').value.trim(); if (!title) { toast('أدخل اسم الكتاب'); return; } if (id) { const b = state.books.find(x => x.id == id); if (b) { b.title = title; b.totalPages = parseInt(document.getElementById('m-book-total').value) || 1; b.readPages = Math.min(parseInt(document.getElementById('m-book-read').value) || 0, b.totalPages); } } else { state.books.push({ id: state.nextId++, title, totalPages: parseInt(document.getElementById('m-book-total').value) || 1, readPages: Math.min(parseInt(document.getElementById('m-book-read').value) || 0, parseInt(document.getElementById('m-book-total').value) || 1) }); } saveState(); populateGlobalSelectors(); renderAll(); closeModal('book'); toast('تم حفظ الكتاب 📚'); }
-    function delBook(id) { if (confirm('تأكيد الحذف؟')) { state.books = state.books.filter(b => b.id !== id); state.habits.forEach(h => { if (h.bookId == id) h.bookId = ""; }); saveState(); populateGlobalSelectors(); renderAll(); } }
+    function delBook(id) { if (confirm('تأكيد الحذف؟')) { state.books = state.books.filter(b => b.id != id); state.habits.forEach(h => { if (h.bookId == id) h.bookId = ""; }); saveState(); populateGlobalSelectors(); renderAll(); } }
     function quickAddPagesInline(id) { const b = state.books.find(x => x.id === id); const val = parseInt(document.getElementById(`quick-add-book-${id}`).value); if (b && !isNaN(val) && val > 0) { b.readPages = Math.min(b.readPages + val, b.totalPages); saveState(); renderAll(); toast('تمت الإضافة ✓'); } }
     function renderBooks() { document.getElementById('books-list').innerHTML = state.books.length ? state.books.map(b => { const pct = Math.round((b.readPages / b.totalPages) * 100) || 0; const isDone = pct === 100; return `<div class="card-box"><div class="card-hdr"><div style="display:flex; align-items:center; gap:10px"><div style="font-size:24px">${isDone ? '🏆' : '📖'}</div><div><div class="card-title" style="text-decoration: ${isDone ? 'line-through' : 'none'}">${b.title}</div><div style="font-size:12px; color:var(--text3); font-family:'JetBrains Mono', monospace; margin-top:4px">${b.readPages} / ${b.totalPages} صفحة</div></div></div><div class="card-pct">${pct}%</div></div><div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" style="background:var(--primary);width:${pct}%"></div></div></div><div style="display:flex; justify-content:space-between; margin-top:20px; border-top: 1px solid var(--border); padding-top:16px;"><div style="display:flex; align-items:center; gap:8px;"><input type="number" id="quick-add-book-${b.id}" class="inp" placeholder="كم صفحة؟" style="width:100px; padding:8px 12px;" min="1" ${isDone ? 'disabled' : ''}><button class="btn btn-dark" style="padding:8px 16px;" onclick="quickAddPagesInline(${b.id})" ${isDone ? 'disabled' : ''}>+</button></div><div style="display:flex; gap:6px;"><button class="btn" style="background:var(--zaha); color:white; padding:0 12px; border-radius:8px; font-size:12px; box-shadow:none; height:32px;" onclick="goToReaderTab()">قراءة 📖</button><button class="del-btn" onclick="openModal('book', ${b.id})">✎</button><button class="del-btn" onclick="delBook(${b.id})">✕</button></div></div></div>`; }).join('') : '<div class="empty">مكتبتك فارغة. أضف كتابك الأول للبدء!</div>'; }
 
@@ -2648,7 +2922,7 @@
 
     function delZahaSession(id) {
       if (confirm('هل أنت متأكد من حذف هذه الحصة؟')) {
-        state.zahaSessions = state.zahaSessions.filter(z => z.id !== id);
+        state.zahaSessions = state.zahaSessions.filter(z => z.id != id);
         saveState();
         renderAll();
         toast('تم حذف الحصة');
@@ -2987,15 +3261,29 @@
         document.getElementById('breathe-desc').textContent = 'تنفس سريع (شهيق/زفير)، ثم حبس النفس بالنهاية.';
       }
       const circle = document.getElementById('breathe-circle');
-      circle.className = 'breathe-circle';
-      circle.style.transition = 'transform 0.5s ease-in-out';
+      circle.className = 'breathe-flower';
+      document.getElementById('breathe-wrap').style.setProperty('--dur', '0.5s');
       document.getElementById('btn-start-breathe').textContent = 'ابدأ ▶';
       document.getElementById('btn-start-breathe').onclick = startBreathe;
     }
 
+    let breatheSessionStart = 0;
+
     function stopBreathe() {
       if (breatheInterval) clearInterval(breatheInterval);
+      
+      if (breatheState !== 0 && breatheSessionStart > 0) {
+        let elapsed = Math.floor((Date.now() - breatheSessionStart) / 1000);
+        if (elapsed > 0) {
+          if (!state.journal[today]) state.journal[today] = {};
+          state.journal[today].breatheTime = (state.journal[today].breatheTime || 0) + elapsed;
+          saveState();
+          renderHabits();
+        }
+      }
+      
       breatheState = 0;
+      breatheSessionStart = 0;
     }
 
     function startBreathe() {
@@ -3003,6 +3291,7 @@
         resetBreathe();
         return;
       }
+      breatheSessionStart = Date.now();
       document.getElementById('btn-start-breathe').textContent = 'إيقاف ⏹';
       document.getElementById('btn-start-breathe').onclick = resetBreathe;
       runBreatheCycle();
@@ -3017,11 +3306,14 @@
       
       let duration = 0;
       
+      const wrap = document.getElementById('breathe-wrap');
+      
       if (breatheState === 1) { // Inhale
+        if(typeof playSound === 'function') playSound('ring');
         duration = breatheConfig.inhale;
         currentBreathePhase = 'شهيق...';
-        circle.className = 'breathe-circle inhale';
-        circle.style.transition = `transform ${duration}s ease-in-out, background 0.5s`;
+        wrap.style.setProperty('--dur', `${duration}s`);
+        circle.className = 'breathe-flower inhale';
       } else if (breatheState === 2) { // Hold 1
         duration = breatheConfig.hold1;
         if (duration === 0) {
@@ -3029,13 +3321,13 @@
           return runBreatheCycle();
         }
         currentBreathePhase = 'احبس...';
-        circle.className = 'breathe-circle hold';
-        circle.style.transition = `transform 0.5s ease-in-out, background 0.5s`;
+        wrap.style.setProperty('--dur', `0.5s`);
+        circle.className = 'breathe-flower hold';
       } else if (breatheState === 3) { // Exhale
         duration = breatheConfig.exhale;
         currentBreathePhase = 'زفير...';
-        circle.className = 'breathe-circle exhale';
-        circle.style.transition = `transform ${duration}s ease-in-out, background 0.5s`;
+        wrap.style.setProperty('--dur', `${duration}s`);
+        circle.className = 'breathe-flower exhale';
       } else if (breatheState === 4) { // Hold 2
         duration = breatheConfig.hold2;
         if (duration === 0) {
@@ -3046,8 +3338,8 @@
           return runBreatheCycle();
         }
         currentBreathePhase = 'احبس...';
-        circle.className = 'breathe-circle hold';
-        circle.style.transition = `transform 0.5s ease-in-out, background 0.5s`;
+        wrap.style.setProperty('--dur', `0.5s`);
+        circle.className = 'breathe-flower hold';
       }
       
       breatheTimeLeft = duration;
@@ -3080,6 +3372,7 @@
         state.journal[today].breatheDone = true;
         saveState();
         renderBreatheStatus();
+        if(typeof playSound === 'function') playSound('achieve');
         toast('رائع! لقد أتممت تمرين التنفس اليومي 🎉');
       }
     }
@@ -3093,6 +3386,988 @@
           statusEl.style.display = 'none';
         }
       }
+    }
+
+    // --- FOCUS GYM LOGIC ---
+    let focusTimer = null;
+    let stroopScore = 0;
+    let stroopTimeLeft = 60;
+    let currentStroopColor = '';
+
+    const focusColors = [
+      { name: 'أحمر', hex: '#ef4444' },
+      { name: 'أزرق', hex: '#3b82f6' },
+      { name: 'أخضر', hex: '#22c55e' },
+      { name: 'أصفر', hex: '#eab308' }
+    ];
+
+    function startStroopGame() {
+      document.getElementById('focus-menu').style.display = 'none';
+      document.getElementById('focus-visual-area').style.display = 'none';
+      document.getElementById('focus-stroop-area').style.display = 'block';
+      
+      stroopScore = 0;
+      stroopTimeLeft = 60;
+      document.getElementById('stroop-score').textContent = stroopScore;
+      document.getElementById('stroop-time').textContent = stroopTimeLeft;
+      
+      nextStroopWord();
+      
+      if (focusTimer) clearInterval(focusTimer);
+      focusTimer = setInterval(() => {
+        stroopTimeLeft--;
+        document.getElementById('stroop-time').textContent = stroopTimeLeft;
+        if (stroopTimeLeft <= 0) {
+          clearInterval(focusTimer);
+          alert(`انتهى الوقت! نقاطك: ${stroopScore}`);
+          startStroopGame();
+        }
+      }, 1000);
+    }
+
+    function nextStroopWord() {
+      const wordObj = focusColors[Math.floor(Math.random() * focusColors.length)];
+      const colorObj = focusColors[Math.floor(Math.random() * focusColors.length)];
+      
+      const wordEl = document.getElementById('stroop-word');
+      wordEl.textContent = wordObj.name;
+      wordEl.style.color = colorObj.hex;
+      currentStroopColor = colorObj.name;
+    }
+
+    function checkStroop(selectedColorName) {
+      if (stroopTimeLeft <= 0) return;
+      if (selectedColorName === currentStroopColor) {
+        stroopScore += 10;
+        if(typeof playSound === 'function') playSound('soft');
+      } else {
+        stroopScore = Math.max(0, stroopScore - 5);
+        if(typeof playSound === 'function') playSound('error');
+        document.getElementById('stroop-word').style.transform = 'translateX(10px)';
+        setTimeout(() => document.getElementById('stroop-word').style.transform = 'translateX(0)', 100);
+      }
+      document.getElementById('stroop-score').textContent = stroopScore;
+      nextStroopWord();
+    }
+
+    // Visual Search Logic
+    let visualLevel = 1;
+    let visualTimeLeft = 15;
+    
+    const visualPairs = [
+      { base: 'ب', target: 'ت' },
+      { base: 'ح', target: 'خ' },
+      { base: 'ص', target: 'ض' },
+      { base: 'O', target: 'Q' },
+      { base: '6', target: '9' },
+      { base: '🙂', target: '🙃' }
+    ];
+
+    function startVisualSearchGame() {
+      document.getElementById('focus-menu').style.display = 'none';
+      document.getElementById('focus-stroop-area').style.display = 'none';
+      document.getElementById('focus-visual-area').style.display = 'block';
+      
+      visualLevel = 1;
+      visualTimeLeft = 15;
+      document.getElementById('visual-level').textContent = visualLevel;
+      document.getElementById('visual-time').textContent = visualTimeLeft;
+      
+      nextVisualLevel();
+    }
+
+    function nextVisualLevel() {
+      if (focusTimer) clearInterval(focusTimer);
+      
+      const gridEl = document.getElementById('visual-grid');
+      gridEl.innerHTML = '';
+      
+      // Determine grid size based on level
+      let size = 25; // 5x5
+      if (visualLevel > 3) size = 36; // 6x6
+      if (visualLevel > 7) size = 49; // 7x7
+      
+      gridEl.style.gridTemplateColumns = `repeat(${Math.sqrt(size)}, 1fr)`;
+      
+      const pair = visualPairs[Math.floor(Math.random() * visualPairs.length)];
+      const targetIndex = Math.floor(Math.random() * size);
+      
+      for (let i = 0; i < size; i++) {
+        const div = document.createElement('div');
+        div.style.background = 'var(--surface)';
+        div.style.borderRadius = '8px';
+        div.style.padding = '15px 0';
+        div.style.cursor = 'pointer';
+        div.style.border = '1px solid var(--border-darker)';
+        
+        if (i === targetIndex) {
+          div.textContent = pair.target;
+          div.onclick = () => {
+            if(typeof playSound === 'function') playSound('soft');
+            visualLevel++;
+            visualTimeLeft = Math.max(5, 15 - Math.floor(visualLevel / 2)); // less time as level increases
+            document.getElementById('visual-level').textContent = visualLevel;
+            document.getElementById('visual-time').textContent = visualTimeLeft;
+            nextVisualLevel();
+          };
+        } else {
+          div.textContent = pair.base;
+          div.onclick = () => {
+            visualTimeLeft = Math.max(0, visualTimeLeft - 2); // penalty
+            document.getElementById('visual-time').textContent = visualTimeLeft;
+          };
+        }
+        gridEl.appendChild(div);
+      }
+      
+      focusTimer = setInterval(() => {
+        visualTimeLeft--;
+        document.getElementById('visual-time').textContent = visualTimeLeft;
+        if (visualTimeLeft <= 0) {
+          clearInterval(focusTimer);
+          alert(`انتهى الوقت! وصلت للمستوى: ${visualLevel}`);
+          startVisualSearchGame();
+        }
+      }, 1000);
+    }
+
+    // Slide Logic
+    let slideMoves = 0;
+    let slideTime = 0;
+    let slideState = [];
+    let slideTarget = [];
+    let slideInterval = null;
+    const slideColors = ['#ef4444', '#ef4444', '#3b82f6', '#3b82f6', '#22c55e', '#22c55e', '#eab308', '#eab308', null];
+
+    function startSlideGame() {
+      document.getElementById('focus-menu').style.display = 'none';
+      document.getElementById('focus-stroop-area').style.display = 'none';
+      document.getElementById('focus-visual-area').style.display = 'none';
+      document.getElementById('focus-wordsearch-area').style.display = 'none';
+      document.getElementById('focus-slide-area').style.display = 'block';
+
+      slideMoves = 0;
+      slideTime = 0;
+      document.getElementById('slide-moves').textContent = slideMoves;
+      document.getElementById('slide-time').textContent = "00:00";
+
+      // Generate target
+      slideTarget = [...slideColors].sort(() => Math.random() - 0.5);
+      
+      // Render target
+      const targetEl = document.getElementById('slide-target');
+      targetEl.innerHTML = '';
+      slideTarget.forEach(c => {
+        const div = document.createElement('div');
+        div.style.width = '30px'; div.style.height = '30px'; div.style.borderRadius = '4px';
+        if(c) div.style.background = c;
+        else div.style.background = 'transparent';
+        targetEl.appendChild(div);
+      });
+
+      // Generate solvable state by reverse moves from target
+      slideState = [...slideTarget];
+      let emptyIdx = slideState.indexOf(null);
+      for(let i=0; i<100; i++) {
+        const row = Math.floor(emptyIdx / 3);
+        const col = emptyIdx % 3;
+        const neighbors = [];
+        if(row > 0) neighbors.push(emptyIdx - 3);
+        if(row < 2) neighbors.push(emptyIdx + 3);
+        if(col > 0) neighbors.push(emptyIdx - 1);
+        if(col < 2) neighbors.push(emptyIdx + 1);
+        const swapIdx = neighbors[Math.floor(Math.random() * neighbors.length)];
+        slideState[emptyIdx] = slideState[swapIdx];
+        slideState[swapIdx] = null;
+        emptyIdx = swapIdx;
+      }
+
+      renderSlideGrid();
+
+      if(slideInterval) clearInterval(slideInterval);
+      slideInterval = setInterval(() => {
+        slideTime++;
+        const m = Math.floor(slideTime / 60).toString().padStart(2, '0');
+        const s = (slideTime % 60).toString().padStart(2, '0');
+        document.getElementById('slide-time').textContent = `${m}:${s}`;
+      }, 1000);
+    }
+
+    function renderSlideGrid() {
+      const gridEl = document.getElementById('slide-grid');
+      gridEl.innerHTML = '';
+      slideState.forEach((c, idx) => {
+        const div = document.createElement('div');
+        div.style.width = '100%'; div.style.height = '100%';
+        div.style.borderRadius = '50%'; div.style.cursor = 'pointer';
+        div.style.transition = 'all 0.2s';
+        if(c) {
+          div.style.background = c;
+          div.style.boxShadow = 'inset 0 -4px 0 rgba(0,0,0,0.2), 0 4px 6px rgba(0,0,0,0.1)';
+        } else {
+          div.style.background = 'transparent';
+          div.style.cursor = 'default';
+        }
+        div.onclick = () => moveSlideTile(idx);
+        gridEl.appendChild(div);
+      });
+    }
+
+    function moveSlideTile(idx) {
+      if(!slideState[idx]) return;
+      const emptyIdx = slideState.indexOf(null);
+      const r1 = Math.floor(idx / 3), c1 = idx % 3;
+      const r2 = Math.floor(emptyIdx / 3), c2 = emptyIdx % 3;
+      if(Math.abs(r1-r2) + Math.abs(c1-c2) === 1) { // adjacent
+        slideState[emptyIdx] = slideState[idx];
+        slideState[idx] = null;
+        slideMoves++;
+        document.getElementById('slide-moves').textContent = slideMoves;
+        if(typeof playSound === 'function') playSound('soft');
+        renderSlideGrid();
+        checkSlideWin();
+      }
+    }
+
+    function checkSlideWin() {
+      if(JSON.stringify(slideState) === JSON.stringify(slideTarget)) {
+        clearInterval(slideInterval);
+        if(typeof playSound === 'function') playSound('achieve');
+        setTimeout(() => {
+          alert(`تهانينا! حليت اللغز بـ ${slideMoves} حركات خلال ${document.getElementById('slide-time').textContent}`);
+          startSlideGame();
+        }, 300);
+      }
+    }
+
+    // Word Search Logic
+    const ALL_WS_WORDS = [
+      'حديقة','ممرضة','فلاح','زهرة','ورد','ناقة','دراجة','بيضة','تفاح','برتقال',
+      'طبيب','مدرسة','جامعة','كتاب','قلم','دفتر','شمس','قمر','نجوم','كوكب',
+      'سماء','أرض','بحر','نهر','جبل','شجرة','سيارة','طائرة','قطار','سفينة',
+      'باب','نافذة','جدار','سقف','طاولة','كرسي','مصباح','هاتف','حاسوب','ساعة',
+      'صلاة','قرآن','دعاء','مسجد','صيام','زكاة','حج','عمرة','صدقة','إيمان',
+      'صبر','شكر','توكل','يقين','نجاح','أمل','طموح','إرادة','عزيمة','إصرار',
+      'أسد','نمر','فهد','ذئب','ثعلب','غزال','زرافة','فيل','قرد','أرنب',
+      'حمامة','عصفور','نسر','صقر','بومة','غراب','بطة','دجاجة','ديك','طاووس',
+      'ذهب','فضة','نحاس','حديد','خشب','زجاج','ورق','قماش','حرير','قطن',
+      'أبيض','أسود','أحمر','أزرق','أخضر','أصفر','برتقالي','بنفسجي','وردي','بني'
+    ];
+    const WS_PASSWORDS = ['انت بطل', 'استمر', 'عمل رائع', 'لا تستسلم', 'ممتاز', 'احسنت', 'تفكير سليم', 'تركيز عالي'];
+
+    let wsWords = [];
+    let wsPassword = "";
+    let rawPassword = "";
+    let wsPasswordCells = [];
+    let wsGrid = [];
+    let wsSize = 10;
+    let wsFound = [];
+    let wsTime = 0;
+    let wsInterval = null;
+    let isDragging = false;
+    let startCell = null;
+    let selectedCells = [];
+    
+    function startWordSearchGame() {
+      document.getElementById('focus-menu').style.display = 'none';
+      document.getElementById('focus-stroop-area').style.display = 'none';
+      document.getElementById('focus-visual-area').style.display = 'none';
+      document.getElementById('focus-slide-area').style.display = 'none';
+      document.getElementById('focus-wordsearch-area').style.display = 'block';
+
+      wsTime = 0;
+      wsFound = [];
+      document.getElementById('ws-remaining').textContent = 10; // We always pick 10 words
+      document.getElementById('ws-time').textContent = "00:00";
+      
+      generateWordSearchGrid();
+      renderWordSearch();
+
+      if(wsInterval) clearInterval(wsInterval);
+      wsInterval = setInterval(() => {
+        wsTime++;
+        const m = Math.floor(wsTime / 60).toString().padStart(2, '0');
+        const s = (wsTime % 60).toString().padStart(2, '0');
+        document.getElementById('ws-time').textContent = `${m}:${s}`;
+      }, 1000);
+    }
+
+    function generateWordSearchGrid() {
+      wsGrid = Array(wsSize).fill(null).map(() => Array(wsSize).fill(''));
+      const letters = "ابتثجحخدذرزسشصضطظعغفقكلمنهوي";
+      
+      const shuffledWords = [...ALL_WS_WORDS].sort(() => 0.5 - Math.random());
+      wsWords = shuffledWords.slice(0, 10);
+      
+      rawPassword = WS_PASSWORDS[Math.floor(Math.random() * WS_PASSWORDS.length)];
+      wsPassword = rawPassword.replace(/\s/g, ''); // Remove spaces
+      wsPasswordCells = [];
+
+      const DIRS = [
+        [0, 1], [0, -1], [1, 0], [-1, 0], [1, 1], [1, -1], [-1, 1], [-1, -1]
+      ];
+      
+      wsWords.forEach(word => {
+        let placed = false;
+        let attempts = 0;
+        while(!placed && attempts < 200) {
+          attempts++;
+          const dir = DIRS[Math.floor(Math.random() * DIRS.length)];
+          const row = Math.floor(Math.random() * wsSize);
+          const col = Math.floor(Math.random() * wsSize);
+          let canPlace = true;
+          
+          for(let i=0; i<word.length; i++) {
+            const r = row + (dir[0] * i);
+            const c = col + (dir[1] * i);
+            if(r < 0 || r >= wsSize || c < 0 || c >= wsSize || (wsGrid[r][c] !== '' && wsGrid[r][c] !== word[i])) {
+              canPlace = false; break;
+            }
+          }
+          
+          if(canPlace) {
+            for(let i=0; i<word.length; i++) {
+              const r = row + (dir[0] * i);
+              const c = col + (dir[1] * i);
+              wsGrid[r][c] = word[i];
+            }
+            placed = true;
+          }
+        }
+      });
+      
+      let emptyCells = [];
+      for(let r=0; r<wsSize; r++) {
+        for(let c=wsSize-1; c>=0; c--) {
+          if(wsGrid[r][c] === '') emptyCells.push({r, c});
+        }
+      }
+      
+      if(emptyCells.length >= wsPassword.length) {
+        const step = Math.floor(emptyCells.length / wsPassword.length);
+        for(let i=0; i<wsPassword.length; i++) {
+          const cell = emptyCells[i * step];
+          wsGrid[cell.r][cell.c] = wsPassword[i];
+          wsPasswordCells.push(cell);
+        }
+      }
+      
+      for(let r=0; r<wsSize; r++) {
+        for(let c=0; c<wsSize; c++) {
+          if(wsGrid[r][c] === '') wsGrid[r][c] = letters[Math.floor(Math.random() * letters.length)];
+        }
+      }
+    }
+
+    function renderWordSearch() {
+      const gridEl = document.getElementById('ws-grid');
+      gridEl.style.gridTemplateColumns = `repeat(${wsSize}, 30px)`;
+      gridEl.style.gridTemplateRows = `repeat(${wsSize}, 30px)`;
+      gridEl.innerHTML = '';
+      
+      for(let r=0; r<wsSize; r++) {
+        for(let c=0; c<wsSize; c++) {
+          const cell = document.createElement('div');
+          cell.dataset.r = r; cell.dataset.c = c;
+          cell.textContent = wsGrid[r][c];
+          cell.style.display = 'flex'; cell.style.alignItems = 'center'; cell.style.justifyContent = 'center';
+          cell.style.fontSize = '18px'; cell.style.fontWeight = 'bold'; cell.style.cursor = 'pointer';
+          cell.style.borderRadius = '4px'; cell.style.background = 'var(--surface)';
+          cell.style.transition = 'all 0.3s ease';
+          cell.className = 'ws-cell';
+          gridEl.appendChild(cell);
+        }
+      }
+
+      gridEl.onmousedown = (e) => startWSDrag(e.target);
+      gridEl.ontouchstart = (e) => {
+        if(e.touches.length > 0) startWSDrag(document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY));
+      };
+      
+      document.onmousemove = (e) => updateWSDrag(e.target);
+      document.ontouchmove = (e) => {
+        if(isDragging && e.cancelable) e.preventDefault();
+        if(e.touches.length > 0) updateWSDrag(document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY));
+      };
+      
+      document.onmouseup = endWSDrag;
+      document.ontouchend = endWSDrag;
+
+      const wordsEl = document.getElementById('ws-words');
+      wordsEl.innerHTML = '';
+      wsWords.forEach(w => {
+        const div = document.createElement('div');
+        div.textContent = w;
+        div.id = `ws-word-${w}`;
+        div.style.padding = '4px 8px'; div.style.background = 'var(--surface)'; div.style.borderRadius = '4px';
+        if(wsFound.includes(w)) {
+          div.style.textDecoration = 'line-through'; div.style.color = 'var(--text3)';
+        }
+        wordsEl.appendChild(div);
+      });
+    }
+
+    function startWSDrag(el) {
+      if(!el || !el.classList || !el.classList.contains('ws-cell')) return;
+      isDragging = true;
+      startCell = el;
+      selectedCells = [el];
+      highlightCells();
+    }
+
+    function updateWSDrag(el) {
+      if(!isDragging || !el || !el.classList || !el.classList.contains('ws-cell') || !startCell) return;
+      
+      const r1 = parseInt(startCell.dataset.r), c1 = parseInt(startCell.dataset.c);
+      const r2 = parseInt(el.dataset.r), c2 = parseInt(el.dataset.c);
+      
+      const dr = Math.sign(r2 - r1);
+      const dc = Math.sign(c2 - c1);
+      const dist = Math.max(Math.abs(r2 - r1), Math.abs(c2 - c1));
+      
+      if(dr === 0 || dc === 0 || Math.abs(r2-r1) === Math.abs(c2-c1)) {
+        selectedCells = [];
+        for(let i=0; i<=dist; i++) {
+          const rr = r1 + dr * i;
+          const cc = c1 + dc * i;
+          const target = document.querySelector(`.ws-cell[data-r="${rr}"][data-c="${cc}"]`);
+          if(target) selectedCells.push(target);
+        }
+        highlightCells();
+      }
+    }
+
+    function endWSDrag() {
+      if(!isDragging) return;
+      isDragging = false;
+      
+      const word = selectedCells.map(c => c.textContent).join('');
+      const wordRev = selectedCells.map(c => c.textContent).reverse().join('');
+      
+      let foundWord = null;
+      if(wsWords.includes(word) && !wsFound.includes(word)) foundWord = word;
+      else if(wsWords.includes(wordRev) && !wsFound.includes(wordRev)) foundWord = wordRev;
+      
+      if(foundWord) {
+        wsFound.push(foundWord);
+        selectedCells.forEach(c => {
+          c.style.background = 'var(--primary)';
+          c.style.color = 'white';
+          c.classList.add('found');
+        });
+        document.getElementById(`ws-word-${foundWord}`).style.textDecoration = 'line-through';
+        document.getElementById(`ws-word-${foundWord}`).style.color = 'var(--text3)';
+        document.getElementById('ws-remaining').textContent = wsWords.length - wsFound.length;
+        if(typeof playSound === 'function') playSound('soft');
+        
+        if(wsFound.length === wsWords.length) {
+          clearInterval(wsInterval);
+          if(typeof playSound === 'function') playSound('achieve');
+          
+          document.querySelectorAll('.ws-cell').forEach(c => {
+             const r = parseInt(c.dataset.r);
+             const col = parseInt(c.dataset.c);
+             const isPassword = wsPasswordCells.some(pc => pc.r === r && pc.c === col);
+             if(isPassword) {
+               c.style.background = '#f59e0b';
+               c.style.color = 'white';
+             } else {
+               c.style.opacity = '0.1';
+             }
+          });
+
+          setTimeout(() => {
+            alert(`تهانينا! اكتشفت كلمة السر: "${rawPassword}"\nالوقت: ${document.getElementById('ws-time').textContent}`);
+            startWordSearchGame();
+          }, 2000);
+        }
+      }
+      
+      selectedCells = [];
+      highlightCells();
+    }
+
+    function highlightCells() {
+      document.querySelectorAll('.ws-cell:not(.found)').forEach(c => {
+        c.style.background = 'var(--surface)'; c.style.color = 'var(--text)';
+      });
+      selectedCells.forEach(c => {
+        if(!c.classList.contains('found')) {
+          c.style.background = '#d1d5db';
+        }
+      });
+    }
+
+    // Infinity Path Logic
+    let infTime = 0;
+    let infLoops = 0;
+    let infInterval = null;
+    let infCurrentNode = 0;
+    let infNodesData = [];
+    
+    // Path coordinates mapping roughly to the SVG infinity path (viewBox 0 0 100 50)
+    const infPathCoords = [
+      {x: 50, y: 25}, // Center
+      {x: 65, y: 10},  // TR1
+      {x: 82, y: 10},  // TR2
+      {x: 95, y: 25}, // R
+      {x: 82, y: 40}, // BR2
+      {x: 65, y: 40}, // BR1
+      {x: 50, y: 25}, // Center
+      {x: 35, y: 40}, // BL1
+      {x: 18, y: 40}, // BL2
+      {x: 5,  y: 25}, // L
+      {x: 18, y: 10},  // TL2
+      {x: 35, y: 10}   // TL1
+    ];
+
+    function startInfinityGame() {
+      document.getElementById('focus-menu').style.display = 'none';
+      document.getElementById('focus-stroop-area').style.display = 'none';
+      document.getElementById('focus-visual-area').style.display = 'none';
+      document.getElementById('focus-slide-area').style.display = 'none';
+      document.getElementById('focus-wordsearch-area').style.display = 'none';
+      document.getElementById('focus-infinity-area').style.display = 'block';
+
+      infTime = 0;
+      infLoops = 0;
+      infCurrentNode = 0;
+      document.getElementById('inf-loops').textContent = "0 / 3";
+      document.getElementById('inf-time').textContent = "00:00";
+      
+      generateInfinityPath();
+      
+      if(infInterval) clearInterval(infInterval);
+      infInterval = setInterval(() => {
+        infTime++;
+        const m = Math.floor(infTime / 60).toString().padStart(2, '0');
+        const s = (infTime % 60).toString().padStart(2, '0');
+        document.getElementById('inf-time').textContent = `${m}:${s}`;
+      }, 1000);
+    }
+
+    function generateInfinityPath() {
+      const colors = ['#ef4444', '#3b82f6', '#22c55e', '#eab308', '#ec4899', '#8b5cf6'];
+      infNodesData = [];
+      const nodesEl = document.getElementById('inf-nodes');
+      nodesEl.innerHTML = '';
+      
+      infPathCoords.forEach((coord, idx) => {
+        const num = Math.floor(Math.random() * 6) + 1;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        infNodesData.push({num, color});
+        
+        const dot = document.createElement('div');
+        dot.id = `inf-node-${idx}`;
+        dot.textContent = num;
+        dot.style.position = 'absolute';
+        dot.style.left = `calc(${coord.x}% - 14px)`; 
+        dot.style.top = `calc(${coord.y * 2}% - 14px)`; // Map Y 0-50 to 0-100%
+        dot.style.width = '28px';
+        dot.style.height = '28px';
+        dot.style.borderRadius = '50%';
+        dot.style.background = 'var(--surface)';
+        dot.style.border = `3px solid ${color}`;
+        dot.style.color = 'var(--text)';
+        dot.style.display = 'flex';
+        dot.style.alignItems = 'center';
+        dot.style.justifyContent = 'center';
+        dot.style.fontWeight = 'bold';
+        dot.style.fontSize = '14px';
+        dot.style.transition = 'all 0.2s ease';
+        dot.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+        nodesEl.appendChild(dot);
+      });
+
+      const diceEl = document.getElementById('inf-dice');
+      diceEl.innerHTML = '';
+      const diceChars = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+      for(let i=1; i<=6; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-dark';
+        btn.style.background = 'var(--surface)';
+        btn.style.color = 'var(--primary)';
+        btn.style.border = '2px solid var(--border-darker)';
+        btn.style.padding = '5px 10px';
+        btn.style.display = 'flex';
+        btn.style.flexDirection = 'column';
+        btn.style.alignItems = 'center';
+        
+        btn.innerHTML = `<span style="font-size: 30px; line-height: 1;">${diceChars[i-1]}</span><span style="font-size:14px; font-weight:bold;">${i}</span>`;
+        btn.onclick = () => handleInfClick(i);
+        diceEl.appendChild(btn);
+      }
+      
+      updateInfHighlight();
+    }
+    
+    function updateInfHighlight() {
+      infPathCoords.forEach((_, idx) => {
+        const dot = document.getElementById(`inf-node-${idx}`);
+        if(idx === infCurrentNode) {
+          dot.style.background = infNodesData[idx].color;
+          dot.style.color = 'white';
+          dot.style.transform = 'scale(1.3)';
+          dot.style.zIndex = '10';
+        } else {
+          dot.style.background = 'var(--surface)';
+          dot.style.color = 'var(--text)';
+          dot.style.transform = 'scale(1)';
+          dot.style.zIndex = '1';
+        }
+      });
+    }
+    
+    function handleInfClick(num) {
+      if(infNodesData[infCurrentNode].num === num) {
+        if(typeof playSound === 'function') playSound('soft');
+        infCurrentNode++;
+        if(infCurrentNode >= infPathCoords.length) {
+          infCurrentNode = 0;
+          infLoops++;
+          document.getElementById('inf-loops').textContent = `${infLoops} / 3`;
+          if(infLoops >= 3) {
+            clearInterval(infInterval);
+            if(typeof playSound === 'function') playSound('achieve');
+            setTimeout(() => {
+              alert(`تهانينا! أكملت 3 دورات في مسار الانتباه خلال ${document.getElementById('inf-time').textContent}`);
+              startInfinityGame();
+            }, 300);
+            return;
+          }
+          // Regenerate colors and numbers for next loop to keep it challenging
+          generateInfinityPath(); 
+        } else {
+          updateInfHighlight();
+        }
+      } else {
+        infTime += 2; // Penalty
+        if(typeof playSound === 'function') playSound('error');
+        const m = Math.floor(infTime / 60).toString().padStart(2, '0');
+        const s = (infTime % 60).toString().padStart(2, '0');
+        document.getElementById('inf-time').textContent = `${m}:${s}`;
+        
+        const dot = document.getElementById(`inf-node-${infCurrentNode}`);
+        dot.style.transform = 'scale(1.3) translateX(5px)';
+        setTimeout(() => dot.style.transform = 'scale(1.3) translateX(0)', 150);
+      }
+    }
+
+    // Memory Connect Logic
+    const mcColors = {
+      1: '#ef4444', 2: '#eab308', 3: '#22c55e', 4: '#f97316',
+      5: '#a855f7', 6: '#06b6d4', 7: '#ec4899', 8: '#1d4ed8', 9: '#71717a'
+    };
+    let mcLevel = 1;
+    let mcScore = 0;
+    let mcSequence = [];
+    let mcUserSequence = [];
+    let mcNodesList = []; 
+    
+    function startMemoryConnectGame() {
+      document.getElementById('focus-menu').style.display = 'none';
+      document.getElementById('focus-stroop-area').style.display = 'none';
+      document.getElementById('focus-visual-area').style.display = 'none';
+      document.getElementById('focus-slide-area').style.display = 'none';
+      document.getElementById('focus-wordsearch-area').style.display = 'none';
+      document.getElementById('focus-infinity-area').style.display = 'none';
+      document.getElementById('focus-memory-area').style.display = 'block';
+
+      mcLevel = 1;
+      mcScore = 0;
+      updateMCScoreboard();
+      generateMCLegend();
+      nextMCLevel();
+    }
+    
+    function updateMCScoreboard() {
+      document.getElementById('mc-level').textContent = mcLevel;
+      document.getElementById('mc-score').textContent = mcScore;
+    }
+    
+    function generateMCLegend() {
+      const legendEl = document.getElementById('mc-legend');
+      legendEl.innerHTML = '';
+      for(let i=1; i<=9; i++) {
+        const item = document.createElement('div');
+        item.style.display = 'flex'; item.style.alignItems = 'center'; item.style.gap = '4px';
+        const circle = document.createElement('div');
+        circle.style.width = '16px'; circle.style.height = '16px'; circle.style.borderRadius = '50%';
+        circle.style.background = mcColors[i];
+        const num = document.createElement('div');
+        num.textContent = i; num.style.fontWeight = 'bold'; num.style.fontSize = '12px';
+        num.style.color = 'var(--text)';
+        item.appendChild(circle); item.appendChild(num);
+        legendEl.appendChild(item);
+      }
+    }
+    
+    function nextMCLevel() {
+      mcUserSequence = [];
+      const nodesEl = document.getElementById('mc-nodes');
+      nodesEl.innerHTML = '';
+      document.getElementById('mc-lines').innerHTML = '';
+      
+      const radius = 100;
+      const center = 125;
+      mcNodesList = [];
+      const nums = [1,2,3,4,5,6,7,8,9].sort(() => 0.5 - Math.random());
+      
+      for(let i=0; i<9; i++) {
+        const angle = (i * 40 - 90) * (Math.PI / 180);
+        const x = center + radius * Math.cos(angle);
+        const y = center + radius * Math.sin(angle);
+        const num = nums[i];
+        mcNodesList.push({num, x, y});
+        
+        const dot = document.createElement('div');
+        dot.style.position = 'absolute';
+        dot.style.left = `${x - 20}px`;
+        dot.style.top = `${y - 20}px`;
+        dot.style.width = '40px';
+        dot.style.height = '40px';
+        dot.style.borderRadius = '50%';
+        dot.style.background = mcColors[num];
+        dot.style.cursor = 'pointer';
+        dot.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+        dot.style.transition = 'transform 0.1s';
+        dot.onclick = () => handleMCClick(num);
+        nodesEl.appendChild(dot);
+      }
+      
+      const seqLength = Math.min(4 + Math.floor(mcLevel / 2), 9);
+      const possibleNums = [...nums].sort(() => 0.5 - Math.random());
+      mcSequence = possibleNums.slice(0, seqLength);
+      
+      document.getElementById('mc-sequence').textContent = mcSequence.join(' - ');
+    }
+    
+    function handleMCClick(num) {
+      if(mcSequence[mcUserSequence.length] === num) {
+        // Correct
+        mcUserSequence.push(num);
+        if(typeof playSound === 'function') playSound('soft');
+        drawMCLines();
+        
+        if(mcUserSequence.length === mcSequence.length) {
+          mcScore += mcLevel * 10;
+          mcLevel++;
+          updateMCScoreboard();
+          if(typeof playSound === 'function') playSound('achieve');
+          setTimeout(() => { nextMCLevel(); }, 800);
+        }
+      } else {
+        // Wrong
+        if(typeof playSound === 'function') playSound('error');
+        mcUserSequence = [];
+        drawMCLines();
+        
+        const seqEl = document.getElementById('mc-sequence');
+        seqEl.style.transform = 'translateX(10px)';
+        seqEl.style.color = '#ef4444';
+        setTimeout(() => {
+          seqEl.style.transform = 'translateX(-10px)';
+          setTimeout(() => {
+            seqEl.style.transform = 'translateX(0)';
+            seqEl.style.color = 'var(--black)';
+          }, 100);
+        }, 100);
+      }
+    }
+    
+    function drawMCLines() {
+      const svg = document.getElementById('mc-lines');
+      svg.innerHTML = '';
+      if(mcUserSequence.length < 2) return;
+      
+      let pathD = "";
+      for(let i=0; i<mcUserSequence.length; i++) {
+        const num = mcUserSequence[i];
+        const node = mcNodesList.find(n => n.num === num);
+        if(i === 0) pathD += `M ${node.x} ${node.y} `;
+        else pathD += `L ${node.x} ${node.y} `;
+      }
+      
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("d", pathD);
+      path.setAttribute("fill", "none");
+      path.setAttribute("stroke", "var(--text)");
+      path.setAttribute("stroke-width", "3");
+      path.setAttribute("stroke-dasharray", "5,5");
+      svg.appendChild(path);
+    }
+
+    function quitFocusGame() {
+      if (focusTimer) clearInterval(focusTimer);
+      if (slideInterval) clearInterval(slideInterval);
+      if (wsInterval) clearInterval(wsInterval);
+      if (infInterval) clearInterval(infInterval);
+      document.getElementById('focus-stroop-area').style.display = 'none';
+      document.getElementById('focus-visual-area').style.display = 'none';
+      document.getElementById('focus-slide-area').style.display = 'none';
+      document.getElementById('focus-wordsearch-area').style.display = 'none';
+      document.getElementById('focus-infinity-area').style.display = 'none';
+      document.getElementById('focus-memory-area').style.display = 'none';
+      document.getElementById('focus-menu').style.display = 'block';
+    }
+
+    // --- Reports Logic ---
+    function populateReportSelector() {
+      const sel = document.getElementById('report-period');
+      if (!sel || sel.options.length > 0) return; // already populated
+      
+      const options = [];
+      const now = new Date();
+      
+      // Last 12 months individually
+      for (let i = 0; i < 12; i++) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const m = d.getMonth() + 1;
+        const y = d.getFullYear();
+        const str = d.toLocaleDateString('ar-JO', { month: 'long', year: 'numeric' });
+        options.push(`<option value="month_${y}_${m}">شهر ${m} / ${y} (${str})</option>`);
+      }
+      
+      // Periods
+      options.push('<option value="period_3">آخر 3 أشهر</option>');
+      options.push('<option value="period_6">آخر 6 أشهر</option>');
+      options.push('<option value="period_12">آخر سنة (12 شهر)</option>');
+      
+      sel.innerHTML = options.join('');
+    }
+
+    function generateReport() {
+      const val = document.getElementById('report-period').value;
+      let startD, endD;
+      const now = new Date();
+      
+      if (val.startsWith('month_')) {
+        const parts = val.split('_');
+        const y = parseInt(parts[1]);
+        const m = parseInt(parts[2]);
+        startD = new Date(y, m - 1, 1);
+        endD = new Date(y, m, 0); // last day of month
+      } else if (val.startsWith('period_')) {
+        const months = parseInt(val.split('_')[1]);
+        startD = new Date(now.getFullYear(), now.getMonth() - months + 1, 1);
+        endD = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      }
+      
+      startD.setHours(0,0,0,0);
+      endD.setHours(23,59,59,999);
+      
+      let totalExpected = 0;
+      let totalDone = 0;
+      const habitsReport = [];
+      
+      // 1. Calculate Habits
+      state.habits.forEach(h => {
+        let expected = 0;
+        let done = 0;
+        let hStart = new Date(h.start || today);
+        let hEnd = h.end ? new Date(Math.min(endD, new Date(h.end))) : endD;
+        
+        let actualStart = new Date(Math.max(startD, hStart));
+        
+        if (actualStart <= hEnd) {
+          let cur = new Date(actualStart);
+          let daysInRange = 0;
+          while (cur <= hEnd) {
+            daysInRange++;
+            let dStr = cur.toLocaleDateString('en-CA');
+            if (h.freq === 'daily' || (h.freq === 'specific' && h.days.includes(cur.getDay()))) {
+              expected++;
+            }
+            if (state.history[dStr] && state.history[dStr].includes(h.id)) {
+              done++;
+            }
+            cur.setDate(cur.getDate() + 1);
+          }
+          if (h.freq === 'weekly') expected = Math.ceil(daysInRange / 7);
+          if (h.freq === 'monthly') expected = Math.ceil(daysInRange / 30);
+          if (h.freq === 'yearly') expected = Math.ceil(daysInRange / 365);
+        }
+        
+        if (expected > 0) {
+          totalExpected += expected;
+          totalDone += done;
+          habitsReport.push({
+            title: h.title,
+            expected: expected,
+            done: done,
+            pct: Math.min(Math.round((done / expected) * 100), 100)
+          });
+        }
+      });
+      
+      const overallPct = totalExpected === 0 ? 0 : Math.round((totalDone / totalExpected) * 100);
+      document.getElementById('rep-habits-pct').textContent = overallPct + '%';
+      
+      // 2. Calculate Zaha Hours
+      let zahaHours = 0;
+      state.zahaSessions.forEach(z => {
+        const d = new Date(z.date);
+        if (d >= startD && d <= endD) {
+          zahaHours += z.hours;
+        }
+      });
+      document.getElementById('rep-zaha-hours').textContent = zahaHours;
+      
+      // 3. Calculate Breathing Days
+      let breatheDays = 0;
+      for (const [dStr, jData] of Object.entries(state.journal)) {
+        const d = new Date(dStr);
+        if (d >= startD && d <= endD && jData.breatheDone) {
+          breatheDays++;
+        }
+      }
+      document.getElementById('rep-breathe-days').textContent = breatheDays;
+      
+      // 4. Render Habits List
+      habitsReport.sort((a, b) => b.pct - a.pct); // Sort by percentage desc
+      
+      const listHtml = habitsReport.length ? habitsReport.map(h => {
+        const isGood = h.pct >= 70;
+        const isBad = h.pct <= 30;
+        const color = isGood ? 'var(--primary)' : (isBad ? '#ef4444' : '#eab308');
+        return `
+          <div class="list-item" style="display:flex; flex-direction:column; padding: 15px 20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <div style="font-weight:800; color:var(--black); font-size:15px;">${h.title}</div>
+              <div style="font-weight:800; color:${color}; font-family:'JetBrains Mono', monospace; font-size:16px;">${h.pct}%</div>
+            </div>
+            <div class="prog-bg" style="height:6px; margin-bottom:8px;"><div class="prog-fill" style="background:${color}; width:${h.pct}%"></div></div>
+            <div style="font-size:12px; color:var(--text3);">الإنجاز: ${h.done} من أصل ${h.expected} مرات مطلوبة</div>
+          </div>
+        `;
+      }).join('') : '<div class="empty">لا يوجد مهام مطلوبة في هذه الفترة</div>';
+      
+      document.getElementById('rep-habits-list').innerHTML = listHtml;
+      
+      // Show results
+      document.getElementById('report-results').style.display = 'block';
+      toast('تم استخراج التقرير بنجاح 📊');
+    }
+
+    function exportReportPDF() {
+      const element = document.getElementById('report-results');
+      const btn = document.getElementById('btn-export-pdf');
+      if (btn) btn.style.display = 'none';
+      
+      const opt = {
+        margin:       10,
+        filename:     'تقرير_الإنجاز.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      
+      html2pdf().set(opt).from(element).toPdf().get('pdf').then(function(pdf) {
+        if (btn) btn.style.display = 'block';
+        const blob = pdf.output('bloburl');
+        window.open(blob, '_blank');
+        toast('تم تجهيز التقرير! يمكنك حفظه أو طباعته 📥');
+      });
     }
   </script>
 </body>
