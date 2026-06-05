@@ -3427,17 +3427,7 @@
       
       nextStroopWord();
       
-      if (focusTimer) clearInterval(focusTimer);
-      focusTimer = setInterval(() => {
-        stroopTimeLeft--;
-        document.getElementById('stroop-time').textContent = stroopTimeLeft;
-      document.getElementById('stroop-bottom-timer').textContent = formatGameTime(stroopTimeLeft);
-        if (stroopTimeLeft <= 0) {
-          clearInterval(focusTimer);
-          alert(`انتهى الوقت! نقاطك: ${stroopScore}`);
-          startStroopGame();
-        }
-      }, 1000);
+      if (focusTimer) clearInterval(focusTimer); isFocusGameActive = false;
     }
 
     function nextStroopWord() {
@@ -3451,6 +3441,20 @@
     }
 
     function checkStroop(selectedColorName) {
+      if (!isFocusGameActive) {
+        isFocusGameActive = true;
+        focusTimer = setInterval(() => {
+          stroopTimeLeft--;
+          document.getElementById('stroop-time').textContent = stroopTimeLeft;
+          document.getElementById('stroop-bottom-timer').textContent = formatGameTime(stroopTimeLeft);
+          if (stroopTimeLeft <= 0) {
+            clearInterval(focusTimer);
+            isFocusGameActive = false;
+            alert(`انتهى الوقت! نقاطك: ${stroopScore}`);
+            startStroopGame();
+          }
+        }, 1000);
+      }
       if (stroopTimeLeft <= 0) return;
       if (selectedColorName === currentStroopColor) {
         stroopScore += 10;
@@ -3485,6 +3489,7 @@
       
       visualLevel = 1;
       visualTimeLeft = 15;
+      isFocusGameActive = false;
       document.getElementById('visual-level').textContent = visualLevel;
       document.getElementById('visual-time').textContent = visualTimeLeft;
       document.getElementById('visual-bottom-timer').textContent = formatGameTime(visualTimeLeft);
@@ -3519,6 +3524,20 @@
         if (i === targetIndex) {
           div.textContent = pair.target;
           div.onclick = () => {
+          if (!isFocusGameActive) {
+            isFocusGameActive = true;
+            focusTimer = setInterval(() => {
+              visualTimeLeft--;
+              document.getElementById('visual-time').textContent = visualTimeLeft;
+              document.getElementById('visual-bottom-timer').textContent = formatGameTime(visualTimeLeft);
+              if (visualTimeLeft <= 0) {
+                clearInterval(focusTimer);
+                isFocusGameActive = false;
+                alert(`انتهى الوقت! وصلت للمستوى: ${visualLevel}`);
+                startVisualSearchGame();
+              }
+            }, 1000);
+          }
             div.style.background = '#22c55e'; // Green
             div.style.color = 'white';
             if(typeof playSound === 'function') playSound('soft');
@@ -3534,6 +3553,20 @@
         } else {
           div.textContent = pair.base;
           div.onclick = () => {
+          if (!isFocusGameActive) {
+            isFocusGameActive = true;
+            focusTimer = setInterval(() => {
+              visualTimeLeft--;
+              document.getElementById('visual-time').textContent = visualTimeLeft;
+              document.getElementById('visual-bottom-timer').textContent = formatGameTime(visualTimeLeft);
+              if (visualTimeLeft <= 0) {
+                clearInterval(focusTimer);
+                isFocusGameActive = false;
+                alert(`انتهى الوقت! وصلت للمستوى: ${visualLevel}`);
+                startVisualSearchGame();
+              }
+            }, 1000);
+          }
             if(typeof playSound === 'function') playSound('error');
             div.style.background = '#ef4444'; // Red
             div.style.color = 'white';
@@ -3549,16 +3582,7 @@
         gridEl.appendChild(div);
       }
       
-      focusTimer = setInterval(() => {
-        visualTimeLeft--;
-        document.getElementById('visual-time').textContent = visualTimeLeft;
-      document.getElementById('visual-bottom-timer').textContent = formatGameTime(visualTimeLeft);
-        if (visualTimeLeft <= 0) {
-          clearInterval(focusTimer);
-          alert(`انتهى الوقت! وصلت للمستوى: ${visualLevel}`);
-          startVisualSearchGame();
-        }
-      }, 1000);
+      
     }
 
     // Slide Logic
@@ -3614,14 +3638,7 @@
 
       renderSlideGrid();
 
-      if(slideInterval) clearInterval(slideInterval);
-      slideInterval = setInterval(() => {
-        slideTime++;
-        const m = Math.floor(slideTime / 60).toString().padStart(2, '0');
-        const s = (slideTime % 60).toString().padStart(2, '0');
-        document.getElementById('slide-time').textContent = `${m}:${s}`;
-        document.getElementById('slide-bottom-timer').textContent = formatGameTime(slideTime);
-      }, 1000);
+      if(slideInterval) clearInterval(slideInterval); isFocusGameActive = false;
     }
 
     function renderSlideGrid() {
@@ -3645,6 +3662,14 @@
     }
 
     function moveSlideTile(idx) {
+      if (!isFocusGameActive) {
+        isFocusGameActive = true;
+        slideInterval = setInterval(() => {
+          slideTime++;
+          document.getElementById('slide-time').textContent = formatGameTime(slideTime);
+          document.getElementById('slide-bottom-timer').textContent = formatGameTime(slideTime);
+        }, 1000);
+      }
       if(!slideState[idx]) return;
       const emptyIdx = slideState.indexOf(null);
       const r1 = Math.floor(idx / 3), c1 = idx % 3;
@@ -3716,14 +3741,7 @@
       generateWordSearchGrid();
       renderWordSearch();
 
-      if(wsInterval) clearInterval(wsInterval);
-      wsInterval = setInterval(() => {
-        wsTime++;
-        const m = Math.floor(wsTime / 60).toString().padStart(2, '0');
-        const s = (wsTime % 60).toString().padStart(2, '0');
-        document.getElementById('ws-time').textContent = `${m}:${s}`;
-        document.getElementById('ws-bottom-timer').textContent = formatGameTime(wsTime);
-      }, 1000);
+      if(wsInterval) clearInterval(wsInterval); isFocusGameActive = false;
     }
 
     function generateWordSearchGrid() {
@@ -3984,14 +4002,7 @@
       
       generateInfinityPath();
       
-      if(infInterval) clearInterval(infInterval);
-      infInterval = setInterval(() => {
-        infTime++;
-        const m = Math.floor(infTime / 60).toString().padStart(2, '0');
-        const s = (infTime % 60).toString().padStart(2, '0');
-        document.getElementById('inf-time').textContent = `${m}:${s}`;
-        document.getElementById('inf-bottom-timer').textContent = formatGameTime(infTime);
-      }, 1000);
+      if(infInterval) clearInterval(infInterval); isFocusGameActive = false;
     }
 
     function generateInfinityPath() {
