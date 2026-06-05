@@ -1743,8 +1743,8 @@
   <div class="sidebar">
     <div class="logo" style="flex-direction: column; gap: 5px;">
       <div style="display:flex; align-items:center; justify-content:center; gap: 10px;">
-        <div class="logo-icon">A</div>
-        <span>امسي</span>
+        <div class="logo-icon" style="font-size: 16px; border-radius: 50%;">👋</div>
+        <span style="font-size: 16px;">مرحباً، <span id="user-greeting-name">صديقي</span></span>
       </div>
       <div style="font-size:24px; cursor:pointer; color:var(--text3); margin-top:5px; transition:0.2s;" onclick="openSettingsModal()" title="إعدادات الحساب" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text3)'">
         ⚙️
@@ -1776,9 +1776,7 @@
         <div class="date-text" id="hdr-date-full">Tue,<br>December</div>
       </div>
       <div class="greeting" style="flex: 1;">
-        <h1>مرحباً، <span id="user-greeting-name" style="cursor:pointer;" onclick="changeUserName()"
-            title="تغيير الاسم">صديقي</span> <span style="font-size:16px; cursor:pointer;"
-            onclick="changeUserName()">✏️</span></h1>
+        
         <p>قم بتنظيم يومك وأهدافك بسهولة!</p>
       </div>
       <div class="header-actions">
