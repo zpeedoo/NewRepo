@@ -2258,6 +2258,74 @@
         <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
       </div>
 
+      <!-- Sum Match Area -->
+      <div id="focus-summatch-area" style="display: none; text-align: center;">
+        <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">المجموع المطلوب: <span id="sm-target" style="color: var(--primary); font-size: 24px;">10</span></div>
+        <div style="margin-bottom: 15px; font-size: 14px; color: var(--text2);">الأزواج المتبقية: <span id="sm-remaining">0</span></div>
+        
+        <div id="sm-grid" style="display: grid; gap: 4px; justify-content: center; margin: 20px auto; background: var(--surface2); padding: 10px; border-radius: 12px; width:fit-content; user-select: none; touch-action: none; position: relative;">
+        </div>
+        
+        <div style="font-size: 24px; font-weight: 800; color: var(--primary); margin: 20px 0; font-family: monospace; letter-spacing: 2px;" id="sm-timer">00:00</div>
+        <button class="btn btn-dark" style="margin-top: 10px;" onclick="document.getElementById('focus-summatch-area').style.display='none'; document.getElementById('focus-menu').style.display='block'; clearInterval(smInterval);">🔙 عودة للقائمة</button>
+      </div>
+
+      <!-- Shape Counter Area -->
+      <div id="focus-shapecounter-area" style="display: none; text-align: center;">
+        <h3 style="margin-bottom: 15px; color: var(--primary);">كم عدد الأشكال الموجودة في الرسم؟</h3>
+        <svg id="sc-svg" width="300" height="300" viewBox="0 0 300 300" style="background: white; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);"></svg>
+        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; max-width: 320px; margin: 0 auto 20px;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
+             <svg width="30" height="30"><circle cx="15" cy="15" r="12" fill="none" stroke="black" stroke-width="2"/></svg>
+             <input type="number" id="sc-circle-count" min="0" style="width: 50px; text-align: center; border: 1px solid var(--border); border-radius: 6px; padding: 5px;">
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
+             <svg width="30" height="30"><rect x="3" y="3" width="24" height="24" fill="none" stroke="black" stroke-width="2"/></svg>
+             <input type="number" id="sc-square-count" min="0" style="width: 50px; text-align: center; border: 1px solid var(--border); border-radius: 6px; padding: 5px;">
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
+             <svg width="30" height="30"><polygon points="15,3 27,27 3,27" fill="none" stroke="black" stroke-width="2"/></svg>
+             <input type="number" id="sc-triangle-count" min="0" style="width: 50px; text-align: center; border: 1px solid var(--border); border-radius: 6px; padding: 5px;">
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
+             <svg width="30" height="30"><rect x="2" y="8" width="26" height="14" fill="none" stroke="black" stroke-width="2"/></svg>
+             <input type="number" id="sc-rect-count" min="0" style="width: 50px; text-align: center; border: 1px solid var(--border); border-radius: 6px; padding: 5px;">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="checkShapeCounter()">تحقق من الإجابة</button>
+        <button class="btn btn-dark" style="margin-top: 10px;" onclick="closeShapeCounter()">🔙 عودة للقائمة</button>
+      </div>
+
+      <!-- Pattern Copy Area -->
+      <div id="focus-patterncopy-area" style="display: none; text-align: center;">
+        <h3 style="margin-bottom: 15px; color: var(--primary);">انقل الشكل المرسوم أمامك</h3>
+        <div style="display: flex; justify-content: center; gap: 20px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
+          <div>
+            <div style="margin-bottom: 5px; font-weight: bold; color: var(--text2);">الشكل المطلوب</div>
+            <div id="pc-target-grid" style="position: relative; width: 160px; height: 160px; background: white; border: 2px solid var(--border); border-radius: 8px;"></div>
+          </div>
+          <div style="font-size: 24px; color: var(--text3);">⬅️</div>
+          <div>
+            <div style="margin-bottom: 5px; font-weight: bold; color: var(--primary);">مساحة الرسم</div>
+            <div id="pc-player-grid" style="position: relative; width: 160px; height: 160px; background: white; border: 2px solid var(--primary); border-radius: 8px; touch-action: none;"></div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+           <button class="btn btn-dark" onclick="resetPatternCopyPlayer()">مسح الرسم 🗑️</button>
+           <button class="btn btn-primary" onclick="checkPatternCopy()">تحقق من التطابق</button>
+        </div>
+        <button class="btn btn-dark" style="margin-top: 10px;" onclick="closePatternCopy()">🔙 عودة للقائمة</button>
+      </div>
+
+      <!-- Size Sorter Area -->
+      <div id="focus-sizesorter-area" style="display: none; text-align: center;">
+        <h3 style="margin-bottom: 15px; color: var(--primary);">رتب الأشكال تصاعدياً (من الأصغر للأكبر)</h3>
+        <div id="ss-container" style="display: flex; gap: 10px; justify-content: center; align-items: center; min-height: 120px; margin: 20px auto; padding: 20px; background: var(--surface2); border-radius: 12px; width: fit-content; max-width: 100%; overflow-x: auto;">
+        </div>
+        <p style="font-size: 12px; color: var(--text2); margin-bottom: 15px;">انقر على شكل ثم انقر على شكل آخر لتبديل أماكنهما.</p>
+        <button class="btn btn-dark" style="margin-top: 10px;" onclick="closeSizeSorter()">🔙 عودة للقائمة</button>
+      </div>
+
       <!-- Word Search Game Area -->
       <div id="focus-wordsearch-area" style="display: none; text-align: center;">
         <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
@@ -4655,6 +4723,178 @@
       });
     }
   
+    
+    // --- Sum Match Game ---
+    let smTarget = 0;
+    let smPairsToFind = 12;
+    let smPairsFound = 0;
+    let smGrid = [];
+    let smSelectedCell = null;
+    let smTime = 0;
+    let smInterval = null;
+
+    function startSumMatchGame() {
+      hideAllFocusGames();
+      document.getElementById('focus-summatch-area').style.display = 'block';
+      
+      smTarget = Math.floor(Math.random() * 8) + 7; // 7 to 14
+      document.getElementById('sm-target').textContent = smTarget;
+      smPairsToFind = 15;
+      smPairsFound = 0;
+      smSelectedCell = null;
+      document.getElementById('sm-remaining').textContent = smPairsToFind;
+      
+      generateSmGrid();
+      renderSmGrid();
+      
+      smTime = 0;
+      document.getElementById('sm-timer').textContent = '00:00';
+      clearInterval(smInterval);
+      smInterval = setInterval(() => {
+        smTime++;
+        const m = String(Math.floor(smTime / 60)).padStart(2, '0');
+        const s = String(smTime % 60).padStart(2, '0');
+        document.getElementById('sm-timer').textContent = `${m}:${s}`;
+      }, 1000);
+    }
+
+    function generateSmGrid() {
+      let success = false;
+      while(!success) {
+        smGrid = Array.from({length: 10}, () => Array(10).fill(0));
+        // Center 2x2 hole
+        smGrid[4][4] = -1; smGrid[4][5] = -1;
+        smGrid[5][4] = -1; smGrid[5][5] = -1;
+        
+        let pairsPlaced = 0;
+        let attempts = 0;
+        while(pairsPlaced < smPairsToFind && attempts < 1000) {
+          attempts++;
+          let r = Math.floor(Math.random() * 10);
+          let c = Math.floor(Math.random() * 10);
+          if(smGrid[r][c] !== 0) continue;
+          
+          let neighbors = [];
+          if(r > 0 && smGrid[r-1][c] === 0) neighbors.push([r-1, c]);
+          if(r < 9 && smGrid[r+1][c] === 0) neighbors.push([r+1, c]);
+          if(c > 0 && smGrid[r][c-1] === 0) neighbors.push([r, c-1]);
+          if(c < 9 && smGrid[r][c+1] === 0) neighbors.push([r, c+1]);
+          
+          if(neighbors.length > 0) {
+            let n = neighbors[Math.floor(Math.random() * neighbors.length)];
+            let maxA = Math.min(9, smTarget - 1);
+            let minA = Math.max(1, smTarget - 9);
+            let a = Math.floor(Math.random() * (maxA - minA + 1)) + minA;
+            let b = smTarget - a;
+            smGrid[r][c] = a;
+            smGrid[n[0]][n[1]] = b;
+            pairsPlaced++;
+          }
+        }
+        
+        if(pairsPlaced === smPairsToFind) success = true;
+      }
+      
+      // Fill remaining with noise
+      for(let r=0; r<10; r++) {
+        for(let c=0; c<10; c++) {
+          if(smGrid[r][c] === 0) {
+            let validNums = [];
+            for(let n=1; n<=9; n++) {
+              let safe = true;
+              if(r > 0 && smGrid[r-1][c] > 0 && smGrid[r-1][c] + n === smTarget) safe = false;
+              if(r < 9 && smGrid[r+1][c] > 0 && smGrid[r+1][c] + n === smTarget) safe = false;
+              if(c > 0 && smGrid[r][c-1] > 0 && smGrid[r][c-1] + n === smTarget) safe = false;
+              if(c < 9 && smGrid[r][c+1] > 0 && smGrid[r][c+1] + n === smTarget) safe = false;
+              if(safe) validNums.push(n);
+            }
+            if(validNums.length === 0) {
+              smGrid[r][c] = 1;
+            } else {
+              smGrid[r][c] = validNums[Math.floor(Math.random() * validNums.length)];
+            }
+          }
+        }
+      }
+    }
+
+    function renderSmGrid() {
+      const gridEl = document.getElementById('sm-grid');
+      gridEl.innerHTML = '';
+      gridEl.style.gridTemplateColumns = 'repeat(10, 35px)';
+      gridEl.style.gridTemplateRows = 'repeat(10, 35px)';
+      
+      let centerAdded = false;
+      
+      for(let r=0; r<10; r++) {
+        for(let c=0; c<10; c++) {
+          if(smGrid[r][c] === -1) {
+            if(!centerAdded) {
+              const centerEl = document.createElement('div');
+              centerEl.className = 'sm-center-cell';
+              centerEl.textContent = smTarget;
+              gridEl.appendChild(centerEl);
+              centerAdded = true;
+            }
+            continue;
+          }
+          
+          const cell = document.createElement('div');
+          cell.className = 'sm-cell';
+          cell.dataset.r = r;
+          cell.dataset.c = c;
+          cell.textContent = smGrid[r][c];
+          cell.onclick = () => handleSmClick(r, c, cell);
+          gridEl.appendChild(cell);
+        }
+      }
+    }
+
+    function handleSmClick(r, c, el) {
+      if(el.classList.contains('found')) return;
+      
+      if(!smSelectedCell) {
+        smSelectedCell = {r, c, el};
+        el.classList.add('selected');
+      } else {
+        if(smSelectedCell.r === r && smSelectedCell.c === c) {
+          el.classList.remove('selected');
+          smSelectedCell = null;
+        } else {
+          let dr = Math.abs(smSelectedCell.r - r);
+          let dc = Math.abs(smSelectedCell.c - c);
+          if((dr === 1 && dc === 0) || (dr === 0 && dc === 1)) {
+            let sum = smGrid[r][c] + smGrid[smSelectedCell.r][smSelectedCell.c];
+            if(sum === smTarget) {
+              el.classList.add('found');
+              smSelectedCell.el.classList.remove('selected');
+              smSelectedCell.el.classList.add('found');
+              smPairsFound++;
+              document.getElementById('sm-remaining').textContent = smPairsToFind - smPairsFound;
+              smSelectedCell = null;
+              
+              if(smPairsFound === smPairsToFind) {
+                clearInterval(smInterval);
+                setTimeout(() => {
+                  if(typeof playSound === 'function') playSound('achieve');
+                  toast('عمل رائع! لقد وجدت كل الأزواج المتطابقة 🧮');
+                  confetti({particleCount: 150, spread: 70});
+                }, 300);
+              }
+            } else {
+              smSelectedCell.el.classList.remove('selected');
+              smSelectedCell = {r, c, el};
+              el.classList.add('selected');
+            }
+          } else {
+            smSelectedCell.el.classList.remove('selected');
+            smSelectedCell = {r, c, el};
+            el.classList.add('selected');
+          }
+        }
+      }
+    }
+    
     // --- Shape Counter Game ---
     let scExpected = { circle: 0, square: 0, triangle: 0, rect: 0 };
     
