@@ -1695,7 +1695,12 @@
     .circ-val {
       transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
     }
-\n  </style>
+\n  .sm-cell { background: var(--surface); color: var(--text); border-radius: 6px; font-weight: bold; font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .sm-cell:hover { background: #e0f2fe; }
+    .sm-cell.selected { background: #3b82f6; color: white; transform: scale(0.95); }
+    .sm-cell.found { background: #10b981; color: white; cursor: default; }
+    .sm-center-cell { background: white; border: 2px solid var(--primary); border-radius: 8px; font-weight: 900; font-size: 28px; color: var(--primary); display: flex; align-items: center; justify-content: center; grid-column: 5 / span 2; grid-row: 5 / span 2; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+  </style>
 </head>
 
 <body>
@@ -2145,6 +2150,11 @@
         <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #10b981;" onclick="startSlideGame()">
           <h3 style="margin-bottom: 5px; color: var(--black);">لغز الألوان المنزلق 🧩</h3>
           <p style="font-size: 13px; color: var(--text2);">رتب الدوائر الملونة لتطابق الهدف في الأعلى عبر تحريك المربع الفارغ.</p>
+        </div>
+        
+        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #8b5cf6;" onclick="startSumMatchGame()">
+          <h3 style="margin-bottom: 5px; color: var(--black);">تطابق المجموع 🧮</h3>
+          <p style="font-size: 13px; color: var(--text2);">ابحث عن رقمين متجاورين أفقياً أو عمودياً مجموعهما يساوي الرقم المطلوب في المنتصف.</p>
         </div>
         
         <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #f59e0b;" onclick="startWordSearchGame()">
