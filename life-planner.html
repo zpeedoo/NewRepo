@@ -17,352 +17,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=JetBrains+Mono:wght@300;400;700;800&family=Georgia&display=swap"
     rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js">
-    // --- Shape Counter Game ---
-    let scExpected = { circle: 0, square: 0, triangle: 0, rect: 0 };
-    
-    function startShapeCounterGame() {
-      hideAllFocusGames();
-      document.getElementById('focus-shapecounter-area').style.display = 'block';
-      generateShapes();
-      
-      document.getElementById('sc-circle-count').value = '';
-      document.getElementById('sc-square-count').value = '';
-      document.getElementById('sc-triangle-count').value = '';
-      document.getElementById('sc-rect-count').value = '';
-    }
-    
-    function closeShapeCounter() {
-      document.getElementById('focus-shapecounter-area').style.display = 'none';
-      document.getElementById('focus-menu').style.display = 'block';
-    }
-    
-    function generateShapes() {
-      const svg = document.getElementById('sc-svg');
-      svg.innerHTML = '';
-      scExpected = { circle: 0, square: 0, triangle: 0, rect: 0 };
-      
-      const counts = {
-        circle: Math.floor(Math.random() * 5) + 3,
-        square: Math.floor(Math.random() * 5) + 3,
-        triangle: Math.floor(Math.random() * 5) + 3,
-        rect: Math.floor(Math.random() * 5) + 3
-      };
-      
-      scExpected = counts;
-      const shapes = [];
-      
-      for(let i=0; i<counts.circle; i++) shapes.push('circle');
-      for(let i=0; i<counts.square; i++) shapes.push('square');
-      for(let i=0; i<counts.triangle; i++) shapes.push('triangle');
-      for(let i=0; i<counts.rect; i++) shapes.push('rect');
-      
-      // Shuffle
-      shapes.sort(() => Math.random() - 0.5);
-      
-      shapes.forEach(type => {
-        let el;
-        const color = `hsl(${Math.random()*360}, 70%, 50%)`;
-        const x = Math.random() * 240 + 30;
-        const y = Math.random() * 240 + 30;
-        
-        if(type === 'circle') {
-          el = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-          el.setAttribute("cx", x);
-          el.setAttribute("cy", y);
-          el.setAttribute("r", Math.random() * 15 + 10);
-        } else if(type === 'square') {
-          el = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-          const size = Math.random() * 20 + 20;
-          el.setAttribute("x", x - size/2);
-          el.setAttribute("y", y - size/2);
-          el.setAttribute("width", size);
-          el.setAttribute("height", size);
-        } else if(type === 'rect') {
-          el = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-          const w = Math.random() * 30 + 30;
-          const h = Math.random() * 10 + 15;
-          el.setAttribute("x", x - w/2);
-          el.setAttribute("y", y - h/2);
-          el.setAttribute("width", w);
-          el.setAttribute("height", h);
-        } else if(type === 'triangle') {
-          el = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-          const size = Math.random() * 20 + 20;
-          el.setAttribute("points", `${x},${y-size} ${x-size},${y+size} ${x+size},${y+size}`);
-        }
-        
-        el.setAttribute("fill", "none");
-        el.setAttribute("stroke", color);
-        el.setAttribute("stroke-width", "3");
-        el.setAttribute("transform", `rotate(${Math.random()*360} ${x} ${y})`);
-        svg.appendChild(el);
-      });
-    }
-    
-    function checkShapeCounter() {
-      const c = parseInt(document.getElementById('sc-circle-count').value) || 0;
-      const s = parseInt(document.getElementById('sc-square-count').value) || 0;
-      const t = parseInt(document.getElementById('sc-triangle-count').value) || 0;
-      const r = parseInt(document.getElementById('sc-rect-count').value) || 0;
-      
-      if(c === scExpected.circle && s === scExpected.square && t === scExpected.triangle && r === scExpected.rect) {
-        if(typeof playSound === 'function') playSound('achieve');
-        toast('أحسنت! إجابة صحيحة 💯');
-        confetti({particleCount: 100, spread: 70});
-        setTimeout(startShapeCounterGame, 2000);
-      } else {
-        toast('هناك خطأ في العد، حاول مرة أخرى!');
-      }
-    }
-
-    // --- Pattern Copy Game ---
-    let pcTarget = [];
-    let pcPlayer = [];
-    
-    function startPatternCopyGame() {
-      hideAllFocusGames();
-      document.getElementById('focus-patterncopy-area').style.display = 'block';
-      generatePatternCopy();
-      resetPatternCopyPlayer();
-    }
-    
-    function closePatternCopy() {
-      document.getElementById('focus-patterncopy-area').style.display = 'none';
-      document.getElementById('focus-menu').style.display = 'block';
-    }
-    
-    function drawGridDots(containerId, isPlayer) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = '';
-      const step = 160 / 3;
-      for(let r=0; r<4; r++) {
-        for(let c=0; c<4; c++) {
-          const dot = document.createElement('div');
-          dot.className = isPlayer ? 'pc-dot pc-player-dot' : 'pc-dot';
-          dot.style.left = `${c * step + 10}px`;
-          dot.style.top = `${r * step + 10}px`;
-          dot.dataset.id = r*4 + c;
-          dot.dataset.r = r;
-          dot.dataset.c = c;
-          
-          if(isPlayer) {
-            dot.onclick = () => handlePcPlayerClick(parseInt(dot.dataset.id), dot);
-          }
-          container.appendChild(dot);
-        }
-      }
-    }
-    
-    function generatePatternCopy() {
-      drawGridDots('pc-target-grid', false);
-      pcTarget = [];
-      const pathLength = Math.floor(Math.random() * 3) + 5; // 5 to 7
-      let curR = Math.floor(Math.random() * 4);
-      let curC = Math.floor(Math.random() * 4);
-      pcTarget.push(curR*4 + curC);
-      
-      for(let i=1; i<pathLength; i++) {
-        let validNeighbors = [];
-        const dirs = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
-        dirs.forEach(d => {
-          let nr = curR + d[0]; let nc = curC + d[1];
-          if(nr>=0 && nr<4 && nc>=0 && nc<4) {
-            let nid = nr*4 + nc;
-            if(!pcTarget.includes(nid)) validNeighbors.push(nid);
-          }
-        });
-        if(validNeighbors.length === 0) break;
-        let nextId = validNeighbors[Math.floor(Math.random() * validNeighbors.length)];
-        pcTarget.push(nextId);
-        curR = Math.floor(nextId / 4);
-        curC = nextId % 4;
-      }
-      
-      drawPath('pc-target-grid', pcTarget, false);
-    }
-    
-    function resetPatternCopyPlayer() {
-      drawGridDots('pc-player-grid', true);
-      pcPlayer = [];
-    }
-    
-    function handlePcPlayerClick(id, el) {
-      if(pcPlayer.includes(id)) return; // Already visited
-      
-      if(pcPlayer.length > 0) {
-        let lastId = pcPlayer[pcPlayer.length-1];
-        let lr = Math.floor(lastId/4); let lc = lastId%4;
-        let cr = Math.floor(id/4); let cc = id%4;
-        let dr = Math.abs(lr - cr); let dc = Math.abs(lc - cc);
-        if(dr > 1 || dc > 1) {
-           toast('يجب توصيل النقاط المتجاورة فقط!');
-           return;
-        }
-      }
-      
-      pcPlayer.push(id);
-      el.classList.add('active');
-      drawPath('pc-player-grid', pcPlayer, true);
-    }
-    
-    function drawPath(containerId, path, isPlayer) {
-      const container = document.getElementById(containerId);
-      // Remove old lines
-      container.querySelectorAll('.pc-line').forEach(e => e.remove());
-      
-      const step = 160 / 3;
-      for(let i=0; i<path.length-1; i++) {
-        let id1 = path[i]; let id2 = path[i+1];
-        let r1 = Math.floor(id1/4); let c1 = id1%4;
-        let r2 = Math.floor(id2/4); let c2 = id2%4;
-        
-        let x1 = c1*step + 10; let y1 = r1*step + 10;
-        let x2 = c2*step + 10; let y2 = r2*step + 10;
-        
-        let length = Math.sqrt((x2-x1)**2 + (y2-y1)**2);
-        let angle = Math.atan2(y2-y1, x2-x1) * 180 / Math.PI;
-        
-        const line = document.createElement('div');
-        line.className = isPlayer ? 'pc-line pc-line-player' : 'pc-line';
-        line.style.width = `${length}px`;
-        line.style.left = `${x1}px`;
-        line.style.top = `${y1 - 2}px`;
-        line.style.transform = `rotate(${angle}deg)`;
-        
-        // Insert before dots
-        container.insertBefore(line, container.firstChild);
-      }
-    }
-    
-    function checkPatternCopy() {
-      if(pcPlayer.length !== pcTarget.length) {
-        toast('المسار غير مكتمل أو غير متطابق!');
-        return;
-      }
-      
-      let isMatch = true;
-      for(let i=0; i<pcTarget.length; i++) {
-        if(pcTarget[i] !== pcPlayer[i]) isMatch = false;
-      }
-      
-      // Also check reversed path
-      let isRevMatch = true;
-      let revTarget = [...pcTarget].reverse();
-      for(let i=0; i<revTarget.length; i++) {
-        if(revTarget[i] !== pcPlayer[i]) isRevMatch = false;
-      }
-      
-      if(isMatch || isRevMatch) {
-        if(typeof playSound === 'function') playSound('achieve');
-        toast('ممتاز! مسار متطابق 💯');
-        confetti({particleCount: 100, spread: 70});
-        setTimeout(startPatternCopyGame, 2000);
-      } else {
-        toast('المسار غير متطابق، حاول مجدداً!');
-      }
-    }
-
-    // --- Size Sorter Game ---
-    let ssShapes = [];
-    let ssSelectedIdx = -1;
-    
-    function startSizeSorterGame() {
-      hideAllFocusGames();
-      document.getElementById('focus-sizesorter-area').style.display = 'block';
-      generateSizeSorter();
-    }
-    
-    function closeSizeSorter() {
-      document.getElementById('focus-sizesorter-area').style.display = 'none';
-      document.getElementById('focus-menu').style.display = 'block';
-    }
-    
-    function generateSizeSorter() {
-      ssSelectedIdx = -1;
-      const baseSizes = [20, 35, 50, 65, 80];
-      ssShapes = baseSizes.map((size, index) => ({ id: index, size: size }));
-      
-      // Shuffle array
-      for (let i = ssShapes.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [ssShapes[i], ssShapes[j]] = [ssShapes[j], ssShapes[i]];
-      }
-      
-      renderSizeSorter();
-    }
-    
-    function renderSizeSorter() {
-      const container = document.getElementById('ss-container');
-      container.innerHTML = '';
-      
-      const type = Math.random() > 0.5 ? 'circle' : 'rect';
-      const color = `hsl(${Math.random()*360}, 70%, 50%)`;
-      
-      ssShapes.forEach((s, i) => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'ss-shape-wrapper' + (ssSelectedIdx === i ? ' selected' : '');
-        wrapper.style.width = '100px';
-        wrapper.style.height = '100px';
-        wrapper.onclick = () => handleSsClick(i);
-        
-        let svgHtml = `<svg width="100" height="100" viewBox="0 0 100 100">`;
-        if(type === 'circle') {
-          svgHtml += `<circle class="ss-shape" cx="50" cy="50" r="${s.size/2}" fill="${color}" />`;
-        } else {
-          svgHtml += `<rect class="ss-shape" x="${50 - s.size/2}" y="${50 - s.size/2}" width="${s.size}" height="${s.size}" rx="4" fill="${color}" />`;
-        }
-        svgHtml += `</svg>`;
-        
-        wrapper.innerHTML = svgHtml;
-        container.appendChild(wrapper);
-      });
-      
-      checkSizeSorterWin();
-    }
-    
-    function handleSsClick(idx) {
-      if(ssSelectedIdx === -1) {
-        ssSelectedIdx = idx;
-        renderSizeSorter();
-      } else {
-        if(ssSelectedIdx !== idx) {
-          // Swap
-          let temp = ssShapes[ssSelectedIdx];
-          ssShapes[ssSelectedIdx] = ssShapes[idx];
-          ssShapes[idx] = temp;
-        }
-        ssSelectedIdx = -1;
-        renderSizeSorter();
-      }
-    }
-    
-    function checkSizeSorterWin() {
-      let isSorted = true;
-      for(let i=0; i<ssShapes.length-1; i++) {
-        if(ssShapes[i].size > ssShapes[i+1].size) isSorted = false;
-      }
-      
-      if(isSorted) {
-        if(typeof playSound === 'function') playSound('achieve');
-        toast('نجاح رائع! الترتيب صحيح 📏');
-        confetti({particleCount: 100, spread: 70});
-        setTimeout(startSizeSorterGame, 2000);
-      }
-    }
-
-    function hideAllFocusGames() {
-      document.getElementById('focus-menu').style.display = 'none';
-      if(document.getElementById('focus-stroop-area')) document.getElementById('focus-stroop-area').style.display = 'none';
-      if(document.getElementById('focus-visual-area')) document.getElementById('focus-visual-area').style.display = 'none';
-      if(document.getElementById('focus-slide-area')) document.getElementById('focus-slide-area').style.display = 'none';
-      if(document.getElementById('focus-wordsearch-area')) document.getElementById('focus-wordsearch-area').style.display = 'none';
-      if(document.getElementById('focus-summatch-area')) document.getElementById('focus-summatch-area').style.display = 'none';
-      if(document.getElementById('focus-shapecounter-area')) document.getElementById('focus-shapecounter-area').style.display = 'none';
-      if(document.getElementById('focus-patterncopy-area')) document.getElementById('focus-patterncopy-area').style.display = 'none';
-      if(document.getElementById('focus-sizesorter-area')) document.getElementById('focus-sizesorter-area').style.display = 'none';
-    }
-</script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <!-- Firebase -->
@@ -4999,6 +4654,352 @@
         toast('تم تجهيز التقرير! يمكنك حفظه أو طباعته 📥');
       });
     }
+  
+    // --- Shape Counter Game ---
+    let scExpected = { circle: 0, square: 0, triangle: 0, rect: 0 };
+    
+    function startShapeCounterGame() {
+      hideAllFocusGames();
+      document.getElementById('focus-shapecounter-area').style.display = 'block';
+      generateShapes();
+      
+      document.getElementById('sc-circle-count').value = '';
+      document.getElementById('sc-square-count').value = '';
+      document.getElementById('sc-triangle-count').value = '';
+      document.getElementById('sc-rect-count').value = '';
+    }
+    
+    function closeShapeCounter() {
+      document.getElementById('focus-shapecounter-area').style.display = 'none';
+      document.getElementById('focus-menu').style.display = 'block';
+    }
+    
+    function generateShapes() {
+      const svg = document.getElementById('sc-svg');
+      svg.innerHTML = '';
+      scExpected = { circle: 0, square: 0, triangle: 0, rect: 0 };
+      
+      const counts = {
+        circle: Math.floor(Math.random() * 5) + 3,
+        square: Math.floor(Math.random() * 5) + 3,
+        triangle: Math.floor(Math.random() * 5) + 3,
+        rect: Math.floor(Math.random() * 5) + 3
+      };
+      
+      scExpected = counts;
+      const shapes = [];
+      
+      for(let i=0; i<counts.circle; i++) shapes.push('circle');
+      for(let i=0; i<counts.square; i++) shapes.push('square');
+      for(let i=0; i<counts.triangle; i++) shapes.push('triangle');
+      for(let i=0; i<counts.rect; i++) shapes.push('rect');
+      
+      // Shuffle
+      shapes.sort(() => Math.random() - 0.5);
+      
+      shapes.forEach(type => {
+        let el;
+        const color = `hsl(${Math.random()*360}, 70%, 50%)`;
+        const x = Math.random() * 240 + 30;
+        const y = Math.random() * 240 + 30;
+        
+        if(type === 'circle') {
+          el = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          el.setAttribute("cx", x);
+          el.setAttribute("cy", y);
+          el.setAttribute("r", Math.random() * 15 + 10);
+        } else if(type === 'square') {
+          el = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          const size = Math.random() * 20 + 20;
+          el.setAttribute("x", x - size/2);
+          el.setAttribute("y", y - size/2);
+          el.setAttribute("width", size);
+          el.setAttribute("height", size);
+        } else if(type === 'rect') {
+          el = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          const w = Math.random() * 30 + 30;
+          const h = Math.random() * 10 + 15;
+          el.setAttribute("x", x - w/2);
+          el.setAttribute("y", y - h/2);
+          el.setAttribute("width", w);
+          el.setAttribute("height", h);
+        } else if(type === 'triangle') {
+          el = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+          const size = Math.random() * 20 + 20;
+          el.setAttribute("points", `${x},${y-size} ${x-size},${y+size} ${x+size},${y+size}`);
+        }
+        
+        el.setAttribute("fill", "none");
+        el.setAttribute("stroke", color);
+        el.setAttribute("stroke-width", "3");
+        el.setAttribute("transform", `rotate(${Math.random()*360} ${x} ${y})`);
+        svg.appendChild(el);
+      });
+    }
+    
+    function checkShapeCounter() {
+      const c = parseInt(document.getElementById('sc-circle-count').value) || 0;
+      const s = parseInt(document.getElementById('sc-square-count').value) || 0;
+      const t = parseInt(document.getElementById('sc-triangle-count').value) || 0;
+      const r = parseInt(document.getElementById('sc-rect-count').value) || 0;
+      
+      if(c === scExpected.circle && s === scExpected.square && t === scExpected.triangle && r === scExpected.rect) {
+        if(typeof playSound === 'function') playSound('achieve');
+        toast('أحسنت! إجابة صحيحة 💯');
+        confetti({particleCount: 100, spread: 70});
+        setTimeout(startShapeCounterGame, 2000);
+      } else {
+        toast('هناك خطأ في العد، حاول مرة أخرى!');
+      }
+    }
+
+    // --- Pattern Copy Game ---
+    let pcTarget = [];
+    let pcPlayer = [];
+    
+    function startPatternCopyGame() {
+      hideAllFocusGames();
+      document.getElementById('focus-patterncopy-area').style.display = 'block';
+      generatePatternCopy();
+      resetPatternCopyPlayer();
+    }
+    
+    function closePatternCopy() {
+      document.getElementById('focus-patterncopy-area').style.display = 'none';
+      document.getElementById('focus-menu').style.display = 'block';
+    }
+    
+    function drawGridDots(containerId, isPlayer) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      const step = 160 / 3;
+      for(let r=0; r<4; r++) {
+        for(let c=0; c<4; c++) {
+          const dot = document.createElement('div');
+          dot.className = isPlayer ? 'pc-dot pc-player-dot' : 'pc-dot';
+          dot.style.left = `${c * step + 10}px`;
+          dot.style.top = `${r * step + 10}px`;
+          dot.dataset.id = r*4 + c;
+          dot.dataset.r = r;
+          dot.dataset.c = c;
+          
+          if(isPlayer) {
+            dot.onclick = () => handlePcPlayerClick(parseInt(dot.dataset.id), dot);
+          }
+          container.appendChild(dot);
+        }
+      }
+    }
+    
+    function generatePatternCopy() {
+      drawGridDots('pc-target-grid', false);
+      pcTarget = [];
+      const pathLength = Math.floor(Math.random() * 3) + 5; // 5 to 7
+      let curR = Math.floor(Math.random() * 4);
+      let curC = Math.floor(Math.random() * 4);
+      pcTarget.push(curR*4 + curC);
+      
+      for(let i=1; i<pathLength; i++) {
+        let validNeighbors = [];
+        const dirs = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+        dirs.forEach(d => {
+          let nr = curR + d[0]; let nc = curC + d[1];
+          if(nr>=0 && nr<4 && nc>=0 && nc<4) {
+            let nid = nr*4 + nc;
+            if(!pcTarget.includes(nid)) validNeighbors.push(nid);
+          }
+        });
+        if(validNeighbors.length === 0) break;
+        let nextId = validNeighbors[Math.floor(Math.random() * validNeighbors.length)];
+        pcTarget.push(nextId);
+        curR = Math.floor(nextId / 4);
+        curC = nextId % 4;
+      }
+      
+      drawPath('pc-target-grid', pcTarget, false);
+    }
+    
+    function resetPatternCopyPlayer() {
+      drawGridDots('pc-player-grid', true);
+      pcPlayer = [];
+    }
+    
+    function handlePcPlayerClick(id, el) {
+      if(pcPlayer.includes(id)) return; // Already visited
+      
+      if(pcPlayer.length > 0) {
+        let lastId = pcPlayer[pcPlayer.length-1];
+        let lr = Math.floor(lastId/4); let lc = lastId%4;
+        let cr = Math.floor(id/4); let cc = id%4;
+        let dr = Math.abs(lr - cr); let dc = Math.abs(lc - cc);
+        if(dr > 1 || dc > 1) {
+           toast('يجب توصيل النقاط المتجاورة فقط!');
+           return;
+        }
+      }
+      
+      pcPlayer.push(id);
+      el.classList.add('active');
+      drawPath('pc-player-grid', pcPlayer, true);
+    }
+    
+    function drawPath(containerId, path, isPlayer) {
+      const container = document.getElementById(containerId);
+      // Remove old lines
+      container.querySelectorAll('.pc-line').forEach(e => e.remove());
+      
+      const step = 160 / 3;
+      for(let i=0; i<path.length-1; i++) {
+        let id1 = path[i]; let id2 = path[i+1];
+        let r1 = Math.floor(id1/4); let c1 = id1%4;
+        let r2 = Math.floor(id2/4); let c2 = id2%4;
+        
+        let x1 = c1*step + 10; let y1 = r1*step + 10;
+        let x2 = c2*step + 10; let y2 = r2*step + 10;
+        
+        let length = Math.sqrt((x2-x1)**2 + (y2-y1)**2);
+        let angle = Math.atan2(y2-y1, x2-x1) * 180 / Math.PI;
+        
+        const line = document.createElement('div');
+        line.className = isPlayer ? 'pc-line pc-line-player' : 'pc-line';
+        line.style.width = `${length}px`;
+        line.style.left = `${x1}px`;
+        line.style.top = `${y1 - 2}px`;
+        line.style.transform = `rotate(${angle}deg)`;
+        
+        // Insert before dots
+        container.insertBefore(line, container.firstChild);
+      }
+    }
+    
+    function checkPatternCopy() {
+      if(pcPlayer.length !== pcTarget.length) {
+        toast('المسار غير مكتمل أو غير متطابق!');
+        return;
+      }
+      
+      let isMatch = true;
+      for(let i=0; i<pcTarget.length; i++) {
+        if(pcTarget[i] !== pcPlayer[i]) isMatch = false;
+      }
+      
+      // Also check reversed path
+      let isRevMatch = true;
+      let revTarget = [...pcTarget].reverse();
+      for(let i=0; i<revTarget.length; i++) {
+        if(revTarget[i] !== pcPlayer[i]) isRevMatch = false;
+      }
+      
+      if(isMatch || isRevMatch) {
+        if(typeof playSound === 'function') playSound('achieve');
+        toast('ممتاز! مسار متطابق 💯');
+        confetti({particleCount: 100, spread: 70});
+        setTimeout(startPatternCopyGame, 2000);
+      } else {
+        toast('المسار غير متطابق، حاول مجدداً!');
+      }
+    }
+
+    // --- Size Sorter Game ---
+    let ssShapes = [];
+    let ssSelectedIdx = -1;
+    
+    function startSizeSorterGame() {
+      hideAllFocusGames();
+      document.getElementById('focus-sizesorter-area').style.display = 'block';
+      generateSizeSorter();
+    }
+    
+    function closeSizeSorter() {
+      document.getElementById('focus-sizesorter-area').style.display = 'none';
+      document.getElementById('focus-menu').style.display = 'block';
+    }
+    
+    function generateSizeSorter() {
+      ssSelectedIdx = -1;
+      const baseSizes = [20, 35, 50, 65, 80];
+      ssShapes = baseSizes.map((size, index) => ({ id: index, size: size }));
+      
+      // Shuffle array
+      for (let i = ssShapes.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [ssShapes[i], ssShapes[j]] = [ssShapes[j], ssShapes[i]];
+      }
+      
+      renderSizeSorter();
+    }
+    
+    function renderSizeSorter() {
+      const container = document.getElementById('ss-container');
+      container.innerHTML = '';
+      
+      const type = Math.random() > 0.5 ? 'circle' : 'rect';
+      const color = `hsl(${Math.random()*360}, 70%, 50%)`;
+      
+      ssShapes.forEach((s, i) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'ss-shape-wrapper' + (ssSelectedIdx === i ? ' selected' : '');
+        wrapper.style.width = '100px';
+        wrapper.style.height = '100px';
+        wrapper.onclick = () => handleSsClick(i);
+        
+        let svgHtml = `<svg width="100" height="100" viewBox="0 0 100 100">`;
+        if(type === 'circle') {
+          svgHtml += `<circle class="ss-shape" cx="50" cy="50" r="${s.size/2}" fill="${color}" />`;
+        } else {
+          svgHtml += `<rect class="ss-shape" x="${50 - s.size/2}" y="${50 - s.size/2}" width="${s.size}" height="${s.size}" rx="4" fill="${color}" />`;
+        }
+        svgHtml += `</svg>`;
+        
+        wrapper.innerHTML = svgHtml;
+        container.appendChild(wrapper);
+      });
+      
+      checkSizeSorterWin();
+    }
+    
+    function handleSsClick(idx) {
+      if(ssSelectedIdx === -1) {
+        ssSelectedIdx = idx;
+        renderSizeSorter();
+      } else {
+        if(ssSelectedIdx !== idx) {
+          // Swap
+          let temp = ssShapes[ssSelectedIdx];
+          ssShapes[ssSelectedIdx] = ssShapes[idx];
+          ssShapes[idx] = temp;
+        }
+        ssSelectedIdx = -1;
+        renderSizeSorter();
+      }
+    }
+    
+    function checkSizeSorterWin() {
+      let isSorted = true;
+      for(let i=0; i<ssShapes.length-1; i++) {
+        if(ssShapes[i].size > ssShapes[i+1].size) isSorted = false;
+      }
+      
+      if(isSorted) {
+        if(typeof playSound === 'function') playSound('achieve');
+        toast('نجاح رائع! الترتيب صحيح 📏');
+        confetti({particleCount: 100, spread: 70});
+        setTimeout(startSizeSorterGame, 2000);
+      }
+    }
+
+    function hideAllFocusGames() {
+      document.getElementById('focus-menu').style.display = 'none';
+      if(document.getElementById('focus-stroop-area')) document.getElementById('focus-stroop-area').style.display = 'none';
+      if(document.getElementById('focus-visual-area')) document.getElementById('focus-visual-area').style.display = 'none';
+      if(document.getElementById('focus-slide-area')) document.getElementById('focus-slide-area').style.display = 'none';
+      if(document.getElementById('focus-wordsearch-area')) document.getElementById('focus-wordsearch-area').style.display = 'none';
+      if(document.getElementById('focus-summatch-area')) document.getElementById('focus-summatch-area').style.display = 'none';
+      if(document.getElementById('focus-shapecounter-area')) document.getElementById('focus-shapecounter-area').style.display = 'none';
+      if(document.getElementById('focus-patterncopy-area')) document.getElementById('focus-patterncopy-area').style.display = 'none';
+      if(document.getElementById('focus-sizesorter-area')) document.getElementById('focus-sizesorter-area').style.display = 'none';
+    }
+
   </script>
 </body>
 
