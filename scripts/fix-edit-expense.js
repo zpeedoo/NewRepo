@@ -1,59 +1,48 @@
 const fs = require('fs');
 let js = fs.readFileSync('js/app.js', 'utf8');
 
-// 1. Fix openEditExpense
-const openEditTarget = `        function openEditExpense(id) {
-            const exp = state.expenses.find(e => String(e.id) === String(id));
-            if (!exp) return;
-            editingExpId = id;
-            document.getElementById('m-exp-desc').value = exp.desc || '';
-            document.getElementById('m-exp-date').value = exp.date || td();
-            document.getElementById('m-exp-payment').value = exp.payment || 'نقدي';
-            document.getElementById('m-exp-note').value = exp.note || '';`;
+// 1. addExpense function (reading value)
+js = js.replace(
+    /const date = document\.getElementById\('m-exp-date'\)\.value \|\| td\(\);\s*const payment = document\.getElementById\('m-exp-payment'\)\.value;\s*const note = document\.getElementById\('m-exp-note'\)\.value\.trim\(\);/,
+    `const date = document.getElementById('m-exp-date').value || td();
+            const walletId = document.getElementById('m-exp-wallet') ? document.getElementById('m-exp-wallet').value : 'cash';
+            const note = document.getElementById('m-exp-note').value.trim();`
+);
 
-const openEditNew = `        function openEditExpense(id) {
-            const exp = state.expenses.find(e => String(e.id) === String(id));
-            if (!exp) return;
-            editingExpId = id;
-            
+// 1.5 addExpense function (pushing to array)
+js = js.replace(
+    /state\.expenses\.push\(\{ id: state\.nextId\+\+, desc, amount, date, payment, note, items \}\);/,
+    `state.expenses.push({ id: state.nextId++, desc, amount, date, walletId, note, items });`
+);
+
+// 2. openEditExpense function (setting value)
+js = js.replace(
+    /document\.getElementById\('m-exp-date'\)\.value = exp\.date \|\| td\(\);\s*document\.getElementById\('m-exp-payment'\)\.value = exp\.payment \|\| '[^']*';\s*document\.getElementById\('m-exp-note'\)\.value = exp\.note \|\| '';/,
+    `document.getElementById('m-exp-date').value = exp.date || td();
             const wOpts = (state.wallets||[]).map(w => \`<option value="\${w.id}">\${w.icon} \${w.name}</option>\`).join('');
             if(document.getElementById('m-exp-wallet')) document.getElementById('m-exp-wallet').innerHTML = wOpts;
-            
-            document.getElementById('m-exp-desc').value = exp.desc || '';
-            document.getElementById('m-exp-date').value = exp.date || td();
             if(document.getElementById('m-exp-wallet')) document.getElementById('m-exp-wallet').value = exp.walletId || 'cash';
-            document.getElementById('m-exp-note').value = exp.note || '';`;
+            document.getElementById('m-exp-note').value = exp.note || '';`
+);
 
-js = js.replace(openEditTarget, openEditNew);
+// 3. saveEditExpense function (reading value)
+js = js.replace(
+    /const date = document\.getElementById\('m-exp-date'\)\.value \|\| td\(\);\s*const payment = document\.getElementById\('m-exp-payment'\)\.value;\s*const note = document\.getElementById\('m-exp-note'\)\.value\.trim\(\);/,
+    `const date = document.getElementById('m-exp-date').value || td();
+            const walletId = document.getElementById('m-exp-wallet') ? document.getElementById('m-exp-wallet').value : 'cash';
+            const note = document.getElementById('m-exp-note').value.trim();`
+);
 
-// 2. Fix saveEditExpense
-const saveEditTarget = `            const payment = document.getElementById('m-exp-payment').value;
-            const note = document.getElementById('m-exp-note').value.trim();`;
+// 3.5 saveEditExpense function (saving to exp)
+js = js.replace(
+    /exp\.desc = desc; exp\.date = date; exp\.payment = payment; exp\.note = note; exp\.items = items; exp\.amount = amount;/,
+    `exp.desc = desc; exp.date = date; exp.walletId = walletId; exp.note = note; exp.items = items; exp.amount = amount;`
+);
 
-const saveEditNew = `            const walletId = document.getElementById('m-exp-wallet') ? document.getElementById('m-exp-wallet').value : 'cash';
-            const note = document.getElementById('m-exp-note').value.trim();`;
-
-js = js.replace(saveEditTarget, saveEditNew);
-
-const saveEditSetTarget = `            exp.payment = payment;`;
-const saveEditSetNew = `            exp.walletId = walletId;`;
-js = js.replace(saveEditSetTarget, saveEditSetNew);
-
-// 3. Fix addExpense
-const addExpTarget = `            const payment = document.getElementById('m-exp-payment').value;
-            const note = document.getElementById('m-exp-note').value.trim();`;
-const addExpNew = `            const walletId = document.getElementById('m-exp-wallet') ? document.getElementById('m-exp-wallet').value : 'cash';
-            const note = document.getElementById('m-exp-note').value.trim();`;
-js = js.replace(addExpTarget, addExpNew);
-
-const addExpPushTarget = `            state.expenses.push({ id: Date.now(), desc, amount: total, date, payment, note, items });`;
-const addExpPushNew = `            state.expenses.push({ id: Date.now(), desc, amount: total, date, walletId: walletId, note, items });`;
-js = js.replace(addExpPushTarget, addExpPushNew);
-
-// 4. Bump sw.js
+// BUMP SW
 let sw = fs.readFileSync('sw.js', 'utf8');
-sw = sw.replace(/مصاريفي-cache-v\d+/, 'مصاريفي-cache-v6');
+sw = sw.replace(/مصاريفي-cache-v\d+/, 'مصاريفي-cache-v7');
 fs.writeFileSync('sw.js', sw, 'utf8');
 
 fs.writeFileSync('js/app.js', js, 'utf8');
-console.log('Fixed edit expense modal and bumped cache to v6.');
+console.log('Fixed edit expense modal via regex and bumped cache to v7.');

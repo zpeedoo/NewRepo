@@ -2612,7 +2612,7 @@ document.getElementById('mini-dashboards').innerHTML = `
         function addExpense() {
             const desc = document.getElementById('m-exp-desc').value.trim();
             const date = document.getElementById('m-exp-date').value || td();
-            const payment = document.getElementById('m-exp-payment').value;
+            const walletId = document.getElementById('m-exp-wallet') ? document.getElementById('m-exp-wallet').value : 'cash';
             const note = document.getElementById('m-exp-note').value.trim();
 
             if (!desc) { toast('أدخل الوصف / الجهة'); return; }
@@ -2633,7 +2633,7 @@ document.getElementById('mini-dashboards').innerHTML = `
             if (!valid || items.length === 0) { toast('أضف صنفاً واحداً على الأقل'); return; }
             const amount = items.reduce((s, it) => s + it.qty * it.price, 0);
 
-            state.expenses.push({ id: state.nextId++, desc, amount, date, payment, note, items });
+            state.expenses.push({ id: state.nextId++, desc, amount, date, walletId, note, items });
             saveState(); closeModal('addExpense');
             
             // SMART INJECTION
@@ -2686,7 +2686,9 @@ document.getElementById('mini-dashboards').innerHTML = `
             editingExpId = id;
             document.getElementById('m-exp-desc').value = exp.desc || '';
             document.getElementById('m-exp-date').value = exp.date || td();
-            document.getElementById('m-exp-payment').value = exp.payment || 'نقدي';
+            const wOpts = (state.wallets||[]).map(w => `<option value="${w.id}">${w.icon} ${w.name}</option>`).join('');
+            if(document.getElementById('m-exp-wallet')) document.getElementById('m-exp-wallet').innerHTML = wOpts;
+            if(document.getElementById('m-exp-wallet')) document.getElementById('m-exp-wallet').value = exp.walletId || 'cash';
             document.getElementById('m-exp-note').value = exp.note || '';
             const container = document.getElementById('inv-items-container');
             container.innerHTML = '';
@@ -2702,7 +2704,7 @@ document.getElementById('mini-dashboards').innerHTML = `
             if (!exp) return;
             const desc = document.getElementById('m-exp-desc').value.trim();
             const date = document.getElementById('m-exp-date').value || td();
-            const payment = document.getElementById('m-exp-payment').value;
+            const walletId = document.getElementById('m-exp-wallet') ? document.getElementById('m-exp-wallet').value : 'cash';
             const note = document.getElementById('m-exp-note').value.trim();
 
             if (!desc) { toast('أدخل الوصف'); return; }
@@ -2721,7 +2723,7 @@ document.getElementById('mini-dashboards').innerHTML = `
             if (!valid || items.length === 0) { toast('أضف صنفاً واحداً على الأقل'); return; }
             const amount = items.reduce((s, it) => s + it.qty * it.price, 0);
 
-            exp.desc = desc; exp.date = date; exp.payment = payment; exp.note = note; exp.items = items; exp.amount = amount;
+            exp.desc = desc; exp.date = date; exp.walletId = walletId; exp.note = note; exp.items = items; exp.amount = amount;
 
             saveState(); closeModal('addExpense'); editingExpId = null; renderExpTable(); renderOverview(); if (typeof renderStatement === 'function') renderStatement(); toast('تم التعديل ✓');
         }
