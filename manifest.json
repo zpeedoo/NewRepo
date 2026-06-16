@@ -1,0 +1,16 @@
+{
+  "name": "مصاريفي",
+  "short_name": "مصاريفي",
+  "description": "تطبيق إدارة المصاريف الشخصية",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8f9fa",
+  "theme_color": "#f8f9fa",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

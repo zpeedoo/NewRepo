@@ -2596,7 +2596,23 @@
             const amount = items.reduce((s, it) => s + it.qty * it.price, 0);
 
             state.expenses.push({ id: state.nextId++, desc, amount, date, payment, note, items });
-            saveState(); closeModal('addExpense'); renderExpTable(); renderOverview(); if (typeof renderStatement === 'function') renderStatement(); toast('تمت إضافة المصروف ✓');
+            saveState(); closeModal('addExpense');
+            
+            // SMART INJECTION
+            if (inRange(date) && (typeof shopFilterCat === 'undefined' || shopFilterCat === 'all' || items.some(it => it.subcat === shopFilterCat))) {
+                const newInv = state.expenses[state.expenses.length - 1];
+                const table = document.getElementById('exp-table');
+                if (table) {
+                    const emptyDiv = table.querySelector('.empty');
+                    if (emptyDiv) emptyDiv.remove();
+                    const html = generateInvoiceHTML(newInv, typeof shopFilterCat !== 'undefined' ? shopFilterCat : 'all');
+                    table.insertAdjacentHTML('afterbegin', html);
+                }
+            }
+            if (typeof renderExpDash === 'function') renderExpDash();
+            renderOverview();
+            if (typeof renderStatement === 'function') renderStatement();
+            toast('تمت إضافة المصروف ✓');
 
             document.getElementById('m-exp-desc').value = '';
             document.getElementById('m-exp-note').value = '';
@@ -2612,7 +2628,16 @@
             state.deletedIds = state.deletedIds || {};
             state.deletedIds[String(id)] = true;
             state.expenses = state.expenses.filter(e => String(e.id) !== String(id));
-            saveState(); renderExpTable(); renderOverview(); if (typeof renderStatement === 'function') renderStatement(); toast('تم الحذف');
+            saveState(); 
+            // SMART DELETION
+            const row = document.querySelector(`.invoice-card[data-id="${id}"]`);
+            if (row) row.remove();
+            else if (typeof renderExpTable === 'function') renderExpTable();
+            
+            if (typeof renderExpDash === 'function') renderExpDash();
+            renderOverview(); 
+            if (typeof renderStatement === 'function') renderStatement(); 
+            toast('تم الحذف');
         }
 
         // Edit reuses the same modal as Add (modal-addExpense). The mode is
@@ -2802,7 +2827,44 @@
             win.document.close();
         }
 
-        function renderExpTable() {
+        
+        function generateInvoiceHTML(inv, shopFilterCat) {
+            const items2show = shopFilterCat === 'all' ? (inv.items || []) : (inv.items || []).filter(it => it.subcat === shopFilterCat);
+            const displayTotal = items2show.reduce((s, it) => s + it.qty * it.price, 0);
+            const itemsHtml = items2show.map(it => {
+                const col = shopSubcatColor(it.subcat);
+                return `<div class="inv-item-row">
+        <div class="inv-subcat-dot" style="background:${col}"></div><span class="inv-item-name">${it.name}</span><span class="inv-item-qty">×${it.qty}</span><span class="inv-subcat-badge"
+            style="background:${col}22;color:${col}">${it.subcat}</span><span class="inv-item-price">${(it.qty * it.price).toFixed(2)} د.أ</span>
+    </div>`;
+            }).join('');
+
+            const primaryCat = (inv.items || [])[0]?.subcat || 'أخرى';
+            const hasMore = (inv.items || []).length > 1;
+
+            return `<div class="invoice-card" data-id="${inv.id}">
+        <div class="invoice-hdr" onclick="toggleInvoice(${inv.id})">
+            <div class="invoice-icon" style="background:${catColor(primaryCat)}22;color:${catColor(primaryCat)}">📄
+            </div>
+            <div class="invoice-info">
+                <div class="invoice-title">${inv.desc}</div>
+                <div class="invoice-meta">${inv.date} · ${primaryCat}${hasMore ? ' (+ متعدد)' : ''} · ${inv.payment || 'نقدي'}${inv.note ? ' · ' + inv.note : ''} · ${(inv.items || []).length} صنف</div>
+            </div>
+            <div class="invoice-total">${(shopFilterCat === 'all' ? inv.amount.toFixed(2) : displayTotal.toFixed(2))} د.أ</div><button class="del-btn" style="color:var(--text);margin-inline-end:4px"
+                onclick="event.stopPropagation();printInvoice(${inv.id})" title="تصدير">🖨</button><button
+                class="del-btn" style="color:var(--accent2);margin-inline-end:4px"
+                onclick="event.stopPropagation();openEditExpense(${inv.id})" title="تعديل">✎</button><button
+                class="del-btn" onclick="event.stopPropagation();delExpense(${inv.id})" title="حذف">✕</button>
+        </div>
+        <div class="invoice-body" id="inv-body-${inv.id}">${itemsHtml}<div
+                style="display:flex;justify-content:space-between;padding-top:8px;margin-top:4px;border-top:1px solid var(--border)">
+                <span style="font-size:11px;color:var(--text3)">${shopFilterCat === 'all' ? 'إجمالي الفاتورة' : 'إجمالي الأصناف المحددة'}</span><span
+                    style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--red)">${(shopFilterCat === 'all' ? inv.amount : displayTotal).toFixed(2)} د.أ</span></div>
+                ${(shopFilterCat !== 'all' && (inv.items || []).length > items2show.length) ? `<button class="btn btn-sm btn-primary" style="width:100%; justify-content:center; margin-top:12px;" onclick="event.stopPropagation(); setShopFilter('all'); setTimeout(() => { const b = document.getElementById('inv-body-${inv.id}'); if(b){ b.classList.add('open'); b.parentElement.scrollIntoView({behavior:'smooth', block:'center'}); } }, 50);">عرض الفاتورة كاملة (${inv.amount.toFixed(2)} د.أ)</button>` : ''}
+        </div>
+    </div>`;
+        }
+function renderExpTable() {
             renderExpDash();
             const q = (document.getElementById('exp-search') || {}).value || '';
 
@@ -2824,44 +2886,7 @@
 
             const visible = filtered.slice(0, expLimit);
 
-            let html = visible.length ? visible.map(inv => {
-                const items2show = shopFilterCat === 'all' ? (inv.items || []) : (inv.items || []).filter(it => it.subcat ===
-                    shopFilterCat);
-                const displayTotal = items2show.reduce((s, it) => s + it.qty * it.price, 0);
-                const itemsHtml = items2show.map(it => {
-                    const col = shopSubcatColor(it.subcat);
-                    return `<div class="inv-item-row">
-        <div class="inv-subcat-dot" style="background:${col}"></div><span class="inv-item-name">${it.name}</span><span class="inv-item-qty">×${it.qty}</span><span class="inv-subcat-badge"
-            style="background:${col}22;color:${col}">${it.subcat}</span><span class="inv-item-price">${(it.qty * it.price).toFixed(2)} د.أ</span>
-    </div>`;
-                }).join('');
-
-                // Get primary subcat for badge
-                const primaryCat = (inv.items || [])[0]?.subcat || 'أخرى';
-                const hasMore = (inv.items || []).length > 1;
-
-                return `<div class="invoice-card">
-        <div class="invoice-hdr" onclick="toggleInvoice(${inv.id})">
-            <div class="invoice-icon" style="background:${catColor(primaryCat)}22;color:${catColor(primaryCat)}">📄
-            </div>
-            <div class="invoice-info">
-                <div class="invoice-title">${inv.desc}</div>
-                <div class="invoice-meta">${inv.date} · ${primaryCat}${hasMore ? ' (+ متعدد)' : ''} · ${inv.payment || 'نقدي'}${inv.note ? ' · ' + inv.note : ''} · ${(inv.items || []).length} صنف</div>
-            </div>
-            <div class="invoice-total">${(shopFilterCat === 'all' ? inv.amount.toFixed(2) : displayTotal.toFixed(2))} د.أ</div><button class="del-btn" style="color:var(--text);margin-inline-end:4px"
-                onclick="event.stopPropagation();printInvoice(${inv.id})" title="تصدير">🖨</button><button
-                class="del-btn" style="color:var(--accent2);margin-inline-end:4px"
-                onclick="event.stopPropagation();openEditExpense(${inv.id})" title="تعديل">✎</button><button
-                class="del-btn" onclick="event.stopPropagation();delExpense(${inv.id})" title="حذف">✕</button>
-        </div>
-        <div class="invoice-body" id="inv-body-${inv.id}">${itemsHtml}<div
-                style="display:flex;justify-content:space-between;padding-top:8px;margin-top:4px;border-top:1px solid var(--border)">
-                <span style="font-size:11px;color:var(--text3)">${shopFilterCat === 'all' ? 'إجمالي الفاتورة' : 'إجمالي الأصناف المحددة'}</span><span
-                    style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--red)">${(shopFilterCat === 'all' ? inv.amount : displayTotal).toFixed(2)} د.أ</span></div>
-                ${(shopFilterCat !== 'all' && (inv.items || []).length > items2show.length) ? `<button class="btn btn-sm btn-primary" style="width:100%; justify-content:center; margin-top:12px;" onclick="event.stopPropagation(); setShopFilter('all'); setTimeout(() => { const b = document.getElementById('inv-body-${inv.id}'); if(b){ b.classList.add('open'); b.parentElement.scrollIntoView({behavior:'smooth', block:'center'}); } }, 50);">عرض الفاتورة كاملة (${inv.amount.toFixed(2)} د.أ)</button>` : ''}
-        </div>
-    </div>`;
-            }).join('') : '<div class="empty">لا مصاريف في هذه الفترة — أضف مصروف جديد</div>';
+            let html = visible.length ? visible.map(inv => generateInvoiceHTML(inv, shopFilterCat)).join('') : '<div class="empty">لا مصاريف في هذه الفترة — أضف مصروف جديد</div>';
 
             if (filtered.length > expLimit) {
                 html += `<div class="show-more-container" style="display:flex;justify-content:center;margin-top:20px;margin-bottom:10px;">
