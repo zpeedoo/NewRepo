@@ -1571,7 +1571,6 @@
       </div>
     </div>
     <div class="nav-item active" data-page="daily" onclick="goPage(this)">☀️ عاداتي اليومية</div>
-    <div class="nav-item" data-page="dash" onclick="goPage(this)">📊 الملخص العام</div>
     <div class="nav-item" data-page="goals" onclick="goPage(this)">🏆 أهداف السنة</div>
     <div class="nav-item" data-page="books" onclick="goPage(this)">📚 مكتبتي اليدوية</div>
     <div class="nav-item" data-page="reader" onclick="goPage(this)">📖 القارئ الذكي</div>
@@ -1599,76 +1598,6 @@
       <div class="header-actions">
         <button class="circle-btn" onclick="openModal('settings')" title="إعدادات الحساب">⚙️</button>
         <button class="circle-btn" onclick="requestNotification()" title="تفعيل التنبيهات">🔔</button>
-      </div>
-    </div>
-    <!-- Dashboard -->
-    <div class="page" id="page-dash">
-      <div class="grid-4">
-        <div class="metric-card">
-          <div style="flex:1">
-            <div class="metric-icon-wrap" style="background:#e0f2fe; color:#0284c7">☀️</div>
-            <div class="metric-title">العادات اليومية</div>
-            <div class="metric-val" id="dash-daily-val">0/0</div>
-          </div>
-          <div class="circ-wrap">
-            <svg width="70" height="70" viewBox="0 0 70 70">
-              <circle class="circ-bg" cx="35" cy="35" r="30"></circle>
-              <circle class="circ-val" id="circ-daily" cx="35" cy="35" r="30" stroke="#0284c7" stroke-dasharray="188.4"
-                stroke-dashoffset="188.4"></circle>
-            </svg>
-            <div class="circ-text" id="circ-txt-daily">0%</div>
-          </div>
-        </div>
-        <div class="metric-card dash-book-matched">
-          <div class="text-side">
-            <div class="metric-icon-wrap"
-              style="background:#fbeae8; color:var(--primary); margin-right: 0; margin-left:auto;">📚</div>
-            <div class="metric-title">مكتبتي (التقدم العام)</div>
-            <div class="metric-val">
-              <span id="dash-books-count">0</span>
-              <span style="font-size: 16px; font-weight: normal; color: var(--text2);">كتب مسجلة</span>
-            </div>
-          </div>
-          <div class="circles-side">
-            <div class="circle-col">
-              <div class="circ-wrap" title="الكتب الورقية (يدوي)" style="transform: scale(0.85); margin: 0;">
-                <svg width="70" height="70" viewBox="0 0 70 70">
-                  <circle class="circ-bg" cx="35" cy="35" r="30"></circle>
-                  <circle class="circ-val" id="circ-books-manual" cx="35" cy="35" r="30" stroke="var(--primary)"
-                    stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle>
-                </svg>
-                <div class="circ-text" id="circ-txt-books-manual" style="font-size:15px; color:var(--primary)">0%</div>
-              </div>
-              <span class="circle-label">ورقي (يدوي)</span>
-            </div>
-            <div class="circle-col">
-              <div class="circ-wrap" title="القارئ الذكي (إلكتروني)" style="transform: scale(0.85); margin: 0;">
-                <svg width="70" height="70" viewBox="0 0 70 70">
-                  <circle class="circ-bg" cx="35" cy="35" r="30"></circle>
-                  <circle class="circ-val" id="circ-books-smart" cx="35" cy="35" r="30" stroke="var(--zaha)"
-                    stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle>
-                </svg>
-                <div class="circ-text" id="circ-txt-books-smart" style="font-size:15px; color:var(--zaha)">0%</div>
-              </div>
-              <span class="circle-label">القارئ الذكي</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="analytics-card">
-        <div class="analytics-hdr">
-          <div class="analytics-title">معدل إنجاز العادات</div>
-          <select class="analytics-filter" id="chart-filter" onchange="renderChart()">
-            <option value="1">اليوم</option>
-            <option value="7" selected>آخر أسبوع</option>
-            <option value="30">آخر شهر</option>
-            <option value="180">آخر 6 أشهر</option>
-            <option value="365">آخر سنة</option>
-          </select>
-        </div>
-        <div style="height: 220px; position: relative; margin-top: 10px;">
-          <canvas id="productivityChart"></canvas>
-        </div>
       </div>
     </div>
     <!-- Daily Habits -->
@@ -1726,6 +1655,25 @@
         <div class="daily-sidebar">
           <div class="mini-dash-card" id="mini-dash-content"></div>
         </div>
+
+        <!-- Moved Analytics Card -->
+
+        <div class="analytics-card">
+        <div class="analytics-hdr">
+          <div class="analytics-title">معدل إنجاز العادات</div>
+          <select class="analytics-filter" id="chart-filter" onchange="renderChart()">
+            <option value="1">اليوم</option>
+            <option value="7" selected>آخر أسبوع</option>
+            <option value="30">آخر شهر</option>
+            <option value="180">آخر 6 أشهر</option>
+            <option value="365">آخر سنة</option>
+          </select>
+        </div>
+        <div style="height: 220px; position: relative; margin-top: 10px;">
+          <canvas id="productivityChart"></canvas>
+        </div>
+      </div>
+
       </div>
     </div>
     <!-- ALL HABITS & STATS PAGE -->
@@ -2314,7 +2262,6 @@
   <!-- Mobile Bottom Nav -->
   <div class="bnav">
     <div class="bnav-item active" data-page="daily" onclick="goPage(this)">☀️<span>عاداتي</span></div>
-    <div class="bnav-item" data-page="dash" onclick="goPage(this)">📊<span>الملخص</span></div>
     <div class="bnav-item" data-page="goals" onclick="goPage(this)">🏆<span>أهدافي</span></div>
     <div class="bnav-item" data-page="books" onclick="goPage(this)">📚<span>ورقي</span></div>
     <div class="bnav-item" data-page="reader" onclick="goPage(this)">📖<span>القارئ</span></div>
