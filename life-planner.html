@@ -192,9 +192,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 30px;
+      margin-bottom: 15px;
       flex-wrap: wrap;
-      gap: 15px;
+      gap: 10px;
     }
     .date-widget {
       display: flex;
@@ -1350,14 +1350,8 @@
       .main {
         padding: 20px 16px 100px;
       }
-      .date-hdr {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 20px;
-      }
-      .greeting {
-        margin-top: 10px;
-      }
+      .date-hdr { flex-direction: row; align-items: center; gap: 10px; margin-bottom: 10px; }
+      .greeting { display: none; } .date-circle { width: 38px; height: 38px; font-size: 16px; } .header-actions .circle-btn { width: 36px; height: 36px; font-size: 14px; }
       .add-bar {
         flex-direction: row;
       }
@@ -1679,8 +1673,8 @@
     </div>
     <!-- Daily Habits -->
     <div class="page active" id="page-daily">
-            <div style="display: flex; justify-content: center; margin-bottom: 20px; margin-top: 10px;">
-        <button class="btn btn-dark btn-circle" onclick="openModal('habit')" title="إضافة عادة" style="width: 60px; height: 60px; font-size: 32px; box-shadow: 0 6px 16px rgba(0,0,0,0.2);">+</button>
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: -10px;">
+        <button class="btn btn-dark btn-circle" onclick="openModal('habit')" title="إضافة عادة" style="width: 40px; height: 40px; font-size: 20px; box-shadow: 0 3px 8px rgba(0,0,0,0.15);">+</button>
       </div>
       <div id="habit-list" style="margin-bottom: 20px;"></div>
             <div style="display: flex; gap: 15px; margin-bottom: 20px; align-items: stretch; flex-wrap: wrap;">
