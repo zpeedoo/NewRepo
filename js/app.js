@@ -181,6 +181,12 @@
                 state.subscriptions = smartMerge(localSubs, serverSubs);
 
                 state.incomeSources = p.incomeSources ? Object.values(p.incomeSources) : [];
+                
+                state.wallets = p.wallets ? Object.values(p.wallets) : [
+                    { id: 'cash', name: 'كاش', icon: '💵', balance: 0 },
+                    { id: 'visa', name: 'فيزا', icon: '💳', balance: 0 },
+                    { id: 'savings', name: 'حساب توفير', icon: '🏦', balance: 0 }
+                ];
                 state.shopping = p.shopping ? Object.values(p.shopping) : [];
                 state.incomeDeductions = p.incomeDeductions ? Object.values(p.incomeDeductions) : [];
                 if (p.categories) state.categories = p.categories;
