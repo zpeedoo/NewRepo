@@ -345,6 +345,7 @@
 
                 // Migrate subscription categories
                 (state.subscriptions || []).forEach(s => {
+                if (s.paused || !isSubActive(s)) return;
                     const before = s.cat;
                     const after = remap(before);
                     if (before !== after) { s.cat = after; updatedIds = true; }
@@ -1053,6 +1054,7 @@ document.getElementById('mini-dashboards').innerHTML = `
         }
         // Check if subscription is active (not ended)
         function isSubActive(s) {
+            if (s.paused) return false;
             if (!s.end) return true;
             const endD = new Date(s.end); endD.setHours(0, 0, 0, 0);
             const today = new Date(); today.setHours(0, 0, 0, 0);
@@ -1199,6 +1201,7 @@ document.getElementById('mini-dashboards').innerHTML = `
                 });
             });
             if (state.subscriptions) state.subscriptions.forEach(s => {
+                if (s.paused || !isSubActive(s)) return;
                 const amt = (s.freq === 'daily' ? s.amount * 30 : s.freq === 'monthly' ? s.amount : s.amount / 12) * numMonths;
                 const cat = normCat(s.cat);
                 byCat[cat] = (byCat[cat] || 0) + amt;
@@ -2978,14 +2981,26 @@ function renderExpTable() {
 
             saveState(); closeModal('editFixedDeds'); renderIncome(); renderSubs(); renderOverview(); toast('تم التحديث ✓');
         }
+        
+        window.toggleSubPause = function(id) {
+            const s = state.subscriptions.find(x => x.id === id);
+            if (s) {
+                s.paused = !s.paused;
+                saveState();
+                renderSubs();
+                renderOverview();
+                toast(s.paused ? 'تم إيقاف الاشتراك مؤقتاً' : 'تم تفعيل الاشتراك');
+            }
+        };
+
         function renderSubs() {
             if (!state.fixedSubs || typeof state.fixedSubs.social !== 'object') {
                 state.fixedSubs = { social: { amount: 0, start: td(), end: '' }, health: { amount: 0, start: td(), end: '' } };
             }
             const monthly = calcSubMonthly();
-            const daily = state.subscriptions.filter(s => s.freq === 'daily').reduce((s, x) => s + x.amount, 0);
-            const mOnly = state.subscriptions.filter(s => s.freq === 'monthly').reduce((s, x) => s + x.amount, 0);
-            const yearly = state.subscriptions.filter(s => s.freq === 'yearly').reduce((s, x) => s + x.amount, 0);
+            const daily = state.subscriptions.filter(s => s.freq === 'daily' && !s.paused && isSubActive(s)).reduce((s, x) => s + x.amount, 0);
+            const mOnly = state.subscriptions.filter(s => s.freq === 'monthly' && !s.paused && isSubActive(s)).reduce((s, x) => s + x.amount, 0);
+            const yearly = state.subscriptions.filter(s => s.freq === 'yearly' && !s.paused && isSubActive(s)).reduce((s, x) => s + x.amount, 0);
             document.getElementById('sub-metrics').innerHTML = `
         <div class="metric m-r">
             <div class="metric-lbl">يومي (شهرياً)</div>
@@ -3019,10 +3034,13 @@ function renderExpTable() {
                 <div class="sub-meta">${s.cat}${s.note ? ' · ' + s.note : ''}</div>
             </div>
             <div style="text-align:left">
-                <div class="sub-amt">${s.amount} د.أ</div>
-                <div class="sub-next" style="font-size:13px; font-weight:600; color:var(--text); margin-top:2px;">تجديد: ${s.next}</div>
+                <div class="sub-amt" style="text-decoration: ${s.paused ? 'line-through' : 'none'}; color: ${s.paused ? 'var(--text3)' : 'var(--text)'}">${s.amount} د.أ</div>
+                <div class="sub-next" style="font-size:13px; font-weight:600; color:${s.paused ? 'var(--text3)' : 'var(--text)'}; margin-top:2px;">
+                    ${s.paused ? '⏸ متوقف مؤقتاً' : 'تجديد: ' + s.next}
+                </div>
             </div>
             <div style="display:flex;gap:4px;">
+                <button class="del-btn" style="color:var(--accent2); font-size: 14px;" onclick="toggleSubPause(${s.id})" title="${s.paused ? 'تفعيل' : 'إيقاف مؤقت'}">${s.paused ? '▶' : '⏸'}</button>
                 <button class="del-btn" style="color:var(--accent2);" onclick="openEditSub(${s.id})" title="تعديل">✎</button>
                 <button class="del-btn" onclick="delSub(${s.id})">✕</button>
             </div>
