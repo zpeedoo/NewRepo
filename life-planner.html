@@ -1677,6 +1677,16 @@
         <button class="btn btn-dark btn-circle" onclick="openModal('habit')" title="إضافة عادة" style="width: 40px; height: 40px; font-size: 20px; box-shadow: 0 3px 8px rgba(0,0,0,0.15);">+</button>
       </div>
       <div id="habit-list" style="margin-bottom: 20px;"></div>
+
+          <!-- Daily Breathing Card -->
+          <div class="breathe-card">
+            <div>
+              <h3 style="margin-bottom: 8px; color: var(--black); font-weight: 800; font-size: 16px;">🫁 تمارين التنفس اليومية</h3>
+              <p style="font-size: 13px; color: var(--text2);">خصص 5 دقائق لصفاء ذهنك وتقليل التوتر</p>
+              <div id="breathe-status" style="margin-top: 10px; font-size: 12px; font-weight: 800; color: #10b981; display: none;">✅ تم إنجاز تمرين اليوم</div>
+            </div>
+            <button class="btn" onclick="openBreatheModal()">ابدأ التمرين ▶</button>
+          </div>
             <div style="display: flex; gap: 15px; margin-bottom: 20px; align-items: stretch; flex-wrap: wrap;">
         
         <div class="metric-card" style="flex: 1; margin-bottom: 0; min-width: 200px; padding: 15px;">
@@ -1711,15 +1721,6 @@
       </div>
       <div class="daily-layout">
         <div class="daily-main">
-          <!-- Daily Breathing Card -->
-          <div class="breathe-card">
-            <div>
-              <h3 style="margin-bottom: 8px; color: var(--black); font-weight: 800; font-size: 16px;">🫁 تمارين التنفس اليومية</h3>
-              <p style="font-size: 13px; color: var(--text2);">خصص 5 دقائق لصفاء ذهنك وتقليل التوتر</p>
-              <div id="breathe-status" style="margin-top: 10px; font-size: 12px; font-weight: 800; color: #10b981; display: none;">✅ تم إنجاز تمرين اليوم</div>
-            </div>
-            <button class="btn" onclick="openBreatheModal()">ابدأ التمرين ▶</button>
-          </div>
           
         </div>
         <div class="daily-sidebar">
