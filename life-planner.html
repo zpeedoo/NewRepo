@@ -2558,7 +2558,7 @@
     }
     // Close popup on outside click
     document.addEventListener('click', function(e) {
-      const gearBtn = document.querySelector('[onclick="openModal('settings')"]');
+      const gearBtn = document.querySelector(`[onclick="openModal('settings')"]`);
       const popup = document.getElementById('settings-popup');
       if(popup && gearBtn && popup.style.display === 'block') {
         if(!gearBtn.contains(e.target)) {
