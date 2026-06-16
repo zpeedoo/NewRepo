@@ -1554,7 +1554,7 @@
         <input type="file" id="hidden-pic-upload" accept="image/*" style="display:none;" onchange="handleDirectPicUpload(this)">
         <span style="font-size: 16px;">مرحباً، <span id="user-greeting-name">صديقي</span></span>
       </div>
-      <div style="font-size:24px; cursor:pointer; color:var(--text3); margin-top:5px; transition:0.2s; position:relative;" onclick="toggleSettingsPopup()" title="إعدادات الحساب" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text3)'">
+      <div style="font-size:24px; cursor:pointer; color:var(--text3); margin-top:5px; transition:0.2s; position:relative;" onclick="openModal('settings')" title="إعدادات الحساب" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text3)'">
         ⚙️
         <div id="settings-popup" style="display:none; position:absolute; top:40px; right:50%; transform:translateX(50%); background:var(--surface); padding:15px; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1); width:240px; z-index:1000; text-align:right; font-size:13px; border:1px solid var(--border); cursor:default;" onclick="event.stopPropagation()">
             <div style="margin-bottom:10px; font-weight:bold; color:var(--black);">إعدادات الحساب</div>
@@ -1597,7 +1597,7 @@
         <p>قم بتنظيم يومك وأهدافك بسهولة!</p>
       </div>
       <div class="header-actions">
-        <button class="circle-btn" onclick="openSettingsModal()" title="إعدادات الحساب">⚙️</button>
+        <button class="circle-btn" onclick="openModal('settings')" title="إعدادات الحساب">⚙️</button>
         <button class="circle-btn" onclick="requestNotification()" title="تفعيل التنبيهات">🔔</button>
       </div>
     </div>
@@ -2137,6 +2137,24 @@
   </div> <!-- End Main -->
   <!-- MODALS -->
   <!-- Notification Settings Modal -->
+    <!-- Settings Modal -->
+  <div class="modal-ov" id="modal-settings">
+    <div class="modal-box">
+      <div class="modal-hdr">
+        <div class="modal-title">إعدادات الحساب ⚙️</div>
+        <button class="modal-close" onclick="closeModal('settings')">×</button>
+      </div>
+      <div class="field" style="margin-bottom:15px;">
+        <label>الاسم المستعار</label>
+        <input type="text" id="s-name-m" class="inp" placeholder="الاسم">
+      </div>
+      <div class="field" style="margin-bottom:20px;">
+        <label>العمر</label>
+        <input type="number" id="s-age-m" class="inp" placeholder="مثال: 25">
+      </div>
+      <button class="btn btn-dark" style="width:100%;" onclick="saveAccountSettingsM()">حفظ التعديلات 💾</button>
+    </div>
+  </div>
   <div class="modal-ov" id="modal-notif">
     <div class="modal">
       <div class="modal-title">تفعيل التنبيهات 🔔</div>
@@ -2540,7 +2558,7 @@
     }
     // Close popup on outside click
     document.addEventListener('click', function(e) {
-      const gearBtn = document.querySelector('[onclick="toggleSettingsPopup()"]');
+      const gearBtn = document.querySelector('[onclick="openModal('settings')"]');
       const popup = document.getElementById('settings-popup');
       if(popup && gearBtn && popup.style.display === 'block') {
         if(!gearBtn.contains(e.target)) {
@@ -2577,6 +2595,11 @@
       renderAll();
     }
     function openModal(type, id = null) {
+      if (type === 'settings') {
+        document.getElementById('s-name-m').value = state.settings.displayName || "صديقي";
+        document.getElementById('s-age-m').value = state.settings.age || "";
+        document.getElementById('modal-settings').classList.add('show'); return;
+      }
       if (type === 'notif') {
         document.getElementById('m-notif-time').value = state.settings.notifTime || '20:00';
         document.getElementById('modal-notif').classList.add('show'); return;
