@@ -4030,8 +4030,8 @@
             }
 
             // Use .on() for REAL-TIME sync: fires automatically on any change from any device
-            if (!localStorage.getItem('fb_auth_token')) {
-                db.ref('state').on('value', snapshot => {
+            db.ref('state').on('value', snapshot => {
+                    
                     const p = snapshot.val();
                     if (!p) return;
 
@@ -4082,10 +4082,10 @@
                             renderCurrentPage();
                         }
                     }
+                
                 }, err => {
                     console.error('Firebase realtime listener error', err);
                 });
-            }
 
             if (needsSave) saveState();
         }
@@ -4156,22 +4156,14 @@
             // 2. المزامنة في الخلفية (Firebase تتعامل مع انقطاع النت بذكاء)
             try {
                 const firebaseState = { ...state, budgets: encodeBudgetsForFirebase(state.budgets) };
-                const token = localStorage.getItem('fb_auth_token');
-                if (token) {
-                    const url = `https://myexpenses-3b6f5-default-rtdb.firebaseio.com/state.json?auth=${token}`;
-                    fetch(url, { method: 'PUT', body: JSON.stringify(firebaseState) })
-                        .then(() => console.log('Firebase REST save OK'))
-                        .catch(e => console.error('Firebase REST save error', e));
-                } else {
-                    db.ref('state').set(firebaseState)
-                        .then(() => console.log('Firebase Web SDK save OK'))
-                        .catch(e => console.error('Firebase Web SDK save error', e));
-                }
+                db.ref('state').set(firebaseState)
+                    .then(() => console.log('Firebase Web SDK save OK'))
+                    .catch(e => console.error('Firebase Web SDK save error', e))
+                    .finally(() => { isSaving = false; });
             } catch (e) {
                 console.error('Firebase format error', e);
+                isSaving = false;
             }
-            // Allow listener again after a short delay
-            setTimeout(() => { isSaving = false; }, 500);
         }
 
         // ═══════════════════════════════════════
@@ -6188,6 +6180,16 @@
                 inputs[1].value = prefill.qty ?? 1;
                 inputs[2].value = prefill.price ?? 0;
                 if (sel[0] && prefill.subcat) {
+                    let exists = false;
+                    for (let i = 0; i < sel[0].options.length; i++) {
+                        if (sel[0].options[i].value === prefill.subcat) { exists = true; break; }
+                    }
+                    if (!exists) {
+                        const opt = document.createElement('option');
+                        opt.value = prefill.subcat;
+                        opt.text = prefill.subcat;
+                        sel[0].add(opt);
+                    }
                     sel[0].value = prefill.subcat;
                     sel[0].dataset.manual = '1';
                 }
