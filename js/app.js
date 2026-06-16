@@ -905,7 +905,36 @@
             // 2. Render Loan Dashbaord
             const offsetLoan = circumference - (loanPct / 100) * circumference;
 
-            document.getElementById('mini-dashboards').innerHTML = `
+            
+            // Wallet Balances
+            if(state.wallets && document.getElementById('wallets-dash')) {
+                let walletBals = {};
+                state.wallets.forEach(w => walletBals[w.id] = 0);
+                
+                (state.incomeSources||[]).forEach(inc => {
+                    let wid = inc.walletId || 'cash';
+                    if(walletBals[wid] !== undefined) walletBals[wid] += inc.amount;
+                });
+                
+                walletBals['cash'] -= calcFixedDeductions();
+                
+                (state.expenses||[]).forEach(exp => {
+                    let wid = exp.walletId || 'cash';
+                    if(walletBals[wid] !== undefined) walletBals[wid] -= exp.amount;
+                });
+                
+                walletBals['cash'] -= calcSubMonthly();
+                walletBals['cash'] -= loanMonthly;
+
+                document.getElementById('wallets-dash').innerHTML = state.wallets.map(w => `
+                    <div class="metric" style="padding: 10px;">
+                        <div class="metric-lbl">${w.icon} ${w.name}</div>
+                        <div class="metric-val" style="font-size: 16px; color: ${walletBals[w.id] < 0 ? 'var(--red)' : 'var(--text)'}">${walletBals[w.id].toFixed(2)} <span style="font-size:11px;color:var(--text3)">د.أ</span></div>
+                    </div>
+                `).join('');
+            }
+
+document.getElementById('mini-dashboards').innerHTML = `
                 <!-- Dashboard 1: Consumption -->
                 <div class="card" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
                     <div class="card-title" style="margin-bottom:20px; text-align:center;">${consumeTitle}</div>
@@ -3336,6 +3365,15 @@ function renderExpTable() {
                 const paid = l.total - l.remaining;
                 const pct = Math.min(paid / l.total * 100, 100);
                 const mLeft = l.monthly > 0 ? Math.ceil(l.remaining / l.monthly) : 0;
+                let nextDueStr = '-';
+                if (l.start && l.remaining > 0) {
+                    const today = new Date();
+                    const startD = new Date(l.start);
+                    let nextDue = new Date(today.getFullYear(), today.getMonth(), startD.getDate());
+                    nextDue.setHours(0,0,0,0);
+                    if (nextDue < today) nextDue.setMonth(nextDue.getMonth() + 1);
+                    nextDueStr = nextDue.toLocaleDateString('ar-JO', {month:'short', day:'numeric'});
+                }
                 return `<div class="loan-card">
                 <div class="loan-hdr">
                     <div>
@@ -3362,6 +3400,10 @@ function renderExpTable() {
                     <div class="loan-stat">
                         <div class="loan-stat-lbl">القسط الشهري</div>
                         <div class="loan-stat-val" style="color:var(--amber)">${l.monthly} د.أ</div>
+                    </div>
+                    <div class="loan-stat">
+                        <div class="loan-stat-lbl">الأقساط المتبقية</div>
+                        <div class="loan-stat-val">${mLeft} قسط</div>
                     </div>
                     <div class="loan-stat">
                         <div class="loan-stat-lbl">الأشهر المتبقية</div>
@@ -4139,6 +4181,10 @@ function renderExpTable() {
         // MODALS + TOAST
         // ═══════════════════════════════════════
         function openModal(name) {
+            const wOpts = (state.wallets||[]).map(w => `<option value="${w.id}">${w.icon} ${w.name}</option>`).join('');
+            if(document.getElementById('m-exp-wallet')) document.getElementById('m-exp-wallet').innerHTML = wOpts;
+            if(document.getElementById('inc-wallet')) document.getElementById('inc-wallet').innerHTML = wOpts;
+
             if (name === 'addExpense') {
                 document.getElementById('m-exp-date').value = td();
                 editingExpId = null;
@@ -4215,11 +4261,11 @@ function renderExpTable() {
                 if (lb) lb.textContent = 'الوضع النهاري';
             }
         }
-        function toggleTheme() {
-            const cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
-            const next = cur === 'light' ? 'dark' : 'light';
-            try { localStorage.setItem('theme', next); } catch (e) { }
-            applyTheme(next);
+                function toggleTheme() {
+            let t = localStorage.getItem('theme') || 'light';
+            t = t === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', t);
+            applyTheme(t);
         }
         (function initTheme() {
             let saved = 'dark';
