@@ -2664,7 +2664,7 @@
       const itemsHtml = activeWeeklyHabits.map(item => {
         const h = item.habit; const expected = item.expected; const done = item.done; const isDone = done >= expected; const pct = Math.min(Math.round((done / expected) * 100), 100);
         const gInfo = state.goals.find(g => g.id == h.goalId); const icon = h.bookId ? '📖' : (gInfo ? '🎯' : '⚡');
-        return `<div class="md-item"><div class="md-icon">${icon}</div><div class="md-info"><div style="display:flex; justify-content:space-between; align-items:center;"><div class="md-name" title="${h.title}">${h.title}</div><div class="md-status ${isDone ? 'done' : ''}">${pct}%</div></div><div class="md-bar-bg"><div class="md-bar-fill ${isDone ? 'done' : ''}" style="width: ${pct}%"></div></div></div></div>`;
+        return `<div class="md-item"><div class="md-icon">${icon}</div><div class="md-info"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="display:flex; align-items:center; gap:8px;"><div class="md-name" title="${h.title}">${h.title}</div>${!isDone ? `<button onclick="openModal('habit', ${h.id})" style="background:none; border:none; cursor:pointer; font-size:14px; opacity:0.7; padding:0;" title="تعديل">✏️</button>` : ''}</div><div class="md-status ${isDone ? 'done' : ''}">${pct}%</div></div><div class="md-bar-bg"><div class="md-bar-fill ${isDone ? 'done' : ''}" style="width: ${pct}%"></div></div></div></div>`;
       }).join('');
       
       const circleOffset = 188.4 - (dPct / 100 * 188.4);
