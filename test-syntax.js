@@ -1,2325 +1,13 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="theme-color" content="#f4f6f8" id="theme-color-meta">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <title>امسي | Amsy</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=JetBrains+Mono:wght@300;400;700;800&family=Georgia&display=swap"
-    rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js" crossorigin="anonymous"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js" crossorigin="anonymous"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js" crossorigin="anonymous"></script>
-  <style>
-    :root {
-      --bg: #f4f6f8;
-      --surface: #ffffff;
-      --surface2: #f9fafb;
-      --text: #1a1b1e;
-      --text2: #6b7280;
-      --text3: #9ca3af;
-      --border: #f3f4f6;
-      --border-darker: #e5e7eb;
-      --primary: #e65c4f;
-      --primary-light: #fbeae8;
-      --black: #111111;
-      --zaha: #4f46e5;
-      --zaha-light: #e0e7ff;
-      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
-      --r: 24px;
-      --r-sm: 14px;
-      --nav-bg: rgba(255, 255, 255, 0.95);
-      /* Calendar Colors */
-      --cal-full: #10b981;
-      --cal-half: #6ee7b7;
-      --cal-low: #d1fae5;
-      --cal-empty: #f3f4f6;
-    }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Almarai', sans-serif;
-      -webkit-tap-highlight-color: transparent;
-      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-    }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
-    /* Layout */
-    .sidebar {
-      width: 240px;
-      background: var(--surface);
-      border-left: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      padding: 30px 0;
-      z-index: 10;
-      box-shadow: 2px 0 15px rgba(0, 0, 0, 0.02);
-    }
-    .main {
-      flex: 1;
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding: 30px;
-      position: relative;
-      scroll-behavior: smooth;
-    }
-    .logo {
-      font-size: 20px;
-      font-weight: 800;
-      text-align: center;
-      color: var(--black);
-      margin-bottom: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    .logo-icon {
-      background: var(--black);
-      color: var(--surface);
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 12px;
-      font-size: 16px;
-    }
-    .nav-item {
-      padding: 12px 24px;
-      color: var(--text2);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 700;
-      font-size: 13px;
-      transition: 0.2s;
-      margin: 0 16px 8px;
-      border-radius: var(--r-sm);
-    }
-    .nav-item:hover {
-      background: var(--surface2);
-      color: var(--black);
-    }
-    .nav-item.active {
-      background: var(--primary-light);
-      color: var(--primary);
-    }
-    /* Bottom Nav */
-    .bnav {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--nav-bg);
-      backdrop-filter: blur(12px);
-      border-top: 1px solid var(--border);
-      z-index: 100;
-      justify-content: space-between;
-      align-items: center;
-      padding: 6px 2px;
-      padding-bottom: max(8px, env(safe-area-inset-bottom));
-      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
-    }
-    .bnav-item {
-      flex: 1 1 0;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: var(--text2);
-      padding: 6px 0;
-      font-size: 18px;
-      cursor: pointer;
-      transition: 0.2s;
-      border-radius: 8px;
-    }
-    .bnav-item span {
-      display: block;
-      font-size: 8.5px;
-      font-weight: 700;
-      margin-top: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      width: 100%;
-      text-align: center;
-    }
-    .bnav-item.active {
-      color: var(--primary);
-      background: var(--primary-light);
-      transform: translateY(-2px);
-    }
-    /* Pages */
-    .page {
-      display: none;
-      animation: fade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      padding-bottom: 80px;
-    }
-    .page.active {
-      display: block;
-    }
-    @keyframes fade {
-      from {
-        opacity: 0;
-        transform: translateY(15px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    /* Header */
-    .date-hdr {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-    .date-widget {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .date-circle {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      font-weight: 800;
-      background: var(--surface);
-      box-shadow: var(--shadow);
-      color: var(--black);
-    }
-    .date-text {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text2);
-      line-height: 1.2;
-    }
-    .greeting {
-      text-align: left;
-    }
-    .greeting h1 {
-      font-size: 28px;
-      margin: 0;
-      font-weight: 800;
-      color: var(--black);
-      letter-spacing: -0.5px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .greeting p {
-      color: var(--text3);
-      font-size: 18px;
-      font-weight: 400;
-      margin-top: 4px;
-    }
-    .header-actions {
-      display: flex;
-      gap: 10px;
-    }
-    .circle-btn {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--black);
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      cursor: pointer;
-      transition: 0.3s;
-      box-shadow: var(--shadow);
-    }
-    .circle-btn:hover {
-      background: var(--border);
-    }
-    /* Dashboard Metrics Cards */
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-    .metric-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 24px;
-      box-shadow: var(--shadow);
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      transition: 0.3s;
-      min-height: 125px;
-    }
-    .metric-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.1);
-    }
-    .metric-icon-wrap {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 12px;
-      font-size: 18px;
-    }
-    .metric-title {
-      font-size: 13px;
-      color: var(--text2);
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    .metric-val {
-      font-size: 28px;
-      font-weight: 800;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--black);
-      letter-spacing: -1px;
-      line-height: 1.2;
-    }
-    /* SVG Circles */
-    .circ-wrap {
-      position: relative;
-      width: 70px;
-      height: 70px;
-      flex-shrink: 0;
-      margin-top: auto;
-      margin-bottom: auto;
-    }
-    .circ-bg {
-      fill: none;
-      stroke: var(--border);
-      stroke-width: 6;
-    }
-    .circ-val {
-      fill: none;
-      stroke-width: 6;
-      stroke-linecap: round;
-      transition: stroke-dashoffset 1s cubic-bezier(0.16, 1, 0.3, 1);
-      transform: rotate(-90deg);
-      transform-origin: 50% 50%;
-    }
-    .circ-text {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 800;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--black);
-    }
-    /* Progress & Sliders */
-    .prog-wrap {
-      margin-top: 16px;
-    }
-    .prog-bg {
-      background: var(--border);
-      height: 8px;
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    .prog-fill {
-      height: 100%;
-      border-radius: 4px;
-      transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    /* Lists & Items */
-    .list-item {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r-sm);
-      padding: 18px 20px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      transition: 0.2s;
-      box-shadow: var(--shadow);
-      position: relative;
-    }
-    .list-item:hover {
-      border-color: var(--border-darker);
-    }
-    .list-item.done {
-      opacity: 0.6;
-      background: var(--surface2);
-      box-shadow: none;
-      border-color: transparent;
-    }
-    .list-item.done .item-title {
-      text-decoration: line-through;
-      color: var(--text3);
-    }
-    .check-btn {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      border: 2px solid var(--border-darker);
-      background: var(--surface);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      transition: 0.2s;
-      flex-shrink: 0;
-      color: transparent;
-    }
-    .check-btn.active {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: #fff;
-    }
-    .item-info {
-      flex: 1;
-      min-width: 0;
-    }
-    .item-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--black);
-    }
-    .item-meta {
-      font-size: 12px;
-      color: var(--text2);
-      margin-top: 6px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .badge {
-      padding: 2px 8px;
-      border-radius: 10px;
-      font-size: 10px;
-      font-weight: 700;
-    }
-    .goal-badge {
-      background: var(--primary-light);
-      color: var(--primary);
-    }
-    .streak-badge {
-      background: #fff3cd;
-      color: #ea580c;
-      border: 1px solid #fed7aa;
-      display: flex;
-      align-items: center;
-      gap: 3px;
-    }
-    body.dark-theme .streak-badge {
-      background: rgba(234, 88, 12, 0.1);
-      border-color: rgba(234, 88, 12, 0.3);
-    }
-    /* Cards */
-    .card-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: var(--shadow);
-      transition: 0.3s;
-    }
-    .card-box:hover {
-      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.1);
-    }
-    .card-hdr {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-    .card-title {
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--black);
-    }
-    .card-pct {
-      font-size: 18px;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 800;
-      color: var(--primary);
-      background: var(--primary-light);
-      padding: 4px 12px;
-      border-radius: 20px;
-    }
-    /* Analytics & Daily Layout */
-    .analytics-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 24px;
-      box-shadow: var(--shadow);
-      margin-bottom: 30px;
-      color: var(--black);
-    }
-    .analytics-hdr {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      flex-direction: row-reverse;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .analytics-title {
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--black);
-    }
-    .analytics-filter {
-      background: var(--surface);
-      color: var(--black);
-      border: 1px solid var(--border-darker);
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 700;
-      outline: none;
-      cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
-    }
-    .daily-layout {
-      display: flex;
-      gap: 30px;
-      align-items: flex-start;
-    }
-    .daily-main {
-      flex: 1;
-      min-width: 0;
-    }
-    .daily-sidebar {
-      width: 320px;
-      flex-shrink: 0;
-      position: sticky;
-      top: 30px;
-    }
-    .mini-dash-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 24px;
-      box-shadow: var(--shadow);
-      transition: 0.3s;
-      margin-bottom: 20px;
-    }
-    .md-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .md-title {
-      font-weight: 800;
-      font-size: 16px;
-      color: var(--black);
-    }
-    .md-overall {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 25px;
-      padding-bottom: 20px;
-      border-bottom: 1px dashed var(--border-darker);
-    }
-    .md-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      max-height: 250px;
-      overflow-y: auto;
-      padding-left: 5px;
-    }
-    .md-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .md-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: var(--surface2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      border: 1px solid var(--border-darker);
-      flex-shrink: 0;
-    }
-    .md-info {
-      flex: 1;
-      min-width: 0;
-    }
-    .md-name {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--black);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .md-status {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--text3);
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .md-status.done {
-      color: var(--primary);
-    }
-    .md-bar-bg {
-      height: 6px;
-      background: var(--surface2);
-      border: 1px solid var(--border-darker);
-      border-radius: 3px;
-      margin-top: 6px;
-      overflow: hidden;
-    }
-    .md-bar-fill {
-      height: 100%;
-      border-radius: 3px;
-      background: var(--text3);
-      transition: 0.4s;
-      width: 0%;
-    }
-    .md-bar-fill.done {
-      background: var(--primary);
-    }
-    /* Mood & Journal Styles */
-    .mood-btn {
-      padding: 10px;
-      border-radius: 12px;
-      border: 1px solid var(--border-darker);
-      background: var(--surface2);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-weight: 700;
-      font-size: 14px;
-      flex: 1;
-      transition: 0.2s;
-      color: var(--text2);
-    }
-    .mood-btn:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-    .mood-btn.active {
-      background: var(--primary-light);
-      border-color: var(--primary);
-      color: var(--primary);
-      transform: translateY(-2px);
-    }
-    /* Calendar Grid Styles */
-    .cal-header-days {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      text-align: center;
-      font-weight: 800;
-      font-size: 11px;
-      color: var(--text2);
-      margin-bottom: 10px;
-    }
-    .cal-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-    }
-    .cal-cell {
-      aspect-ratio: 1;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 800;
-      position: relative;
-      color: var(--text);
-      background: var(--surface);
-      transition: 0.3s;
-    }
-    .cal-day-empty {
-      background: var(--cal-empty);
-      color: var(--text3);
-      border-color: transparent;
-    }
-    .cal-day-low {
-      background: var(--cal-low);
-      border-color: var(--cal-low);
-    }
-    .cal-day-half {
-      background: var(--cal-half);
-      border-color: var(--cal-half);
-      color: #fff;
-    }
-    .cal-day-full {
-      background: var(--cal-full);
-      border-color: var(--cal-full);
-      color: #fff;
-      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
-    }
-    .cal-mood {
-      position: absolute;
-      bottom: 2px;
-      right: 2px;
-      font-size: 10px;
-    }
-    .cal-today-marker {
-      position: absolute;
-      top: 4px;
-      left: 4px;
-      width: 6px;
-      height: 6px;
-      background: var(--primary);
-      border-radius: 50%;
-    }
-    /* Shared Common Elements */
-    .add-bar {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 30px;
-      background: var(--surface);
-      padding: 16px;
-      border-radius: var(--r);
-      border: 1px solid var(--border);
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      box-shadow: var(--shadow);
-    }
-    .inp {
-      width: 100%;
-      background: var(--surface2);
-      border: 1px solid var(--border-darker);
-      color: var(--text);
-      padding: 12px 16px;
-      border-radius: var(--r-sm);
-      font-size: 14px;
-      font-weight: 700;
-      outline: none;
-      transition: 0.2s;
-      box-sizing: border-box;
-    }
-    .inp:focus {
-      border-color: var(--primary);
-      background: var(--surface);
-    }
-    textarea.inp {
-      resize: vertical;
-      min-height: 80px;
-      font-weight: normal;
-      font-size: 13px;
-    }
-    .sel {
-      background: var(--surface2);
-      border: 1px solid var(--border-darker);
-      color: var(--text);
-      padding: 10px 16px;
-      border-radius: var(--r-sm);
-      font-size: 13px;
-      font-weight: 700;
-      outline: none;
-      cursor: pointer;
-    }
-    .btn {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 30px;
-      font-size: 14px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: 0.2s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      white-space: nowrap;
-      box-shadow: 0 4px 10px rgba(230, 92, 79, 0.3);
-    }
-    .btn:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(230, 92, 79, 0.4);
-    }
-    .btn:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-    .btn-dark {
-      background: var(--black);
-      color: var(--surface);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-    .btn-dark:hover:not(:disabled) {
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-    }
-    .btn-zaha {
-      background: var(--zaha);
-      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
-    }
-    .btn-zaha:hover {
-      box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4);
-    }
-    .btn-circle {
-      width: 44px;
-      height: 44px;
-      padding: 0;
-      border-radius: 50%;
-      font-size: 26px;
-      font-weight: 400;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding-bottom: 2px;
-    }
-    .del-btn {
-      background: var(--surface2);
-      border: 1px solid var(--border-darker);
-      color: var(--text2);
-      cursor: pointer;
-      font-size: 14px;
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: 0.2s;
-    }
-    .del-btn:hover {
-      background: #fee2e2;
-      color: #ef4444;
-      border-color: #fca5a5;
-    }
-    /* Modals */
-    .modal-ov {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: 1000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(4px);
-      opacity: 0;
-      transition: 0.3s;
-    }
-    .modal-ov.show {
-      display: flex;
-      opacity: 1;
-    }
-    .modal {
-      background: var(--surface);
-      width: 90%;
-      max-width: 450px;
-      border-radius: var(--r);
-      border: 1px solid var(--border);
-      padding: 30px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-      transform: translateY(20px);
-      transition: 0.3s;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .modal-ov.show .modal {
-      transform: translateY(0);
-    }
-    .modal-title {
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 24px;
-      color: var(--black);
-    }
-    .field {
-      margin-bottom: 16px;
-      text-align: right;
-    }
-    .field label {
-      display: block;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text2);
-      margin-bottom: 8px;
-    }
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-      margin-top: 30px;
-    }
-    .days-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-      margin-top: 8px;
-    }
-    .day-btn {
-      background: var(--surface2);
-      border: 1px solid var(--border-darker);
-      color: var(--text);
-      padding: 10px 0;
-      text-align: center;
-      border-radius: var(--r-sm);
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 700;
-      transition: 0.2s;
-      user-select: none;
-    }
-    .day-btn.active {
-      background: var(--black);
-      color: var(--surface);
-      border-color: var(--black);
-    }
-    /* Helpers */
-    .sync-status {
-      font-size: 12px;
-      font-weight: 700;
-      text-align: center;
-      color: var(--text3);
-      margin-top: auto;
-      padding-top: 20px;
-    }
-    .sync-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--text3);
-      margin-inline-end: 6px;
-    }
-    .sync-dot.on {
-      background: #10b981;
-      box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
-    }
-    .toast {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-100px);
-      background: var(--primary);
-      color: #fff;
-      padding: 14px 28px;
-      border-radius: 30px;
-      font-size: 14px;
-      font-weight: 700;
-      z-index: 1000;
-      opacity: 0;
-      transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    }
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-    .empty {
-      text-align: center;
-      padding: 50px 20px;
-      color: var(--text3);
-      font-size: 14px;
-      font-weight: 700;
-      background: var(--surface2);
-      border: 2px dashed var(--border-darker);
-      border-radius: var(--r);
-    }
-    .loading-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      z-index: 4000;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      flex-direction: column;
-      gap: 10px;
-      backdrop-filter: blur(5px);
-    }
-    .dash-book-matched {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px;
-      flex-direction: row;
-    }
-    .dash-book-matched .text-side {
-      text-align: right;
-    }
-    .circles-side {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 15px;
-    }
-    .circle-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      margin-top: 5px;
-    }
-    .circle-label {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--text2);
-    }
-    /* Reader specific */
-    .progress-container-global {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      z-index: 2000;
-      background: var(--border);
-    }
-    .progress-bar-global {
-      height: 100%;
-      background: var(--primary);
-      width: 0%;
-      transition: width 0.2s;
-    }
-    .reader-tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 30px;
-      background: var(--surface);
-      padding: 5px;
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-    }
-    .rtab-btn {
-      flex: 1;
-      padding: 12px;
-      border: none;
-      background: none;
-      border-radius: 8px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: 0.3s;
-      color: var(--text2);
-    }
-    .rtab-btn.active {
-      background: var(--primary);
-      color: white;
-    }
-    .reader-library-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 20px;
-      padding: 10px 0;
-    }
-    .reader-book-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r-sm);
-      padding: 30px 15px 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: 0.3s;
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-    }
-    .reader-book-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--primary);
-    }
-    .rbc-icon {
-      font-size: 40px;
-      margin-bottom: 15px;
-      display: block;
-    }
-    .rbc-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--black);
-      margin-bottom: 10px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .rbc-prog-bg {
-      background: var(--border-darker);
-      height: 6px;
-      border-radius: 3px;
-      width: 100%;
-      overflow: hidden;
-    }
-    .rbc-prog-fill {
-      background: var(--primary);
-      height: 100%;
-    }
-    .rbc-actions {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      display: flex;
-      gap: 6px;
-      opacity: 0;
-      transition: 0.2s;
-    }
-    .rbc-btn {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      transition: 0.2s;
-      background: var(--surface2);
-      border: 1px solid var(--border-darker);
-      color: var(--text2);
-    }
-    .rbc-btn:hover {
-      filter: brightness(0.9);
-      transform: scale(1.1);
-    }
-    .reader-book-card:hover .rbc-actions {
-      opacity: 1;
-    }
-    .file-upload-wrapper {
-      border: 2px dashed var(--border-darker);
-      background: var(--surface2);
-      padding: 30px 20px;
-      border-radius: 15px;
-      margin: 20px 0;
-      cursor: pointer;
-      text-align: center;
-      transition: 0.3s;
-      color: var(--text);
-    }
-    .file-upload-wrapper:hover {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-    .reader-toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--surface);
-      padding: 15px 20px;
-      border-radius: var(--r-sm);
-      box-shadow: var(--shadow);
-      margin-bottom: 20px;
-      border: 1px solid var(--border);
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-    .rt-tools {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .rt-search {
-      background: var(--surface2);
-      border: 1px solid var(--border-darker);
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 13px;
-      color: var(--text);
-      outline: none;
-      width: 180px;
-    }
-    .rt-search:focus {
-      border-color: var(--primary);
-    }
-    .rt-btn {
-      background: var(--surface2);
-      border: 1px solid var(--border-darker);
-      color: var(--text);
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .rt-btn:hover {
-      background: var(--border-darker);
-    }
-    /* Reader Paragraphs & PDF */
-    .paragraph-block-reader {
-      background: var(--surface);
-      padding: 24px;
-      border-radius: var(--r);
-      margin-bottom: 20px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      position: relative;
-      transition: 0.3s;
-    }
-    .paragraph-block-reader.read-done {
-      opacity: 0.6;
-      background: var(--surface2);
-      box-shadow: none;
-      border-color: transparent;
-    }
-    .text-en {
-      direction: ltr;
-      text-align: left;
-      color: var(--text-en);
-      font-family: 'Georgia', serif;
-      margin-bottom: 12px;
-      border-bottom: 1px dashed var(--border);
-      padding-bottom: 12px;
-      transition: font-size 0.2s;
-    }
-    .text-ar {
-      font-weight: 400;
-      text-align: justify;
-      color: var(--text);
-      transition: font-size 0.2s;
-    }
-    .reader-stats-box {
-      background: var(--primary-light);
-      border-radius: 12px;
-      padding: 15px 20px;
-      margin-bottom: 25px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .rs-text {
-      font-weight: 800;
-      color: var(--primary);
-      font-size: 15px;
-    }
-    .rs-pct {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--primary);
-    }
-    /* PDF View */
-    .pdf-viewer-container {
-      text-align: center;
-      padding: 20px 0;
-    }
-    .pdf-iframe {
-      width: 100%;
-      height: 75vh;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      margin-top: 20px;
-      background: var(--surface2);
-    }
-    .zaha-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-      padding: 10px 0;
-    }
-    .zaha-card {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      margin-bottom: 0 !important;
-    }
-    .zaha-dash {
-      display: flex;
-      gap: 20px;
-      margin-bottom: 25px;
-      margin-top: 10px;
-    }
-    .z-metric {
-      flex: 1;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 20px;
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-    .z-num-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-    .z-icon {
-      font-size: 24px;
-    }
-    .z-num {
-      font-size: 32px;
-      font-weight: 800;
-      color: var(--black);
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .z-lbl {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text2);
-    }
-    /* Auth Screen Overlay */
-    #auth-screen {
-      display: flex;
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      z-index: 9999;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      backdrop-filter: blur(10px);
-    }
-    .auth-card {
-      background: var(--surface);
-      width: 90%;
-      max-width: 400px;
-      border-radius: var(--r);
-      padding: 40px 30px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-      text-align: center;
-      border: 1px solid var(--border);
-    }
-    .auth-logo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--black);
-      margin-bottom: 10px;
-    }
-    @media (max-width: 768px) {
-      .sidebar {
-        display: none;
-      }
-      .bnav {
-        display: flex;
-      }
-      .main {
-        padding: 20px 16px 100px;
-      }
-      .date-hdr {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 20px;
-      }
-      .greeting {
-        margin-top: 10px;
-      }
-      .add-bar {
-        flex-direction: row;
-      }
-      .analytics-hdr {
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 12px;
-      }
-      .dash-book-matched {
-        flex-direction: column !important;
-        align-items: flex-start;
-        gap: 15px;
-      }
-      .daily-layout {
-        flex-direction: column-reverse;
-      }
-      .daily-sidebar {
-        width: 100%;
-        position: static;
-        margin-bottom: 20px;
-      }
-      .pdf-iframe {
-        height: 60vh;
-      }
-    }
-    .breathe-circle-wrap {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 50px 0;
-      height: 250px;
-      position: relative;
-    }
-    .breathe-flower {
-      position: absolute;
-      width: 100px;
-      height: 100px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: transform var(--dur, 1s) ease-in-out;
-    }
-    .petal {
-      position: absolute;
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      background: var(--primary);
-      opacity: 0.4;
-      mix-blend-mode: multiply;
-      transition: all var(--dur, 1s) ease-in-out;
-      transform-origin: center center;
-    }
-    .breathe-flower.inhale .petal:nth-child(1) { transform: rotate(0deg) translateY(-45px) scale(1.3); background: #10b981; }
-    .breathe-flower.inhale .petal:nth-child(2) { transform: rotate(60deg) translateY(-45px) scale(1.3); background: #34d399; }
-    .breathe-flower.inhale .petal:nth-child(3) { transform: rotate(120deg) translateY(-45px) scale(1.3); background: #10b981; }
-    .breathe-flower.inhale .petal:nth-child(4) { transform: rotate(180deg) translateY(-45px) scale(1.3); background: #34d399; }
-    .breathe-flower.inhale .petal:nth-child(5) { transform: rotate(240deg) translateY(-45px) scale(1.3); background: #10b981; }
-    .breathe-flower.inhale .petal:nth-child(6) { transform: rotate(300deg) translateY(-45px) scale(1.3); background: #34d399; }
-    .breathe-flower.inhale { transform: rotate(90deg); }
-    .breathe-flower.hold .petal:nth-child(1) { transform: rotate(15deg) translateY(-45px) scale(1.3); background: #4f46e5; }
-    .breathe-flower.hold .petal:nth-child(2) { transform: rotate(75deg) translateY(-45px) scale(1.3); background: #818cf8; }
-    .breathe-flower.hold .petal:nth-child(3) { transform: rotate(135deg) translateY(-45px) scale(1.3); background: #4f46e5; }
-    .breathe-flower.hold .petal:nth-child(4) { transform: rotate(195deg) translateY(-45px) scale(1.3); background: #818cf8; }
-    .breathe-flower.hold .petal:nth-child(5) { transform: rotate(255deg) translateY(-45px) scale(1.3); background: #4f46e5; }
-    .breathe-flower.hold .petal:nth-child(6) { transform: rotate(315deg) translateY(-45px) scale(1.3); background: #818cf8; }
-    .breathe-flower.hold { transform: rotate(180deg); }
-    .breathe-flower.exhale .petal { transform: rotate(0deg) translateY(0) scale(1); background: var(--primary); }
-    .breathe-flower.exhale { transform: rotate(0deg); }
-    .breathe-text-container {
-      position: absolute;
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255,255,255,0.7);
-      backdrop-filter: blur(4px);
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-    .breathe-text {
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--black);
-    }
-    .breathe-timer {
-      font-size: 30px;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 800;
-      color: var(--black);
-    }
-    .breathe-card {
-      background: linear-gradient(135deg, var(--surface) 0%, var(--primary-light) 100%);
-      border: 1px solid var(--primary);
-      border-radius: var(--r);
-      padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: var(--shadow);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    /* --- Dynamic UI Additions --- */
-    .metric-card, .list-item, .breathe-card, .hab-card, .btn, .circle-btn {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .metric-card:hover, .breathe-card:hover, .hab-card:hover {
-      transform: translateY(-4px) scale(1.01);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    }
-    .btn:active, .circle-btn:active {
-      transform: scale(0.95);
-    }
-    .btn:hover, .circle-btn:hover {
-      filter: brightness(1.1);
-    }
-    .list-item:hover {
-      background: var(--surface2);
-      transform: translateX(-5px);
-    }
-    .nav-item, .bnav-item {
-      transition: background-color 0.2s, color 0.2s, transform 0.2s;
-    }
-    .nav-item:hover {
-      transform: translateX(-5px);
-      background: var(--surface2);
-    }
-    .page.active {
-      animation: fadeIn 0.4s ease-out forwards;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .circ-val {
-      transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-\n  .sm-cell { background: var(--surface); color: var(--text); border-radius: 6px; font-weight: bold; font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .sm-cell:hover { background: #e0f2fe; }
-    .sm-cell.selected { background: #3b82f6; color: white; transform: scale(0.95); }
-    .sm-cell.found { background: #10b981; color: white; cursor: default; }
-    .sm-center-cell { background: white; border: 2px solid var(--primary); border-radius: 8px; font-weight: 900; font-size: 28px; color: var(--primary); display: flex; align-items: center; justify-content: center; grid-column: 5 / span 2; grid-row: 5 / span 2; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-    /* Pattern Copy CSS */
-    .pc-dot { position: absolute; width: 12px; height: 12px; background: var(--text3); border-radius: 50%; transform: translate(-50%, -50%); }
-    .pc-player-dot { cursor: pointer; }
-    .pc-player-dot.active { background: var(--primary); transform: translate(-50%, -50%) scale(1.3); }
-    .pc-line { position: absolute; background: var(--black); height: 4px; transform-origin: left center; border-radius: 2px; }
-    .pc-line-player { background: var(--primary); }
-    /* Size Sorter CSS */
-    .ss-shape-wrapper { cursor: pointer; padding: 10px; border-radius: 8px; transition: 0.2s; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; }
-    .ss-shape-wrapper:hover { background: var(--surface); }
-    .ss-shape-wrapper.selected { border-color: var(--primary); background: #e0f2fe; transform: scale(1.05); }
-    .ss-shape { fill: var(--black); transition: 0.3s; }
-  </style>
-</head>
-<body>
-  <button id="scrollTopBtn" onclick="scrollToTop()" title="العودة للأعلى"
-    style="display: none; position: fixed; bottom: 90px; left: 20px; z-index: 1000; background: var(--primary); color: white; border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; cursor: pointer; box-shadow: 0 4px 10px rgba(230, 92, 79, 0.4); transition: background 0.3s, transform 0.3s; align-items: center; justify-content: center; padding-bottom: 4px;">↑</button>
-  <div class="progress-container-global" id="reader-progress-container">
-    <div class="progress-bar-global" id="readingProgress"></div>
-  </div>
-  <div id="global-loading" class="loading-overlay">
-    <div style="font-size:30px;">⏳</div>
-    <div>جاري معالجة البيانات...</div>
-  </div>
-  <!-- AUTHENTICATION SCREEN -->
-  <div id="auth-screen">
-    <div class="auth-card">
-      <div class="auth-logo">
-        <div class="logo-icon">P</div>
-        <span>امسي</span>
-      </div>
-      <h2 style="margin-top: 0; margin-bottom: 8px;">تسجيل الدخول</h2>
-      <p style="font-size: 13px; color: var(--text2); margin-bottom: 30px;">يرجى تسجيل الدخول للوصول إلى مساحتك الآمنة
-      </p>
-      <div class="field" style="text-align: right; margin-bottom: 16px;"><label
-          style="display: block; font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 8px;">البريد
-          الإلكتروني</label><input type="email" id="auth-email" class="inp" placeholder="name@example.com" /></div>
-      <div class="field" style="text-align: right; margin-bottom: 16px;"><label
-          style="display: block; font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 8px;">كلمة
-          المرور</label><input type="password" id="auth-password" class="inp" placeholder="••••••••" /></div>
-      <button id="btn-login" class="btn btn-dark" style="width: 100%; margin-top: 15px; padding: 14px;"
-        onclick="handleLogin()">تسجيل الدخول</button>
-      <button id="btn-signup" class="btn"
-        style="width: 100%; margin-top: 12px; background: var(--surface2); color: var(--text); box-shadow: none; border: 1px solid var(--border-darker);"
-        onclick="handleSignUp()">إنشاء حساب جديد</button>
-      <div
-        style="margin-top: 24px; font-size: 13px; color: var(--primary); cursor: pointer; font-weight: 700; transition: 0.2s;"
-        onclick="handleReset()">هل نسيت كلمة المرور؟</div>
-    </div>
-  </div>
-  <!-- Desktop Sidebar -->
-  <div class="sidebar">
-    <div class="logo" style="flex-direction: column; gap: 5px;">
-      <div style="display:flex; align-items:center; justify-content:center; gap: 10px;">
-        <div class="logo-icon" id="user-avatar-icon" style="font-size: 16px; border-radius: 50%; overflow: hidden; cursor: pointer;" onclick="document.getElementById('hidden-pic-upload').click()" title="تغيير الصورة الشخصية">👋</div>
-        <input type="file" id="hidden-pic-upload" accept="image/*" style="display:none;" onchange="handleDirectPicUpload(this)">
-        <span style="font-size: 16px;">مرحباً، <span id="user-greeting-name">صديقي</span></span>
-      </div>
-      <div style="font-size:24px; cursor:pointer; color:var(--text3); margin-top:5px; transition:0.2s; position:relative;" onclick="toggleSettingsPopup()" title="إعدادات الحساب" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text3)'">
-        ⚙️
-        <div id="settings-popup" style="display:none; position:absolute; top:40px; right:50%; transform:translateX(50%); background:var(--surface); padding:15px; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1); width:240px; z-index:1000; text-align:right; font-size:13px; border:1px solid var(--border); cursor:default;" onclick="event.stopPropagation()">
-            <div style="margin-bottom:10px; font-weight:bold; color:var(--black);">إعدادات الحساب</div>
-            <div class="field" style="margin-bottom:10px;">
-                <label>الاسم الكامل</label>
-                <input type="text" id="s-name" class="inp" style="padding:6px; font-size:12px;">
-            </div>
-            <div class="field" style="margin-bottom:15px;">
-                <label>العمر</label>
-                <input type="number" id="s-age" class="inp" placeholder="مثال: 25" style="padding:6px; font-size:12px;">
-            </div>
-            <button class="btn" style="width:100%; padding:8px; font-size:12px;" onclick="saveAccountSettings()">حفظ ✓</button>
-        </div>
-      </div>
-    </div>
-    <div class="nav-item active" data-page="daily" onclick="goPage(this)">☀️ عاداتي اليومية</div>
-    <div class="nav-item" data-page="dash" onclick="goPage(this)">📊 الملخص العام</div>
-    <div class="nav-item" data-page="goals" onclick="goPage(this)">🏆 أهداف السنة</div>
-    <div class="nav-item" data-page="books" onclick="goPage(this)">📚 مكتبتي اليدوية</div>
-    <div class="nav-item" data-page="reader" onclick="goPage(this)">📖 القارئ الذكي</div>
-    
-    <div class="nav-item" data-page="focus" onclick="goPage(this)">🧠 نادي التركيز</div>
-    <div class="nav-item" data-page="reports" onclick="goPage(this)">📈 التقارير</div>
-    <div class="nav-item" data-page="all-habits" style="display:none;"></div>
-    <div style="margin-top: auto; width: 100%;">
-      <div class="nav-item" style="color: var(--text2); justify-content: center; border: 1px solid var(--border);"
-        onclick="handleLogout()">تسجيل الخروج</div>
-      <div class="sync-status"><span class="sync-dot" id="syncDot"></span>مزامنة سحابية</div>
-    </div>
-  </div>
-  <!-- Main Content -->
-  <div class="main" id="main">
-    <!-- Top Header -->
-    <div class="date-hdr">
-      <div class="date-widget">
-        <div class="date-circle" id="hdr-day">19</div>
-        <div class="date-text" id="hdr-date-full">Tue,<br>December</div>
-      </div>
-      <div class="greeting" style="flex: 1;">
-        <p>قم بتنظيم يومك وأهدافك بسهولة!</p>
-      </div>
-      <div class="header-actions">
-        <button class="circle-btn" onclick="openSettingsModal()" title="إعدادات الحساب">⚙️</button>
-        <button class="circle-btn" onclick="requestNotification()" title="تفعيل التنبيهات">🔔</button>
-      </div>
-    </div>
-    <!-- Dashboard -->
-    <div class="page" id="page-dash">
-      <div class="grid-4">
-        <div class="metric-card">
-          <div style="flex:1">
-            <div class="metric-icon-wrap" style="background:#e0f2fe; color:#0284c7">☀️</div>
-            <div class="metric-title">العادات اليومية</div>
-            <div class="metric-val" id="dash-daily-val">0/0</div>
-          </div>
-          <div class="circ-wrap">
-            <svg width="70" height="70" viewBox="0 0 70 70">
-              <circle class="circ-bg" cx="35" cy="35" r="30"></circle>
-              <circle class="circ-val" id="circ-daily" cx="35" cy="35" r="30" stroke="#0284c7" stroke-dasharray="188.4"
-                stroke-dashoffset="188.4"></circle>
-            </svg>
-            <div class="circ-text" id="circ-txt-daily">0%</div>
-          </div>
-        </div>
-        <div class="metric-card dash-book-matched">
-          <div class="text-side">
-            <div class="metric-icon-wrap"
-              style="background:#fbeae8; color:var(--primary); margin-right: 0; margin-left:auto;">📚</div>
-            <div class="metric-title">مكتبتي (التقدم العام)</div>
-            <div class="metric-val">
-              <span id="dash-books-count">0</span>
-              <span style="font-size: 16px; font-weight: normal; color: var(--text2);">كتب مسجلة</span>
-            </div>
-          </div>
-          <div class="circles-side">
-            <div class="circle-col">
-              <div class="circ-wrap" title="الكتب الورقية (يدوي)" style="transform: scale(0.85); margin: 0;">
-                <svg width="70" height="70" viewBox="0 0 70 70">
-                  <circle class="circ-bg" cx="35" cy="35" r="30"></circle>
-                  <circle class="circ-val" id="circ-books-manual" cx="35" cy="35" r="30" stroke="var(--primary)"
-                    stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle>
-                </svg>
-                <div class="circ-text" id="circ-txt-books-manual" style="font-size:15px; color:var(--primary)">0%</div>
-              </div>
-              <span class="circle-label">ورقي (يدوي)</span>
-            </div>
-            <div class="circle-col">
-              <div class="circ-wrap" title="القارئ الذكي (إلكتروني)" style="transform: scale(0.85); margin: 0;">
-                <svg width="70" height="70" viewBox="0 0 70 70">
-                  <circle class="circ-bg" cx="35" cy="35" r="30"></circle>
-                  <circle class="circ-val" id="circ-books-smart" cx="35" cy="35" r="30" stroke="var(--zaha)"
-                    stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle>
-                </svg>
-                <div class="circ-text" id="circ-txt-books-smart" style="font-size:15px; color:var(--zaha)">0%</div>
-              </div>
-              <span class="circle-label">القارئ الذكي</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="analytics-card">
-        <div class="analytics-hdr">
-          <div class="analytics-title">معدل إنجاز العادات</div>
-          <select class="analytics-filter" id="chart-filter" onchange="renderChart()">
-            <option value="1">اليوم</option>
-            <option value="7" selected>آخر أسبوع</option>
-            <option value="30">آخر شهر</option>
-            <option value="180">آخر 6 أشهر</option>
-            <option value="365">آخر سنة</option>
-          </select>
-        </div>
-        <div style="height: 220px; position: relative; margin-top: 10px;">
-          <canvas id="productivityChart"></canvas>
-        </div>
-      </div>
-    </div>
-    <!-- Daily Habits -->
-    <div class="page active" id="page-daily">
-      <div id="habit-list" style="margin-bottom: 20px;"></div>
-            <div style="display: flex; gap: 15px; margin-bottom: 20px; align-items: stretch; flex-wrap: wrap;">
-        <div class="add-bar" style="flex: 1; margin-bottom: 0; min-width: 200px; padding: 15px; justify-content: space-between; align-items: center;">
-          <div style="font-weight:800; font-size:16px">العادات المجدولة لليوم</div>
-          <div style="display: flex; gap: 8px;">
-            <button class="btn btn-dark btn-circle" onclick="openModal('habit')" title="إضافة عادة">+</button>
-          </div>
-        </div>
-        <div class="metric-card" style="flex: 1; margin-bottom: 0; min-width: 200px; padding: 15px;">
-          <div style="flex:1">
-            <div class="metric-icon-wrap" style="background:#e0f2fe; color:#0284c7; width: 35px; height: 35px; font-size: 16px;">☀️</div>
-            <div class="metric-title" style="font-size: 12px;">نسبة إنجاز اليوم</div>
-            <div class="metric-val" id="daily-pg-val" style="font-size: 18px;">0/0</div>
-          </div>
-          <div class="circ-wrap" style="transform: scale(0.8); margin: -10px; transform-origin: left center;">
-            <svg width="70" height="70" viewBox="0 0 70 70">
-              <circle class="circ-bg" cx="35" cy="35" r="30"></circle>
-              <circle class="circ-val" id="daily-pg-circ" cx="35" cy="35" r="30" stroke="#0284c7" stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle>
-            </svg>
-            <div class="circ-text" id="daily-pg-txt" style="font-size: 14px;">0%</div>
-          </div>
-        </div>
-        <div class="metric-card" style="flex: 1; margin-bottom: 0; min-width: 200px; padding: 15px;">
-          <div style="flex:1">
-            <div class="metric-icon-wrap" style="background:var(--surface2); color:var(--black)">🏆</div>
-            <div class="metric-title">تقدم أهداف السنة</div>
-            <div class="metric-val" id="dash-goals-val">0%</div>
-          </div>
-          <div class="circ-wrap" style="transform: scale(0.8); margin: -10px; transform-origin: left center;">
-            <svg width="70" height="70" viewBox="0 0 70 70">
-              <circle class="circ-bg" cx="35" cy="35" r="30"></circle>
-              <circle class="circ-val" id="circ-goals" cx="35" cy="35" r="30" stroke="var(--black)"
-                stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle>
-            </svg>
-            <div class="circ-text" id="circ-txt-goals">0%</div>
-          </div>
-        </div>
-      </div>
-      <div class="daily-layout">
-        <div class="daily-main">
-          <!-- Daily Breathing Card -->
-          <div class="breathe-card">
-            <div>
-              <h3 style="margin-bottom: 8px; color: var(--black); font-weight: 800; font-size: 16px;">🫁 تمارين التنفس اليومية</h3>
-              <p style="font-size: 13px; color: var(--text2);">خصص 5 دقائق لصفاء ذهنك وتقليل التوتر</p>
-              <div id="breathe-status" style="margin-top: 10px; font-size: 12px; font-weight: 800; color: #10b981; display: none;">✅ تم إنجاز تمرين اليوم</div>
-            </div>
-            <button class="btn" onclick="openBreatheModal()">ابدأ التمرين ▶</button>
-          </div>
-          
-        </div>
-        <div class="daily-sidebar">
-          <div class="mini-dash-card" id="mini-dash-content"></div>
-        </div>
-      </div>
-    </div>
-    <!-- ALL HABITS & STATS PAGE -->
-    <div class="page" id="page-all-habits">
-      <div class="add-bar" style="border-color: var(--primary);">
-        <div style="font-weight:800; font-size:16px; color: var(--primary)">إدارة جميع العادات والإحصائيات 📊</div>
-        <div style="display:flex; gap:10px;">
-          <button class="btn btn-dark" style="padding: 8px 16px; font-size: 13px;" onclick="openModal('habit')">+ إضافة
-            عادة</button>
-          <button class="btn"
-            style="background: var(--surface2); color: var(--text); border: 1px solid var(--border-darker); padding: 8px 16px; font-size: 13px;"
-            onclick="goPage({dataset: {page: 'daily'}})">العودة لليوم 🔙</button>
-        </div>
-      </div>
-      <div class="analytics-card" style="margin-bottom: 20px; padding: 16px 24px;">
-        <div class="analytics-hdr" style="margin-bottom: 0;">
-          <div class="analytics-title" style="font-size: 14px;">الفترة الزمنية للتقييم:</div>
-          <select class="analytics-filter" id="habit-stats-filter" onchange="renderAllHabits()">
-            <option value="1">اليوم</option>
-            <option value="7" selected>آخر أسبوع</option>
-            <option value="30">آخر شهر</option>
-            <option value="180">آخر 6 أشهر</option>
-            <option value="365">آخر سنة</option>
-            <option value="all">كل المدة (تراكمي)</option>
-          </select>
-        </div>
-      </div>
-      <div id="all-habits-list"></div>
-    </div>
-    <!-- Goals -->
-    <div class="page" id="page-goals">
-      <div class="add-bar">
-        <div style="font-weight:800; font-size:16px">أهداف السنة الكبرى</div>
-        <button class="btn btn-dark btn-circle" onclick="openModal('goal')" title="إضافة هدف">+</button>
-      </div>
-      <div id="goal-list"></div>
-    </div>
-    <!-- Books Library (Manual) -->
-    <div class="page" id="page-books">
-      <div class="add-bar">
-        <div style="font-weight:800; font-size:16px">الكتب الورقية واليدوية 📚</div>
-        <button class="btn btn-dark btn-circle" onclick="openModal('book')" title="إضافة كتاب">+</button>
-      </div>
-      <div id="books-list"></div>
-    </div>
-    <!-- ZAHA CENTER -->
-    <div class="page" id="page-reader">
-      <div class="reader-tabs">
-        <button class="rtab-btn active" id="rtab-lib" onclick="switchReaderMode('library')">مكتبة القارئ</button>
-        <button class="rtab-btn" id="rtab-read" onclick="switchReaderMode('read')"
-          style="display:none;">القراءة</button>
-        <button class="rtab-btn" id="rtab-import" onclick="switchReaderMode('import')">+ إضافة كتاب</button>
-      </div>
-      <!-- Library View -->
-      <div id="reader-library-section">
-        <div class="add-bar" style="border-color: var(--primary-light);">
-          <div style="font-weight:800; font-size:16px; color: var(--primary)">مكتبتي الذكية 📖</div>
-        </div>
-        <div class="reader-library-grid" id="reader-library-grid"></div>
-      </div>
-      <!-- Import View (Updated for PDF/Drive) -->
-      <div id="reader-import-section"
-        style="display: none; background: var(--surface); padding: 30px; border-radius: var(--r); box-shadow: var(--shadow); border: 1px solid var(--border); text-align: center;">
-        <h3>إضافة كتاب للقارئ (نص أو رابط)</h3>
-        <div
-          style="margin-top: 20px; padding: 20px; background: var(--surface2); border-radius: 12px; border: 1px solid var(--border-darker);">
-          <h4 style="color: var(--primary); margin-bottom: 10px;">الخيار الأول: رفع ملف نصي</h4>
-          <p style="font-size: 12px; color: var(--text3); margin-bottom: 15px;">صيغ مدعومة: .md, .txt, .html (ترتيب:
-            إنجليزي ثم عربي)</p>
-          <input type="text" id="new-book-title" class="inp" placeholder="اسم الكتاب (للملفات النصية)..."
-            style="margin-bottom: 15px; text-align:center;">
-          <div class="file-upload-wrapper" style="margin-top:0;"
-            onclick="document.getElementById('readerFileInput').click()">
-            <input type="file" id="readerFileInput" accept=".md,.txt,.html,.htm" onchange="handleFileSelect(this)"
-              style="display:none;">
-            <div id="readerFileName" style="font-weight:bold;">اضغط لاختيار ملف من جهازك</div>
-          </div>
-          <button class="btn btn-dark" id="saveReaderBtn" disabled onclick="processAndSaveFile()"
-            style="width: 100%;">بدء المعالجة والحفظ 🚀</button>
-        </div>
-        <hr style="margin: 30px 0; border:0; border-top: 1px dashed var(--border-darker);">
-        <div
-          style="padding: 20px; background: var(--surface2); border-radius: 12px; border: 1px solid var(--border-darker);">
-          <h4 style="color: var(--zaha); margin-bottom: 10px;">الخيار الثاني: إضافة رابط كتاب (Google Drive / PDF)</h4>
-          <p style="font-size: 12px; color: var(--text3); margin-bottom: 15px;">سيتم حفظ الرابط ومتابعة الصفحات المقروءة
-            يدوياً.</p>
-          <input type="text" id="pdf-book-title" class="inp" placeholder="اسم الكتاب..." style="margin-bottom: 10px;">
-          <input type="url" id="pdf-book-url" class="inp" placeholder="رابط الكتاب (Drive / Web)..."
-            style="margin-bottom: 15px; text-align:left; direction:ltr;">
-          <div style="display:flex; gap:10px;">
-            <input type="number" id="pdf-book-pages" class="inp" placeholder="عدد الصفحات" style="width:50%;">
-            <button class="btn btn-zaha" onclick="savePdfBook()" style="width: 50%;">حفظ الرابط 🔗</button>
-          </div>
-        </div>
-      </div>
-      <!-- Reading View -->
-      <div id="reader-reading-area" style="display: none;">
-        <div class="reader-toolbar">
-          <div style="font-weight:800; color:var(--primary); font-size:18px;" id="current-reading-title">اسم الكتاب
-          </div>
-          <div class="rt-tools" id="reader-text-tools">
-            <input type="text" class="rt-search" id="reader-search" placeholder="بحث في الكتاب 🔍"
-              onkeyup="searchReaderBook(this.value)">
-            <button class="rt-btn" onclick="changeFontSize(2)" title="تكبير الخط">A+</button>
-            <button class="rt-btn" onclick="changeFontSize(-2)" title="تصغير الخط">A-</button>
-          </div>
-        </div>
-        <!-- View for TEXT/HTML Books -->
-        <div id="reader-text-view">
-          <div class="reader-stats-box" id="reader-stats-summary"></div>
-          <div id="reader-content-blocks"></div>
-        </div>
-        <!-- View for PDF/Drive Books -->
-        <div id="pdf-viewer-container" class="pdf-viewer-container" style="display:none;">
-          <div class="card-box"
-            style="margin-bottom: 30px; background: var(--surface2); border: 2px solid var(--zaha-light);">
-            <h3 style="margin-bottom: 15px; color: var(--black);">استكمال القراءة 📖</h3>
-            <button class="btn btn-zaha" id="btn-open-pdf"
-              style="font-size:18px; padding:15px 30px; width:100%; margin-bottom:20px; display:flex; align-items:center; justify-content:center; gap:10px;">
-              افتح الكتاب في نافذة جديدة ↗️
-            </button>
-            <hr style="border:0; border-top:1px dashed var(--border-darker); margin: 20px 0;">
-            <h4 style="margin-bottom: 15px; color: var(--text2);">تحديث تقدمك يدوياً:</h4>
-            <div style="display:flex; align-items:center; gap:15px;">
-              <div style="flex:1;">
-                <label
-                  style="font-size:12px; font-weight:bold; color:var(--text2); display:block; margin-bottom:5px;">الصفحة
-                  التي وصلت إليها</label>
-                <input type="number" id="pdf-current-page" class="inp" placeholder="0" min="0">
-              </div>
-              <div style="font-size:18px; font-weight:bold; color:var(--text3); margin-top:20px;">/</div>
-              <div style="flex:1;">
-                <label
-                  style="font-size:12px; font-weight:bold; color:var(--text2); display:block; margin-bottom:5px;">إجمالي
-                  الصفحات</label>
-                <div id="pdf-total-pages"
-                  style="font-size:18px; font-weight:bold; color:var(--black); padding-top:10px;">0</div>
-              </div>
-            </div>
-            <button class="btn btn-dark" style="margin-top:20px; width:100%" onclick="updatePdfProgress()">حفظ النسبة
-              🔄</button>
-          </div>
-          <!-- Optional Iframe preview if allowed by source -->
-          <iframe id="pdf-iframe" class="pdf-iframe" src="" allowfullscreen></iframe>
-        </div>
-      </div>
-    </div>
-    <!-- FOCUS GYM PAGE -->
-    <div class="page" id="page-focus">
-      <div class="add-bar" style="border-color: #8b5cf6;">
-        <div style="font-weight:800; font-size:16px; color: #8b5cf6">نادي التركيز 🧠</div>
-      </div>
-      <!-- Menu to choose game -->
-      <div id="focus-menu">
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #ef4444;" onclick="startStroopGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">اختبار ستروب (Stroop) 🎨</h3>
-          <p style="font-size: 13px; color: var(--text2);">اضغط على لون الخط وليس الكلمة المكتوبة. يمرن قدرتك على كبح ردود الفعل التلقائية.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #3b82f6;" onclick="startVisualSearchGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">الصيد البصري 👁️</h3>
-          <p style="font-size: 13px; color: var(--text2);">اعثر على الشكل أو الحرف المختلف في الشبكة بأسرع وقت ممكن.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #10b981;" onclick="startSlideGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">لغز الألوان المنزلق 🧩</h3>
-          <p style="font-size: 13px; color: var(--text2);">رتب الدوائر الملونة لتطابق الهدف في الأعلى عبر تحريك المربع الفارغ.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #8b5cf6;" onclick="startSumMatchGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">تطابق المجموع 🧮</h3>
-          <p style="font-size: 13px; color: var(--text2);">ابحث عن رقمين متجاورين أفقياً أو عمودياً مجموعهما يساوي الرقم المطلوب في المنتصف.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #6366f1;" onclick="startShapeCounterGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">حصر الأشكال 📐</h3>
-          <p style="font-size: 13px; color: var(--text2);">قم بعد الأشكال الهندسية المختلفة في الرسمة.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #14b8a6;" onclick="startPatternCopyGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">نسخ المسار ✍️</h3>
-          <p style="font-size: 13px; color: var(--text2);">قم بتوصيل النقاط لنسخ الشكل المرسوم أمامك بدقة.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #ec4899;" onclick="startSizeSorterGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">ترتيب الأحجام 📏</h3>
-          <p style="font-size: 13px; color: var(--text2);">قم بسحب وإفلات الأشكال لترتيبها تصاعدياً من الأصغر للأكبر.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #f59e0b;" onclick="startWordSearchGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">البحث عن الكلمات 🔎</h3>
-          <p style="font-size: 13px; color: var(--text2);">اسحب بإصبعك على الحروف لتشكيل الكلمات المطلوبة وشطبها من القائمة.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #8b5cf6;" onclick="startInfinityGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">مسار الانتباه ♾️</h3>
-          <p style="font-size: 13px; color: var(--text2);">تتبع المسار المضيء وانقر على الرقم المطابق له بأسرع وقت.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #ec4899;" onclick="startMemoryConnectGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">خريطة الألوان 🎨</h3>
-          <p style="font-size: 13px; color: var(--text2);">اربط الألوان بناءً على تسلسل الأرقام المحددة لاختبار ذاكرتك.</p>
-        </div>
-      </div>
-      <!-- Stroop Game Area -->
-      <div id="focus-stroop-area" style="display: none; text-align: center;">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-          <div style="font-weight: bold; color: var(--text2);">الوقت: <span id="stroop-time" style="color:var(--black);">60</span></div>
-          <div style="font-weight: bold; color: var(--text2);">النقاط: <span id="stroop-score" style="color:var(--primary);">0</span></div>
-        </div>
-        <div id="stroop-word" style="font-size: 48px; font-weight: 900; margin: 40px 0; letter-spacing: -1px;">أحمر</div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-          <button class="btn btn-dark" style="background:#ef4444; color:white; font-size: 18px; padding: 15px;" onclick="checkStroop('أحمر')">أحمر</button>
-          <button class="btn btn-dark" style="background:#3b82f6; color:white; font-size: 18px; padding: 15px;" onclick="checkStroop('أزرق')">أزرق</button>
-          <button class="btn btn-dark" style="background:#22c55e; color:white; font-size: 18px; padding: 15px;" onclick="checkStroop('أخضر')">أخضر</button>
-          <button class="btn btn-dark" style="background:#eab308; color:white; font-size: 18px; padding: 15px;" onclick="checkStroop('أصفر')">أصفر</button>
-        </div>
-        <div id="stroop-bottom-timer" style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">00:00</div>
-        <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
-      </div>
-      <!-- Visual Search Game Area -->
-      <div id="focus-visual-area" style="display: none; text-align: center;">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-          <div style="font-weight: bold; color: var(--text2);">المستوى: <span id="visual-level" style="color:var(--black);">1</span></div>
-          <div style="font-weight: bold; color: var(--text2);">الوقت المتبقي: <span id="visual-time" style="color:#ef4444;">15</span></div>
-        </div>
-        <div id="visual-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 20px 0; font-size: 24px; user-select: none;">
-          <!-- Grid items populated by JS -->
-        </div>
-        <div id="visual-bottom-timer" style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">00:00</div>
-        <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
-      </div>
-      <!-- Color Slide Game Area -->
-      <div id="focus-slide-area" style="display: none; text-align: center;">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-          <div style="font-weight: bold; color: var(--text2);">الوقت: <span id="slide-time" style="color:var(--black);">00:00</span></div>
-          <div style="font-weight: bold; color: var(--text2);">الحركات: <span id="slide-moves" style="color:var(--primary);">0</span></div>
-        </div>
-        <div style="margin-bottom: 20px;">
-          <div style="font-size: 13px; color: var(--text2); margin-bottom: 5px;">الهدف (تطابق اللوحة مع هذا الشكل):</div>
-          <div id="slide-target" style="display: grid; grid-template-columns: repeat(3, 30px); gap: 4px; justify-content: center; opacity: 0.8;">
-            <!-- Target populated by JS -->
-          </div>
-        </div>
-        <div id="slide-grid" style="display: grid; grid-template-columns: repeat(3, 80px); grid-template-rows: repeat(3, 80px); gap: 10px; justify-content: center; margin: 20px auto; background: var(--border); padding: 10px; border-radius: 12px; width:fit-content;">
-          <!-- Grid items populated by JS -->
-        </div>
-        <div id="slide-bottom-timer" style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">00:00</div>
-        <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
-      </div>
-      <!-- Sum Match Area -->
-      <div id="focus-summatch-area" style="display: none; text-align: center;">
-        <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">المجموع المطلوب: <span id="sm-target" style="color: var(--primary); font-size: 24px;">10</span></div>
-        <div style="margin-bottom: 15px; font-size: 14px; color: var(--text2);">الأزواج المتبقية: <span id="sm-remaining">0</span></div>
-        <div id="sm-grid" style="display: grid; gap: 4px; justify-content: center; margin: 20px auto; background: var(--surface2); padding: 10px; border-radius: 12px; width:fit-content; user-select: none; touch-action: none; position: relative;">
-        </div>
-        <div style="font-size: 24px; font-weight: 800; color: var(--primary); margin: 20px 0; font-family: monospace; letter-spacing: 2px;" id="sm-timer">00:00</div>
-        <button class="btn btn-dark" style="margin-top: 10px;" onclick="document.getElementById('focus-summatch-area').style.display='none'; document.getElementById('focus-menu').style.display='block'; clearInterval(smInterval);">🔙 عودة للقائمة</button>
-      </div>
-      <!-- Shape Counter Area -->
-      <div id="focus-shapecounter-area" style="display: none; text-align: center;">
-        <h3 style="margin-bottom: 15px; color: var(--primary);">كم عدد الأشكال الموجودة في الرسم؟</h3>
-        <svg id="sc-svg" width="300" height="300" viewBox="0 0 300 300" style="background: white; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);"></svg>
-        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; max-width: 320px; margin: 0 auto 20px;">
-          <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
-             <svg width="30" height="30"><circle cx="15" cy="15" r="12" fill="none" stroke="black" stroke-width="2"/></svg>
-             <input type="number" id="sc-circle-count" min="0" style="width: 50px; text-align: center; border: 1px solid var(--border); border-radius: 6px; padding: 5px;">
-          </div>
-          <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
-             <svg width="30" height="30"><rect x="3" y="3" width="24" height="24" fill="none" stroke="black" stroke-width="2"/></svg>
-             <input type="number" id="sc-square-count" min="0" style="width: 50px; text-align: center; border: 1px solid var(--border); border-radius: 6px; padding: 5px;">
-          </div>
-          <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
-             <svg width="30" height="30"><polygon points="15,3 27,27 3,27" fill="none" stroke="black" stroke-width="2"/></svg>
-             <input type="number" id="sc-triangle-count" min="0" style="width: 50px; text-align: center; border: 1px solid var(--border); border-radius: 6px; padding: 5px;">
-          </div>
-          <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
-             <svg width="30" height="30"><rect x="2" y="8" width="26" height="14" fill="none" stroke="black" stroke-width="2"/></svg>
-             <input type="number" id="sc-rect-count" min="0" style="width: 50px; text-align: center; border: 1px solid var(--border); border-radius: 6px; padding: 5px;">
-          </div>
-        </div>
-        <button class="btn btn-primary" onclick="checkShapeCounter()">تحقق من الإجابة</button>
-        <button class="btn btn-dark" style="margin-top: 10px;" onclick="closeShapeCounter()">🔙 عودة للقائمة</button>
-      </div>
-      <!-- Pattern Copy Area -->
-      <div id="focus-patterncopy-area" style="display: none; text-align: center;">
-        <h3 style="margin-bottom: 15px; color: var(--primary);">انقل الشكل المرسوم أمامك</h3>
-        <div style="display: flex; justify-content: center; gap: 20px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
-          <div>
-            <div style="margin-bottom: 5px; font-weight: bold; color: var(--text2);">الشكل المطلوب</div>
-            <div id="pc-target-grid" style="position: relative; width: 160px; height: 160px; background: white; border: 2px solid var(--border); border-radius: 8px;"></div>
-          </div>
-          <div style="font-size: 24px; color: var(--text3);">⬅️</div>
-          <div>
-            <div style="margin-bottom: 5px; font-weight: bold; color: var(--primary);">مساحة الرسم</div>
-            <div id="pc-player-grid" style="position: relative; width: 160px; height: 160px; background: white; border: 2px solid var(--primary); border-radius: 8px; touch-action: none;"></div>
-          </div>
-        </div>
-        <div style="display: flex; gap: 10px; justify-content: center;">
-           <button class="btn btn-dark" onclick="resetPatternCopyPlayer()">مسح الرسم 🗑️</button>
-           <button class="btn btn-primary" onclick="checkPatternCopy()">تحقق من التطابق</button>
-        </div>
-        <button class="btn btn-dark" style="margin-top: 10px;" onclick="closePatternCopy()">🔙 عودة للقائمة</button>
-      </div>
-      <!-- Size Sorter Area -->
-      <div id="focus-sizesorter-area" style="display: none; text-align: center;">
-        <h3 style="margin-bottom: 15px; color: var(--primary);">رتب الأشكال تصاعدياً (من الأصغر للأكبر)</h3>
-        <div id="ss-container" style="display: flex; gap: 10px; justify-content: center; align-items: center; min-height: 120px; margin: 20px auto; padding: 20px; background: var(--surface2); border-radius: 12px; width: fit-content; max-width: 100%; overflow-x: auto;">
-        </div>
-        <p style="font-size: 12px; color: var(--text2); margin-bottom: 15px;">انقر على شكل ثم انقر على شكل آخر لتبديل أماكنهما.</p>
-        <button class="btn btn-dark" style="margin-top: 10px;" onclick="closeSizeSorter()">🔙 عودة للقائمة</button>
-      </div>
-      <!-- Word Search Game Area -->
-      <div id="focus-wordsearch-area" style="display: none; text-align: center;">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
-          <div style="font-weight: bold; color: var(--text2);">الوقت: <span id="ws-time" style="color:var(--black);">00:00</span></div>
-          <div style="font-weight: bold; color: var(--text2);">الكلمات المتبقية: <span id="ws-remaining" style="color:var(--primary);">0</span></div>
-        </div>
-        <div id="ws-grid" style="display: grid; gap: 4px; justify-content: center; margin: 20px auto; background: var(--surface2); padding: 10px; border-radius: 12px; width:fit-content; user-select: none; touch-action: none;">
-          <!-- Grid items populated by JS -->
-        </div>
-        <div style="margin-top: 15px;">
-          <div style="font-size: 14px; font-weight: 800; color: var(--black); margin-bottom: 10px;">الكلمات المطلوبة:</div>
-          <div id="ws-words" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; font-size: 13px;">
-             <!-- Words populated by JS -->
-          </div>
-        </div>
-        <div id="ws-bottom-timer" style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">00:00</div>
-        <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
-      </div>
-      <!-- Infinity Path Game Area -->
-      <div id="focus-infinity-area" style="display: none; text-align: center;">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-          <div style="font-weight: bold; color: var(--text2);">الوقت: <span id="inf-time" style="color:var(--black);">00:00</span></div>
-          <div style="font-weight: bold; color: var(--text2);">الدورات: <span id="inf-loops" style="color:var(--primary);">0 / 3</span></div>
-        </div>
-        <div style="position: relative; width: 100%; max-width: 350px; height: 180px; margin: 0 auto 30px auto;">
-          <!-- SVG Infinity Path -->
-          <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" viewBox="0 0 100 50" preserveAspectRatio="none">
-             <path d="M 50 25 C 35 5, 5 5, 5 25 C 5 45, 35 45, 50 25 C 65 5, 95 5, 95 25 C 95 45, 65 45, 50 25" fill="none" stroke="var(--border-darker)" stroke-width="2" />
-          </svg>
-          <!-- Nodes Container -->
-          <div id="inf-nodes" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
-            <!-- Populated by JS -->
-          </div>
-        </div>
-        <div style="font-size: 14px; font-weight: bold; color: var(--text2); margin-bottom: 15px;">اختر الرقم المطابق للدائرة المضيئة:</div>
-        <div id="inf-dice" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; justify-content: center; max-width: 300px; margin: 0 auto;">
-          <!-- Populated by JS -->
-        </div>
-        <div id="inf-bottom-timer" style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">00:00</div>
-        <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
-      </div>
-      <!-- Memory Connect Game Area -->
-      <div id="focus-memory-area" style="display: none; text-align: center;">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-          <div style="font-weight: bold; color: var(--text2);">المستوى: <span id="mc-level" style="color:var(--black);">1</span></div>
-          <div style="font-weight: bold; color: var(--text2);">النقاط: <span id="mc-score" style="color:var(--primary);">0</span></div>
-        </div>
-        <div style="font-size: 12px; font-weight: bold; color: var(--text2); margin-bottom: 10px;">مفتاح الألوان (تذكرها جيداً):</div>
-        <div id="mc-legend" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 20px; background: var(--surface2); padding: 10px; border-radius: 8px;">
-          <!-- Populated by JS -->
-        </div>
-        <div style="position: relative; width: 250px; height: 250px; margin: 0 auto 30px auto;">
-          <!-- SVG for drawing lines -->
-          <svg id="mc-lines" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
-             <!-- Lines will be drawn here -->
-          </svg>
-          <!-- Nodes Container -->
-          <div id="mc-nodes" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
-            <!-- Populated by JS -->
-          </div>
-        </div>
-        <div style="font-size: 14px; font-weight: bold; color: var(--text2); margin-bottom: 10px;">انقر على الألوان لتطابق هذا التسلسل:</div>
-        <div id="mc-sequence" style="font-size: 24px; font-weight: 900; letter-spacing: 4px; color: var(--black); margin-bottom: 20px;">
-          <!-- Populated by JS -->
-        </div>
-        <div id="mc-bottom-timer" style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">00:00</div>
-        <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
-      </div>
-    </div>
-    <!-- REPORTS PAGE -->
-    <div class="page" id="page-reports">
-      <div class="add-bar" style="border-color: var(--primary);">
-        <div style="font-weight:800; font-size:16px; color: var(--primary)">التقارير التفصيلية 📈</div>
-      </div>
-      <div class="card-box" style="margin-bottom: 25px;">
-        <div class="field" style="margin-bottom: 0;">
-          <label>اختر الفترة الزمنية للتقرير:</label>
-          <div style="display:flex; gap:10px; margin-top:8px;">
-            <select class="sel" id="report-period" style="flex:1;">
-              <!-- Options populated dynamically -->
-            </select>
-            <button class="btn" onclick="generateReport()">إصدار التقرير 🚀</button>
-          </div>
-        </div>
-      </div>
-      <div id="report-results" style="display:none;">
-        <div class="zaha-dash">
-          <div class="z-metric">
-            <div class="z-num-row"><span class="z-icon">🎯</span><span class="z-num" id="rep-habits-pct">0%</span></div>
-            <span class="z-lbl">إنجاز العادات</span>
-          </div>
-          <div class="z-metric">
-            <div class="z-num-row"><span class="z-icon">🏛️</span><span class="z-num" id="rep-zaha-hours">0</span></div>
-            <span class="z-lbl">ساعات زها</span>
-          </div>
-          <div class="z-metric">
-            <div class="z-num-row"><span class="z-icon">🫁</span><span class="z-num" id="rep-breathe-days">0</span></div>
-            <span class="z-lbl">أيام التنفس</span>
-          </div>
-        </div>
-        <h3 style="margin: 25px 0 15px; font-weight:800; color: var(--black);">تفاصيل العادات (أنجزت / لم تنجز)</h3>
-        <div id="rep-habits-list"></div>
-        <button id="btn-export-pdf" class="btn btn-dark" style="margin-top:20px; width:100%; display:block; padding: 15px; background: var(--surface2); color: var(--text);" onclick="exportReportPDF()">تصدير التقرير كملف PDF 📥</button>
-      </div>
-    </div>
-  </div> <!-- End Main -->
-  <!-- MODALS -->
-  <!-- Notification Settings Modal -->
-  <div class="modal-ov" id="modal-notif">
-    <div class="modal">
-      <div class="modal-title">تفعيل التنبيهات 🔔</div>
-      <p style="font-size:13px; color:var(--text2); margin-bottom:20px;">سيقوم المتصفح بإرسال إشعار لك يومياً في الوقت
-        المحدد لتذكيرك بتسجيل عاداتك ويومياتك.</p>
-      <div class="field"><label>وقت التنبيه اليومي</label><input type="time" class="inp" id="m-notif-time"
-          value="20:00" /></div>
-      <div class="modal-actions">
-        <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none"
-          onclick="closeModal('notif')">إلغاء</button>
-        <button class="btn" onclick="saveNotificationSettings()">حفظ وتفعيل</button>
-      </div>
-    </div>
-  </div>
-  <!-- Habit Modal -->
-  <div class="modal-ov" id="modal-habit">
-    <div class="modal">
-      <div class="modal-title" id="m-hab-title-text">إضافة عادة جديدة ✨</div>
-      <input type="hidden" id="m-hab-id">
-      <div class="field"><label>اسم العادة</label><input type="text" class="inp" id="m-hab-title"
-          placeholder="مثال: القراءة اليومية" /></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div class="field"><label>البداية</label><input type="date" class="inp" id="m-hab-start" /></div>
-        <div class="field"><label>النهاية (اختياري)</label><input type="date" class="inp" id="m-hab-end" /></div>
-      </div>
-      <div class="field"><label>ارتباط بهدف</label><select class="sel" id="m-hab-goal" style="width:100%"></select>
-      </div>
-      <div class="field"><label>ارتباط بكتاب (يدوي)</label><select class="sel" id="m-hab-book"
-          style="width:100%"></select></div>
-      <div class="field"><label>نظام التكرار</label>
-        <select class="sel" id="m-hab-freq" style="width:100%"
-          onchange="toggleHabitDays(this.value, 'm-hab-days-wrap')">
-          <option value="daily">يومياً</option>
-          <option value="specific">أيام محددة في الأسبوع</option>
-          <option value="weekly">أسبوعياً</option>
-          <option value="monthly">شهرياً</option>
-          <option value="yearly">سنوياً</option>
-        </select>
-      </div>
-      <div class="field" id="m-hab-days-wrap" style="display:none">
-        <label>اختر الأيام</label>
-        <div class="days-grid">
-          <div class="day-btn active" data-day="0" onclick="this.classList.toggle('active')">أحد</div>
-          <div class="day-btn active" data-day="1" onclick="this.classList.toggle('active')">إثنين</div>
-          <div class="day-btn active" data-day="2" onclick="this.classList.toggle('active')">ثلاثاء</div>
-          <div class="day-btn active" data-day="3" onclick="this.classList.toggle('active')">أربعاء</div>
-          <div class="day-btn active" data-day="4" onclick="this.classList.toggle('active')">خميس</div>
-          <div class="day-btn active" data-day="5" onclick="this.classList.toggle('active')">جمعة</div>
-          <div class="day-btn active" data-day="6" onclick="this.classList.toggle('active')">سبت</div>
-        </div>
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none"
-          onclick="closeModal('habit')">إلغاء</button>
-        <button class="btn" onclick="saveHabit()">حفظ العادة</button>
-      </div>
-    </div>
-  </div>
-  <!-- Goal Modal -->
-  <div class="modal-ov" id="modal-goal">
-    <div class="modal">
-      <div class="modal-title" id="m-goal-title-text">إضافة هدف 🏆</div>
-      <input type="hidden" id="m-goal-id">
-      <div class="field"><label>اسم الهدف</label><input type="text" class="inp" id="m-goal-title"
-          placeholder="مثال: تعلم لغة جديدة" /></div>
-      <div class="field"><label>تاريخ إنجاز الهدف (لحساب التقدم تلقائياً)</label><input type="date" class="inp"
-          id="m-goal-end" /></div>
-      <div class="modal-actions">
-        <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none"
-          onclick="closeModal('goal')">إلغاء</button>
-        <button class="btn" onclick="saveGoal()">حفظ الهدف</button>
-      </div>
-    </div>
-  </div>
-  <!-- Book Modal -->
-  <div class="modal-ov" id="modal-book">
-    <div class="modal">
-      <div class="modal-title" id="m-book-title-text">إضافة كتاب 📚</div>
-      <input type="hidden" id="m-book-id">
-      <div class="field"><label>اسم الكتاب</label><input type="text" class="inp" id="m-book-title"
-          placeholder="اسم الكتاب" /></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div class="field"><label>إجمالي الصفحات</label><input type="number" class="inp" id="m-book-total" min="1"
-            value="100" /></div>
-        <div class="field"><label>الصفحات المقروءة</label><input type="number" class="inp" id="m-book-read" min="0"
-            value="0" /></div>
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none"
-          onclick="closeModal('book')">إلغاء</button>
-        <button class="btn" onclick="saveBook()">حفظ الكتاب</button>
-      </div>
-    </div>
-  </div>
-  <!-- Zaha Modal -->
-  <div class="modal-ov" id="modal-zaha">
-    <div class="modal">
-      <div class="modal-title" id="m-zaha-title-text" style="color: var(--zaha)">توثيق حصة زها 🏛️</div>
-      <input type="hidden" id="m-zaha-id">
-      <div class="field"><label>اسم الدورة / الفريق</label><input type="text" class="inp" id="m-zaha-course"
-          placeholder="مثال: 3dmqx" /></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div class="field"><label>التاريخ</label><input type="date" class="inp" id="m-zaha-date" /></div>
-        <div class="field"><label>عدد الساعات</label><input type="number" class="inp" id="m-zaha-hours" min="1"
-            value="2" /></div>
-      </div>
-      <div class="field">
-        <label>ما تم تقديمه في الحصة (اكتب كنقاط)</label>
-        <textarea class="inp" id="m-zaha-summary" placeholder="- تعلم كذا...&#10;- إنشاء كذا..."></textarea>
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none"
-          onclick="closeModal('zaha')">إلغاء</button>
-        <button class="btn btn-zaha" onclick="saveZahaSession()">حفظ الحصة</button>
-      </div>
-    </div>
-  </div>
-  <!-- Breathe Modal -->
-  <div class="modal-ov" id="modal-breathe">
-    <div class="modal" style="text-align: center;">
-      <div class="modal-title" style="color: var(--primary)">تمارين التنفس التفاعلية 🫁</div>
-      <div class="field" style="text-align: center; margin-bottom: 20px;">
-        <label>اختر نوع التمرين:</label>
-        <select class="sel" id="breathe-type" style="width: 100%; margin-top: 8px;" onchange="resetBreathe()">
-          <option value="478">4-7-8 (استرخاء ونوم عميق)</option>
-          <option value="box">التنفس المربع (تركيز وهدوء)</option>
-          <option value="wimhof">فيم هوف (طاقة وحيوية)</option>
-        </select>
-      </div>
-      <div class="breathe-circle-wrap" id="breathe-wrap">
-        <div class="breathe-flower" id="breathe-circle">
-          <div class="petal"></div>
-          <div class="petal"></div>
-          <div class="petal"></div>
-          <div class="petal"></div>
-          <div class="petal"></div>
-          <div class="petal"></div>
-        </div>
-        <div class="breathe-text-container">
-          <div class="breathe-text" id="breathe-text">مستعد؟</div>
-          <div class="breathe-timer" id="breathe-timer">--</div>
-        </div>
-      </div>
-      <div style="font-size: 13px; color: var(--text2); margin-bottom: 20px;" id="breathe-desc">
-        شهيق لـ 4 ثوانٍ، احبس لـ 7 ثوانٍ، زفير لـ 8 ثوانٍ.
-      </div>
-      <div style="font-weight: 800; color: var(--primary); margin-bottom: 20px;">
-        الدورات المنجزة: <span id="breathe-cycles">0</span>
-      </div>
-      <div style="font-size: 24px; font-weight: 800; color: var(--text); margin-bottom: 20px; font-family: 'JetBrains Mono', monospace;" id="breathe-session-clock">00:00</div>
-      <div class="modal-actions" style="justify-content: center; gap: 15px;">
-        <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none" onclick="closeBreatheModal()">إغلاق</button>
-        <button class="btn" id="btn-start-breathe" onclick="startBreathe()">ابدأ ▶</button>
-      </div>
-    </div>
-  </div>
-  <!-- Mobile Bottom Nav -->
-  <div class="bnav">
-    <div class="bnav-item active" data-page="daily" onclick="goPage(this)">☀️<span>عاداتي</span></div>
-    <div class="bnav-item" data-page="dash" onclick="goPage(this)">📊<span>الملخص</span></div>
-    <div class="bnav-item" data-page="goals" onclick="goPage(this)">🏆<span>أهدافي</span></div>
-    <div class="bnav-item" data-page="books" onclick="goPage(this)">📚<span>ورقي</span></div>
-    <div class="bnav-item" data-page="reader" onclick="goPage(this)">📖<span>القارئ</span></div>
-    
-    <div class="bnav-item" data-page="focus" onclick="goPage(this)">🧠<span>التركيز</span></div>
-    <div class="bnav-item" data-page="reports" onclick="goPage(this)">📈<span>تقارير</span></div>
-  </div>
-  <div class="toast" id="toast">✨ <span id="toast-msg"></span></div>
-  <script>
+
     const APP_VER = "v28_Production_Auth_Restored";
+
     // --- Sound Effects ---
     const sfxSoftUI = new Audio('sounds/SoftUI.aac');
     const sfxRing = new Audio('sounds/Ring.aac');
     const sfxAchievement = new Audio('sounds/Achievement.aac');
     const sfxError = new Audio('sounds/Error.aac');
     sfxError.onerror = () => { sfxError.src = 'sounds/Error.mp3'; };
+
     function playSound(type) {
       try {
         if (type === 'soft') { sfxSoftUI.currentTime = 0; sfxSoftUI.play(); }
@@ -2328,21 +16,28 @@
         else if (type === 'error') { sfxError.currentTime = 0; sfxError.play(); }
       } catch(e) { console.warn('Sound error:', e); }
     }
+
     window.onerror = function (message, source, lineno, colno, error) { console.error("Global Error Caught:", message); return false; };
+
     const firebaseConfig = { apiKey: "AIzaSyD5_r_wBDjy1y6Pm0oOwLIMdHyITiknSSw", authDomain: "myexpenses-3b6f5.firebaseapp.com", projectId: "myexpenses-3b6f5", storageBucket: "myexpenses-3b6f5.firebasestorage.app", messagingSenderId: "321643278173", appId: "1:321643278173:web:5dfb1ae0c644e97fe842b4", measurementId: "G-MJZN5DXGRQ" };
+
     let db, auth;
     try { if (!firebase.apps.length) firebase.initializeApp(firebaseConfig); db = firebase.database(); auth = firebase.auth(); } catch (e) { console.error("Firebase Init Error:", e); }
+
     let currentUserUID = null;
+
     // --- تفعيل شاشة تسجيل الدخول والمصادقة الحقيقية ---
     if (auth) {
       auth.onAuthStateChanged((user) => {
         if (user) {
           currentUserUID = user.uid;
           document.getElementById('auth-screen').style.display = 'none';
+
           // Fetch user name or email for greeting
           let displayName = user.email ? user.email.split('@')[0] : "صديقي";
           document.getElementById('user-greeting-name').textContent = displayName;
           document.title = `امسي | ${displayName}`;
+
           checkAndMigrateDataThenLoad(currentUserUID);
           setupNotifications();
         } else {
@@ -2352,12 +47,15 @@
         }
       });
     }
+
     function handleLogin() {
       const email = document.getElementById('auth-email').value.trim();
       const pass = document.getElementById('auth-password').value;
       if (!email || !pass) { toast('يرجى تعبئة الإيميل وكلمة المرور'); return; }
+
       const btn = document.getElementById('btn-login');
       btn.disabled = true; btn.textContent = "جاري الدخول...";
+
       auth.signInWithEmailAndPassword(email, pass).then(() => {
         toast('تم تسجيل الدخول بنجاح!');
         btn.disabled = false; btn.textContent = "تسجيل الدخول";
@@ -2367,12 +65,15 @@
         console.error(e);
       });
     }
+
     function handleSignUp() {
       const email = document.getElementById('auth-email').value.trim();
       const pass = document.getElementById('auth-password').value;
       if (!email || !pass) { toast('يرجى تعبئة الإيميل وكلمة المرور'); return; }
+
       const btn = document.getElementById('btn-signup');
       btn.disabled = true; btn.textContent = "جاري الإنشاء...";
+
       auth.createUserWithEmailAndPassword(email, pass).then(() => {
         toast('تم إنشاء الحساب بنجاح!');
         btn.disabled = false; btn.textContent = "إنشاء حساب جديد";
@@ -2381,38 +82,47 @@
         btn.disabled = false; btn.textContent = "إنشاء حساب جديد";
       });
     }
+
     function handleReset() {
       const email = document.getElementById('auth-email').value.trim();
       if (!email) { toast('أدخل بريدك الإلكتروني أولاً في الخانة المخصصة'); return; }
       auth.sendPasswordResetEmail(email).then(() => toast('تم إرسال رابط استعادة كلمة المرور لبريدك')).catch(e => toast('خطأ: ' + e.message));
     }
+
     function handleLogout() {
       if (confirm("هل تود تسجيل الخروج من حسابك؟")) {
         if (auth) auth.signOut();
       }
     }
     // ------------------------------------------------------------------------
+
     let state = {
       habits: [], history: {}, goals: [], books: [], readerBooks: [], zahaSessions: [], nextId: 1,
       journal: {}, settings: { notifTime: '20:00' }
     };
+
     let currentOpenBookId = null; let readerData = []; let currentFontSize = 17; window.rawFileContent = "";
+
     const dNow = new Date();
     const today = new Date(dNow.getTime() - (dNow.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+
     document.getElementById('hdr-day').textContent = dNow.getDate();
     const engDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const engMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     document.getElementById('hdr-date-full').innerHTML = `${engDays[dNow.getDay()]},<br>${engMonths[dNow.getMonth()]}`;
+
     async function checkAndMigrateDataThenLoad(uid) {
       const userRef = db.ref(`users/${uid}/planner_state`);
       userRef.once('value', async (snap) => {
         let cloudData = snap.val();
         let shouldUpdateCloud = false;
+
         const localDataStr = localStorage.getItem('planner_state');
         let localData = null;
         if (localDataStr) {
           try { localData = JSON.parse(localDataStr); } catch (e) { }
         }
+
         if (!cloudData || (!cloudData.habits && !cloudData.goals && !cloudData.books && !cloudData.readerBooks)) {
           // محاولة استعادة البيانات القديمة
           const oldSnap = await db.ref('planner_state').once('value');
@@ -2430,6 +140,7 @@
             shouldUpdateCloud = true;
           }
         }
+
         // استعادة محتوى الكتب إن كان مفقوداً في السحابة الخاصة بالمستخدم
         if (cloudData && cloudData.readerBooks) {
           for (let rb of cloudData.readerBooks) {
@@ -2443,12 +154,14 @@
             }
           }
         }
+
         if (shouldUpdateCloud && cloudData) {
           await userRef.set(cloudData);
         }
         loadState();
       });
     }
+
     let isInitialLoad = true;
     function loadState() {
       if (!currentUserUID) return;
@@ -2480,6 +193,8 @@
         populateGlobalSelectors(); renderAll();
       }, (err) => { document.getElementById('syncDot').classList.remove('on'); });
     }
+
+    
     function toggleSettingsPopup() {
       const popup = document.getElementById('settings-popup');
       if (popup.style.display === 'block') {
@@ -2490,6 +205,7 @@
         popup.style.display = 'block';
       }
     }
+    
     function saveAccountSettings() {
       const name = document.getElementById('s-name').value.trim();
       const age = document.getElementById('s-age').value.trim();
@@ -2501,8 +217,10 @@
       if (age) {
         state.settings.age = age;
       }
+      
       finishSaveSettings();
     }
+
         function handleDirectPicUpload(fileInput) {
       if (fileInput.files && fileInput.files[0]) {
         const reader = new FileReader();
@@ -2518,6 +236,7 @@
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+            
             state.settings.profilePic = dataUrl;
             updateAvatarUI();
             saveState();
@@ -2528,11 +247,13 @@
         reader.readAsDataURL(fileInput.files[0]);
       }
     }
+
     function finishSaveSettings() {
       saveState();
       document.getElementById('settings-popup').style.display = 'none';
       toast('تم حفظ الإعدادات بنجاح ✅');
     }
+
     function updateAvatarUI() {
       const iconDiv = document.getElementById('user-avatar-icon');
       if(iconDiv) {
@@ -2545,6 +266,7 @@
         }
       }
     }
+    
     // Close popup on outside click
     document.addEventListener('click', function(e) {
       const gearBtn = document.querySelector('[onclick="toggleSettingsPopup()"]');
@@ -2555,6 +277,7 @@
         }
       }
     });
+
     function changeUserName() {
       const currentName = document.getElementById('user-greeting-name').textContent;
       const newName = prompt("أدخل اسمك الجديد:", currentName);
@@ -2566,12 +289,14 @@
       }
     }
     async function saveState() { if (!currentUserUID) return; try { await db.ref(`users/${currentUserUID}/planner_state`).set(state); document.getElementById('syncDot').classList.add('on'); } catch (e) { document.getElementById('syncDot').classList.remove('on'); } }
+
     function populateGlobalSelectors() {
       const gHtml = `<option value="">-- بدون هدف مرتبط --</option>` + state.goals.map(g => `<option value="${g.id}">🎯 ${g.title}</option>`).join('');
       if (document.getElementById('m-hab-goal')) document.getElementById('m-hab-goal').innerHTML = gHtml;
       const bHtml = `<option value="">-- بدون كتاب مرتبط --</option>` + state.books.map(b => `<option value="${b.id}">📖 ${b.title}</option>`).join('');
       if (document.getElementById('m-hab-book')) document.getElementById('m-hab-book').innerHTML = bHtml;
     }
+
     function goPage(el) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -2601,8 +326,10 @@
       document.getElementById(`modal-${type}`).classList.add('show');
     }
     function closeModal(id) { document.getElementById('modal-' + id).classList.remove('show'); }
+
     let toastTimeout;
     function toast(msg) { const t = document.getElementById('toast'); document.getElementById('toast-msg').textContent = msg; t.classList.add('show'); clearTimeout(toastTimeout); toastTimeout = setTimeout(() => t.classList.remove('show'), 2500); }
+
     function renderAll() {
       renderHabits();
       renderAllHabits();
@@ -2614,6 +341,7 @@
       if(typeof renderBreatheStatus === 'function') renderBreatheStatus();
       if(typeof populateReportSelector === 'function') populateReportSelector();
     }
+
     function getStreak(habitId) {
       const h = state.habits.find(x => x.id === habitId);
       if (!h || (h.freq !== 'daily' && h.freq !== 'specific')) return 0;
@@ -2632,6 +360,7 @@
       }
       return streak;
     }
+
     function toggleHabitDays(val, wrapId) { document.getElementById(wrapId).style.display = val === 'specific' ? 'block' : 'none'; }
     function saveHabit() { const id = document.getElementById('m-hab-id').value; const title = document.getElementById('m-hab-title').value.trim(); if (!title) { toast('أدخل اسم العادة'); return; } const freq = document.getElementById('m-hab-freq').value; let days = []; if (freq === 'specific') { document.querySelectorAll('#m-hab-days-wrap .day-btn.active').forEach(b => days.push(parseInt(b.dataset.day))); if (!days.length) { toast('اختر يوم واحد على الأقل'); return; } } if (id) { const h = state.habits.find(x => x.id == id); if (h) { h.title = title; h.start = document.getElementById('m-hab-start').value || today; h.end = document.getElementById('m-hab-end').value; h.freq = freq; h.days = days; h.goalId = document.getElementById('m-hab-goal').value; h.bookId = document.getElementById('m-hab-book').value; } } else { state.habits.push({ id: state.nextId++, title, start: document.getElementById('m-hab-start').value || today, end: document.getElementById('m-hab-end').value, freq, days, goalId: document.getElementById('m-hab-goal').value, bookId: document.getElementById('m-hab-book').value }); } saveState(); renderAll(); closeModal('habit'); toast('تم الحفظ ✓'); }
     function delHabit(id) { if (confirm('تأكيد الحذف؟')) { state.habits = state.habits.filter(h => h.id != id); saveState(); renderAll(); } }
@@ -2660,7 +389,9 @@
       saveState(); 
       renderAll(); 
     }
+
     function getActiveHabitsForDate(dateStr) { const d = new Date(dateStr); const dayIdx = d.getDay(); return state.habits.filter(h => { if (h.start && dateStr < h.start) return false; if (h.end && dateStr > h.end) return false; if (h.freq === 'specific' && !h.days.includes(dayIdx)) return false; return true; }); }
+
     function renderHabits() {
       const activeToday = getActiveHabitsForDate(today);
       let html = activeToday.length ? activeToday.map(h => {
@@ -2671,6 +402,7 @@
         const streakHtml = streak > 0 ? `<span class="badge streak-badge">🔥 ${streak}</span>` : '';
         return `<div class="list-item ${done ? 'done' : ''}" style="display:flex; align-items:center;"><div class="check-btn ${done ? 'active' : ''}" onclick="toggleHabit(${h.id}, ${h.bookId ? `'${h.bookId}'` : 'null'})">${done ? '✓' : ''}</div>${bInput}<div class="item-info" style="flex:1;"><div class="item-title">${h.title}</div><div class="item-meta">${streakHtml}${gInfo ? `<span class="badge goal-badge">🎯 ${gInfo.title}</span>` : ''}${bInfo ? `<span class="badge" style="background:#e0f2fe; color:#0284c7">📖 ${bInfo.title}</span>` : ''}</div></div><button class="del-btn" style="background:var(--surface2); margin-inline-start:10px; flex-shrink:0;" onclick="openModal('habit', ${h.id})" title="تعديل"><span style="font-size:14px;">⚙️</span></button></div>`;
       }).join('') : '';
+      
       if (state.journal[today] && state.journal[today].breatheTime > 0) {
         const totalSecs = state.journal[today].breatheTime;
         const m = Math.floor(totalSecs / 60);
@@ -2678,8 +410,10 @@
         const timeText = (m > 0 ? `${m} دقيقة و ` : '') + `${s} ثانية`;
         html += `<div class="list-item done" style="border: 1px solid var(--primary);"><div class="check-btn active" style="background:var(--primary); color:white; border-color:var(--primary);">✓</div><div class="item-info"><div class="item-title">تمرين التنفس المنجز 🫁</div><div class="item-meta" style="color:var(--primary); font-weight:bold;">⏱ إجمالي الوقت: ${timeText}</div></div></div>`;
       }
+      
       if (!html) html = '<div class="empty">لا يوجد مهام اليوم</div>';
             document.getElementById('habit-list').innerHTML = html;
+      
       const dDone = activeToday.filter(h => (state.history[today] || []).includes(h.id)).length;
       const dPct = activeToday.length ? (dDone / activeToday.length * 100) : 0;
       const valEl = document.getElementById('daily-pg-val');
@@ -2687,8 +421,10 @@
       if(valEl) valEl.textContent = `${dDone}/${activeToday.length}`;
       if(txtEl) txtEl.textContent = Math.round(dPct) + '%';
       updateCircle('daily-pg-circ', dPct);
+
       renderDailyMiniDash();
     }
+
     function renderDailyMiniDash() {
       const container = document.getElementById('mini-dash-content');
       if (!container) return;
@@ -2708,6 +444,7 @@
         }
         if (expected > 0) { totalExpected += expected; totalDone += done; activeWeeklyHabits.push({ habit: h, expected, done }); }
       });
+
       if (activeWeeklyHabits.length === 0) { container.innerHTML = `<div class="empty" style="padding: 20px; border: none; background: transparent;">لا يوجد مهام مطلوبة هذا الأسبوع</div>`; return; }
       const dPct = totalExpected === 0 ? 0 : Math.min(Math.round((totalDone / totalExpected) * 100), 100);
       const itemsHtml = activeWeeklyHabits.map(item => {
@@ -2718,6 +455,7 @@
       const circleOffset = 188.4 - (dPct / 100 * 188.4);
       container.innerHTML = `<div class="md-header"><div class="md-title">تقدم الأسبوع <span style="font-size:11px; color:var(--text3); font-weight:normal;">(آخر 7 أيام)</span></div><div style="font-size: 18px; font-weight: 800; color: var(--primary); font-family: 'JetBrains Mono', monospace;">${dPct}%</div></div><div class="md-overall"><div class="circ-wrap" style="transform: scale(0.85); margin: 0; width: 60px; height: 60px;"><svg width="60" height="60" viewBox="0 0 70 70" style="overflow:visible;"><circle class="circ-bg" cx="35" cy="35" r="30" stroke-width="6"></circle><circle class="circ-val" cx="35" cy="35" r="30" stroke="var(--primary)" stroke-width="6" stroke-dasharray="188.4" stroke-dashoffset="${circleOffset}" style="transition: stroke-dashoffset 0.8s ease;"></circle></svg></div><div><div style="font-size: 12px; color: var(--text2); font-weight: 700;">المهام الأسبوعية المنجزة</div><div style="font-size: 18px; font-weight: 800; color: var(--black);"><span style="color: var(--primary)">${totalDone}</span> / ${totalExpected}</div></div></div><div class="md-list">${itemsHtml}</div>`;
     }
+
     function renderAllHabits() {
       const filterVal = document.getElementById('habit-stats-filter') ? document.getElementById('habit-stats-filter').value : '7';
       const dayNames = ['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
@@ -2741,6 +479,9 @@
       }).join('');
       const listEl = document.getElementById('all-habits-list'); if (listEl) listEl.innerHTML = html || '<div class="empty">لم تتم إضافة عادات بعد</div>';
     }
+
+
+
     function requestNotification() {
       if (!("Notification" in window)) { alert("متصفحك لا يدعم التنبيهات"); return; }
       Notification.requestPermission().then(permission => {
@@ -2748,6 +489,7 @@
         else alert("يرجى السماح بالتنبيهات من إعدادات المتصفح أولاً.");
       });
     }
+
     function saveNotificationSettings() {
       const t = document.getElementById('m-notif-time').value;
       if (t) {
@@ -2757,6 +499,7 @@
         toast(`تم تفعيل التنبيه اليومي الساعة ${t} 🔔`);
       }
     }
+
     function setupNotifications() {
       setInterval(() => {
         let now = new Date();
@@ -2770,6 +513,7 @@
         }
       }, 60000);
     }
+
     function getGoalProgressInfo(goalId) { const goal = state.goals.find(g => g.id == goalId); const linked = state.habits.filter(h => h.goalId == goalId); if (linked.length === 0) return { isAuto: false, pct: null, habitsTotal: 0 }; let exTot = 0; let dnTot = 0; let goalEndD = goal.endDate ? new Date(goal.endDate) : new Date(new Date().getFullYear(), 11, 31); linked.forEach(h => { let ex = 0; let dn = 0; let startD = new Date(h.start || today); let endD = h.end ? new Date(Math.min(new Date(h.end), goalEndD)) : goalEndD; let cur = new Date(startD); cur.setHours(0, 0, 0, 0); endD.setHours(0, 0, 0, 0); let daysInRange = 0; while (cur <= endD) { daysInRange++; if (h.freq === 'daily' || (h.freq === 'specific' && h.days.includes(cur.getDay()))) { ex++; } cur.setDate(cur.getDate() + 1); } if (h.freq === 'weekly') ex = Math.ceil(daysInRange / 7); if (h.freq === 'monthly') ex = Math.ceil(daysInRange / 30); if (h.freq === 'yearly') ex = Math.ceil(daysInRange / 365); Object.keys(state.history).forEach(d => { let histDate = new Date(d); if (histDate >= startD && histDate <= endD && state.history[d].includes(h.id)) dn++; }); exTot += ex; dnTot += dn; }); let pct = exTot > 0 ? Math.round((dnTot / exTot) * 100) : 0; return { isAuto: true, pct: Math.min(pct, 100), habitsTotal: linked.length }; }
     function saveGoal() { const id = document.getElementById('m-goal-id').value; const title = document.getElementById('m-goal-title').value.trim(); const endDate = document.getElementById('m-goal-end').value; if (!title) { toast('أدخل اسم الهدف'); return; } if (id) { const g = state.goals.find(x => x.id == id); if (g) { g.title = title; g.endDate = endDate; } } else { state.goals.push({ id: state.nextId++, title, endDate, progress: 0 }); } saveState(); populateGlobalSelectors(); renderAll(); closeModal('goal'); toast('تم الحفظ 🎯'); }
     function delGoal(id) { if (confirm('تأكيد الحذف؟')) { state.goals = state.goals.filter(g => g.id != id); state.habits.forEach(h => { if (h.goalId == id) h.goalId = ""; }); saveState(); populateGlobalSelectors(); renderAll(); } }
@@ -2780,13 +524,16 @@
     function delBook(id) { if (confirm('تأكيد الحذف؟')) { state.books = state.books.filter(b => b.id != id); state.habits.forEach(h => { if (h.bookId == id) h.bookId = ""; }); saveState(); populateGlobalSelectors(); renderAll(); } }
     function quickAddPagesInline(id) { const b = state.books.find(x => x.id === id); const val = parseInt(document.getElementById(`quick-add-book-${id}`).value); if (b && !isNaN(val) && val > 0) { b.readPages = Math.min(b.readPages + val, b.totalPages); saveState(); renderAll(); toast('تمت الإضافة ✓'); } }
     function renderBooks() { document.getElementById('books-list').innerHTML = state.books.length ? state.books.map(b => { const pct = Math.round((b.readPages / b.totalPages) * 100) || 0; const isDone = pct === 100; return `<div class="card-box"><div class="card-hdr"><div style="display:flex; align-items:center; gap:10px"><div style="font-size:24px">${isDone ? '🏆' : '📖'}</div><div><div class="card-title" style="text-decoration: ${isDone ? 'line-through' : 'none'}">${b.title}</div><div style="font-size:12px; color:var(--text3); font-family:'JetBrains Mono', monospace; margin-top:4px">${b.readPages} / ${b.totalPages} صفحة</div></div></div><div class="card-pct">${pct}%</div></div><div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" style="background:var(--primary);width:${pct}%"></div></div></div><div style="display:flex; justify-content:space-between; margin-top:20px; border-top: 1px solid var(--border); padding-top:16px;"><div style="display:flex; align-items:center; gap:8px;"><input type="number" id="quick-add-book-${b.id}" class="inp" placeholder="كم صفحة؟" style="width:100px; padding:8px 12px;" min="1" ${isDone ? 'disabled' : ''}><button class="btn btn-dark" style="padding:8px 16px;" onclick="quickAddPagesInline(${b.id})" ${isDone ? 'disabled' : ''}>+</button></div><div style="display:flex; gap:6px;"><button class="btn" style="background:var(--zaha); color:white; padding:0 12px; border-radius:8px; font-size:12px; box-shadow:none; height:32px;" onclick="goToReaderTab()">قراءة 📖</button><button class="del-btn" onclick="openModal('book', ${b.id})">✎</button><button class="del-btn" onclick="delBook(${b.id})">✕</button></div></div></div>`; }).join('') : '<div class="empty">مكتبتك فارغة. أضف كتابك الأول للبدء!</div>'; }
+
     function saveZahaSession() {
       const id = document.getElementById('m-zaha-id').value;
       const course = document.getElementById('m-zaha-course').value.trim();
       const date = document.getElementById('m-zaha-date').value;
       const hours = parseInt(document.getElementById('m-zaha-hours').value) || 0;
       const summary = document.getElementById('m-zaha-summary').value.trim();
+
       if (!course) { toast('أدخل اسم الدورة / الفريق'); return; }
+
       if (id) {
         const z = state.zahaSessions.find(x => x.id == id);
         if (z) {
@@ -2804,11 +551,13 @@
           summary
         });
       }
+
       saveState();
       renderAll();
       closeModal('zaha');
       toast('تم حفظ الحصة بنجاح 🏛️');
     }
+
     function delZahaSession(id) {
       if (confirm('هل أنت متأكد من حذف هذه الحصة؟')) {
         state.zahaSessions = state.zahaSessions.filter(z => z.id != id);
@@ -2817,14 +566,18 @@
         toast('تم حذف الحصة');
       }
     }
+
     function renderZaha() {
       let totalHours = 0;
+
       const sortedSessions = [...state.zahaSessions].sort((a, b) => new Date(b.date) - new Date(a.date));
+
       const listEl = document.getElementById('zaha-list');
       if (listEl) {
         listEl.innerHTML = sortedSessions.length ? sortedSessions.map(z => {
           totalHours += z.hours;
           const formattedSummary = z.summary ? z.summary.split('\n').map(line => line.trim()).filter(line => line).map(line => `<div style="font-size:13px; color:var(--text2); margin-top:4px;">${line}</div>`).join('') : '';
+
           return `<div class="card-box zaha-card">
                     <div class="card-hdr" style="margin-bottom: 10px;">
                         <div style="display:flex; align-items:center; gap:10px">
@@ -2846,11 +599,14 @@
                 </div>`;
         }).join('') : '<div class="empty" style="grid-column: 1 / -1;">لم تقم بتوثيق أي حصة بعد</div>';
       }
+
       const hoursEl = document.getElementById('z-val-hours');
       if (hoursEl) hoursEl.textContent = totalHours;
+
       const sessionsEl = document.getElementById('z-val-sessions');
       if (sessionsEl) sessionsEl.textContent = state.zahaSessions.length;
     }
+
     let dashChart = null;
     function updateCircle(id, pct) { const el = document.getElementById(id); if (el) el.style.strokeDashoffset = 188.4 - (pct / 100 * 188.4); }
     function renderDashboard() {
@@ -2876,6 +632,7 @@
       const gradient = ctx.createLinearGradient(0, 0, 0, 300); gradient.addColorStop(0, isDark ? 'rgba(255, 118, 105, 0.8)' : 'rgba(230, 92, 79, 0.8)'); gradient.addColorStop(1, isDark ? 'rgba(255, 118, 105, 0.05)' : 'rgba(230, 92, 79, 0.05)');
       dashChart = new Chart(ctx, { type: 'bar', data: { labels, datasets: [{ data: habitsVals, backgroundColor: gradient, borderRadius: 8, barThickness: daysFilter <= 7 ? 16 : (daysFilter <= 30 ? 8 : 'flex') }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100, grid: { color: isDark ? '#333' : '#f3f4f6' }, ticks: { color: isDark ? '#a0a0a0' : '#9ca3af', maxTicksLimit: 10 } }, x: { grid: { display: false }, ticks: { color: isDark ? '#a0a0a0' : '#6b7280', maxTicksLimit: 15 } } } } });
     }
+
     // ═══════════════════════════════════════
     //  SMART READER LOGIC (PDF/DRIVE ADDED)
     // ═══════════════════════════════════════
@@ -2890,6 +647,7 @@
       document.getElementById('reader-progress-container').style.display = (m === 'read') ? 'block' : 'none';
       if (m === 'library') renderReaderLibrary();
     }
+
     function renderReaderLibrary() {
       const grid = document.getElementById('reader-library-grid');
       if (state.readerBooks.length === 0) { grid.innerHTML = `<div class="empty" style="grid-column: 1 / -1;">مكتبتك الذكية فارغة. ارفع كتاباً جديداً!</div>`; return; }
@@ -2899,8 +657,10 @@
         return `<div class="reader-book-card" onclick="openReaderBook(${book.id})"><div class="rbc-actions"><div class="rbc-btn" style="color: var(--zaha);" onclick="renameReaderBook(event, ${book.id})" title="تعديل الاسم">✏️</div><div class="rbc-btn" style="color: #ef4444;" onclick="deleteReaderBook(event, ${book.id})" title="حذف الكتاب">✕</div></div><span class="rbc-icon">${icon}</span><div class="rbc-title" title="${book.title}">${book.title}</div><div style="font-size:11px; color:var(--text3); margin-bottom:8px;">${pct}% مُنجز</div><div class="rbc-prog-bg"><div class="rbc-prog-fill" style="width:${pct}%"></div></div></div>`;
       }).join('');
     }
+
     function renameReaderBook(event, id) { event.stopPropagation(); const bookMeta = state.readerBooks.find(b => b.id === id); if (!bookMeta) return; const card = event.target.closest('.reader-book-card'); const titleDiv = card.querySelector('.rbc-title'); if (titleDiv.querySelector('input')) return; const currentTitle = bookMeta.title; const input = document.createElement('input'); input.type = 'text'; input.value = currentTitle; input.className = 'inp'; input.style.width = '100%'; input.style.fontSize = '13px'; input.style.padding = '4px 8px'; input.style.textAlign = 'center'; titleDiv.innerHTML = ''; titleDiv.appendChild(input); input.focus(); input.addEventListener('click', (e) => e.stopPropagation()); function finishRename() { const newName = input.value.trim(); if (newName !== "" && newName !== currentTitle) { bookMeta.title = newName; saveState(); renderReaderLibrary(); toast('تم التعديل ✓'); } else { titleDiv.textContent = currentTitle; } } input.addEventListener('blur', finishRename); input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); else if (e.key === 'Escape') { input.value = currentTitle; input.blur(); } }); }
     function deleteReaderBook(event, id) { event.stopPropagation(); if (!confirm('حذف هذا الكتاب نهائياً؟')) return; state.readerBooks = state.readerBooks.filter(b => b.id !== id); db.ref(`users/${currentUserUID}/book_contents/${id}`).remove(); saveState(); if (currentOpenBookId === id) { currentOpenBookId = null; switchReaderMode('library'); } renderAll(); }
+
     function getPreviewUrl(url, pageNumber) {
       if (url.includes('drive.google.com/file/d/')) {
         return url.replace(/\/view.*/, '/preview');
@@ -2910,41 +670,52 @@
       }
       return url.replace(/#page=\d+/, '#page=' + (pageNumber || 1));
     }
+
     async function openReaderBook(id) {
       currentOpenBookId = id;
       document.getElementById('global-loading').style.display = 'flex';
       const bookMeta = state.readerBooks.find(b => b.id === id);
       if (!bookMeta) { document.getElementById('global-loading').style.display = 'none'; return; }
+
       document.getElementById('current-reading-title').textContent = bookMeta.title;
       document.getElementById('reader-search').value = '';
+
       if (bookMeta.type === 'pdf') {
         document.getElementById('global-loading').style.display = 'none';
         document.getElementById('reader-text-view').style.display = 'none';
         document.getElementById('pdf-viewer-container').style.display = 'block';
         document.getElementById('reader-text-tools').style.display = 'none'; // hide zoom/search
+
         document.getElementById('pdf-iframe').removeAttribute('srcdoc');
         document.getElementById('pdf-iframe').src = getPreviewUrl(bookMeta.url, bookMeta.progress || 1);
         document.getElementById('pdf-total-pages').textContent = bookMeta.total;
         document.getElementById('pdf-current-page').value = bookMeta.progress;
+
         document.getElementById('btn-open-pdf').style.display = 'flex';
         // Set up explicit "Open in New Window" button
         document.getElementById('btn-open-pdf').onclick = function () {
           window.open(bookMeta.url, '_blank');
         };
+
         switchReaderMode('read');
       } else if (bookMeta.type === 'html') {
         try {
           const snap = await db.ref(`users/${currentUserUID}/book_contents/${id}`).once('value');
           const data = snap.val();
+
           document.getElementById('global-loading').style.display = 'none';
           document.getElementById('reader-text-view').style.display = 'none';
           document.getElementById('pdf-viewer-container').style.display = 'block';
           document.getElementById('reader-text-tools').style.display = 'none';
+
           document.getElementById('pdf-iframe').removeAttribute('src');
           document.getElementById('pdf-iframe').srcdoc = data ? data.rawHtml : "<h1>محتوى غير متوفر</h1>";
+
           document.getElementById('pdf-total-pages').textContent = bookMeta.total || 1;
           document.getElementById('pdf-current-page').value = bookMeta.progress || 0;
+
           document.getElementById('btn-open-pdf').style.display = 'none'; // hide for srcdoc
+
           switchReaderMode('read');
         } catch (e) {
           document.getElementById('global-loading').style.display = 'none'; alert("خطأ في التحميل.");
@@ -2964,27 +735,34 @@
         }
       }
     }
+
     function updatePdfProgress() {
       if (!currentOpenBookId) return;
       const bookMeta = state.readerBooks.find(b => b.id === currentOpenBookId);
       if (!bookMeta || bookMeta.type !== 'pdf') return;
+
       let currentPage = parseInt(document.getElementById('pdf-current-page').value) || 0;
       if (currentPage > bookMeta.total) currentPage = bookMeta.total;
       if (currentPage < 0) currentPage = 0;
+
       document.getElementById('pdf-current-page').value = currentPage;
       bookMeta.progress = currentPage;
       saveState(); // sync
       renderDashboard(); // Update circles
       toast('تم حفظ تقدمك بنجاح ✓');
     }
+
     function handleFileSelect(input) { const file = input.files[0]; if (file) { document.getElementById('readerFileName').textContent = file.name; document.getElementById('saveReaderBtn').disabled = false; if (!document.getElementById('new-book-title').value) { document.getElementById('new-book-title').value = file.name.replace(/\.[^/.]+$/, ""); } const reader = new FileReader(); reader.onload = (e) => { window.rawFileContent = e.target.result; }; reader.onerror = () => { alert("خطأ أثناء قراءة الملف"); }; reader.readAsText(file); } }
+
     async function processAndSaveFile() {
       const titleInput = document.getElementById('new-book-title').value.trim();
       if (!window.rawFileContent || !titleInput) { alert("اختر الملف واكتب الاسم."); return; }
       if (!currentUserUID) return;
       document.getElementById('global-loading').style.display = 'flex';
       const fileName = document.getElementById('readerFileName').textContent.toLowerCase();
+
       const newBookId = Date.now();
+
       try {
         if (fileName.endsWith('.html') || fileName.endsWith('.htm')) {
           const newBookMeta = { id: newBookId, title: titleInput, type: 'html', progress: 0, total: 1 };
@@ -3006,6 +784,7 @@
           await db.ref(`users/${currentUserUID}/book_contents/${newBookId}`).set(arrangedData);
           state.readerBooks.push(newBookMeta);
         }
+
         await saveState();
         document.getElementById('global-loading').style.display = 'none';
         alert("تم الحفظ ✓");
@@ -3018,20 +797,26 @@
         document.getElementById('global-loading').style.display = 'none'; alert("خطأ سحابي: " + e.message);
       }
     }
+
     async function savePdfBook() {
       const title = document.getElementById('pdf-book-title').value.trim();
       const url = document.getElementById('pdf-book-url').value.trim();
       const pages = parseInt(document.getElementById('pdf-book-pages').value) || 1;
+
       if (!title || !url) { alert("يرجى إدخال الاسم والرابط."); return; }
+
       const newBookId = Date.now();
       const newBookMeta = { id: newBookId, title: title, type: 'pdf', url: url, progress: 0, total: pages };
+
       document.getElementById('global-loading').style.display = 'flex';
       try {
         state.readerBooks.push(newBookMeta);
         await saveState();
+
         document.getElementById('pdf-book-title').value = '';
         document.getElementById('pdf-book-url').value = '';
         document.getElementById('pdf-book-pages').value = '';
+
         document.getElementById('global-loading').style.display = 'none';
         alert("تم الحفظ ✓");
         openReaderBook(newBookId);
@@ -3040,22 +825,26 @@
         alert("خطأ: " + e.message);
       }
     }
+
     function toggleReaderPara(index) { if (!currentUserUID || !readerData[index] || !currentOpenBookId) return; const newStatus = !readerData[index].read; readerData[index].read = newStatus; const block = document.getElementById(`r-block-${index}`); const btn = block.querySelector('.check-btn'); if (newStatus) { block.classList.add('read-done'); btn.classList.add('active'); } else { block.classList.remove('read-done'); btn.classList.remove('active'); } updateReaderStatsUI(); db.ref(`users/${currentUserUID}/book_contents/${currentOpenBookId}/${index}/read`).set(newStatus); const bookMeta = state.readerBooks.find(b => b.id === currentOpenBookId); if (bookMeta) { bookMeta.progress = readerData.filter(p => p.read).length; saveState(); } }
     function updateReaderStatsUI() { if (readerData.length === 0) return; const total = readerData.length; const readCount = readerData.filter(p => p.read).length; const pct = Math.round((readCount / total) * 100); const statEl = document.getElementById('reader-stats-summary'); if (statEl) { statEl.innerHTML = `<div class="rs-text">إنجاز الكتاب: ${readCount} من ${total} فقرة</div><div class="rs-pct">${pct}%</div>`; } }
     function jumpToLastRead() { if (readerData.length === 0) return; const firstUnreadIndex = readerData.findIndex(p => !p.read); if (firstUnreadIndex !== -1) { const el = document.getElementById(`r-block-${firstUnreadIndex}`); const mainContainer = document.getElementById('main'); if (el && mainContainer) { const targetY = el.offsetTop - 150; mainContainer.scrollTo({ top: targetY, behavior: 'smooth' }); } } else { toast('لقد أنهيت الكتاب بالكامل! 🏆'); } }
     function changeFontSize(delta) { currentFontSize += delta; if (currentFontSize < 12) currentFontSize = 12; if (currentFontSize > 30) currentFontSize = 30; document.querySelectorAll('.text-en, .text-ar').forEach(el => { el.style.fontSize = currentFontSize + 'px'; }); }
     function searchReaderBook(query) { const blocks = document.querySelectorAll('.paragraph-block-reader'); const q = query.toLowerCase(); blocks.forEach(block => { if (block.innerText.toLowerCase().includes(q)) { block.style.display = 'block'; } else { block.style.display = 'none'; } }); }
+
     function renderBookContent() {
       const area = document.getElementById('reader-content-blocks');
       if (!area) return;
       if (readerData.length === 0) { area.innerHTML = `<div style="text-align:center; padding:40px; color:#888;">الكتاب فارغ.</div>`; updateReaderStatsUI(); return; }
       area.innerHTML = readerData.map((block, index) => { const tsMatch = block.en.match(/\[(\d{2}:\d{2}:\d{2})\]/); const ts = tsMatch ? tsMatch[1] : null; const cleanEn = block.en.replace(/\[\d{2}:\d{2}:\d{2}\]/, ''); const isRead = block.read === true; return `<div class="paragraph-block-reader ${isRead ? 'read-done' : ''}" id="r-block-${index}"><div class="check-btn ${isRead ? 'active' : ''}" style="position:absolute; top:20px; right:20px; z-index:10;" onclick="toggleReaderPara(${index})">✓</div>${ts ? `<div class="timestamp-badge">${ts}</div>` : ''}<div class="text-en" style="padding-inline-start: 40px; font-size:${currentFontSize}px;">${cleanEn.replace(/\n/g, '<br>')}</div><div class="text-ar" style="padding-inline-start: 40px; font-size:${currentFontSize}px;">${block.ar.replace(/\n/g, '<br>')}</div></div>`; }).join(''); updateReaderStatsUI();
     }
+
     document.getElementById('main').addEventListener('scroll', function () {
       var mainEl = document.getElementById('main');
       var winScroll = mainEl.scrollTop;
       var height = mainEl.scrollHeight - mainEl.clientHeight;
       var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+
       // Progress bar for text books
       if (document.getElementById('page-reader').classList.contains('active') && currentOpenBookId) {
         const bookMeta = state.readerBooks.find(b => b.id === currentOpenBookId);
@@ -3064,11 +853,14 @@
           if (progBar && !isNaN(scrolled)) progBar.style.width = scrolled + "%";
         }
       }
+
       const topBtn = document.getElementById('scrollTopBtn');
       if (winScroll > 400) topBtn.style.display = 'flex';
       else topBtn.style.display = 'none';
     });
+
     function scrollToTop() { document.getElementById('main').scrollTo({ top: 0, behavior: 'smooth' }); }
+
     // --- Breathing Exercises Logic ---
     let breatheInterval;
     let breatheState = 0; // 0: stopped, 1: inhale, 2: hold, 3: exhale, 4: hold (for box)
@@ -3077,14 +869,17 @@
     let breatheCycles = 0;
     let breatheConfig = { inhale: 4, hold1: 7, exhale: 8, hold2: 0 };
     let currentBreatheType = '478';
+
     function openBreatheModal() {
       document.getElementById('modal-breathe').classList.add('show');
       resetBreathe();
     }
+    
     function closeBreatheModal() {
       document.getElementById('modal-breathe').classList.remove('show');
       stopBreathe();
     }
+    
     function resetBreathe() {
       stopBreathe();
       breatheCycles = 0;
@@ -3111,11 +906,14 @@
       document.getElementById('btn-start-breathe').textContent = 'ابدأ ▶';
       document.getElementById('btn-start-breathe').onclick = startBreathe;
     }
+
     let breatheSessionStart = 0;
     let breatheSessionTimerInterval = null;
+
     function stopBreathe() {
       if (breatheInterval) clearInterval(breatheInterval);
       if (breatheSessionTimerInterval) clearInterval(breatheSessionTimerInterval);
+      
       if (breatheState !== 0 && breatheSessionStart > 0) {
         let elapsed = Math.floor((Date.now() - breatheSessionStart) / 1000);
         if (elapsed > 0) {
@@ -3125,9 +923,11 @@
           renderHabits();
         }
       }
+      
       breatheState = 0;
       breatheSessionStart = 0;
     }
+
     function startBreathe() {
       if (breatheState !== 0) {
         resetBreathe();
@@ -3136,6 +936,7 @@
             breatheSessionStart = Date.now();
       document.getElementById('btn-start-breathe').textContent = 'إيقاف ⏹';
       document.getElementById('btn-start-breathe').onclick = resetBreathe;
+      
       document.getElementById('breathe-session-clock').textContent = '00:00';
       if(breatheSessionTimerInterval) clearInterval(breatheSessionTimerInterval);
       breatheSessionTimerInterval = setInterval(() => {
@@ -3144,15 +945,21 @@
         let s = (elapsed % 60).toString().padStart(2, '0');
         document.getElementById('breathe-session-clock').textContent = `${m}:${s}`;
       }, 1000);
+
       runBreatheCycle();
     }
+
     function runBreatheCycle() {
       if (breatheState === 0) breatheState = 1; // start inhale
+      
       const circle = document.getElementById('breathe-circle');
       const textEl = document.getElementById('breathe-text');
       const timerEl = document.getElementById('breathe-timer');
+      
       let duration = 0;
+      
       const wrap = document.getElementById('breathe-wrap');
+      
       if (breatheState === 1) { // Inhale
         if(typeof playSound === 'function') playSound('ring');
         duration = breatheConfig.inhale;
@@ -3186,9 +993,11 @@
         wrap.style.setProperty('--dur', `0.5s`);
         circle.className = 'breathe-flower hold';
       }
+      
       breatheTimeLeft = duration;
       textEl.textContent = currentBreathePhase;
       timerEl.textContent = breatheTimeLeft;
+      
       if (breatheInterval) clearInterval(breatheInterval);
       breatheInterval = setInterval(() => {
         breatheTimeLeft--;
@@ -3207,6 +1016,7 @@
         }
       }, 1000);
     }
+    
     function checkBreatheGoal() {
       // Mark as done for today if 4 cycles completed
       if (breatheCycles === 4) {
@@ -3218,6 +1028,7 @@
         toast('رائع! لقد أتممت تمرين التنفس اليومي 🎉');
       }
     }
+    
     function renderBreatheStatus() {
       const statusEl = document.getElementById('breathe-status');
       if (statusEl) {
@@ -3228,43 +1039,53 @@
         }
       }
     }
+
     // --- FOCUS GYM LOGIC ---
     let focusTimer = null;
     let isFocusGameActive = false;
     let stroopScore = 0;
     let stroopTimeLeft = 60;
     let currentStroopColor = '';
+
     const focusColors = [
       { name: 'أحمر', hex: '#ef4444' },
       { name: 'أزرق', hex: '#3b82f6' },
       { name: 'أخضر', hex: '#22c55e' },
       { name: 'أصفر', hex: '#eab308' }
     ];
+
     function formatGameTime(seconds) {
       const m = Math.floor(seconds / 60).toString().padStart(2, '0');
       const s = (seconds % 60).toString().padStart(2, '0');
       return `${m}:${s}`;
     }
+
     function startStroopGame() {
       document.getElementById('focus-menu').style.display = 'none';
       document.getElementById('focus-visual-area').style.display = 'none';
       document.getElementById('focus-stroop-area').style.display = 'block';
+      
       stroopScore = 0;
       stroopTimeLeft = 60;
       document.getElementById('stroop-score').textContent = stroopScore;
       document.getElementById('stroop-time').textContent = stroopTimeLeft;
       document.getElementById('stroop-bottom-timer').textContent = formatGameTime(stroopTimeLeft);
+      
       nextStroopWord();
+      
       if (focusTimer) clearInterval(focusTimer); isFocusGameActive = false;
     }
+
     function nextStroopWord() {
       const wordObj = focusColors[Math.floor(Math.random() * focusColors.length)];
       const colorObj = focusColors[Math.floor(Math.random() * focusColors.length)];
+      
       const wordEl = document.getElementById('stroop-word');
       wordEl.textContent = wordObj.name;
       wordEl.style.color = colorObj.hex;
       currentStroopColor = colorObj.name;
     }
+
     function checkStroop(selectedColorName) {
       if (!isFocusGameActive) {
         isFocusGameActive = true;
@@ -3293,9 +1114,11 @@
       document.getElementById('stroop-score').textContent = stroopScore;
       nextStroopWord();
     }
+
     // Visual Search Logic
     let visualLevel = 1;
     let visualTimeLeft = 15;
+    
     const visualPairs = [
       { base: 'ب', target: 'ت' },
       { base: 'ح', target: 'خ' },
@@ -3304,29 +1127,38 @@
       { base: '6', target: '9' },
       { base: '🙂', target: '🙃' }
     ];
+
     function startVisualSearchGame() {
       document.getElementById('focus-menu').style.display = 'none';
       document.getElementById('focus-stroop-area').style.display = 'none';
       document.getElementById('focus-visual-area').style.display = 'block';
+      
       visualLevel = 1;
       visualTimeLeft = 15;
       isFocusGameActive = false;
       document.getElementById('visual-level').textContent = visualLevel;
       document.getElementById('visual-time').textContent = visualTimeLeft;
       document.getElementById('visual-bottom-timer').textContent = formatGameTime(visualTimeLeft);
+      
       nextVisualLevel();
     }
+
     function nextVisualLevel() {
       if (focusTimer) clearInterval(focusTimer);
+      
       const gridEl = document.getElementById('visual-grid');
       gridEl.innerHTML = '';
+      
       // Determine grid size based on level
       let size = 25; // 5x5
       if (visualLevel > 3) size = 36; // 6x6
       if (visualLevel > 7) size = 49; // 7x7
+      
       gridEl.style.gridTemplateColumns = `repeat(${Math.sqrt(size)}, 1fr)`;
+      
       const pair = visualPairs[Math.floor(Math.random() * visualPairs.length)];
       const targetIndex = Math.floor(Math.random() * size);
+      
       for (let i = 0; i < size; i++) {
         const div = document.createElement('div');
         div.style.background = 'var(--surface)';
@@ -3334,6 +1166,7 @@
         div.style.padding = '15px 0';
         div.style.cursor = 'pointer';
         div.style.border = '1px solid var(--border-darker)';
+        
         if (i === targetIndex) {
           div.textContent = pair.target;
           div.onclick = () => {
@@ -3394,7 +1227,10 @@
         }
         gridEl.appendChild(div);
       }
+      
+      
     }
+
     // Slide Logic
     let slideMoves = 0;
     let slideTime = 0;
@@ -3402,18 +1238,22 @@
     let slideTarget = [];
     let slideInterval = null;
     const slideColors = ['#ef4444', '#ef4444', '#3b82f6', '#3b82f6', '#22c55e', '#22c55e', '#eab308', '#eab308', null];
+
     function startSlideGame() {
       document.getElementById('focus-menu').style.display = 'none';
       document.getElementById('focus-stroop-area').style.display = 'none';
       document.getElementById('focus-visual-area').style.display = 'none';
       document.getElementById('focus-wordsearch-area').style.display = 'none';
       document.getElementById('focus-slide-area').style.display = 'block';
+
       slideMoves = 0;
       slideTime = 0;
       document.getElementById('slide-moves').textContent = slideMoves;
       document.getElementById('slide-time').textContent = "00:00";
+
       // Generate target
       slideTarget = [...slideColors].sort(() => Math.random() - 0.5);
+      
       // Render target
       const targetEl = document.getElementById('slide-target');
       targetEl.innerHTML = '';
@@ -3424,6 +1264,7 @@
         else div.style.background = 'transparent';
         targetEl.appendChild(div);
       });
+
       // Generate solvable state by reverse moves from target
       slideState = [...slideTarget];
       let emptyIdx = slideState.indexOf(null);
@@ -3440,9 +1281,12 @@
         slideState[swapIdx] = null;
         emptyIdx = swapIdx;
       }
+
       renderSlideGrid();
+
       if(slideInterval) clearInterval(slideInterval); isFocusGameActive = false;
     }
+
     function renderSlideGrid() {
       const gridEl = document.getElementById('slide-grid');
       gridEl.innerHTML = '';
@@ -3462,6 +1306,7 @@
         gridEl.appendChild(div);
       });
     }
+
     function moveSlideTile(idx) {
       if (!isFocusGameActive) {
         isFocusGameActive = true;
@@ -3487,6 +1332,7 @@
         if(typeof playSound === 'function') playSound('error');
       }
     }
+
     function checkSlideWin() {
       if(JSON.stringify(slideState) === JSON.stringify(slideTarget)) {
         clearInterval(slideInterval);
@@ -3497,6 +1343,7 @@
         }, 300);
       }
     }
+
     // Word Search Logic
     const ALL_WS_WORDS = [
       'حديقة','ممرضة','فلاح','زهرة','ورد','ناقة','دراجة','بيضة','تفاح','برتقال',
@@ -3511,6 +1358,7 @@
       'أبيض','أسود','أحمر','أزرق','أخضر','أصفر','برتقالي','بنفسجي','وردي','بني'
     ];
     const WS_PASSWORDS = ['انت بطل', 'استمر', 'عمل رائع', 'لا تستسلم', 'ممتاز', 'احسنت', 'تفكير سليم', 'تركيز عالي'];
+
     let wsWords = [];
     let wsPassword = "";
     let rawPassword = "";
@@ -3525,31 +1373,40 @@
     let isDragging = false;
     let startCell = null;
     let selectedCells = [];
+    
     function startWordSearchGame() {
       document.getElementById('focus-menu').style.display = 'none';
       document.getElementById('focus-stroop-area').style.display = 'none';
       document.getElementById('focus-visual-area').style.display = 'none';
       document.getElementById('focus-slide-area').style.display = 'none';
       document.getElementById('focus-wordsearch-area').style.display = 'block';
+
       wsTime = 0;
       wsFound = [];
       document.getElementById('ws-remaining').textContent = 10; // We always pick 10 words
       document.getElementById('ws-time').textContent = "00:00";
+      
       generateWordSearchGrid();
       renderWordSearch();
+
       if(wsInterval) clearInterval(wsInterval); isFocusGameActive = false;
     }
+
     function generateWordSearchGrid() {
       wsGrid = Array(wsSize).fill(null).map(() => Array(wsSize).fill(''));
       const letters = "ابتثجحخدذرزسشصضطظعغفقكلمنهوي";
+      
       const shuffledWords = [...ALL_WS_WORDS].sort(() => 0.5 - Math.random());
       wsWords = shuffledWords.slice(0, 10);
+      
       rawPassword = WS_PASSWORDS[Math.floor(Math.random() * WS_PASSWORDS.length)];
       wsPassword = rawPassword.replace(/\s/g, ''); // Remove spaces
       wsPasswordCells = [];
+
       const DIRS = [
         [0, 1], [0, -1], [1, 0], [-1, 0], [1, 1], [1, -1], [-1, 1], [-1, -1]
       ];
+      
       wsWords.forEach(word => {
         let placed = false;
         let attempts = 0;
@@ -3559,6 +1416,7 @@
           const row = Math.floor(Math.random() * wsSize);
           const col = Math.floor(Math.random() * wsSize);
           let canPlace = true;
+          
           for(let i=0; i<word.length; i++) {
             const r = row + (dir[0] * i);
             const c = col + (dir[1] * i);
@@ -3566,6 +1424,7 @@
               canPlace = false; break;
             }
           }
+          
           if(canPlace) {
             for(let i=0; i<word.length; i++) {
               const r = row + (dir[0] * i);
@@ -3576,12 +1435,14 @@
           }
         }
       });
+      
       let emptyCells = [];
       for(let r=0; r<wsSize; r++) {
         for(let c=wsSize-1; c>=0; c--) {
           if(wsGrid[r][c] === '') emptyCells.push({r, c});
         }
       }
+      
       if(emptyCells.length >= wsPassword.length) {
         const step = Math.floor(emptyCells.length / wsPassword.length);
         for(let i=0; i<wsPassword.length; i++) {
@@ -3590,17 +1451,20 @@
           wsPasswordCells.push(cell);
         }
       }
+      
       for(let r=0; r<wsSize; r++) {
         for(let c=0; c<wsSize; c++) {
           if(wsGrid[r][c] === '') wsGrid[r][c] = letters[Math.floor(Math.random() * letters.length)];
         }
       }
     }
+
     function renderWordSearch() {
       const gridEl = document.getElementById('ws-grid');
       gridEl.style.gridTemplateColumns = `repeat(${wsSize}, 30px)`;
       gridEl.style.gridTemplateRows = `repeat(${wsSize}, 30px)`;
       gridEl.innerHTML = '';
+      
       for(let r=0; r<wsSize; r++) {
         for(let c=0; c<wsSize; c++) {
           const cell = document.createElement('div');
@@ -3614,17 +1478,21 @@
           gridEl.appendChild(cell);
         }
       }
+
       gridEl.onmousedown = (e) => startWSDrag(e.target);
       gridEl.ontouchstart = (e) => {
         if(e.touches.length > 0) startWSDrag(document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY));
       };
+      
       document.onmousemove = (e) => updateWSDrag(e.target);
       document.ontouchmove = (e) => {
         if(isDragging && e.cancelable) e.preventDefault();
         if(e.touches.length > 0) updateWSDrag(document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY));
       };
+      
       document.onmouseup = endWSDrag;
       document.ontouchend = endWSDrag;
+
       const wordsEl = document.getElementById('ws-words');
       wordsEl.innerHTML = '';
       wsWords.forEach(w => {
@@ -3638,6 +1506,7 @@
         wordsEl.appendChild(div);
       });
     }
+
     function startWSDrag(el) {
       if(!el || !el.classList || !el.classList.contains('ws-cell')) return;
       isDragging = true;
@@ -3645,13 +1514,17 @@
       selectedCells = [el];
       highlightCells();
     }
+
     function updateWSDrag(el) {
       if(!isDragging || !el || !el.classList || !el.classList.contains('ws-cell') || !startCell) return;
+      
       const r1 = parseInt(startCell.dataset.r), c1 = parseInt(startCell.dataset.c);
       const r2 = parseInt(el.dataset.r), c2 = parseInt(el.dataset.c);
+      
       const dr = Math.sign(r2 - r1);
       const dc = Math.sign(c2 - c1);
       const dist = Math.max(Math.abs(r2 - r1), Math.abs(c2 - c1));
+      
       if(dr === 0 || dc === 0 || Math.abs(r2-r1) === Math.abs(c2-c1)) {
         selectedCells = [];
         for(let i=0; i<=dist; i++) {
@@ -3663,14 +1536,18 @@
         highlightCells();
       }
     }
+
     function endWSDrag() {
       if(!isDragging) return;
       isDragging = false;
+      
       const word = selectedCells.map(c => c.textContent).join('');
       const wordRev = selectedCells.map(c => c.textContent).reverse().join('');
+      
       let foundWord = null;
       if(wsWords.includes(word) && !wsFound.includes(word)) foundWord = word;
       else if(wsWords.includes(wordRev) && !wsFound.includes(wordRev)) foundWord = wordRev;
+      
       if(foundWord) {
         wsFound.push(foundWord);
         const currentColor = wsColors[wsColorIndex % wsColors.length];
@@ -3684,9 +1561,11 @@
         document.getElementById(`ws-word-${foundWord}`).style.color = 'var(--text3)';
         document.getElementById('ws-remaining').textContent = wsWords.length - wsFound.length;
         if(typeof playSound === 'function') playSound('soft');
+        
         if(wsFound.length === wsWords.length) {
           clearInterval(wsInterval);
           if(typeof playSound === 'function') playSound('achieve');
+          
           document.querySelectorAll('.ws-cell').forEach(c => {
              const r = parseInt(c.dataset.r);
              const col = parseInt(c.dataset.c);
@@ -3698,6 +1577,7 @@
                c.style.opacity = '0.1';
              }
           });
+
           setTimeout(() => {
             alert(`تهانينا! اكتشفت كلمة السر: "${rawPassword}"\nالوقت: ${document.getElementById('ws-time').textContent}`);
             startWordSearchGame();
@@ -3717,9 +1597,11 @@
           return;
         }
       }
+      
       selectedCells = [];
       highlightCells();
     }
+
     function highlightCells() {
       document.querySelectorAll('.ws-cell:not(.found)').forEach(c => {
         c.style.background = 'var(--surface)'; c.style.color = 'var(--text)';
@@ -3730,12 +1612,14 @@
         }
       });
     }
+
     // Infinity Path Logic
     let infTime = 0;
     let infLoops = 0;
     let infInterval = null;
     let infCurrentNode = 0;
     let infNodesData = [];
+    
     // Path coordinates mapping roughly to the SVG infinity path (viewBox 0 0 100 50)
     const infPathCoords = [
       {x: 50, y: 25}, // Center
@@ -3751,6 +1635,7 @@
       {x: 18, y: 10},  // TL2
       {x: 35, y: 10}   // TL1
     ];
+
     function startInfinityGame() {
       document.getElementById('focus-menu').style.display = 'none';
       document.getElementById('focus-stroop-area').style.display = 'none';
@@ -3758,23 +1643,29 @@
       document.getElementById('focus-slide-area').style.display = 'none';
       document.getElementById('focus-wordsearch-area').style.display = 'none';
       document.getElementById('focus-infinity-area').style.display = 'block';
+
       infTime = 0;
       infLoops = 0;
       infCurrentNode = 0;
       document.getElementById('inf-loops').textContent = "0 / 3";
       document.getElementById('inf-time').textContent = "00:00";
+      
       generateInfinityPath();
+      
       if(infInterval) clearInterval(infInterval); isFocusGameActive = false;
     }
+
     function generateInfinityPath() {
       const colors = ['#ef4444', '#3b82f6', '#22c55e', '#eab308', '#ec4899', '#8b5cf6'];
       infNodesData = [];
       const nodesEl = document.getElementById('inf-nodes');
       nodesEl.innerHTML = '';
+      
       infPathCoords.forEach((coord, idx) => {
         const num = Math.floor(Math.random() * 6) + 1;
         const color = colors[Math.floor(Math.random() * colors.length)];
         infNodesData.push({num, color});
+        
         const dot = document.createElement('div');
         dot.id = `inf-node-${idx}`;
         dot.textContent = num;
@@ -3796,6 +1687,7 @@
         dot.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
         nodesEl.appendChild(dot);
       });
+
       const diceEl = document.getElementById('inf-dice');
       diceEl.innerHTML = '';
       const diceChars = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
@@ -3809,12 +1701,15 @@
         btn.style.display = 'flex';
         btn.style.flexDirection = 'column';
         btn.style.alignItems = 'center';
+        
         btn.innerHTML = `<span style="font-size: 30px; line-height: 1;">${diceChars[i-1]}</span><span style="font-size:14px; font-weight:bold;">${i}</span>`;
         btn.onclick = () => handleInfClick(i);
         diceEl.appendChild(btn);
       }
+      
       updateInfHighlight();
     }
+    
     function updateInfHighlight() {
       infPathCoords.forEach((_, idx) => {
         const dot = document.getElementById(`inf-node-${idx}`);
@@ -3831,6 +1726,7 @@
         }
       });
     }
+    
     function handleInfClick(num) {
       if(infNodesData[infCurrentNode].num === num) {
         if(typeof playSound === 'function') playSound('soft');
@@ -3860,11 +1756,13 @@
         const s = (infTime % 60).toString().padStart(2, '0');
         document.getElementById('inf-time').textContent = `${m}:${s}`;
         document.getElementById('inf-bottom-timer').textContent = formatGameTime(infTime);
+        
         const dot = document.getElementById(`inf-node-${infCurrentNode}`);
         dot.style.transform = 'scale(1.3) translateX(5px)';
         setTimeout(() => dot.style.transform = 'scale(1.3) translateX(0)', 150);
       }
     }
+
     // Memory Connect Logic
     const mcColors = {
       1: '#ef4444', 2: '#eab308', 3: '#22c55e', 4: '#f97316',
@@ -3877,6 +1775,7 @@
     let mcSequence = [];
     let mcUserSequence = [];
     let mcNodesList = []; 
+    
     function startMemoryConnectGame() {
       document.getElementById('focus-menu').style.display = 'none';
       document.getElementById('focus-stroop-area').style.display = 'none';
@@ -3885,16 +1784,19 @@
       document.getElementById('focus-wordsearch-area').style.display = 'none';
       document.getElementById('focus-infinity-area').style.display = 'none';
       document.getElementById('focus-memory-area').style.display = 'block';
+
       mcLevel = 1; mcScore = 0; mcTime = 0; document.getElementById('mc-bottom-timer').textContent = "00:00"; if(mcInterval) clearInterval(mcInterval);
       isFocusGameActive = false;
       updateMCScoreboard();
       generateMCLegend();
       nextMCLevel();
     }
+    
     function updateMCScoreboard() {
       document.getElementById('mc-level').textContent = mcLevel;
       document.getElementById('mc-score').textContent = mcScore;
     }
+    
     function generateMCLegend() {
       const legendEl = document.getElementById('mc-legend');
       legendEl.innerHTML = '';
@@ -3911,21 +1813,25 @@
         legendEl.appendChild(item);
       }
     }
+    
     function nextMCLevel() {
       mcUserSequence = [];
       const nodesEl = document.getElementById('mc-nodes');
       nodesEl.innerHTML = '';
       document.getElementById('mc-lines').innerHTML = '';
+      
       const radius = 100;
       const center = 125;
       mcNodesList = [];
       const nums = [1,2,3,4,5,6,7,8,9].sort(() => 0.5 - Math.random());
+      
       for(let i=0; i<9; i++) {
         const angle = (i * 40 - 90) * (Math.PI / 180);
         const x = center + radius * Math.cos(angle);
         const y = center + radius * Math.sin(angle);
         const num = nums[i];
         mcNodesList.push({num, x, y});
+        
         const dot = document.createElement('div');
         dot.style.position = 'absolute';
         dot.style.left = `${x - 20}px`;
@@ -3940,17 +1846,21 @@
         dot.onclick = () => handleMCClick(num);
         nodesEl.appendChild(dot);
       }
+      
       const seqLength = Math.min(4 + Math.floor(mcLevel / 2), 9);
       const possibleNums = [...nums].sort(() => 0.5 - Math.random());
       mcSequence = possibleNums.slice(0, seqLength);
+      
       document.getElementById('mc-sequence').textContent = mcSequence.join(' - ');
     }
+    
     function handleMCClick(num) {
       if(mcSequence[mcUserSequence.length] === num) {
         // Correct
         mcUserSequence.push(num);
         if(typeof playSound === 'function') playSound('soft');
         drawMCLines();
+        
         if(mcUserSequence.length === mcSequence.length) {
           mcScore += mcLevel * 10;
           mcLevel++;
@@ -3963,6 +1873,7 @@
         if(typeof playSound === 'function') playSound('error');
         mcUserSequence = [];
         drawMCLines();
+        
         const seqEl = document.getElementById('mc-sequence');
         seqEl.style.transform = 'translateX(10px)';
         seqEl.style.color = '#ef4444';
@@ -3975,10 +1886,12 @@
         }, 100);
       }
     }
+    
     function drawMCLines() {
       const svg = document.getElementById('mc-lines');
       svg.innerHTML = '';
       if(mcUserSequence.length < 2) return;
+      
       let pathD = "";
       for(let i=0; i<mcUserSequence.length; i++) {
         const num = mcUserSequence[i];
@@ -3986,6 +1899,7 @@
         if(i === 0) pathD += `M ${node.x} ${node.y} `;
         else pathD += `L ${node.x} ${node.y} `;
       }
+      
       const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
       path.setAttribute("d", pathD);
       path.setAttribute("fill", "none");
@@ -3994,6 +1908,7 @@
       path.setAttribute("stroke-dasharray", "5,5");
       svg.appendChild(path);
     }
+
     function quitFocusGame() {
       if(typeof mcInterval !== 'undefined' && mcInterval) clearInterval(mcInterval);
       if (focusTimer) clearInterval(focusTimer);
@@ -4008,12 +1923,15 @@
       document.getElementById('focus-memory-area').style.display = 'none';
       document.getElementById('focus-menu').style.display = 'block';
     }
+
     // --- Reports Logic ---
     function populateReportSelector() {
       const sel = document.getElementById('report-period');
       if (!sel || sel.options.length > 0) return; // already populated
+      
       const options = [];
       const now = new Date();
+      
       // Last 12 months individually
       for (let i = 0; i < 12; i++) {
         const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -4022,16 +1940,20 @@
         const str = d.toLocaleDateString('ar-JO', { month: 'long', year: 'numeric' });
         options.push(`<option value="month_${y}_${m}">شهر ${m} / ${y} (${str})</option>`);
       }
+      
       // Periods
       options.push('<option value="period_3">آخر 3 أشهر</option>');
       options.push('<option value="period_6">آخر 6 أشهر</option>');
       options.push('<option value="period_12">آخر سنة (12 شهر)</option>');
+      
       sel.innerHTML = options.join('');
     }
+
     function generateReport() {
       const val = document.getElementById('report-period').value;
       let startD, endD;
       const now = new Date();
+      
       if (val.startsWith('month_')) {
         const parts = val.split('_');
         const y = parseInt(parts[1]);
@@ -4043,18 +1965,23 @@
         startD = new Date(now.getFullYear(), now.getMonth() - months + 1, 1);
         endD = new Date(now.getFullYear(), now.getMonth() + 1, 0);
       }
+      
       startD.setHours(0,0,0,0);
       endD.setHours(23,59,59,999);
+      
       let totalExpected = 0;
       let totalDone = 0;
       const habitsReport = [];
+      
       // 1. Calculate Habits
       state.habits.forEach(h => {
         let expected = 0;
         let done = 0;
         let hStart = new Date(h.start || today);
         let hEnd = h.end ? new Date(Math.min(endD, new Date(h.end))) : endD;
+        
         let actualStart = new Date(Math.max(startD, hStart));
+        
         if (actualStart <= hEnd) {
           let cur = new Date(actualStart);
           let daysInRange = 0;
@@ -4073,6 +2000,7 @@
           if (h.freq === 'monthly') expected = Math.ceil(daysInRange / 30);
           if (h.freq === 'yearly') expected = Math.ceil(daysInRange / 365);
         }
+        
         if (expected > 0) {
           totalExpected += expected;
           totalDone += done;
@@ -4084,8 +2012,10 @@
           });
         }
       });
+      
       const overallPct = totalExpected === 0 ? 0 : Math.round((totalDone / totalExpected) * 100);
       document.getElementById('rep-habits-pct').textContent = overallPct + '%';
+      
       // 2. Calculate Zaha Hours
       let zahaHours = 0;
       state.zahaSessions.forEach(z => {
@@ -4095,6 +2025,7 @@
         }
       });
       document.getElementById('rep-zaha-hours').textContent = zahaHours;
+      
       // 3. Calculate Breathing Days
       let breatheDays = 0;
       for (const [dStr, jData] of Object.entries(state.journal)) {
@@ -4104,8 +2035,10 @@
         }
       }
       document.getElementById('rep-breathe-days').textContent = breatheDays;
+      
       // 4. Render Habits List
       habitsReport.sort((a, b) => b.pct - a.pct); // Sort by percentage desc
+      
       const listHtml = habitsReport.length ? habitsReport.map(h => {
         const isGood = h.pct >= 70;
         const isBad = h.pct <= 30;
@@ -4121,15 +2054,19 @@
           </div>
         `;
       }).join('') : '<div class="empty">لا يوجد مهام مطلوبة في هذه الفترة</div>';
+      
       document.getElementById('rep-habits-list').innerHTML = listHtml;
+      
       // Show results
       document.getElementById('report-results').style.display = 'block';
       toast('تم استخراج التقرير بنجاح 📊');
     }
+
     function exportReportPDF() {
       const element = document.getElementById('report-results');
       const btn = document.getElementById('btn-export-pdf');
       if (btn) btn.style.display = 'none';
+      
       const opt = {
         margin:       10,
         filename:     'تقرير_الإنجاز.pdf',
@@ -4137,6 +2074,7 @@
         html2canvas:  { scale: 2 },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
+      
       html2pdf().set(opt).from(element).toPdf().get('pdf').then(function(pdf) {
         if (btn) btn.style.display = 'block';
         const blob = pdf.output('bloburl');
@@ -4144,6 +2082,8 @@
         toast('تم تجهيز التقرير! يمكنك حفظه أو طباعته 📥');
       });
     }
+  
+    
     // --- Sum Match Game ---
     let smTarget = 0;
     let smPairsToFind = 12;
@@ -4152,17 +2092,21 @@
     let smSelectedCell = null;
     let smTime = 0;
     let smInterval = null;
+
     function startSumMatchGame() {
       hideAllFocusGames();
       document.getElementById('focus-summatch-area').style.display = 'block';
+      
       smTarget = Math.floor(Math.random() * 8) + 7; // 7 to 14
       document.getElementById('sm-target').textContent = smTarget;
       smPairsToFind = 15;
       smPairsFound = 0;
       smSelectedCell = null;
       document.getElementById('sm-remaining').textContent = smPairsToFind;
+      
       generateSmGrid();
       renderSmGrid();
+      
       smTime = 0;
       document.getElementById('sm-timer').textContent = '00:00';
       clearInterval(smInterval);
@@ -4173,6 +2117,7 @@
         document.getElementById('sm-timer').textContent = `${m}:${s}`;
       }, 1000);
     }
+
     function generateSmGrid() {
       let success = false;
       while(!success) {
@@ -4180,6 +2125,7 @@
         // Center 2x2 hole
         smGrid[4][4] = -1; smGrid[4][5] = -1;
         smGrid[5][4] = -1; smGrid[5][5] = -1;
+        
         let pairsPlaced = 0;
         let attempts = 0;
         while(pairsPlaced < smPairsToFind && attempts < 1000) {
@@ -4187,11 +2133,13 @@
           let r = Math.floor(Math.random() * 10);
           let c = Math.floor(Math.random() * 10);
           if(smGrid[r][c] !== 0) continue;
+          
           let neighbors = [];
           if(r > 0 && smGrid[r-1][c] === 0) neighbors.push([r-1, c]);
           if(r < 9 && smGrid[r+1][c] === 0) neighbors.push([r+1, c]);
           if(c > 0 && smGrid[r][c-1] === 0) neighbors.push([r, c-1]);
           if(c < 9 && smGrid[r][c+1] === 0) neighbors.push([r, c+1]);
+          
           if(neighbors.length > 0) {
             let n = neighbors[Math.floor(Math.random() * neighbors.length)];
             let maxA = Math.min(9, smTarget - 1);
@@ -4203,8 +2151,10 @@
             pairsPlaced++;
           }
         }
+        
         if(pairsPlaced === smPairsToFind) success = true;
       }
+      
       // Fill remaining with noise
       for(let r=0; r<10; r++) {
         for(let c=0; c<10; c++) {
@@ -4227,12 +2177,15 @@
         }
       }
     }
+
     function renderSmGrid() {
       const gridEl = document.getElementById('sm-grid');
       gridEl.innerHTML = '';
       gridEl.style.gridTemplateColumns = 'repeat(10, 35px)';
       gridEl.style.gridTemplateRows = 'repeat(10, 35px)';
+      
       let centerAdded = false;
+      
       for(let r=0; r<10; r++) {
         for(let c=0; c<10; c++) {
           if(smGrid[r][c] === -1) {
@@ -4245,6 +2198,7 @@
             }
             continue;
           }
+          
           const cell = document.createElement('div');
           cell.className = 'sm-cell';
           cell.dataset.r = r;
@@ -4255,8 +2209,10 @@
         }
       }
     }
+
     function handleSmClick(r, c, el) {
       if(el.classList.contains('found')) return;
+      
       if(!smSelectedCell) {
         smSelectedCell = {r, c, el};
         el.classList.add('selected');
@@ -4276,6 +2232,7 @@
               smPairsFound++;
               document.getElementById('sm-remaining').textContent = smPairsToFind - smPairsFound;
               smSelectedCell = null;
+              
               if(smPairsFound === smPairsToFind) {
                 clearInterval(smInterval);
                 setTimeout(() => {
@@ -4297,44 +2254,55 @@
         }
       }
     }
+    
     // --- Shape Counter Game ---
     let scExpected = { circle: 0, square: 0, triangle: 0, rect: 0 };
+    
     function startShapeCounterGame() {
       hideAllFocusGames();
       document.getElementById('focus-shapecounter-area').style.display = 'block';
       generateShapes();
+      
       document.getElementById('sc-circle-count').value = '';
       document.getElementById('sc-square-count').value = '';
       document.getElementById('sc-triangle-count').value = '';
       document.getElementById('sc-rect-count').value = '';
     }
+    
     function closeShapeCounter() {
       document.getElementById('focus-shapecounter-area').style.display = 'none';
       document.getElementById('focus-menu').style.display = 'block';
     }
+    
     function generateShapes() {
       const svg = document.getElementById('sc-svg');
       svg.innerHTML = '';
       scExpected = { circle: 0, square: 0, triangle: 0, rect: 0 };
+      
       const counts = {
         circle: Math.floor(Math.random() * 5) + 3,
         square: Math.floor(Math.random() * 5) + 3,
         triangle: Math.floor(Math.random() * 5) + 3,
         rect: Math.floor(Math.random() * 5) + 3
       };
+      
       scExpected = counts;
       const shapes = [];
+      
       for(let i=0; i<counts.circle; i++) shapes.push('circle');
       for(let i=0; i<counts.square; i++) shapes.push('square');
       for(let i=0; i<counts.triangle; i++) shapes.push('triangle');
       for(let i=0; i<counts.rect; i++) shapes.push('rect');
+      
       // Shuffle
       shapes.sort(() => Math.random() - 0.5);
+      
       shapes.forEach(type => {
         let el;
         const color = `hsl(${Math.random()*360}, 70%, 50%)`;
         const x = Math.random() * 240 + 30;
         const y = Math.random() * 240 + 30;
+        
         if(type === 'circle') {
           el = document.createElementNS("http://www.w3.org/2000/svg", "circle");
           el.setAttribute("cx", x);
@@ -4360,6 +2328,7 @@
           const size = Math.random() * 20 + 20;
           el.setAttribute("points", `${x},${y-size} ${x-size},${y+size} ${x+size},${y+size}`);
         }
+        
         el.setAttribute("fill", "none");
         el.setAttribute("stroke", color);
         el.setAttribute("stroke-width", "3");
@@ -4367,11 +2336,13 @@
         svg.appendChild(el);
       });
     }
+    
     function checkShapeCounter() {
       const c = parseInt(document.getElementById('sc-circle-count').value) || 0;
       const s = parseInt(document.getElementById('sc-square-count').value) || 0;
       const t = parseInt(document.getElementById('sc-triangle-count').value) || 0;
       const r = parseInt(document.getElementById('sc-rect-count').value) || 0;
+      
       if(c === scExpected.circle && s === scExpected.square && t === scExpected.triangle && r === scExpected.rect) {
         if(typeof playSound === 'function') playSound('achieve');
         toast('أحسنت! إجابة صحيحة 💯');
@@ -4381,19 +2352,23 @@
         toast('هناك خطأ في العد، حاول مرة أخرى!');
       }
     }
+
     // --- Pattern Copy Game ---
     let pcTarget = [];
     let pcPlayer = [];
+    
     function startPatternCopyGame() {
       hideAllFocusGames();
       document.getElementById('focus-patterncopy-area').style.display = 'block';
       generatePatternCopy();
       resetPatternCopyPlayer();
     }
+    
     function closePatternCopy() {
       document.getElementById('focus-patterncopy-area').style.display = 'none';
       document.getElementById('focus-menu').style.display = 'block';
     }
+    
     function drawGridDots(containerId, isPlayer) {
       const container = document.getElementById(containerId);
       container.innerHTML = '';
@@ -4407,6 +2382,7 @@
           dot.dataset.id = r*4 + c;
           dot.dataset.r = r;
           dot.dataset.c = c;
+          
           if(isPlayer) {
             dot.onclick = () => handlePcPlayerClick(parseInt(dot.dataset.id), dot);
           }
@@ -4414,6 +2390,7 @@
         }
       }
     }
+    
     function generatePatternCopy() {
       drawGridDots('pc-target-grid', false);
       pcTarget = [];
@@ -4421,6 +2398,7 @@
       let curR = Math.floor(Math.random() * 4);
       let curC = Math.floor(Math.random() * 4);
       pcTarget.push(curR*4 + curC);
+      
       for(let i=1; i<pathLength; i++) {
         let validNeighbors = [];
         const dirs = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
@@ -4437,14 +2415,18 @@
         curR = Math.floor(nextId / 4);
         curC = nextId % 4;
       }
+      
       drawPath('pc-target-grid', pcTarget, false);
     }
+    
     function resetPatternCopyPlayer() {
       drawGridDots('pc-player-grid', true);
       pcPlayer = [];
     }
+    
     function handlePcPlayerClick(id, el) {
       if(pcPlayer.includes(id)) return; // Already visited
+      
       if(pcPlayer.length > 0) {
         let lastId = pcPlayer[pcPlayer.length-1];
         let lr = Math.floor(lastId/4); let lc = lastId%4;
@@ -4455,48 +2437,59 @@
            return;
         }
       }
+      
       pcPlayer.push(id);
       el.classList.add('active');
       drawPath('pc-player-grid', pcPlayer, true);
     }
+    
     function drawPath(containerId, path, isPlayer) {
       const container = document.getElementById(containerId);
       // Remove old lines
       container.querySelectorAll('.pc-line').forEach(e => e.remove());
+      
       const step = 160 / 3;
       for(let i=0; i<path.length-1; i++) {
         let id1 = path[i]; let id2 = path[i+1];
         let r1 = Math.floor(id1/4); let c1 = id1%4;
         let r2 = Math.floor(id2/4); let c2 = id2%4;
+        
         let x1 = c1*step + 10; let y1 = r1*step + 10;
         let x2 = c2*step + 10; let y2 = r2*step + 10;
+        
         let length = Math.sqrt((x2-x1)**2 + (y2-y1)**2);
         let angle = Math.atan2(y2-y1, x2-x1) * 180 / Math.PI;
+        
         const line = document.createElement('div');
         line.className = isPlayer ? 'pc-line pc-line-player' : 'pc-line';
         line.style.width = `${length}px`;
         line.style.left = `${x1}px`;
         line.style.top = `${y1 - 2}px`;
         line.style.transform = `rotate(${angle}deg)`;
+        
         // Insert before dots
         container.insertBefore(line, container.firstChild);
       }
     }
+    
     function checkPatternCopy() {
       if(pcPlayer.length !== pcTarget.length) {
         toast('المسار غير مكتمل أو غير متطابق!');
         return;
       }
+      
       let isMatch = true;
       for(let i=0; i<pcTarget.length; i++) {
         if(pcTarget[i] !== pcPlayer[i]) isMatch = false;
       }
+      
       // Also check reversed path
       let isRevMatch = true;
       let revTarget = [...pcTarget].reverse();
       for(let i=0; i<revTarget.length; i++) {
         if(revTarget[i] !== pcPlayer[i]) isRevMatch = false;
       }
+      
       if(isMatch || isRevMatch) {
         if(typeof playSound === 'function') playSound('achieve');
         toast('ممتاز! مسار متطابق 💯');
@@ -4506,40 +2499,50 @@
         toast('المسار غير متطابق، حاول مجدداً!');
       }
     }
+
     // --- Size Sorter Game ---
     let ssShapes = [];
     let ssSelectedIdx = -1;
+    
     function startSizeSorterGame() {
       hideAllFocusGames();
       document.getElementById('focus-sizesorter-area').style.display = 'block';
       generateSizeSorter();
     }
+    
     function closeSizeSorter() {
       document.getElementById('focus-sizesorter-area').style.display = 'none';
       document.getElementById('focus-menu').style.display = 'block';
     }
+    
     function generateSizeSorter() {
       ssSelectedIdx = -1;
       const baseSizes = [20, 35, 50, 65, 80];
       ssShapes = baseSizes.map((size, index) => ({ id: index, size: size }));
+      
       // Shuffle array
       for (let i = ssShapes.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [ssShapes[i], ssShapes[j]] = [ssShapes[j], ssShapes[i]];
       }
+      
       renderSizeSorter();
     }
+    
     function renderSizeSorter() {
       const container = document.getElementById('ss-container');
       container.innerHTML = '';
+      
       const type = Math.random() > 0.5 ? 'circle' : 'rect';
       const color = `hsl(${Math.random()*360}, 70%, 50%)`;
+      
       ssShapes.forEach((s, i) => {
         const wrapper = document.createElement('div');
         wrapper.className = 'ss-shape-wrapper' + (ssSelectedIdx === i ? ' selected' : '');
         wrapper.style.width = '100px';
         wrapper.style.height = '100px';
         wrapper.onclick = () => handleSsClick(i);
+        
         let svgHtml = `<svg width="100" height="100" viewBox="0 0 100 100">`;
         if(type === 'circle') {
           svgHtml += `<circle class="ss-shape" cx="50" cy="50" r="${s.size/2}" fill="${color}" />`;
@@ -4547,11 +2550,14 @@
           svgHtml += `<rect class="ss-shape" x="${50 - s.size/2}" y="${50 - s.size/2}" width="${s.size}" height="${s.size}" rx="4" fill="${color}" />`;
         }
         svgHtml += `</svg>`;
+        
         wrapper.innerHTML = svgHtml;
         container.appendChild(wrapper);
       });
+      
       checkSizeSorterWin();
     }
+    
     function handleSsClick(idx) {
       if(ssSelectedIdx === -1) {
         ssSelectedIdx = idx;
@@ -4567,11 +2573,13 @@
         renderSizeSorter();
       }
     }
+    
     function checkSizeSorterWin() {
       let isSorted = true;
       for(let i=0; i<ssShapes.length-1; i++) {
         if(ssShapes[i].size > ssShapes[i+1].size) isSorted = false;
       }
+      
       if(isSorted) {
         if(typeof playSound === 'function') playSound('achieve');
         toast('نجاح رائع! الترتيب صحيح 📏');
@@ -4579,6 +2587,7 @@
         setTimeout(startSizeSorterGame, 2000);
       }
     }
+
     function hideAllFocusGames() {
       document.getElementById('focus-menu').style.display = 'none';
       if(document.getElementById('focus-stroop-area')) document.getElementById('focus-stroop-area').style.display = 'none';
@@ -4590,6 +2599,5 @@
       if(document.getElementById('focus-patterncopy-area')) document.getElementById('focus-patterncopy-area').style.display = 'none';
       if(document.getElementById('focus-sizesorter-area')) document.getElementById('focus-sizesorter-area').style.display = 'none';
     }
-  </script>
-</body>
-</html>
+
+  

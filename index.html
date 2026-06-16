@@ -47,10 +47,10 @@
             --r: 14px;
             --r2: 18px;
             --r3: 24px;
-        
-}
 
-        
+        }
+
+
 
         /* ─── LIGHT THEME COMPLIX-STYLE MINI-MALIST AESTHETICS ─── */
         html,
@@ -1651,22 +1651,55 @@
         }
 
         @keyframes fadeUpCard {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .page.active .card, .page.active .table-card, .page.active .metric {
+        .page.active .card,
+        .page.active .table-card,
+        .page.active .metric {
             animation: fadeUpCard 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             opacity: 0;
         }
-        
-        .page.active .card:nth-child(1), .page.active .metric:nth-child(1) { animation-delay: 0.05s; }
-        .page.active .card:nth-child(2), .page.active .metric:nth-child(2) { animation-delay: 0.1s; }
-        .page.active .card:nth-child(3), .page.active .metric:nth-child(3) { animation-delay: 0.15s; }
-        .page.active .card:nth-child(4), .page.active .metric:nth-child(4) { animation-delay: 0.2s; }
-        .page.active .card:nth-child(5) { animation-delay: 0.25s; }
-        .page.active .card:nth-child(6) { animation-delay: 0.3s; }
-        .page.active .card:nth-child(n+7) { animation-delay: 0.4s; }
+
+        .page.active .card:nth-child(1),
+        .page.active .metric:nth-child(1) {
+            animation-delay: 0.05s;
+        }
+
+        .page.active .card:nth-child(2),
+        .page.active .metric:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .page.active .card:nth-child(3),
+        .page.active .metric:nth-child(3) {
+            animation-delay: 0.15s;
+        }
+
+        .page.active .card:nth-child(4),
+        .page.active .metric:nth-child(4) {
+            animation-delay: 0.2s;
+        }
+
+        .page.active .card:nth-child(5) {
+            animation-delay: 0.25s;
+        }
+
+        .page.active .card:nth-child(6) {
+            animation-delay: 0.3s;
+        }
+
+        .page.active .card:nth-child(n+7) {
+            animation-delay: 0.4s;
+        }
 
         .btn-primary {
             background: var(--accent);
@@ -2456,14 +2489,17 @@
 <body>
 
     <!-- Login Overlay -->
-    <div id="loginOverlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg); z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-        
+    <div id="loginOverlay"
+        style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg); z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+
         <!-- LOGIN SECTION -->
-        <div class="card" id="authLoginSection" style="width: 320px; max-width: 90%; text-align:center; padding: 32px 24px;">
+        <div class="card" id="authLoginSection"
+            style="width: 320px; max-width: 90%; text-align:center; padding: 32px 24px;">
             <div style="font-size: 36px; margin-bottom: 12px;">💸</div>
             <h2 style="margin-bottom: 8px; color: var(--text);">تسجيل الدخول</h2>
-            <div style="color: var(--text3); font-size: 13px; margin-bottom: 24px;">أهلاً بك مجدداً في حسابك المالي</div>
-            
+            <div style="color: var(--text3); font-size: 13px; margin-bottom: 24px;">أهلاً بك مجدداً في حسابك المالي
+            </div>
+
             <form id="loginForm" onsubmit="doLogin(event)">
                 <div class="field" style="text-align:right;">
                     <label>البريد الإلكتروني</label>
@@ -2471,27 +2507,34 @@
                 </div>
                 <div class="field" style="text-align:right;">
                     <label>كلمة المرور</label>
-                    <input type="password" id="loginPassword" class="inp" required style="direction:ltr; text-align:left;">
+                    <input type="password" id="loginPassword" class="inp" required
+                        style="direction:ltr; text-align:left;">
                 </div>
-                <div id="loginError" style="color: var(--red); font-size: 12px; margin-bottom: 12px; display:none;"></div>
-                
-                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content:center; padding: 12px; font-size: 15px; margin-bottom: 16px;" id="loginBtn">دخول</button>
-                
+                <div id="loginError" style="color: var(--red); font-size: 12px; margin-bottom: 12px; display:none;">
+                </div>
+
+                <button type="submit" class="btn btn-primary"
+                    style="width: 100%; justify-content:center; padding: 12px; font-size: 15px; margin-bottom: 16px;"
+                    id="loginBtn">دخول</button>
+
                 <div style="font-size: 12px; color: var(--text3); margin-bottom: 8px;">
-                    <a href="#" onclick="switchAuthSection('forgot')" style="color: var(--accent); text-decoration: none;">نسيت كلمة السر؟</a>
+                    <a href="#" onclick="switchAuthSection('forgot')"
+                        style="color: var(--accent); text-decoration: none;">نسيت كلمة السر؟</a>
                 </div>
                 <div style="font-size: 12px; color: var(--text3);">
-                    ليس لديك حساب؟ <a href="#" onclick="switchAuthSection('register')" style="color: var(--accent); text-decoration: none; font-weight: bold;">إنشاء حساب جديد</a>
+                    ليس لديك حساب؟ <a href="#" onclick="switchAuthSection('register')"
+                        style="color: var(--accent); text-decoration: none; font-weight: bold;">إنشاء حساب جديد</a>
                 </div>
             </form>
         </div>
 
         <!-- REGISTER SECTION -->
-        <div class="card" id="authRegisterSection" style="width: 320px; max-width: 90%; text-align:center; padding: 32px 24px; display:none;">
+        <div class="card" id="authRegisterSection"
+            style="width: 320px; max-width: 90%; text-align:center; padding: 32px 24px; display:none;">
             <div style="font-size: 36px; margin-bottom: 12px;">✨</div>
             <h2 style="margin-bottom: 8px; color: var(--text);">إنشاء حساب</h2>
             <div style="color: var(--text3); font-size: 13px; margin-bottom: 24px;">ابدأ بإدارة أموالك بسهولة</div>
-            
+
             <form id="registerForm" onsubmit="doRegister(event)">
                 <div class="field" style="text-align:right;">
                     <label>البريد الإلكتروني</label>
@@ -2499,35 +2542,46 @@
                 </div>
                 <div class="field" style="text-align:right;">
                     <label>كلمة المرور (6 أحرف على الأقل)</label>
-                    <input type="password" id="regPassword" class="inp" required style="direction:ltr; text-align:left;" minlength="6">
+                    <input type="password" id="regPassword" class="inp" required style="direction:ltr; text-align:left;"
+                        minlength="6">
                 </div>
                 <div id="regError" style="color: var(--red); font-size: 12px; margin-bottom: 12px; display:none;"></div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content:center; padding: 12px; font-size: 15px; margin-bottom: 16px;" id="regBtn">إنشاء الحساب</button>
-                
+                <button type="submit" class="btn btn-primary"
+                    style="width: 100%; justify-content:center; padding: 12px; font-size: 15px; margin-bottom: 16px;"
+                    id="regBtn">إنشاء الحساب</button>
+
                 <div style="font-size: 12px; color: var(--text3);">
-                    لديك حساب بالفعل؟ <a href="#" onclick="switchAuthSection('login')" style="color: var(--accent); text-decoration: none; font-weight: bold;">تسجيل الدخول</a>
+                    لديك حساب بالفعل؟ <a href="#" onclick="switchAuthSection('login')"
+                        style="color: var(--accent); text-decoration: none; font-weight: bold;">تسجيل الدخول</a>
                 </div>
             </form>
         </div>
 
         <!-- FORGOT PASSWORD SECTION -->
-        <div class="card" id="authForgotSection" style="width: 320px; max-width: 90%; text-align:center; padding: 32px 24px; display:none;">
+        <div class="card" id="authForgotSection"
+            style="width: 320px; max-width: 90%; text-align:center; padding: 32px 24px; display:none;">
             <div style="font-size: 36px; margin-bottom: 12px;">🔑</div>
             <h2 style="margin-bottom: 8px; color: var(--text);">استعادة كلمة السر</h2>
-            <div style="color: var(--text3); font-size: 13px; margin-bottom: 24px;">أدخل إيميلك وسنرسل لك رابطاً للتعديل</div>
-            
+            <div style="color: var(--text3); font-size: 13px; margin-bottom: 24px;">أدخل إيميلك وسنرسل لك رابطاً للتعديل
+            </div>
+
             <form id="forgotForm" onsubmit="doResetPassword(event)">
                 <div class="field" style="text-align:right;">
                     <label>البريد الإلكتروني</label>
                     <input type="email" id="forgotEmail" class="inp" required style="direction:ltr; text-align:left;">
                 </div>
-                <div id="forgotError" style="color: var(--red); font-size: 12px; margin-bottom: 12px; display:none;"></div>
-                <div id="forgotSuccess" style="color: #34d399; font-size: 12px; margin-bottom: 12px; display:none;"></div>
-                
-                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content:center; padding: 12px; font-size: 15px; margin-bottom: 16px;" id="forgotBtn">إرسال الرابط</button>
-                
+                <div id="forgotError" style="color: var(--red); font-size: 12px; margin-bottom: 12px; display:none;">
+                </div>
+                <div id="forgotSuccess" style="color: #34d399; font-size: 12px; margin-bottom: 12px; display:none;">
+                </div>
+
+                <button type="submit" class="btn btn-primary"
+                    style="width: 100%; justify-content:center; padding: 12px; font-size: 15px; margin-bottom: 16px;"
+                    id="forgotBtn">إرسال الرابط</button>
+
                 <div style="font-size: 12px; color: var(--text3);">
-                    <a href="#" onclick="switchAuthSection('login')" style="color: var(--text3); text-decoration: underline;">العودة لتسجيل الدخول</a>
+                    <a href="#" onclick="switchAuthSection('login')"
+                        style="color: var(--text3); text-decoration: underline;">العودة لتسجيل الدخول</a>
                 </div>
             </form>
         </div>
@@ -2746,7 +2800,8 @@
                         style="padding: 8px 16px; font-size: 12px; font-weight: 600; gap: 6px; display: inline-flex; align-items: center; border-radius: var(--r);">
                         ➕ إضافة مصروف
                     </button>
-                    <button class="btn" onclick="openModal('addFLFromStmt'); document.getElementById('n-fl-date').value=td();"
+                    <button class="btn"
+                        onclick="openModal('addFLFromStmt'); document.getElementById('n-fl-date').value=td();"
                         style="padding: 8px 16px; font-size: 12px; font-weight: 600; gap: 6px; display: inline-flex; align-items: center; border-radius: var(--r); background: var(--surface2); color: var(--text1); border: 1px solid var(--border);">
                         ➕ إضافة دخل
                     </button>
@@ -2796,7 +2851,9 @@
             </div>
 
             <div style="margin-bottom: 12px; position: relative;">
-                <input type="text" id="stmtSearch" class="inp" placeholder="ابحث في المعاملات (الوصف، الفئة، المبلغ)..." style="width: 100%; padding-right: 36px; background: var(--surface); border: 1px solid var(--border);" onkeyup="filterStatementTable()">
+                <input type="text" id="stmtSearch" class="inp" placeholder="ابحث في المعاملات (الوصف، الفئة، المبلغ)..."
+                    style="width: 100%; padding-right: 36px; background: var(--surface); border: 1px solid var(--border);"
+                    onkeyup="filterStatementTable()">
                 <span style="position: absolute; right: 12px; top: 10px; color: var(--text3);">🔍</span>
             </div>
 
@@ -3212,7 +3269,8 @@
             <div class="modal-title">إضافة دخل جديد</div>
             <div class="modal-body">
                 <div class="field">
-                    <label>الوصف</label><input class="inp" id="n-fl-desc" autocomplete="off" placeholder="مثال: بيع، استشارة، مكافأة..." />
+                    <label>الوصف</label><input class="inp" id="n-fl-desc" autocomplete="off"
+                        placeholder="مثال: بيع، استشارة، مكافأة..." />
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
                     <div class="field">
@@ -4106,8 +4164,8 @@
                         .catch(e => console.error('Firebase REST save error', e));
                 } else {
                     db.ref('state').set(firebaseState)
-                      .then(() => console.log('Firebase Web SDK save OK'))
-                      .catch(e => console.error('Firebase Web SDK save error', e));
+                        .then(() => console.log('Firebase Web SDK save OK'))
+                        .catch(e => console.error('Firebase Web SDK save error', e));
                 }
             } catch (e) {
                 console.error('Firebase format error', e);
@@ -4263,7 +4321,7 @@
             let fixed = 0;
             let curM = finM;
             let curY = finY;
-            
+
             for (let i = 0; i < numMonths; i++) {
                 let cycleEnd;
                 if (startDay === 1) {
@@ -4827,7 +4885,7 @@
         }
         function renderLine() {
             const now = new Date(); const labels = []; const vals = [];
-            
+
             const startDay = state.financialMonthStartDay || 27;
             const parseLocalDate = (dateStr) => {
                 if (!dateStr) return new Date(0);
@@ -4986,13 +5044,13 @@
             }
             renderStatement();
         }
-        
+
         function renderStatement() {
             const fromM = parseInt(document.getElementById('stmtFromMonth').value);
             const fromY = parseInt(document.getElementById('stmtFromYear').value);
             const toM = parseInt(document.getElementById('stmtToMonth').value);
             const toY = parseInt(document.getElementById('stmtToYear').value);
-            
+
             const startDay = state.financialMonthStartDay || 27;
 
             let from;
@@ -5104,7 +5162,7 @@
                         const dayPart = startD.getDate();
                         const finalDay = Math.min(dayPart, thisMonthEnd.getDate());
                         const dateStr = `${curY}-${String(curM + 1).padStart(2, '0')}-${String(finalDay).padStart(2, '0')}`;
-                        
+
                         const d = parseLocalDate(dateStr);
                         if (d >= from && d <= to) {
                             loanExps.push({
@@ -5138,7 +5196,7 @@
                         const dayPart = startD.getDate();
                         const finalDay = Math.min(dayPart, thisMonthEnd.getDate());
                         const dateStr = `${curY}-${String(curM + 1).padStart(2, '0')}-${String(finalDay).padStart(2, '0')}`;
-                        
+
                         const d = parseLocalDate(dateStr);
                         if (d >= from && d <= to) {
                             fixedIncExps.push({
@@ -5174,7 +5232,7 @@
                 type: 'income',
                 cat: 'دخل'
             }));
-            
+
             exps = exps.concat(incExps, fixedIncExps).sort((a, b) => parseLocalDate(a.date) - parseLocalDate(b.date));
 
             const totalExp = exps.filter(e => e.type !== 'income' && e.type !== 'fixed_income').reduce((s, e) => s + e.amount, 0);
@@ -5233,7 +5291,7 @@
             });
 
             let flatRowsHtml = '';
-            
+
             let uniqueCats = [];
             if (stmtSortKey === 'cat') {
                 const orderedCats = ['دخل', ...state.categories.map(c => c.name), 'أخرى'];
@@ -5400,9 +5458,9 @@
             const query = document.getElementById('stmtSearch').value.toLowerCase();
             const tableBody = document.querySelector('.stmt-table tbody');
             if (!tableBody) return;
-            
+
             const rows = Array.from(tableBody.querySelectorAll('tr'));
-            
+
             if (query === '') {
                 rows.forEach(row => row.style.display = '');
                 return;
@@ -5413,10 +5471,10 @@
 
             rows.forEach(row => {
                 if (row.classList.contains('stmt-grand-total')) return;
-                
+
                 const text = row.textContent.toLowerCase();
                 const isMatch = text.includes(query);
-                
+
                 if (row.classList.contains('stmt-inv-hdr')) {
                     currentParentRow = row;
                     parentMatches = isMatch;
@@ -5523,7 +5581,7 @@
                 }
                 nextDate.setDate(28);
                 const nextStr = ymd(nextDate);
-                
+
                 return `
         <div class="income-source">
           <div>
@@ -7939,7 +7997,7 @@
                 const overdue = days < 0;
                 const triggerKey = `sub_${s.id}_${overdue ? 'over' : days}`;
                 if (shown[triggerKey] && !force) return;
-                
+
                 const dayLbl = overdue ? `متأخر ${Math.abs(days)} يوم` : days === 0 ? 'اليوم' : days === 1 ? 'غداً' : `بعد ${days} أيام`;
                 showSystemNotification(`🔔 تذكير: ${s.name}`, `يتجدد ${dayLbl} — ${s.amount.toFixed(2)} د.أ`, triggerKey);
                 shown[triggerKey] = Date.now();
@@ -7947,18 +8005,18 @@
 
             // 2. LOANS
             (state.loans || []).filter(l => l.remaining > 0).forEach(l => {
-                if(!l.start) return;
+                if (!l.start) return;
                 const startD = new Date(l.start);
                 let nextDue = new Date(today.getFullYear(), today.getMonth(), startD.getDate());
-                nextDue.setHours(0,0,0,0);
+                nextDue.setHours(0, 0, 0, 0);
                 if (nextDue < today) nextDue.setMonth(nextDue.getMonth() + 1); // move to next month if passed
-                
+
                 const days = Math.round((nextDue - today) / 86400000);
                 if (!LOAN_ALERT_DAYS.includes(days)) return; // Only warn on 3, 1, 0 days
-                
+
                 const triggerKey = `loan_${l.id}_${days}`;
                 if (shown[triggerKey] && !force) return;
-                
+
                 const dayLbl = days === 0 ? 'اليوم' : days === 1 ? 'غداً' : `بعد ${days} أيام`;
                 showSystemNotification(`💳 قسط القرض: ${l.name}`, `يستحق الدفع ${dayLbl} بقيمة ${l.monthly.toFixed(2)} د.أ`, triggerKey);
                 shown[triggerKey] = Date.now();
@@ -7979,7 +8037,7 @@
                     if (limit <= 0) return;
                     const spent = catSpent[cat] || 0;
                     const pct = (spent / limit) * 100;
-                    
+
                     if (pct >= 100) {
                         const triggerKey = `budg_${cat}_100`;
                         if (!shown[triggerKey]) {
@@ -8244,21 +8302,21 @@
             const pass = document.getElementById('regPassword').value;
             const btn = document.getElementById('regBtn');
             const err = document.getElementById('regError');
-            
+
             btn.innerHTML = 'جاري الإنشاء...';
             btn.disabled = true;
             err.style.display = 'none';
-            
+
             try {
                 await auth.createUserWithEmailAndPassword(email, pass);
                 // auto logs in, listener handles the rest
             } catch (error) {
                 console.error(error);
                 let msg = error.message;
-                if(error.code === 'auth/email-already-in-use') msg = 'هذا الإيميل مسجل مسبقاً.';
-                else if(error.code === 'auth/weak-password') msg = 'كلمة المرور ضعيفة جداً (يجب أن تكون 6 أحرف على الأقل).';
-                else if(error.code === 'auth/invalid-email') msg = 'صيغة الإيميل غير صحيحة.';
-                
+                if (error.code === 'auth/email-already-in-use') msg = 'هذا الإيميل مسجل مسبقاً.';
+                else if (error.code === 'auth/weak-password') msg = 'كلمة المرور ضعيفة جداً (يجب أن تكون 6 أحرف على الأقل).';
+                else if (error.code === 'auth/invalid-email') msg = 'صيغة الإيميل غير صحيحة.';
+
                 err.innerText = error.code + ': ' + msg;
                 err.style.display = 'block';
                 btn.innerHTML = 'إنشاء الحساب';
@@ -8298,18 +8356,18 @@
             const pass = document.getElementById('loginPassword').value;
             const btn = document.getElementById('loginBtn');
             const err = document.getElementById('loginError');
-            
+
             btn.innerHTML = 'جاري تسجيل الدخول...';
             btn.disabled = true;
             err.style.display = 'none';
-            
+
             try {
                 await auth.signInWithEmailAndPassword(email, pass);
             } catch (error) {
                 err.innerText = 'البيانات خاطئة. يرجى التأكد من كلمة المرور والإيميل.';
                 err.style.display = 'block';
             }
-            
+
             btn.innerHTML = 'دخول';
             btn.disabled = false;
         }
