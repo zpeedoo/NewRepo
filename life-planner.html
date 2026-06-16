@@ -1656,24 +1656,6 @@
           <div class="mini-dash-card" id="mini-dash-content"></div>
         </div>
 
-        <!-- Moved Analytics Card -->
-
-        <div class="analytics-card">
-        <div class="analytics-hdr">
-          <div class="analytics-title">معدل إنجاز العادات</div>
-          <select class="analytics-filter" id="chart-filter" onchange="renderChart()">
-            <option value="1">اليوم</option>
-            <option value="7" selected>آخر أسبوع</option>
-            <option value="30">آخر شهر</option>
-            <option value="180">آخر 6 أشهر</option>
-            <option value="365">آخر سنة</option>
-          </select>
-        </div>
-        <div style="height: 220px; position: relative; margin-top: 10px;">
-          <canvas id="productivityChart"></canvas>
-        </div>
-      </div>
-
       </div>
     </div>
     <!-- ALL HABITS & STATS PAGE -->
@@ -2656,10 +2638,14 @@
       const container = document.getElementById('mini-dash-content');
       if (!container) return;
       if (state.habits.length === 0) { container.innerHTML = `<div class="empty" style="padding: 20px; border: none; background: transparent;">لا يوجد عادات مجدولة</div>`; return; }
+      
+      const filterDays = document.getElementById('mini-dash-filter') ? parseInt(document.getElementById('mini-dash-filter').value) : 7;
       let totalExpected = 0; let totalDone = 0; const activeWeeklyHabits = [];
+      
       state.habits.forEach(h => {
         let expected = 0; let done = 0; let dStart = new Date(h.start || today); let dEnd = h.end ? new Date(Math.min(new Date(today), new Date(h.end))) : new Date(today);
-        let fDate = new Date(today); fDate.setDate(fDate.getDate() - 6); if (dStart < fDate) dStart = fDate;
+        let fDate = new Date(today); fDate.setDate(fDate.getDate() - filterDays + 1); if (dStart < fDate) dStart = fDate;
+        
         if (dStart <= dEnd) {
           let cur = new Date(dStart); let daysInRange = 0;
           while (cur <= dEnd) {
@@ -2671,15 +2657,47 @@
         }
         if (expected > 0) { totalExpected += expected; totalDone += done; activeWeeklyHabits.push({ habit: h, expected, done }); }
       });
-      if (activeWeeklyHabits.length === 0) { container.innerHTML = `<div class="empty" style="padding: 20px; border: none; background: transparent;">لا يوجد مهام مطلوبة هذا الأسبوع</div>`; return; }
+      
+      if (activeWeeklyHabits.length === 0) { container.innerHTML = `<div class="empty" style="padding: 20px; border: none; background: transparent;">لا يوجد مهام مطلوبة لهذه الفترة</div>`; return; }
+      
       const dPct = totalExpected === 0 ? 0 : Math.min(Math.round((totalDone / totalExpected) * 100), 100);
       const itemsHtml = activeWeeklyHabits.map(item => {
         const h = item.habit; const expected = item.expected; const done = item.done; const isDone = done >= expected; const pct = Math.min(Math.round((done / expected) * 100), 100);
         const gInfo = state.goals.find(g => g.id == h.goalId); const icon = h.bookId ? '📖' : (gInfo ? '🎯' : '⚡');
         return `<div class="md-item"><div class="md-icon">${icon}</div><div class="md-info"><div style="display:flex; justify-content:space-between; align-items:center;"><div class="md-name" title="${h.title}">${h.title}</div><div class="md-status ${isDone ? 'done' : ''}">${pct}%</div></div><div class="md-bar-bg"><div class="md-bar-fill ${isDone ? 'done' : ''}" style="width: ${pct}%"></div></div></div></div>`;
       }).join('');
+      
       const circleOffset = 188.4 - (dPct / 100 * 188.4);
-      container.innerHTML = `<div class="md-header"><div class="md-title">تقدم الأسبوع <span style="font-size:11px; color:var(--text3); font-weight:normal;">(آخر 7 أيام)</span></div><div style="font-size: 18px; font-weight: 800; color: var(--primary); font-family: 'JetBrains Mono', monospace;">${dPct}%</div></div><div class="md-overall"><div class="circ-wrap" style="transform: scale(0.85); margin: 0; width: 60px; height: 60px;"><svg width="60" height="60" viewBox="0 0 70 70" style="overflow:visible;"><circle class="circ-bg" cx="35" cy="35" r="30" stroke-width="6"></circle><circle class="circ-val" cx="35" cy="35" r="30" stroke="var(--primary)" stroke-width="6" stroke-dasharray="188.4" stroke-dashoffset="${circleOffset}" style="transition: stroke-dashoffset 0.8s ease;"></circle></svg></div><div><div style="font-size: 12px; color: var(--text2); font-weight: 700;">المهام الأسبوعية المنجزة</div><div style="font-size: 18px; font-weight: 800; color: var(--black);"><span style="color: var(--primary)">${totalDone}</span> / ${totalExpected}</div></div></div><div class="md-list">${itemsHtml}</div>`;
+      let filterLabel = 'آخر ' + filterDays + ' أيام';
+      if(filterDays===30) filterLabel='آخر شهر'; if(filterDays===90) filterLabel='آخر 3 أشهر'; if(filterDays===180) filterLabel='آخر 6 أشهر'; if(filterDays===365) filterLabel='آخر سنة';
+      
+      container.innerHTML = `
+        <div class="md-header" style="flex-direction:column; align-items:flex-start; gap:10px;">
+          <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+             <div class="md-title" style="margin-bottom:0;">التقدم التراكمي</div>
+             <select id="mini-dash-filter" onchange="renderDailyMiniDash()" style="font-size:12px; padding:2px 5px; border-radius:6px; border:1px solid var(--border); color:var(--text); background:var(--surface);">
+               <option value="7" ${filterDays===7?'selected':''}>أسبوع</option>
+               <option value="30" ${filterDays===30?'selected':''}>شهر</option>
+               <option value="90" ${filterDays===90?'selected':''}>3 أشهر</option>
+               <option value="180" ${filterDays===180?'selected':''}>6 أشهر</option>
+               <option value="365" ${filterDays===365?'selected':''}>سنة</option>
+             </select>
+          </div>
+        </div>
+        <div class="md-overall" style="margin-top:10px;">
+          <div class="circ-wrap" style="transform: scale(0.85); margin: 0; width: 60px; height: 60px;">
+            <svg width="60" height="60" viewBox="0 0 70 70" style="overflow:visible;">
+              <circle class="circ-bg" cx="35" cy="35" r="30" stroke-width="6"></circle>
+              <circle class="circ-val" cx="35" cy="35" r="30" stroke="var(--primary)" stroke-width="6" stroke-dasharray="188.4" stroke-dashoffset="${circleOffset}" style="transition: stroke-dashoffset 0.8s ease;"></circle>
+            </svg>
+          </div>
+          <div>
+            <div style="font-size: 12px; color: var(--text2); font-weight: 700;">المهام المنجزة (${filterLabel})</div>
+            <div style="font-size: 18px; font-weight: 800; color: var(--black);"><span style="color: var(--primary)">${totalDone}</span> / ${totalExpected} <span style="font-size:14px; color:var(--text3); font-weight:normal;">(${dPct}%)</span></div>
+          </div>
+        </div>
+        <div class="md-list">${itemsHtml}</div>
+      `;
     }
     function renderAllHabits() {
       const filterVal = document.getElementById('habit-stats-filter') ? document.getElementById('habit-stats-filter').value : '7';
@@ -3194,6 +3212,7 @@
     // --- FOCUS GYM LOGIC ---
     let focusTimer = null;
     let isFocusGameActive = false;
+    let focusMistakes = 0;
     let stroopScore = 0;
     let stroopTimeLeft = 60;
     let currentStroopColor = '';
@@ -3209,6 +3228,7 @@
       return `${m}:${s}`;
     }
     function startStroopGame() {
+      focusMistakes = 0; if(document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if(document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       document.getElementById('focus-menu').style.display = 'none';
       document.getElementById('focus-visual-area').style.display = 'none';
       document.getElementById('focus-stroop-area').style.display = 'block';
@@ -3249,7 +3269,7 @@
         if(typeof playSound === 'function') playSound('soft');
       } else {
         stroopScore = Math.max(0, stroopScore - 5);
-        if(typeof playSound === 'function') playSound('error');
+        if(typeof playSound === 'function') playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
         document.getElementById('stroop-word').style.transform = 'translateX(10px)';
         setTimeout(() => document.getElementById('stroop-word').style.transform = 'translateX(0)', 100);
       }
@@ -3268,6 +3288,7 @@
       { base: '🙂', target: '🙃' }
     ];
     function startVisualSearchGame() {
+      focusMistakes = 0; if(document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if(document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       document.getElementById('focus-menu').style.display = 'none';
       document.getElementById('focus-stroop-area').style.display = 'none';
       document.getElementById('focus-visual-area').style.display = 'block';
@@ -3343,7 +3364,7 @@
               }
             }, 1000);
           }
-            if(typeof playSound === 'function') playSound('error');
+            if(typeof playSound === 'function') playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
             div.style.background = '#ef4444'; // Red
             div.style.color = 'white';
             setTimeout(() => {
@@ -3366,6 +3387,7 @@
     let slideInterval = null;
     const slideColors = ['#ef4444', '#ef4444', '#3b82f6', '#3b82f6', '#22c55e', '#22c55e', '#eab308', '#eab308', null];
     function startSlideGame() {
+      focusMistakes = 0; if(document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if(document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       document.getElementById('focus-menu').style.display = 'none';
       document.getElementById('focus-stroop-area').style.display = 'none';
       document.getElementById('focus-visual-area').style.display = 'none';
@@ -3447,7 +3469,7 @@
         renderSlideGrid();
         checkSlideWin();
       } else {
-        if(typeof playSound === 'function') playSound('error');
+        if(typeof playSound === 'function') playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
       }
     }
     function checkSlideWin() {
@@ -3489,6 +3511,7 @@
     let startCell = null;
     let selectedCells = [];
     function startWordSearchGame() {
+      focusMistakes = 0; if(document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if(document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       document.getElementById('focus-menu').style.display = 'none';
       document.getElementById('focus-stroop-area').style.display = 'none';
       document.getElementById('focus-visual-area').style.display = 'none';
@@ -3668,7 +3691,7 @@
         }
       } else {
         if(selectedCells.length > 1) {
-          if(typeof playSound === 'function') playSound('error');
+          if(typeof playSound === 'function') playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
           selectedCells.forEach(c => {
             c.style.background = '#ef4444';
             c.style.color = 'white';
@@ -3715,6 +3738,7 @@
       {x: 35, y: 10}   // TL1
     ];
     function startInfinityGame() {
+      focusMistakes = 0; if(document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if(document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       document.getElementById('focus-menu').style.display = 'none';
       document.getElementById('focus-stroop-area').style.display = 'none';
       document.getElementById('focus-visual-area').style.display = 'none';
@@ -3818,7 +3842,7 @@
         }
       } else {
         infTime += 2; // Penalty
-        if(typeof playSound === 'function') playSound('error');
+        if(typeof playSound === 'function') playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
         const m = Math.floor(infTime / 60).toString().padStart(2, '0');
         const s = (infTime % 60).toString().padStart(2, '0');
         document.getElementById('inf-time').textContent = `${m}:${s}`;
@@ -3923,7 +3947,7 @@
         }
       } else {
         // Wrong
-        if(typeof playSound === 'function') playSound('error');
+        if(typeof playSound === 'function') playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
         mcUserSequence = [];
         drawMCLines();
         const seqEl = document.getElementById('mc-sequence');
@@ -3969,7 +3993,7 @@
       document.getElementById('focus-wordsearch-area').style.display = 'none';
       document.getElementById('focus-infinity-area').style.display = 'none';
       document.getElementById('focus-memory-area').style.display = 'none';
-      document.getElementById('focus-menu').style.display = 'block';
+      document.getElementById('focus-menu').style.display = 'block'; if(document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'none';
     }
     // --- Reports Logic ---
     function populateReportSelector() {
@@ -4116,6 +4140,7 @@
     let smTime = 0;
     let smInterval = null;
     function startSumMatchGame() {
+      focusMistakes = 0; if(document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if(document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       hideAllFocusGames();
       document.getElementById('focus-summatch-area').style.display = 'block';
       smTarget = Math.floor(Math.random() * 8) + 7; // 7 to 14
@@ -4263,6 +4288,7 @@
     // --- Shape Counter Game ---
     let scExpected = { circle: 0, square: 0, triangle: 0, rect: 0 };
     function startShapeCounterGame() {
+      focusMistakes = 0; if(document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if(document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       hideAllFocusGames();
       document.getElementById('focus-shapecounter-area').style.display = 'block';
       generateShapes();
@@ -4273,7 +4299,7 @@
     }
     function closeShapeCounter() {
       document.getElementById('focus-shapecounter-area').style.display = 'none';
-      document.getElementById('focus-menu').style.display = 'block';
+      document.getElementById('focus-menu').style.display = 'block'; if(document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'none';
     }
     function generateShapes() {
       const svg = document.getElementById('sc-svg');
@@ -4348,6 +4374,7 @@
     let pcTarget = [];
     let pcPlayer = [];
     function startPatternCopyGame() {
+      focusMistakes = 0; if(document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if(document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       hideAllFocusGames();
       document.getElementById('focus-patterncopy-area').style.display = 'block';
       generatePatternCopy();
@@ -4355,7 +4382,7 @@
     }
     function closePatternCopy() {
       document.getElementById('focus-patterncopy-area').style.display = 'none';
-      document.getElementById('focus-menu').style.display = 'block';
+      document.getElementById('focus-menu').style.display = 'block'; if(document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'none';
     }
     function drawGridDots(containerId, isPlayer) {
       const container = document.getElementById(containerId);
@@ -4473,13 +4500,14 @@
     let ssShapes = [];
     let ssSelectedIdx = -1;
     function startSizeSorterGame() {
+      focusMistakes = 0; if(document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if(document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       hideAllFocusGames();
       document.getElementById('focus-sizesorter-area').style.display = 'block';
       generateSizeSorter();
     }
     function closeSizeSorter() {
       document.getElementById('focus-sizesorter-area').style.display = 'none';
-      document.getElementById('focus-menu').style.display = 'block';
+      document.getElementById('focus-menu').style.display = 'block'; if(document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'none';
     }
     function generateSizeSorter() {
       ssSelectedIdx = -1;
