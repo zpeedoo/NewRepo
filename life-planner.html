@@ -3477,6 +3477,7 @@
           if (stroopTimeLeft <= 0) {
             clearInterval(focusTimer);
             isFocusGameActive = false;
+            recordGameScore('stroop', stroopScore);
             alert(`انتهى الوقت! نقاطك: ${stroopScore}`);
             startStroopGame();
           }
@@ -4896,6 +4897,7 @@
       if(dirAnimFrame) cancelAnimationFrame(dirAnimFrame);
       document.getElementById('focus-direction-area').style.display = 'none';
       if (!state.highScores.direction || dirScore > state.highScores.direction) state.highScores.direction = dirScore; saveState(); updateHighScores();
+      recordGameScore('direction', dirScore);
       document.getElementById('focus-menu').style.display = 'block';
       if(document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'none';
       if(dirTime <= 0) alert(`انتهى الوقت! نقاطك: ${dirScore}`);
