@@ -3767,7 +3767,13 @@
       document.getElementById('focus-wordsearch-area').style.display = 'block';
       wsTime = 0;
       wsFound = [];
-      document.getElementById('ws-remaining').textContent = 10; // We always pick 10 words
+      document.getElementById('ws-remaining').textContent = 10;
+      if(typeof wsInterval !== 'undefined' && wsInterval) clearInterval(wsInterval);
+      wsInterval = setInterval(() => {
+        if(!isFocusGameActive) return;
+        wsTime++;
+        document.getElementById('ws-time').textContent = formatGameTime(wsTime);
+      }, 1000); // We always pick 10 words
       document.getElementById('ws-time').textContent = "00:00";
       generateWordSearchGrid();
       renderWordSearch();
@@ -3967,6 +3973,12 @@
     // Infinity Path Logic
     let infTime = 0;
     let infLoops = 0;
+      if(typeof infInterval !== 'undefined' && infInterval) clearInterval(infInterval);
+      infInterval = setInterval(() => {
+        if(!isFocusGameActive) return;
+        infTime++;
+        document.getElementById('inf-time').textContent = formatGameTime(infTime);
+      }, 1000);
     let infInterval = null;
     let infCurrentNode = 0;
     let infNodesData = [];
@@ -4612,13 +4624,13 @@
       generateSmGrid();
       renderSmGrid();
       smTime = 0;
-      document.getElementById('sm-timer').textContent = '00:00';
+      document.getElementById('sm-time').textContent = '00:00';
       clearInterval(smInterval);
       smInterval = setInterval(() => {
         smTime++;
         const m = String(Math.floor(smTime / 60)).padStart(2, '0');
         const s = String(smTime % 60).padStart(2, '0');
-        document.getElementById('sm-timer').textContent = `${m}:${s}`;
+        document.getElementById('sm-time').textContent = `${m}:${s}`;
       }, 1000);
     }
     function generateSmGrid() {
