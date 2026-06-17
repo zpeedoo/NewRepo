@@ -13,7 +13,72 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=JetBrains+Mono:wght@300;400;700;800&family=Georgia&display=swap"
     rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js">
+    // --- Direction Game ---
+    let dirTime = 60;
+    let dirScore = 0;
+    let dirInterval = null;
+    let dirRule = 'moving';
+    let dirPoint = 'up';
+    let dirMove = 'up';
+    let dirArrows = [];
+    let dirAnimFrame = null;
+    const dirs = ['up', 'down', 'left', 'right'];
+    
+    function startDirectionGame() {
+      focusMistakes = 0; if(document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if(document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
+      hideAllFocusGames();
+      document.getElementById('focus-direction-area').style.display = 'block';
+      dirTime = 60;
+      dirScore = 0;
+      document.getElementById('direction-time').textContent = dirTime;
+      document.getElementById('direction-score').textContent = dirScore;
+      spawnDirectionFlock();
+      clearInterval(dirInterval);
+      dirInterval = setInterval(() => {
+        dirTime--;
+        document.getElementById('direction-time').textContent = dirTime;
+        if (dirTime <= 0) {
+          endDirectionGameEarly();
+        }
+      }, 1000);
+    }
+    
+    function endDirectionGameEarly() {
+      clearInterval(dirInterval);
+      if(dirAnimFrame) cancelAnimationFrame(dirAnimFrame);
+      if (!state.highScores.direction || dirScore > state.highScores.direction) state.highScores.direction = dirScore; saveState(); updateHighScores();
+      endGame('الحركة والاتجاه 🧭', dirScore);
+    }
+    
+    function spawnDirectionFlock() {
+      dirRule = Math.random() > 0.5 ? 'moving' : 'pointing';
+      dirPoint = dirs[Math.floor(Math.random() * dirs.length)];
+      dirMove = dirs[Math.floor(Math.random() * dirs.length)];
+      
+      const ruleEl = document.getElementById('direction-rule');
+      ruleEl.textContent = dirRule === 'moving' ? 'الحركة (المسار) 🏃‍♂️' : 'الاتجاه (رأس السهم) 🎯';
+      ruleEl.style.background = dirRule === 'moving' ? '#f97316' : '#8b5cf6';
+      
+      const layer = document.getElementById('direction-layer');
+      layer.innerHTML = '';
+      dirArrows = [];
+      const numArrows = 12;
+      
+      let rotation = 0;
+      if(dirPoint === 'right') rotation = 90;
+      if(dirPoint === 'down') rotation = 180;
+      if(dirPoint === 'left') rotation = -90;
+      
+      for(let i=0; i<numArrows; i++) {
+        const el = document.createElement('div');
+        el.innerHTML = '⬆'; // Arrow symbol
+        el.style.position = 'absolute';
+        el.style.fontSize = '35px';
+        el.style.fontWeight = 'bold';
+        el.style.color = '#fbbf24'; // Amber yellow color for arrows like the image
+        el.style.transform = \`rotate(\${rotation}deg)\
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js" crossorigin="anonymous"></script>
