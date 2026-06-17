@@ -2097,7 +2097,11 @@
         <div id="mc-sequence" style="font-size: 24px; font-weight: 900; letter-spacing: 4px; color: var(--black); margin-bottom: 20px;">
           <!-- Populated by JS -->
         </div>
-        <div id="mc-bottom-timer" style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">00:00</div>
+        <div style="display:flex; justify-content:center; align-items:center; gap: 15px; margin: 20px 0 10px 0; direction: ltr;">
+          <button class="circle-btn" onclick="adjustMCTime(-10)" style="background:var(--surface2); border:2px solid var(--border-darker); color:var(--text2); width:40px; height:40px; font-weight:bold; font-size:16px;">-10</button>
+          <div id="mc-bottom-timer" style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); margin:0;">00:00</div>
+          <button class="circle-btn" onclick="adjustMCTime(10)" style="background:var(--surface2); border:2px solid var(--border-darker); color:var(--text2); width:40px; height:40px; font-weight:bold; font-size:16px;">+10</button>
+        </div>
         <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
       </div>
     
@@ -4114,6 +4118,12 @@
       updateMCScoreboard();
       generateMCLegend();
       nextMCLevel();
+    }
+    function adjustMCTime(amount) {
+      if (!isFocusGameActive) return;
+      mcTime += amount;
+      if (mcTime < 0) mcTime = 0;
+      document.getElementById('mc-bottom-timer').textContent = formatGameTime(mcTime);
     }
     function updateMCScoreboard() {
       document.getElementById('mc-level').textContent = mcLevel;
