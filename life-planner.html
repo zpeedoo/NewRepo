@@ -4631,6 +4631,8 @@
       if(document.getElementById('focus-sizesorter-area')) document.getElementById('focus-sizesorter-area').style.display = 'none';
     }
   
+
+
     // --- Direction Game ---
     let dirTime = 60;
     let dirScore = 0;
@@ -4694,7 +4696,60 @@
         el.style.fontSize = '35px';
         el.style.fontWeight = 'bold';
         el.style.color = '#fbbf24'; // Amber yellow color for arrows like the image
-        el.style.transform = \`rotate(\${rotation}deg)\
+        el.style.transform = 'rotate(' + rotation + 'deg)';
+        el.style.textShadow = '0 2px 5px rgba(0,0,0,0.8)';
+        el.style.transition = 'opacity 0.2s ease';
+        
+        let x = 10 + Math.random() * 80;
+        let y = 10 + Math.random() * 80;
+        
+        el.style.left = x + '%';
+        el.style.top = y + '%';
+        layer.appendChild(el);
+        dirArrows.push({el, x, y});
+      }
+      if(dirAnimFrame) cancelAnimationFrame(dirAnimFrame);
+      animateDirectionFlock();
+    }
+    
+    function animateDirectionFlock() {
+      dirArrows.forEach(a => {
+        let speed = 0.6;
+        if(dirMove === 'right') a.x += speed;
+        if(dirMove === 'left') a.x -= speed;
+        if(dirMove === 'down') a.y += speed;
+        if(dirMove === 'up') a.y -= speed;
+        
+        if(a.x > 110) a.x = -10;
+        if(a.x < -10) a.x = 110;
+        if(a.y > 110) a.y = -10;
+        if(a.y < -10) a.y = 110;
+        
+        a.el.style.left = a.x + '%';
+        a.el.style.top = a.y + '%';
+      });
+      if(document.getElementById('focus-direction-area').style.display === 'block') {
+        dirAnimFrame = requestAnimationFrame(animateDirectionFlock);
+      }
+    }
+    
+    function handleDirectionInput(inputDir) {
+      let expected = dirRule === 'moving' ? dirMove : dirPoint;
+      if (inputDir === expected) {
+        if(typeof playSound === 'function') playSound('soft');
+        dirScore += 10;
+        document.getElementById('direction-score').textContent = dirScore;
+        // Fade out arrows and spawn new
+        dirArrows.forEach(a => a.el.style.opacity = '0');
+        setTimeout(spawnDirectionFlock, 100);
+      } else {
+        if(typeof playSound === 'function') playSound('error');
+        shakeScreen();
+        focusMistakes++;
+        if(document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = focusMistakes;
+      }
+    }
+
 </script>
 </body>
 </html>
