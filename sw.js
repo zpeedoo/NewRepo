@@ -1,4 +1,4 @@
-const CACHE_NAME = 'مصاريفي-cache-v35';
+const CACHE_NAME = 'مصاريفي-cache-v36';
 const urlsToCache = [
   './',
   './index.html',

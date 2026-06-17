@@ -4098,8 +4098,19 @@
       document.getElementById('focus-wordsearch-area').style.display = 'none';
       document.getElementById('focus-infinity-area').style.display = 'none';
       document.getElementById('focus-memory-area').style.display = 'block';
-      mcLevel = 1; mcScore = 0; mcTime = 0; document.getElementById('mc-bottom-timer').textContent = "00:00"; if(mcInterval) clearInterval(mcInterval);
-      isFocusGameActive = false;
+      mcLevel = 1; mcScore = 0; mcTime = 60; document.getElementById('mc-bottom-timer').textContent = "01:00"; if(mcInterval) clearInterval(mcInterval);
+      isFocusGameActive = true;
+      mcInterval = setInterval(() => {
+        mcTime--;
+        document.getElementById('mc-bottom-timer').textContent = formatGameTime(mcTime);
+        if (mcTime <= 0) {
+          clearInterval(mcInterval);
+          isFocusGameActive = false;
+          recordGameScore('mc', mcScore);
+          alert(`انتهى الوقت! نقاطك: ${mcScore}`);
+          startMemoryConnectGame();
+        }
+      }, 1000);
       updateMCScoreboard();
       generateMCLegend();
       nextMCLevel();
