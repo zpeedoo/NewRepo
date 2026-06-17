@@ -9,7 +9,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>امسي | Amsy</title>
+  <title>مُبين | Mubeen</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=JetBrains+Mono:wght@300;400;700;800&family=Georgia&display=swap"
     rel="stylesheet">
@@ -1525,7 +1525,7 @@
     <div class="auth-card">
       <div class="auth-logo">
         <div class="logo-icon">P</div>
-        <span>امسي</span>
+        <span>مُبين</span>
       </div>
       <h2 style="margin-top: 0; margin-bottom: 8px;">تسجيل الدخول</h2>
       <p style="font-size: 13px; color: var(--text2); margin-bottom: 30px;">يرجى تسجيل الدخول للوصول إلى مساحتك الآمنة
@@ -2282,7 +2282,7 @@
           // Fetch user name or email for greeting
           let displayName = user.email ? user.email.split('@')[0] : "صديقي";
           document.getElementById('user-greeting-name').textContent = displayName;
-          document.title = `امسي | ${displayName}`;
+          document.title = `مُبين | ${displayName}`;
           checkAndMigrateDataThenLoad(currentUserUID);
           setupNotifications();
         } else {
@@ -2409,7 +2409,7 @@
         if (!state.history[today]) state.history[today] = [];
         if (state.settings && state.settings.displayName) {
           document.getElementById('user-greeting-name').textContent = state.settings.displayName;
-          document.title = `امسي | ${state.settings.displayName}`;
+          document.title = `مُبين | ${state.settings.displayName}`;
           updateAvatarUI();
         }
         if (isInitialLoad) {
@@ -2436,7 +2436,7 @@
       if (name) {
         state.settings.displayName = name;
         document.getElementById('user-greeting-name').textContent = name;
-        document.title = `امسي | ${name}`;
+        document.title = `مُبين | ${name}`;
       }
       if (age) {
         state.settings.age = age;
@@ -2501,7 +2501,7 @@
       if (newName && newName.trim()) {
         state.settings.displayName = newName.trim();
         document.getElementById('user-greeting-name').textContent = state.settings.displayName;
-        document.title = `امسي | ${state.settings.displayName}`;
+        document.title = `مُبين | ${state.settings.displayName}`;
         saveState();
       }
     }
