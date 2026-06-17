@@ -1854,56 +1854,13 @@
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 5px;"><h3 style="margin: 0; color: var(--black);">اختبار ستروب (Stroop) 🎨</h3><span style="font-size:12px; color:var(--text3); font-weight:bold;" id="hs-stroop">🏆 0</span></div>
           <p style="font-size: 13px; color: var(--text2);">اضغط على لون الخط وليس الكلمة المكتوبة. يمرن قدرتك على كبح ردود الفعل التلقائية.</p>
         </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #3b82f6;" onclick="startVisualSearchGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">الصيد البصري 👁️</h3>
-          <p style="font-size: 13px; color: var(--text2);">اعثر على الشكل أو الحرف المختلف في الشبكة بأسرع وقت ممكن.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #10b981;" onclick="startSlideGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">لغز الألوان المنزلق 🧩</h3>
-          <p style="font-size: 13px; color: var(--text2);">رتب الدوائر الملونة لتطابق الهدف في الأعلى عبر تحريك المربع الفارغ.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #8b5cf6;" onclick="startSumMatchGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">تطابق المجموع 🧮</h3>
-          <p style="font-size: 13px; color: var(--text2);">ابحث عن رقمين متجاورين أفقياً أو عمودياً مجموعهما يساوي الرقم المطلوب في المنتصف.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #6366f1;" onclick="startShapeCounterGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">حصر الأشكال 📐</h3>
-          <p style="font-size: 13px; color: var(--text2);">قم بعد الأشكال الهندسية المختلفة في الرسمة.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #14b8a6;" onclick="startPatternCopyGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">نسخ المسار ✍️</h3>
-          <p style="font-size: 13px; color: var(--text2);">قم بتوصيل النقاط لنسخ الشكل المرسوم أمامك بدقة.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #ec4899;" onclick="startSizeSorterGame()">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 5px;"><h3 style="margin: 0; color: var(--black);">ترتيب الأحجام 📏</h3><span style="font-size:12px; color:var(--text3); font-weight:bold;" id="hs-sizesorter">🏆 0</span></div>
-          <p style="font-size: 13px; color: var(--text2);">قم بسحب وإفلات الأشكال لترتيبها تصاعدياً من الأصغر للأكبر.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #f59e0b;" onclick="startWordSearchGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">البحث عن الكلمات 🔎</h3>
-          <p style="font-size: 13px; color: var(--text2);">اسحب بإصبعك على الحروف لتشكيل الكلمات المطلوبة وشطبها من القائمة.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #8b5cf6;" onclick="startInfinityGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">مسار الانتباه ♾️</h3>
-          <p style="font-size: 13px; color: var(--text2);">تتبع المسار المضيء وانقر على الرقم المطابق له بأسرع وقت.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #ec4899;" onclick="startMemoryConnectGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">خريطة الألوان 🎨</h3>
-          <p style="font-size: 13px; color: var(--text2);">اربط الألوان بناءً على تسلسل الأرقام المحددة لاختبار ذاكرتك.</p>
-        </div>
-      
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #f97316;" onclick="startDirectionGame()">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 5px;"><h3 style="margin: 0; color: var(--black);">الحركة والاتجاه 🧭</h3><span style="font-size:12px; color:var(--text3); font-weight:bold;" id="hs-direction">🏆 0</span></div>
-          <p style="font-size: 13px; color: var(--text2);">حدد اتجاه الأسهم أو اتجاه حركتها بناءً على القاعدة المطلوبة بأسرع وقت.</p>
-        </div>
-</div>
-      
-      <!-- Direction Game Area -->
+        <!-- Direction Game Area -->
       <div id="focus-direction-area" style="display: none; text-align: center; height: 500px; flex-direction: column; background-color: #0f172a; border-radius: 16px; overflow: hidden; margin-bottom: 20px;">
         <!-- Top Bar -->
         <div style="display:flex; justify-content:space-between; align-items:center; background: rgba(255,255,255,0.1); padding: 15px 20px; color: white;">
           <button onclick="endDirectionGameEarly()" style="background:rgba(255,255,255,0.2); border:none; color:white; font-size:16px; font-weight:bold; cursor:pointer; padding: 5px 15px; border-radius: 8px;">← رجوع</button>
           <div style="font-weight: bold; display:flex; gap:20px; font-size:18px;">
-             <div>الوقت: <span id="direction-time">60</span></div>
+             <div style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">الوقت: <button class="circle-btn" onclick="adjustGameTime('dir', -10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:rgba(255,255,255,0.2); color:white; border:none; font-weight:bold;">-10</button> <span id="direction-time" style="color:var(--black);">60</span> <button class="circle-btn" onclick="adjustGameTime('dir', 10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:rgba(255,255,255,0.2); color:white; border:none; font-weight:bold;">+10</button></div>
              <div>النقاط: <span id="direction-score" style="color:#fbbf24;">0</span></div>
           </div>
         </div>
@@ -1927,7 +1884,7 @@
       <!-- Stroop Game Area -->
       <div id="focus-stroop-area" style="display: none; text-align: center;">
         <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-          <div style="font-weight: bold; color: var(--text2);">الوقت: <span id="stroop-time" style="color:var(--black);">60</span></div>
+          <div style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">الوقت: <button class="circle-btn" onclick="adjustGameTime('stroop', -10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">-10</button> <span id="stroop-time" style="color:var(--black);">60</span> <button class="circle-btn" onclick="adjustGameTime('stroop', 10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">+10</button></div>
           <div style="font-weight: bold; color: var(--text2);">النقاط: <span id="stroop-score" style="color:var(--primary);">0</span></div>
         </div>
         <div id="stroop-word" style="font-size: 48px; font-weight: 900; margin: 40px 0; letter-spacing: -1px;">أحمر</div>
@@ -1940,22 +1897,10 @@
         <div id="stroop-bottom-timer" style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">00:00</div>
         <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
       </div>
-      <!-- Visual Search Game Area -->
-      <div id="focus-visual-area" style="display: none; text-align: center;">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-          <div style="font-weight: bold; color: var(--text2);">المستوى: <span id="visual-level" style="color:var(--black);">1</span></div>
-          <div style="font-weight: bold; color: var(--text2);">الوقت المتبقي: <span id="visual-time" style="color:#ef4444;">15</span></div>
-        </div>
-        <div id="visual-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 20px 0; font-size: 24px; user-select: none;">
-          <!-- Grid items populated by JS -->
-        </div>
-        <div id="visual-bottom-timer" style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">00:00</div>
-        <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
-      </div>
       <!-- Color Slide Game Area -->
       <div id="focus-slide-area" style="display: none; text-align: center;">
         <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-          <div style="font-weight: bold; color: var(--text2);">الوقت: <span id="slide-time" style="color:var(--black);">00:00</span></div>
+          <div style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">الوقت: <button class="circle-btn" onclick="adjustGameTime('slide', -10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">-10</button> <span id="slide-time" style="color:var(--black);">02:00</span> <button class="circle-btn" onclick="adjustGameTime('slide', 10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">+10</button></div>
           <div style="font-weight: bold; color: var(--text2);">الحركات: <span id="slide-moves" style="color:var(--primary);">0</span></div>
         </div>
         <div style="margin-bottom: 20px;">
@@ -2035,7 +1980,7 @@
       <!-- Word Search Game Area -->
       <div id="focus-wordsearch-area" style="display: none; text-align: center;">
         <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
-          <div style="font-weight: bold; color: var(--text2);">الوقت: <span id="ws-time" style="color:var(--black);">00:00</span></div>
+          <div style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">الوقت: <button class="circle-btn" onclick="adjustGameTime('ws', -10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">-10</button> <span id="ws-time" style="color:var(--black);">00:00</span> <button class="circle-btn" onclick="adjustGameTime('ws', 10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">+10</button></div>
           <div style="font-weight: bold; color: var(--text2);">الكلمات المتبقية: <span id="ws-remaining" style="color:var(--primary);">0</span></div>
         </div>
         <div id="ws-grid" style="display: grid; gap: 4px; justify-content: center; margin: 20px auto; background: var(--surface2); padding: 10px; border-radius: 12px; width:fit-content; user-select: none; touch-action: none;">
@@ -2053,7 +1998,7 @@
       <!-- Infinity Path Game Area -->
       <div id="focus-infinity-area" style="display: none; text-align: center;">
         <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-          <div style="font-weight: bold; color: var(--text2);">الوقت: <span id="inf-time" style="color:var(--black);">00:00</span></div>
+          <div style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">الوقت: <button class="circle-btn" onclick="adjustGameTime('inf', -10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">-10</button> <span id="inf-time" style="color:var(--black);">00:00</span> <button class="circle-btn" onclick="adjustGameTime('inf', 10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">+10</button></div>
           <div style="font-weight: bold; color: var(--text2);">الدورات: <span id="inf-loops" style="color:var(--primary);">0 / 3</span></div>
         </div>
         <div style="position: relative; width: 100%; max-width: 350px; height: 180px; margin: 0 auto 30px auto;">
@@ -2664,7 +2609,7 @@
     }
     function updateHighScores() {
       if(!state.highScores) state.highScores = {};
-      const g = ['stroop','visual','slide','summatch','shapecounter','patterncopy','sizesorter','wordsearch','infinity','memoryconnect','direction'];
+      const g = ['stroop','visual','slide','summatch','shapecounter','patterncopy','wordsearch','infinity','memoryconnect','direction'];
       g.forEach(id => {
         if(document.getElementById('hs-'+id)) {
            document.getElementById('hs-'+id).textContent = '🏆 ' + (state.highScores[id] || 0);
@@ -3369,6 +3314,16 @@
       return `${m}:${s}`;
     }
     
+        function adjustGameTime(game, amount) {
+      if(!isFocusGameActive) return;
+      if (game === 'stroop') { stroopTimeLeft += amount; if(stroopTimeLeft<0) stroopTimeLeft=0; document.getElementById('stroop-time').textContent = stroopTimeLeft; }
+      else if (game === 'slide') { slideTimeLeft += amount; if(slideTimeLeft<0) slideTimeLeft=0; document.getElementById('slide-time').textContent = formatGameTime(slideTimeLeft); }
+      else if (game === 'sm') { smTime += amount; if(smTime<0) smTime=0; document.getElementById('sm-time').textContent = formatGameTime(smTime); }
+      else if (game === 'sc') { scTime += amount; if(scTime<0) scTime=0; document.getElementById('sc-time').textContent = formatGameTime(scTime); }
+      else if (game === 'ws') { wsTime += amount; if(wsTime<0) wsTime=0; document.getElementById('ws-time').textContent = formatGameTime(wsTime); }
+      else if (game === 'inf') { infTime += amount; if(infTime<0) infTime=0; document.getElementById('inf-time').textContent = formatGameTime(infTime); }
+      else if (game === 'dir') { dirTime += amount; if(dirTime<0) dirTime=0; document.getElementById('direction-time').textContent = dirTime; }
+    }
     function recordGameScore(gameId, score) {
       if (!state.gameHistory) state.gameHistory = {};
       const dStr = today;
@@ -3402,7 +3357,7 @@
       });
       
       // Calculate max score per game within the timeframe
-      const bestScores = { stroop:0, vs:0, slide:0, sm:0, sc:0, direction:0, sizesorter:0, mc:0 };
+      const bestScores = { stroop:0, slide:0, sm:0, sc:0, direction:0, mc:0 };
       
       datesToInclude.forEach(dStr => {
         const dayData = history[dStr];
@@ -3428,10 +3383,10 @@
       };
       
       const categories = [
-        { name: 'السرعة (Speed)', score: calcAvg(['direction', 'vs']), max: 8000 },
+        { name: 'السرعة (Speed)', score: calcAvg(['direction']), max: 8000 },
         { name: 'الذاكرة (Memory)', score: calcAvg(['mc']), max: 3000 },
-        { name: 'الانتباه (Attention)', score: calcAvg(['stroop', 'vs', 'direction']), max: 6000 },
-        { name: 'المرونة (Flexibility)', score: calcAvg(['stroop', 'slide', 'sizesorter']), max: 4000 },
+        { name: 'الانتباه (Attention)', score: calcAvg(['stroop', 'direction']), max: 6000 },
+        { name: 'المرونة (Flexibility)', score: calcAvg(['stroop', 'slide']), max: 4000 },
         { name: 'المنطق (Reasoning & Math)', score: calcAvg(['sm', 'sc']), max: 5000 }
       ];
       
@@ -3611,7 +3566,7 @@
     }
     // Slide Logic
     let slideMoves = 0;
-    let slideTime = 0;
+    let slideTimeLeft = 120;
     let slideState = [];
     let slideTarget = [];
     let slideInterval = null;
@@ -3681,8 +3636,14 @@
       if (!isFocusGameActive) {
         isFocusGameActive = true;
         slideInterval = setInterval(() => {
-          slideTime++;
-          document.getElementById('slide-time').textContent = formatGameTime(slideTime);
+          slideTimeLeft--;
+          document.getElementById('slide-time').textContent = formatGameTime(slideTimeLeft);
+        if (slideTimeLeft <= 0) {
+          clearInterval(slideInterval);
+          isFocusGameActive = false;
+          alert('انتهى الوقت للغز الانزلاق!');
+          startSlideGame();
+        }
           document.getElementById('slide-bottom-timer').textContent = formatGameTime(slideTime);
         }, 1000);
       }
@@ -4647,132 +4608,6 @@
         setTimeout(startShapeCounterGame, 2000);
       } else {
         toast('هناك خطأ في العد، حاول مرة أخرى!');
-      }
-    }
-    // --- Pattern Copy Game ---
-    let pcTarget = [];
-    let pcPlayer = [];
-    function startPatternCopyGame() {
-      focusMistakes = 0; if(document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if(document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
-      hideAllFocusGames();
-      document.getElementById('focus-patterncopy-area').style.display = 'block';
-      generatePatternCopy();
-      resetPatternCopyPlayer();
-    }
-    function closePatternCopy() {
-      document.getElementById('focus-patterncopy-area').style.display = 'none';
-      document.getElementById('focus-menu').style.display = 'block'; if(document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'none';
-    }
-    function drawGridDots(containerId, isPlayer) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = '';
-      const step = 160 / 3;
-      for(let r=0; r<4; r++) {
-        for(let c=0; c<4; c++) {
-          const dot = document.createElement('div');
-          dot.className = isPlayer ? 'pc-dot pc-player-dot' : 'pc-dot';
-          dot.style.left = `${c * step + 10}px`;
-          dot.style.top = `${r * step + 10}px`;
-          dot.dataset.id = r*4 + c;
-          dot.dataset.r = r;
-          dot.dataset.c = c;
-          if(isPlayer) {
-            dot.onclick = () => handlePcPlayerClick(parseInt(dot.dataset.id), dot);
-          }
-          container.appendChild(dot);
-        }
-      }
-    }
-    function generatePatternCopy() {
-      drawGridDots('pc-target-grid', false);
-      pcTarget = [];
-      const pathLength = Math.floor(Math.random() * 3) + 5; // 5 to 7
-      let curR = Math.floor(Math.random() * 4);
-      let curC = Math.floor(Math.random() * 4);
-      pcTarget.push(curR*4 + curC);
-      for(let i=1; i<pathLength; i++) {
-        let validNeighbors = [];
-        const dirs = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
-        dirs.forEach(d => {
-          let nr = curR + d[0]; let nc = curC + d[1];
-          if(nr>=0 && nr<4 && nc>=0 && nc<4) {
-            let nid = nr*4 + nc;
-            if(!pcTarget.includes(nid)) validNeighbors.push(nid);
-          }
-        });
-        if(validNeighbors.length === 0) break;
-        let nextId = validNeighbors[Math.floor(Math.random() * validNeighbors.length)];
-        pcTarget.push(nextId);
-        curR = Math.floor(nextId / 4);
-        curC = nextId % 4;
-      }
-      drawPath('pc-target-grid', pcTarget, false);
-    }
-    function resetPatternCopyPlayer() {
-      drawGridDots('pc-player-grid', true);
-      pcPlayer = [];
-    }
-    function handlePcPlayerClick(id, el) {
-      if(pcPlayer.includes(id)) return; // Already visited
-      if(pcPlayer.length > 0) {
-        let lastId = pcPlayer[pcPlayer.length-1];
-        let lr = Math.floor(lastId/4); let lc = lastId%4;
-        let cr = Math.floor(id/4); let cc = id%4;
-        let dr = Math.abs(lr - cr); let dc = Math.abs(lc - cc);
-        if(dr > 1 || dc > 1) {
-           toast('يجب توصيل النقاط المتجاورة فقط!');
-           return;
-        }
-      }
-      pcPlayer.push(id);
-      el.classList.add('active');
-      drawPath('pc-player-grid', pcPlayer, true);
-    }
-    function drawPath(containerId, path, isPlayer) {
-      const container = document.getElementById(containerId);
-      // Remove old lines
-      container.querySelectorAll('.pc-line').forEach(e => e.remove());
-      const step = 160 / 3;
-      for(let i=0; i<path.length-1; i++) {
-        let id1 = path[i]; let id2 = path[i+1];
-        let r1 = Math.floor(id1/4); let c1 = id1%4;
-        let r2 = Math.floor(id2/4); let c2 = id2%4;
-        let x1 = c1*step + 10; let y1 = r1*step + 10;
-        let x2 = c2*step + 10; let y2 = r2*step + 10;
-        let length = Math.sqrt((x2-x1)**2 + (y2-y1)**2);
-        let angle = Math.atan2(y2-y1, x2-x1) * 180 / Math.PI;
-        const line = document.createElement('div');
-        line.className = isPlayer ? 'pc-line pc-line-player' : 'pc-line';
-        line.style.width = `${length}px`;
-        line.style.left = `${x1}px`;
-        line.style.top = `${y1 - 2}px`;
-        line.style.transform = `rotate(${angle}deg)`;
-        // Insert before dots
-        container.insertBefore(line, container.firstChild);
-      }
-    }
-    function checkPatternCopy() {
-      if(pcPlayer.length !== pcTarget.length) {
-        toast('المسار غير مكتمل أو غير متطابق!');
-        return;
-      }
-      let isMatch = true;
-      for(let i=0; i<pcTarget.length; i++) {
-        if(pcTarget[i] !== pcPlayer[i]) isMatch = false;
-      }
-      // Also check reversed path
-      let isRevMatch = true;
-      let revTarget = [...pcTarget].reverse();
-      for(let i=0; i<revTarget.length; i++) {
-        if(revTarget[i] !== pcPlayer[i]) isRevMatch = false;
-      }
-      if(isMatch || isRevMatch) {
-        if(typeof playSound === 'function') playSound('achieve');
-        toast('ممتاز! مسار متطابق 💯');
-        confetti({particleCount: 100, spread: 70});
-        setTimeout(startPatternCopyGame, 2000);
-      } else {
-        toast('المسار غير متطابق، حاول مجدداً!');
       }
     }
     // --- Size Sorter Game ---
