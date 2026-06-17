@@ -4211,7 +4211,8 @@
       const seqLength = Math.min(4 + Math.floor(mcLevel / 2), 9);
       const possibleNums = [...nums].sort(() => 0.5 - Math.random());
       mcSequence = possibleNums.slice(0, seqLength);
-      document.getElementById('mc-sequence').textContent = mcSequence.join(' - ');
+      const seqHtml = mcSequence.map((n, i) => `<span id="mc-seq-num-${i}" style="transition: all 0.3s ease; display: inline-block;">${n}</span>`).join(' <span style="color:var(--text3);">-</span> ');
+      document.getElementById('mc-sequence').innerHTML = seqHtml;
       highlightNextMCTarget();
     }
     
@@ -4229,7 +4230,7 @@
         } else {
           item.style.transform = 'scale(1)';
           numEl.style.color = 'var(--text)';
-          item.style.opacity = '0.5'; // Dim others
+          item.style.opacity = '0.5';
         }
       }
     }
@@ -4237,7 +4238,8 @@
     function handleMCClick(num, el) {
       if (el) {
         el.style.transform = 'scale(0.8)';
-        setTimeout(() => { if (el) el.style.transform = 'scale(1)'; }, 150);
+        el.style.boxShadow = '0 0 15px rgba(255,255,255,0.8)';
+        setTimeout(() => { if (el) { el.style.transform = 'scale(1)'; el.style.boxShadow = '0 4px 10px rgba(0,0,0,0.3)'; } }, 200);
       }
       if(mcSequence[mcUserSequence.length] === num) {
         // Correct
