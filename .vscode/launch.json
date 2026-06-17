@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "msedge",
+      "request": "launch",
+      "name": "Debug life-planner.html",
+      "file": "${workspaceFolder}/life-planner.html"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Debug (Chrome) life-planner.html",
+      "file": "${workspaceFolder}/life-planner.html"
+    }
+  ]
+}

@@ -1,2853 +1,4 @@
-﻿<!DOCTYPE html>
-<html lang="ar" dir="rtl">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="theme-color" content="#f4f6f8" id="theme-color-meta">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <title>مُبين | Mubeen</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=JetBrains+Mono:wght@300;400;700;800&family=Georgia&display=swap"
-    rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js">
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js" crossorigin="anonymous"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js" crossorigin="anonymous"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js" crossorigin="anonymous"></script>
-  <style>
-    :root {
-      --bg: #f4f6f8;
-      --surface: #ffffff;
-      --surface2: #f9fafb;
-      --text: #1a1b1e;
-      --text2: #6b7280;
-      --text3: #9ca3af;
-      --border: #f3f4f6;
-      --border-darker: #e5e7eb;
-      --primary: #e65c4f;
-      --primary-light: #fbeae8;
-      --black: #111111;
-      --zaha: #4f46e5;
-      --zaha-light: #e0e7ff;
-      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
-      --r: 24px;
-      --r-sm: 14px;
-      --nav-bg: rgba(255, 255, 255, 0.95);
-      --cal-full: #10b981;
-      --cal-half: #6ee7b7;
-      --cal-low: #d1fae5;
-      --cal-empty: #f3f4f6;
-    }
-
-    .task-card {
-      border: 2px dashed #f59e0b;
-      background: linear-gradient(135deg, #fef3c7, #fde68a);
-      color: #92400e;
-    }
-
-    body.dark .task-card {
-      background: linear-gradient(135deg, #78350f, #92400e);
-      border-color: #f59e0b;
-      color: #fef3c7;
-    }
-
-    .task-card.done .habit-name {
-      text-decoration: line-through;
-      opacity: 0.7;
-    }
-
-    .quick-task-input-wrapper {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      margin-top: -10px;
-      align-items: center;
-    }
-
-    .quick-task-input {
-      flex: 1;
-      padding: 12px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--surface2);
-      color: var(--black);
-      font-family: inherit;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Almarai', sans-serif;
-      -webkit-tap-highlight-color: transparent;
-      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    /* Layout */
-    .sidebar {
-      width: 240px;
-      background: var(--surface);
-      border-left: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      padding: 30px 0;
-      z-index: 10;
-      box-shadow: 2px 0 15px rgba(0, 0, 0, 0.02);
-    }
-
-    .main {
-      flex: 1;
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding: 30px;
-      position: relative;
-      scroll-behavior: smooth;
-    }
-
-    .logo {
-      font-size: 20px;
-      font-weight: 800;
-      text-align: center;
-      color: var(--black);
-      margin-bottom: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .logo-icon {
-      background: var(--black);
-      color: var(--surface);
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 12px;
-      font-size: 16px;
-    }
-
-    .nav-item {
-      padding: 12px 24px;
-      color: var(--text2);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 700;
-      font-size: 13px;
-      transition: 0.2s;
-      margin: 0 16px 8px;
-      border-radius: var(--r-sm);
-    }
-
-    .nav-item.active {
-      background: var(--primary-light);
-      color: var(--primary);
-    }
-
-    /* Bottom Nav */
-    .bnav {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--nav-bg);
-      backdrop-filter: blur(12px);
-      border-top: 1px solid var(--border);
-      z-index: 100;
-      justify-content: space-between;
-      align-items: center;
-      padding: 6px 2px;
-      padding-bottom: max(8px, env(safe-area-inset-bottom));
-      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
-    }
-
-    .bnav-item {
-      flex: 1 1 0;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: var(--text2);
-      padding: 6px 0;
-      font-size: 18px;
-      cursor: pointer;
-      transition: 0.2s;
-      border-radius: 8px;
-    }
-
-    .bnav-item span {
-      display: block;
-      font-size: 8.5px;
-      font-weight: 700;
-      margin-top: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      width: 100%;
-      text-align: center;
-    }
-
-    .bnav-item.active {
-      color: var(--primary);
-      background: var(--primary-light);
-      transform: translateY(-2px);
-    }
-
-    /* Pages */
-    .page {
-      display: none;
-      padding-bottom: 80px;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    /* Header */
-    .date-hdr {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .date-widget {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .date-circle {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      font-weight: 800;
-      background: var(--surface);
-      box-shadow: var(--shadow);
-      color: var(--black);
-    }
-
-    .date-text {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text2);
-      line-height: 1.2;
-    }
-
-    .greeting {
-      text-align: left;
-    }
-
-    .greeting p {
-      color: var(--text3);
-      font-size: 18px;
-      font-weight: 400;
-      margin-top: 4px;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    .circle-btn {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--black);
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      cursor: pointer;
-      transition: 0.3s;
-      box-shadow: var(--shadow);
-    }
-
-    .circle-btn:hover {
-      background: var(--border);
-    }
-
-    /* Dashboard Metrics Cards */
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-
-    .metric-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 24px;
-      box-shadow: var(--shadow);
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      transition: 0.3s;
-      min-height: 125px;
-    }
-
-    .metric-icon-wrap {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 12px;
-      font-size: 18px;
-    }
-
-    .metric-title {
-      font-size: 13px;
-      color: var(--text2);
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .metric-val {
-      font-size: 28px;
-      font-weight: 800;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--black);
-      letter-spacing: -1px;
-      line-height: 1.2;
-    }
-
-    /* SVG Circles */
-    .circ-wrap {
-      position: relative;
-      width: 70px;
-      height: 70px;
-      flex-shrink: 0;
-      margin-top: auto;
-      margin-bottom: auto;
-    }
-
-    .circ-bg {
-      fill: none;
-      stroke: var(--border);
-      stroke-width: 6;
-    }
-
-    .circ-val {
-      fill: none;
-      stroke-width: 6;
-      stroke-linecap: round;
-      transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
-      transform: rotate(-90deg);
-      transform-origin: 50% 50%;
-    }
-
-    .circ-text {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 800;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--black);
-    }
-
-    /* Progress & Sliders */
-    .prog-wrap {
-      margin-top: 16px;
-    }
-
-    .prog-bg {
-      background: var(--border);
-      height: 8px;
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .prog-fill {
-      height: 100%;
-      border-radius: 4px;
-      transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    /* Lists & Items */
-    .list-item {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r-sm);
-      padding: 18px 20px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      transition: 0.2s;
-      box-shadow: var(--shadow);
-      position: relative;
-    }
-
-    .list-item.done {
-      opacity: 0.6;
-      background: var(--surface2);
-      box-shadow: none;
-      border-color: transparent;
-    }
-
-    .list-item.done .item-title {
-      text-decoration: line-through;
-      color: var(--text3);
-    }
-
-    .check-btn {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      border: 2px solid var(--border-darker);
-      background: var(--surface);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      transition: 0.2s;
-      flex-shrink: 0;
-      color: transparent;
-    }
-
-    .check-btn.active {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: #fff;
-    }
-
-    .item-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .item-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--black);
-    }
-
-    .item-meta {
-      font-size: 12px;
-      color: var(--text2);
-      margin-top: 6px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .badge {
-      padding: 2px 8px;
-      border-radius: 10px;
-      font-size: 10px;
-      font-weight: 700;
-    }
-
-    .goal-badge {
-      background: var(--primary-light);
-      color: var(--primary);
-    }
-
-    .streak-badge {
-      background: #fff3cd;
-      color: #ea580c;
-      border: 1px solid #fed7aa;
-      display: flex;
-      align-items: center;
-      gap: 3px;
-    }
-
-    body.dark-theme .streak-badge {
-      background: rgba(234, 88, 12, 0.1);
-      border-color: rgba(234, 88, 12, 0.3);
-    }
-
-    /* Cards */
-    .card-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: var(--shadow);
-      transition: 0.3s;
-    }
-
-    .card-box:hover {
-      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-hdr {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .card-title {
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--black);
-    }
-
-    .card-pct {
-      font-size: 18px;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 800;
-      color: var(--primary);
-      background: var(--primary-light);
-      padding: 4px 12px;
-      border-radius: 20px;
-    }
-
-    /* Analytics & Daily Layout */
-    .analytics-hdr {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      flex-direction: row-reverse;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .analytics-filter {
-      background: var(--surface);
-      color: var(--black);
-      border: 1px solid var(--border-darker);
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 700;
-      outline: none;
-      cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
-    }
-
-    .daily-layout {
-      display: flex;
-      gap: 30px;
-      align-items: flex-start;
-    }
-
-    .daily-main {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .daily-sidebar {
-      width: 320px;
-      flex-shrink: 0;
-      position: sticky;
-      top: 30px;
-    }
-
-    .md-overall {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 25px;
-      padding-bottom: 20px;
-      border-bottom: 1px dashed var(--border-darker);
-    }
-
-    .md-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      max-height: 250px;
-      overflow-y: auto;
-      padding-left: 5px;
-    }
-
-    .md-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .md-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: var(--surface2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      border: 1px solid var(--border-darker);
-      flex-shrink: 0;
-    }
-
-    .md-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .md-name {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--black);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .md-status {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--text3);
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .md-status.done {
-      color: var(--primary);
-    }
-
-    .md-bar-bg {
-      height: 6px;
-      background: var(--surface2);
-      border: 1px solid var(--border-darker);
-      border-radius: 3px;
-      margin-top: 6px;
-      overflow: hidden;
-    }
-
-    .md-bar-fill {
-      height: 100%;
-      border-radius: 3px;
-      background: var(--text3);
-      transition: 0.4s;
-      width: 0%;
-    }
-
-    .md-bar-fill.done {
-      background: var(--primary);
-    }
-
-    /* Mood & Journal Styles */
-    .mood-btn {
-      padding: 10px;
-      border-radius: 12px;
-      border: 1px solid var(--border-darker);
-      background: var(--surface2);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-weight: 700;
-      font-size: 14px;
-      flex: 1;
-      transition: 0.2s;
-      color: var(--text2);
-    }
-
-    .mood-btn:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .mood-btn.active {
-      background: var(--primary-light);
-      border-color: var(--primary);
-      color: var(--primary);
-      transform: translateY(-2px);
-    }
-
-    /* Calendar Grid Styles */
-    .cal-header-days {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      text-align: center;
-      font-weight: 800;
-      font-size: 11px;
-      color: var(--text2);
-      margin-bottom: 10px;
-    }
-
-    .cal-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-    }
-
-    .cal-cell {
-      aspect-ratio: 1;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 800;
-      position: relative;
-      color: var(--text);
-      background: var(--surface);
-      transition: 0.3s;
-    }
-
-    .cal-day-empty {
-      background: var(--cal-empty);
-      color: var(--text3);
-      border-color: transparent;
-    }
-
-    .cal-day-low {
-      background: var(--cal-low);
-      border-color: var(--cal-low);
-    }
-
-    .cal-day-half {
-      background: var(--cal-half);
-      border-color: var(--cal-half);
-      color: #fff;
-    }
-
-    .cal-day-full {
-      background: var(--cal-full);
-      border-color: var(--cal-full);
-      color: #fff;
-      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
-    }
-
-    .cal-mood {
-      position: absolute;
-      bottom: 2px;
-      right: 2px;
-      font-size: 10px;
-    }
-
-    .cal-today-marker {
-      position: absolute;
-      top: 4px;
-      left: 4px;
-      width: 6px;
-      height: 6px;
-      background: var(--primary);
-      border-radius: 50%;
-    }
-
-    /* Shared Common Elements */
-    .add-bar {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 30px;
-      background: var(--surface);
-      padding: 16px;
-      border-radius: var(--r);
-      border: 1px solid var(--border);
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      box-shadow: var(--shadow);
-    }
-
-    .inp {
-      width: 100%;
-      background: var(--surface2);
-      border: 1px solid var(--border-darker);
-      color: var(--text);
-      padding: 12px 16px;
-      border-radius: var(--r-sm);
-      font-size: 14px;
-      font-weight: 700;
-      outline: none;
-      transition: 0.2s;
-      box-sizing: border-box;
-    }
-
-    .inp:focus {
-      border-color: var(--primary);
-      background: var(--surface);
-    }
-
-    textarea.inp {
-      resize: vertical;
-      min-height: 80px;
-      font-weight: normal;
-      font-size: 13px;
-    }
-
-    .sel {
-      background: var(--surface2);
-      border: 1px solid var(--border-darker);
-      color: var(--text);
-      padding: 10px 16px;
-      border-radius: var(--r-sm);
-      font-size: 13px;
-      font-weight: 700;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .btn {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 30px;
-      font-size: 14px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: 0.2s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      white-space: nowrap;
-      box-shadow: 0 4px 10px rgba(230, 92, 79, 0.3);
-    }
-
-    .btn:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(230, 92, 79, 0.4);
-    }
-
-    .btn:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    .btn-dark {
-      background: var(--black);
-      color: var(--surface);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .btn-dark:hover:not(:disabled) {
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-    }
-
-    .btn-zaha {
-      background: var(--zaha);
-      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
-    }
-
-    .btn-zaha:hover {
-      box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4);
-    }
-
-    .btn-circle {
-      width: 44px;
-      height: 44px;
-      padding: 0 0 2px;
-      border-radius: 50%;
-      font-size: 26px;
-      font-weight: 400;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .del-btn {
-      background: var(--surface2);
-      border: 1px solid var(--border-darker);
-      color: var(--text2);
-      cursor: pointer;
-      font-size: 14px;
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: 0.2s;
-    }
-
-    .del-btn:hover {
-      background: #fee2e2;
-      color: #ef4444;
-      border-color: #fca5a5;
-    }
-
-    /* Modals */
-    .modal-ov {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: 1000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(4px);
-      opacity: 0;
-      transition: 0.3s;
-    }
-
-    .modal-ov.show {
-      display: flex;
-      opacity: 1;
-    }
-
-    .modal {
-      background: var(--surface);
-      width: 90%;
-      max-width: 450px;
-      border-radius: var(--r);
-      border: 1px solid var(--border);
-      padding: 30px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-      transform: translateY(20px);
-      transition: 0.3s;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .modal-ov.show .modal {
-      transform: translateY(0);
-    }
-
-    .modal-title {
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 24px;
-      color: var(--black);
-    }
-
-    .field {
-      margin-bottom: 16px;
-      text-align: right;
-    }
-
-    .field label {
-      display: block;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text2);
-      margin-bottom: 8px;
-    }
-
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-      margin-top: 30px;
-    }
-
-    .days-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-      margin-top: 8px;
-    }
-
-    .day-btn {
-      background: var(--surface2);
-      border: 1px solid var(--border-darker);
-      color: var(--text);
-      padding: 10px 0;
-      text-align: center;
-      border-radius: var(--r-sm);
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 700;
-      transition: 0.2s;
-      user-select: none;
-    }
-
-    .day-btn.active {
-      background: var(--black);
-      color: var(--surface);
-      border-color: var(--black);
-    }
-
-    /* Helpers */
-    .sync-status {
-      font-size: 12px;
-      font-weight: 700;
-      text-align: center;
-      color: var(--text3);
-      margin-top: auto;
-      padding-top: 20px;
-    }
-
-    .sync-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--text3);
-      margin-inline-end: 6px;
-    }
-
-    .sync-dot.on {
-      background: #10b981;
-      box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
-    }
-
-    .toast {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-100px);
-      background: var(--primary);
-      color: #fff;
-      padding: 14px 28px;
-      border-radius: 30px;
-      font-size: 14px;
-      font-weight: 700;
-      z-index: 1000;
-      opacity: 0;
-      transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    }
-
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-
-    .empty {
-      text-align: center;
-      padding: 50px 20px;
-      color: var(--text3);
-      font-size: 14px;
-      font-weight: 700;
-      background: var(--surface2);
-      border: 2px dashed var(--border-darker);
-      border-radius: var(--r);
-    }
-
-    .loading-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      z-index: 4000;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      flex-direction: column;
-      gap: 10px;
-      backdrop-filter: blur(5px);
-    }
-
-    .dash-book-matched {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px;
-      flex-direction: row;
-    }
-
-    .dash-book-matched .text-side {
-      text-align: right;
-    }
-
-    .circles-side {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 15px;
-    }
-
-    .circle-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      margin-top: 5px;
-    }
-
-    .circle-label {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--text2);
-    }
-
-    /* Reader specific */
-    .progress-container-global {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      z-index: 2000;
-      background: var(--border);
-    }
-
-    .progress-bar-global {
-      height: 100%;
-      background: var(--primary);
-      width: 0%;
-      transition: width 0.2s;
-    }
-
-    .reader-tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 30px;
-      background: var(--surface);
-      padding: 5px;
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-    }
-
-    .rtab-btn {
-      flex: 1;
-      padding: 12px;
-      border: none;
-      background: none;
-      border-radius: 8px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: 0.3s;
-      color: var(--text2);
-    }
-
-    .rtab-btn.active {
-      background: var(--primary);
-      color: white;
-    }
-
-    .reader-library-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 20px;
-      padding: 10px 0;
-    }
-
-    .reader-book-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r-sm);
-      padding: 30px 15px 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: 0.3s;
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .reader-book-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--primary);
-    }
-
-    .rbc-icon {
-      font-size: 40px;
-      margin-bottom: 15px;
-      display: block;
-    }
-
-    .rbc-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--black);
-      margin-bottom: 10px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .rbc-prog-bg {
-      background: var(--border-darker);
-      height: 6px;
-      border-radius: 3px;
-      width: 100%;
-      overflow: hidden;
-    }
-
-    .rbc-prog-fill {
-      background: var(--primary);
-      height: 100%;
-    }
-
-    .rbc-actions {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      display: flex;
-      gap: 6px;
-      opacity: 0;
-      transition: 0.2s;
-    }
-
-    .rbc-btn {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      transition: 0.2s;
-      background: var(--surface2);
-      border: 1px solid var(--border-darker);
-      color: var(--text2);
-    }
-
-    .rbc-btn:hover {
-      filter: brightness(0.9);
-      transform: scale(1.1);
-    }
-
-    .reader-book-card:hover .rbc-actions {
-      opacity: 1;
-    }
-
-    .file-upload-wrapper {
-      border: 2px dashed var(--border-darker);
-      background: var(--surface2);
-      padding: 30px 20px;
-      border-radius: 15px;
-      margin: 20px 0;
-      cursor: pointer;
-      text-align: center;
-      transition: 0.3s;
-      color: var(--text);
-    }
-
-    .file-upload-wrapper:hover {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-
-    .reader-toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--surface);
-      padding: 15px 20px;
-      border-radius: var(--r-sm);
-      box-shadow: var(--shadow);
-      margin-bottom: 20px;
-      border: 1px solid var(--border);
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .rt-tools {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .rt-search {
-      background: var(--surface2);
-      border: 1px solid var(--border-darker);
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 13px;
-      color: var(--text);
-      outline: none;
-      width: 180px;
-    }
-
-    .rt-search:focus {
-      border-color: var(--primary);
-    }
-
-    .rt-btn {
-      background: var(--surface2);
-      border: 1px solid var(--border-darker);
-      color: var(--text);
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .rt-btn:hover {
-      background: var(--border-darker);
-    }
-
-    /* Reader Paragraphs & PDF */
-    .paragraph-block-reader {
-      background: var(--surface);
-      padding: 24px;
-      border-radius: var(--r);
-      margin-bottom: 20px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      position: relative;
-      transition: 0.3s;
-    }
-
-    .paragraph-block-reader.read-done {
-      opacity: 0.6;
-      background: var(--surface2);
-      box-shadow: none;
-      border-color: transparent;
-    }
-
-    .text-en {
-      direction: ltr;
-      text-align: left;
-      color: var(--text-en);
-      font-family: 'Georgia', serif;
-      margin-bottom: 12px;
-      border-bottom: 1px dashed var(--border);
-      padding-bottom: 12px;
-      transition: font-size 0.2s;
-    }
-
-    .text-ar {
-      font-weight: 400;
-      text-align: justify;
-      color: var(--text);
-      transition: font-size 0.2s;
-    }
-
-    .reader-stats-box {
-      background: var(--primary-light);
-      border-radius: 12px;
-      padding: 15px 20px;
-      margin-bottom: 25px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .rs-text {
-      font-weight: 800;
-      color: var(--primary);
-      font-size: 15px;
-    }
-
-    .rs-pct {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--primary);
-    }
-
-    /* PDF View */
-    .pdf-viewer-container {
-      text-align: center;
-      padding: 20px 0;
-    }
-
-    .pdf-iframe {
-      width: 100%;
-      height: 75vh;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      margin-top: 20px;
-      background: var(--surface2);
-    }
-
-    .zaha-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-      padding: 10px 0;
-    }
-
-    .zaha-card {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      margin-bottom: 0 !important;
-    }
-
-    .zaha-dash {
-      display: flex;
-      gap: 20px;
-      margin-bottom: 25px;
-      margin-top: 10px;
-    }
-
-    .z-metric {
-      flex: 1;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 20px;
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-
-    .z-num-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-
-    .z-icon {
-      font-size: 24px;
-    }
-
-    .z-num {
-      font-size: 32px;
-      font-weight: 800;
-      color: var(--black);
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .z-lbl {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text2);
-    }
-
-    /* Auth Screen Overlay */
-    #auth-screen {
-      display: flex;
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      z-index: 9999;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      backdrop-filter: blur(10px);
-    }
-
-    .auth-card {
-      background: var(--surface);
-      width: 90%;
-      max-width: 400px;
-      border-radius: var(--r);
-      padding: 40px 30px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-      text-align: center;
-      border: 1px solid var(--border);
-    }
-
-    .auth-logo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--black);
-      margin-bottom: 10px;
-    }
-
-    @media (max-width: 768px) {
-      .sidebar {
-        display: none;
-      }
-
-      .bnav {
-        display: flex;
-      }
-
-      .main {
-        padding: 20px 16px 100px;
-      }
-
-      .date-hdr {
-        flex-direction: row;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 10px;
-      }
-
-      .greeting {
-        display: none;
-      }
-
-      .date-circle {
-        width: 38px;
-        height: 38px;
-        font-size: 16px;
-      }
-
-      .header-actions .circle-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 14px;
-      }
-
-      .add-bar {
-        flex-direction: row;
-      }
-
-      .analytics-hdr {
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 12px;
-      }
-
-      .dash-book-matched {
-        flex-direction: column !important;
-        align-items: flex-start;
-        gap: 15px;
-      }
-
-      .daily-layout {
-        flex-direction: column-reverse;
-      }
-
-      .daily-sidebar {
-        width: 100%;
-        position: static;
-        margin-bottom: 20px;
-      }
-
-      .pdf-iframe {
-        height: 60vh;
-      }
-    }
-
-    .breathe-circle-wrap {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 50px 0;
-      height: 250px;
-      position: relative;
-    }
-
-    .breathe-flower {
-      position: absolute;
-      width: 100px;
-      height: 100px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: transform var(--dur, 1s) ease-in-out;
-    }
-
-    .petal {
-      position: absolute;
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      background: var(--primary);
-      opacity: 0.4;
-      mix-blend-mode: multiply;
-      transition: all var(--dur, 1s) ease-in-out;
-      transform-origin: center center;
-    }
-
-    .breathe-flower.inhale .petal:nth-child(1) {
-      transform: rotate(0deg) translateY(-45px) scale(1.3);
-      background: #10b981;
-    }
-
-    .breathe-flower.inhale .petal:nth-child(2) {
-      transform: rotate(60deg) translateY(-45px) scale(1.3);
-      background: #34d399;
-    }
-
-    .breathe-flower.inhale .petal:nth-child(3) {
-      transform: rotate(120deg) translateY(-45px) scale(1.3);
-      background: #10b981;
-    }
-
-    .breathe-flower.inhale .petal:nth-child(4) {
-      transform: rotate(180deg) translateY(-45px) scale(1.3);
-      background: #34d399;
-    }
-
-    .breathe-flower.inhale .petal:nth-child(5) {
-      transform: rotate(240deg) translateY(-45px) scale(1.3);
-      background: #10b981;
-    }
-
-    .breathe-flower.inhale .petal:nth-child(6) {
-      transform: rotate(300deg) translateY(-45px) scale(1.3);
-      background: #34d399;
-    }
-
-    .breathe-flower.inhale {
-      transform: rotate(90deg);
-    }
-
-    .breathe-flower.hold .petal:nth-child(1) {
-      transform: rotate(15deg) translateY(-45px) scale(1.3);
-      background: #4f46e5;
-    }
-
-    .breathe-flower.hold .petal:nth-child(2) {
-      transform: rotate(75deg) translateY(-45px) scale(1.3);
-      background: #818cf8;
-    }
-
-    .breathe-flower.hold .petal:nth-child(3) {
-      transform: rotate(135deg) translateY(-45px) scale(1.3);
-      background: #4f46e5;
-    }
-
-    .breathe-flower.hold .petal:nth-child(4) {
-      transform: rotate(195deg) translateY(-45px) scale(1.3);
-      background: #818cf8;
-    }
-
-    .breathe-flower.hold .petal:nth-child(5) {
-      transform: rotate(255deg) translateY(-45px) scale(1.3);
-      background: #4f46e5;
-    }
-
-    .breathe-flower.hold .petal:nth-child(6) {
-      transform: rotate(315deg) translateY(-45px) scale(1.3);
-      background: #818cf8;
-    }
-
-    .breathe-flower.hold {
-      transform: rotate(180deg);
-    }
-
-    .breathe-flower.exhale .petal {
-      transform: rotate(0deg) translateY(0) scale(1);
-      background: var(--primary);
-    }
-
-    .breathe-flower.exhale {
-      transform: rotate(0deg);
-    }
-
-    .breathe-text-container {
-      position: absolute;
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(4px);
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .breathe-text {
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--black);
-    }
-
-    .breathe-timer {
-      font-size: 30px;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 800;
-      color: var(--black);
-    }
-
-    .breathe-card {
-      background: linear-gradient(135deg, var(--surface) 0%, var(--primary-light) 100%);
-      border: 1px solid var(--primary);
-      border-radius: var(--r);
-      padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: var(--shadow);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    /* --- Dynamic UI Additions --- */
-    .metric-card,
-    .list-item,
-    .breathe-card,
-    .hab-card,
-    .btn,
-    .circle-btn {
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                  box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                  opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .metric-card:hover,
-    .breathe-card:hover,
-    .hab-card:hover {
-      transform: translateY(-4px) scale(1.01);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    }
-
-    .btn:active,
-    .circle-btn:active {
-      transform: scale(0.95);
-    }
-
-    .btn:hover,
-    .circle-btn:hover {
-      filter: brightness(1.1);
-    }
-
-    .list-item:hover {
-      background: var(--surface2);
-      border-color: var(--border-darker);
-      transform: translateX(-5px);
-    }
-
-    .nav-item,
-    .bnav-item {
-      transition: background-color 0.2s, color 0.2s, transform 0.2s;
-    }
-
-    .nav-item:hover {
-      transform: translateX(-5px);
-      background: var(--surface2);
-      color: var(--black);
-    }
-
-    .page.active {
-      animation: fadeIn 0.4s ease-out forwards;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .sm-cell {
-      background: var(--surface);
-      color: var(--text);
-      border-radius: 6px;
-      font-weight: bold;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: 0.2s;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
-
-    .sm-cell:hover {
-      background: #e0f2fe;
-    }
-
-    .sm-cell.selected {
-      background: #3b82f6;
-      color: white;
-      transform: scale(0.95);
-    }
-
-    .sm-cell.found {
-      background: #10b981;
-      color: white;
-      cursor: default;
-    }
-
-    .sm-center-cell {
-      background: white;
-      border: 2px solid var(--primary);
-      border-radius: 8px;
-      font-weight: 900;
-      font-size: 28px;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      grid-column: 5 / span 2;
-      grid-row: 5 / span 2;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Pattern Copy CSS */
-    .pc-dot {
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      background: var(--text3);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .pc-player-dot {
-      cursor: pointer;
-    }
-
-    .pc-player-dot.active {
-      background: var(--primary);
-      transform: translate(-50%, -50%) scale(1.3);
-    }
-
-    .pc-line {
-      position: absolute;
-      background: var(--black);
-      height: 4px;
-      transform-origin: left center;
-      border-radius: 2px;
-    }
-
-    .pc-line-player {
-      background: var(--primary);
-    }
-
-    /* Size Sorter CSS */
-    .ss-shape-wrapper {
-      cursor: pointer;
-      padding: 10px;
-      border-radius: 8px;
-      transition: 0.2s;
-      border: 2px solid transparent;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .ss-shape-wrapper:hover {
-      background: var(--surface);
-    }
-
-    .ss-shape-wrapper.selected {
-      border-color: var(--primary);
-      background: #e0f2fe;
-      transform: scale(1.05);
-    }
-
-    .ss-shape {
-      fill: var(--black);
-      transition: 0.3s;
-    }
-  </style>
-</head>
-
-<body>
-  <button id="scrollTopBtn" onclick="scrollToTop()" title="العودة للأعلى"
-    style="display: none; position: fixed; bottom: 90px; left: 20px; z-index: 1000; background: var(--primary); color: white; border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; cursor: pointer; box-shadow: 0 4px 10px rgba(230, 92, 79, 0.4); transition: background 0.3s, transform 0.3s; align-items: center; justify-content: center; padding-bottom: 4px;">↑</button>
-  <div class="progress-container-global" id="reader-progress-container">
-    <div class="progress-bar-global" id="readingProgress"></div>
-  </div>
-  <div id="global-loading" class="loading-overlay">
-    <div style="font-size:30px;">⏳</div>
-    <div>جاري معالجة البيانات...</div>
-  </div>
-  <!-- AUTHENTICATION SCREEN -->
-  <div id="auth-screen">
-    <div class="auth-card">
-      <div class="auth-logo">
-        <div class="logo-icon">P</div>
-        <span>مُبين</span>
-      </div>
-      <h2 style="margin-top: 0; margin-bottom: 8px;">تسجيل الدخول</h2>
-      <p style="font-size: 13px; color: var(--text2); margin-bottom: 30px;">يرجى تسجيل الدخول للوصول إلى مساحتك الآمنة
-      </p>
-      <div class="field" style="text-align: right; margin-bottom: 16px;"><label
-          style="display: block; font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 8px;">البريد
-          الإلكتروني</label><input type="email" id="auth-email" class="inp" placeholder="name@example.com" /></div>
-      <div class="field" style="text-align: right; margin-bottom: 16px;"><label
-          style="display: block; font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 8px;">كلمة
-          المرور</label><input type="password" id="auth-password" class="inp" placeholder="••••••••" /></div>
-      <button id="btn-login" class="btn btn-dark" style="width: 100%; margin-top: 15px; padding: 14px;"
-        onclick="handleLogin()">تسجيل الدخول</button>
-      <button id="btn-signup" class="btn"
-        style="width: 100%; margin-top: 12px; background: var(--surface2); color: var(--text); box-shadow: none; border: 1px solid var(--border-darker);"
-        onclick="handleSignUp()">إنشاء حساب جديد</button>
-      <div
-        style="margin-top: 24px; font-size: 13px; color: var(--primary); cursor: pointer; font-weight: 700; transition: 0.2s;"
-        onclick="handleReset()">هل نسيت كلمة المرور؟</div>
-    </div>
-  </div>
-  <!-- Desktop Sidebar -->
-  <div class="sidebar">
-    <div class="logo" style="flex-direction: column; gap: 5px;">
-      <div style="display:flex; align-items:center; justify-content:center; gap: 10px;">
-        <div class="logo-icon" id="user-avatar-icon"
-          style="font-size: 16px; border-radius: 50%; overflow: hidden; cursor: pointer;"
-          onclick="document.getElementById('hidden-pic-upload').click()" title="تغيير الصورة الشخصية">👋</div>
-        <input type="file" id="hidden-pic-upload" accept="image/*" style="display:none;"
-          onchange="handleDirectPicUpload(this)">
-        <span style="font-size: 16px;">مرحباً، <span id="user-greeting-name">صديقي</span></span>
-      </div>
-      <div
-        style="font-size:24px; cursor:pointer; color:var(--text3); margin-top:5px; transition:0.2s; position:relative;"
-        onclick="openModal('settings')" title="إعدادات الحساب" onmouseover="this.style.color='var(--primary)'"
-        onmouseout="this.style.color='var(--text3)'">
-        ⚙️
-        <div id="settings-popup"
-          style="display:none; position:absolute; top:40px; right:50%; transform:translateX(50%); background:var(--surface); padding:15px; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1); width:240px; z-index:1000; text-align:right; font-size:13px; border:1px solid var(--border); cursor:default;"
-          onclick="event.stopPropagation()">
-          <div style="margin-bottom:10px; font-weight:bold; color:var(--black);">إعدادات الحساب</div>
-          <div class="field" style="margin-bottom:10px;">
-            <label>الاسم الكامل</label>
-            <input type="text" id="s-name" class="inp" style="padding:6px; font-size:12px;">
-          </div>
-          <div class="field" style="margin-bottom:15px;">
-            <label>العمر</label>
-            <input type="number" id="s-age" class="inp" placeholder="مثال: 25" style="padding:6px; font-size:12px;">
-          </div>
-          <button class="btn" style="width:100%; padding:8px; font-size:12px;" onclick="saveAccountSettings()">حفظ
-            ✓</button>
-        </div>
-      </div>
-    </div>
-    <div class="nav-item active" data-page="daily" onclick="goPage(this)">☀️ عاداتي اليومية</div>
-    <div class="nav-item" data-page="goals" onclick="goPage(this)">🏆 أهداف السنة</div>
-    <div class="nav-item" data-page="books" onclick="goPage(this)">📚 مكتبتي اليدوية</div>
-    <div class="nav-item" data-page="reader" onclick="goPage(this)">📖 القارئ الذكي</div>
-
-    <div class="nav-item" data-page="focus" onclick="goPage(this)">🧠 نادي التركيز</div>
-    <div class="nav-item" data-page="reports" onclick="goPage(this)">📈 التقارير</div>
-    <div class="nav-item" data-page="all-habits" style="display:none;"></div>
-    <div style="margin-top: auto; width: 100%;">
-      <div class="nav-item" style="color: var(--text2); justify-content: center; border: 1px solid var(--border);"
-        onclick="handleLogout()">تسجيل الخروج</div>
-      <div class="sync-status"><span class="sync-dot" id="syncDot"></span>مزامنة سحابية</div>
-    </div>
-  </div>
-  <!-- Main Content -->
-  <div class="main" id="main">
-    <!-- Top Header -->
-    <div class="date-hdr">
-      <div class="date-widget">
-        <div class="date-circle" id="hdr-day">19</div>
-        <div class="date-text" id="hdr-date-full">Tue,<br>December</div>
-      </div>
-      <div class="greeting" style="flex: 1;">
-        <p>قم بتنظيم يومك وأهدافك بسهولة!</p>
-      </div>
-      <div class="header-actions">
-        <button class="circle-btn" onclick="openModal('settings')" title="إعدادات الحساب">⚙️</button>
-        <button class="circle-btn" onclick="requestNotification()" title="تفعيل التنبيهات">🔔</button>
-      </div>
-    </div>
-    <!-- Daily Habits -->
-    <div class="page active" id="page-daily">
-      <div class="quick-task-input-wrapper">
-        <input type="text" id="quick-task-input" class="quick-task-input"
-          placeholder="أضف مهمة مميزة لليوم... (اضغط Enter)" onkeydown="if(event.key==='Enter') addQuickTask()">
-        <button class="btn btn-dark" onclick="addQuickTask()" style="padding: 12px 15px; border-radius: 12px;">إضافة
-          ➕</button>
-        <button class="btn btn-dark btn-circle" onclick="openModal('habit')" title="إضافة عادة يومية"
-          style="width: 45px; height: 45px; font-size: 20px; box-shadow: 0 3px 8px rgba(0,0,0,0.15); flex-shrink: 0;">+</button>
-      </div>
-      <div id="habit-list" style="margin-bottom: 20px;"></div>
-
-      <!-- Daily Breathing Card -->
-      <div class="breathe-card">
-        <div>
-          <h3 style="margin-bottom: 8px; color: var(--black); font-weight: 800; font-size: 16px;">🫁 تمارين التنفس
-            اليومية</h3>
-          <p style="font-size: 13px; color: var(--text2);">خصص 5 دقائق لصفاء ذهنك وتقليل التوتر</p>
-          <div id="breathe-status"
-            style="margin-top: 10px; font-size: 12px; font-weight: 800; color: #10b981; display: none;">✅ تم إنجاز تمرين
-            اليوم</div>
-        </div>
-        <button class="btn" onclick="openBreatheModal()">ابدأ التمرين ▶</button>
-      </div>
-      <div style="display: flex; gap: 15px; margin-bottom: 20px; align-items: stretch; flex-wrap: wrap;">
-
-        <div class="metric-card" style="flex: 1; margin-bottom: 0; min-width: 200px; padding: 15px;">
-          <div style="flex:1">
-            <div class="metric-icon-wrap"
-              style="background:#e0f2fe; color:#0284c7; width: 35px; height: 35px; font-size: 16px;">☀️</div>
-            <div class="metric-title" style="font-size: 12px;">نسبة إنجاز اليوم</div>
-            <div class="metric-val" id="daily-pg-val" style="font-size: 18px;">0/0</div>
-          </div>
-          <div class="circ-wrap" style="transform: scale(0.8); margin: -10px; transform-origin: left center;">
-            <svg width="70" height="70" viewBox="0 0 70 70">
-              <circle class="circ-bg" cx="35" cy="35" r="30"></circle>
-              <circle class="circ-val" id="daily-pg-circ" cx="35" cy="35" r="30" stroke="#0284c7"
-                stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle>
-            </svg>
-            <div class="circ-text" id="daily-pg-txt" style="font-size: 14px;">0%</div>
-          </div>
-        </div>
-        <div class="metric-card" style="flex: 1; margin-bottom: 0; min-width: 200px; padding: 15px;">
-          <div style="flex:1">
-            <div class="metric-icon-wrap" style="background:var(--surface2); color:var(--black)">🏆</div>
-            <div class="metric-title">تقدم أهداف السنة</div>
-            <div class="metric-val" id="dash-goals-val">0%</div>
-          </div>
-          <div class="circ-wrap" style="transform: scale(0.8); margin: -10px; transform-origin: left center;">
-            <svg width="70" height="70" viewBox="0 0 70 70">
-              <circle class="circ-bg" cx="35" cy="35" r="30"></circle>
-              <circle class="circ-val" id="circ-goals" cx="35" cy="35" r="30" stroke="var(--black)"
-                stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle>
-            </svg>
-            <div class="circ-text" id="circ-txt-goals">0%</div>
-          </div>
-        </div>
-      </div>
-      <div class="daily-layout">
-        <div class="daily-main">
-
-        </div>
-        <div class="daily-sidebar">
-          <div class="card-box" id="mini-dash-content"></div>
-        </div>
-
-      </div>
-
-    </div>
-    <!-- ALL HABITS & STATS PAGE -->
-    <div class="page" id="page-all-habits">
-      <div class="add-bar" style="border-color: var(--primary);">
-        <div style="font-weight:800; font-size:16px; color: var(--primary)">إدارة جميع العادات والإحصائيات 📊</div>
-        <div style="display:flex; gap:10px;">
-          <button class="btn btn-dark" style="padding: 8px 16px; font-size: 13px;" onclick="openModal('habit')">+ إضافة
-            عادة</button>
-          <button class="btn"
-            style="background: var(--surface2); color: var(--text); border: 1px solid var(--border-darker); padding: 8px 16px; font-size: 13px;"
-            onclick="goPage({dataset: {page: 'daily'}})">العودة لليوم 🔙</button>
-        </div>
-      </div>
-      <div class="card-box" style="margin-bottom: 20px; padding: 16px 24px;">
-        <div class="analytics-hdr" style="margin-bottom: 0;">
-          <div class="card-title" style="font-size: 14px;">الفترة الزمنية للتقييم:</div>
-          <select class="analytics-filter" id="habit-stats-filter" onchange="renderAllHabits()">
-            <option value="1">اليوم</option>
-            <option value="7" selected>آخر أسبوع</option>
-            <option value="30">آخر شهر</option>
-            <option value="180">آخر 6 أشهر</option>
-            <option value="365">آخر سنة</option>
-            <option value="all">كل المدة (تراكمي)</option>
-          </select>
-        </div>
-      </div>
-      <div id="all-habits-list"></div>
-    </div>
-    <!-- Goals -->
-    <div class="page" id="page-goals">
-      <div class="add-bar">
-        <div style="font-weight:800; font-size:16px">أهداف السنة الكبرى</div>
-        <button class="btn btn-dark btn-circle" onclick="openModal('goal')" title="إضافة هدف">+</button>
-      </div>
-      <div id="goal-list"></div>
-    </div>
-    <!-- Books Library (Manual) -->
-    <div class="page" id="page-books">
-      <div class="add-bar">
-        <div style="font-weight:800; font-size:16px">الكتب الورقية واليدوية 📚</div>
-        <button class="btn btn-dark btn-circle" onclick="openModal('book')" title="إضافة كتاب">+</button>
-      </div>
-      <div id="books-list"></div>
-    </div>
-    <!-- ZAHA CENTER -->
-    <div class="page" id="page-reader">
-      <div class="reader-tabs">
-        <button class="rtab-btn active" id="rtab-lib" onclick="switchReaderMode('library')">مكتبة القارئ</button>
-        <button class="rtab-btn" id="rtab-read" onclick="switchReaderMode('read')"
-          style="display:none;">القراءة</button>
-        <button class="rtab-btn" id="rtab-import" onclick="switchReaderMode('import')">+ إضافة كتاب</button>
-        <button class="rtab-btn" id="rtab-zaha" onclick="switchReaderMode('zaha')">🏛️ زها</button>
-      </div>
-      <!-- Zaha View -->
-      <div id="reader-zaha-section" style="display:none;">
-        <div class="add-bar" style="border-color: var(--zaha);">
-          <div style="font-weight:800; font-size:16px; color:var(--zaha)">حصص زها 🏛️</div>
-          <button class="btn btn-zaha btn-circle" onclick="openModal('zaha')" title="إضافة حصة">+</button>
-        </div>
-        <div class="zaha-dash">
-          <div class="z-metric">
-            <div class="z-num-row"><span class="z-icon">⏱️</span><span class="z-num" id="z-val-hours">0</span></div>
-            <span class="z-lbl">إجمالي الساعات</span>
-          </div>
-          <div class="z-metric">
-            <div class="z-num-row"><span class="z-icon">🏛️</span><span class="z-num" id="z-val-sessions">0</span></div>
-            <span class="z-lbl">عدد الحصص</span>
-          </div>
-        </div>
-        <div class="zaha-grid" id="zaha-list"></div>
-      </div>
-      <!-- Library View -->
-      <div id="reader-library-section">
-        <div class="add-bar" style="border-color: var(--primary-light);">
-          <div style="font-weight:800; font-size:16px; color: var(--primary)">مكتبتي الذكية 📖</div>
-        </div>
-        <div class="reader-library-grid" id="reader-library-grid"></div>
-      </div>
-      <!-- Import View (Updated for PDF/Drive) -->
-      <div id="reader-import-section"
-        style="display: none; background: var(--surface); padding: 30px; border-radius: var(--r); box-shadow: var(--shadow); border: 1px solid var(--border); text-align: center;">
-        <h3>إضافة كتاب للقارئ (نص أو رابط)</h3>
-        <div
-          style="margin-top: 20px; padding: 20px; background: var(--surface2); border-radius: 12px; border: 1px solid var(--border-darker);">
-          <h4 style="color: var(--primary); margin-bottom: 10px;">الخيار الأول: رفع ملف نصي</h4>
-          <p style="font-size: 12px; color: var(--text3); margin-bottom: 15px;">صيغ مدعومة: .md, .txt, .html (ترتيب:
-            إنجليزي ثم عربي)</p>
-          <input type="text" id="new-book-title" class="inp" placeholder="اسم الكتاب (للملفات النصية)..."
-            style="margin-bottom: 15px; text-align:center;">
-          <div class="file-upload-wrapper" style="margin-top:0;"
-            onclick="document.getElementById('readerFileInput').click()">
-            <input type="file" id="readerFileInput" accept=".md,.txt,.html,.htm" onchange="handleFileSelect(this)"
-              style="display:none;">
-            <div id="readerFileName" style="font-weight:bold;">اضغط لاختيار ملف من جهازك</div>
-          </div>
-          <button class="btn btn-dark" id="saveReaderBtn" disabled onclick="processAndSaveFile()"
-            style="width: 100%;">بدء المعالجة والحفظ 🚀</button>
-        </div>
-        <hr style="margin: 30px 0; border:0; border-top: 1px dashed var(--border-darker);">
-        <div
-          style="padding: 20px; background: var(--surface2); border-radius: 12px; border: 1px solid var(--border-darker);">
-          <h4 style="color: var(--zaha); margin-bottom: 10px;">الخيار الثاني: إضافة رابط كتاب (Google Drive / PDF)</h4>
-          <p style="font-size: 12px; color: var(--text3); margin-bottom: 15px;">سيتم حفظ الرابط ومتابعة الصفحات المقروءة
-            يدوياً.</p>
-          <input type="text" id="pdf-book-title" class="inp" placeholder="اسم الكتاب..." style="margin-bottom: 10px;">
-          <input type="url" id="pdf-book-url" class="inp" placeholder="رابط الكتاب (Drive / Web)..."
-            style="margin-bottom: 15px; text-align:left; direction:ltr;">
-          <div style="display:flex; gap:10px;">
-            <input type="number" id="pdf-book-pages" class="inp" placeholder="عدد الصفحات" style="width:50%;">
-            <button class="btn btn-zaha" onclick="savePdfBook()" style="width: 50%;">حفظ الرابط 🔗</button>
-          </div>
-        </div>
-      </div>
-      <!-- Reading View -->
-      <div id="reader-reading-area" style="display: none;">
-        <div class="reader-toolbar">
-          <div style="font-weight:800; color:var(--primary); font-size:18px;" id="current-reading-title">اسم الكتاب
-          </div>
-          <div class="rt-tools" id="reader-text-tools">
-            <input type="text" class="rt-search" id="reader-search" placeholder="بحث في الكتاب 🔍"
-              onkeyup="searchReaderBook(this.value)">
-            <button class="rt-btn" onclick="changeFontSize(2)" title="تكبير الخط">A+</button>
-            <button class="rt-btn" onclick="changeFontSize(-2)" title="تصغير الخط">A-</button>
-          </div>
-        </div>
-        <!-- View for TEXT/HTML Books -->
-        <div id="reader-text-view">
-          <div class="reader-stats-box" id="reader-stats-summary"></div>
-          <div id="reader-content-blocks"></div>
-        </div>
-        <!-- View for PDF/Drive Books -->
-        <div id="pdf-viewer-container" class="pdf-viewer-container" style="display:none;">
-          <div class="card-box"
-            style="margin-bottom: 30px; background: var(--surface2); border: 2px solid var(--zaha-light);">
-            <h3 style="margin-bottom: 15px; color: var(--black);">استكمال القراءة 📖</h3>
-            <button class="btn btn-zaha" id="btn-open-pdf"
-              style="font-size:18px; padding:15px 30px; width:100%; margin-bottom:20px; display:flex; align-items:center; justify-content:center; gap:10px;">
-              افتح الكتاب في نافذة جديدة ↗️
-            </button>
-            <hr style="border:0; border-top:1px dashed var(--border-darker); margin: 20px 0;">
-            <h4 style="margin-bottom: 15px; color: var(--text2);">تحديث تقدمك يدوياً:</h4>
-            <div style="display:flex; align-items:center; gap:15px;">
-              <div style="flex:1;">
-                <label
-                  style="font-size:12px; font-weight:bold; color:var(--text2); display:block; margin-bottom:5px;">الصفحة
-                  التي وصلت إليها</label>
-                <input type="number" id="pdf-current-page" class="inp" placeholder="0" min="0">
-              </div>
-              <div style="font-size:18px; font-weight:bold; color:var(--text3); margin-top:20px;">/</div>
-              <div style="flex:1;">
-                <label
-                  style="font-size:12px; font-weight:bold; color:var(--text2); display:block; margin-bottom:5px;">إجمالي
-                  الصفحات</label>
-                <div id="pdf-total-pages"
-                  style="font-size:18px; font-weight:bold; color:var(--black); padding-top:10px;">0</div>
-              </div>
-            </div>
-            <button class="btn btn-dark" style="margin-top:20px; width:100%" onclick="updatePdfProgress()">حفظ النسبة
-              🔄</button>
-          </div>
-          <!-- Optional Iframe preview if allowed by source -->
-          <iframe id="pdf-iframe" class="pdf-iframe" src="" allowfullscreen></iframe>
-        </div>
-      </div>
-    </div>
-    <!-- FOCUS GYM PAGE -->
-    <div class="page" id="page-focus">
-      <div class="add-bar" style="border-color: #8b5cf6;">
-        <div style="font-weight:800; font-size:16px; color: #8b5cf6">نادي التركيز 🧠</div>
-      </div>
-      <div id="global-mistake-counter" style="display:none; text-align:center; margin-bottom:10px; font-size:13px; color:var(--text2); font-weight:700;">
-        الأخطاء: <span id="mistake-count" style="color:#ef4444; font-family:'JetBrains Mono',monospace; font-size:15px;">0</span>
-      </div>
-      <!-- Menu to choose game -->
-      <div id="focus-menu">
-
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #ef4444;"
-          onclick="startStroopGame()">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 5px;">
-            <h3 style="margin: 0; color: var(--black);">اختبار ستروب (Stroop) 🎨</h3><span
-              style="font-size:12px; color:var(--text3); font-weight:bold;" id="hs-stroop">🏆 0</span>
-          </div>
-          <p style="font-size: 13px; color: var(--text2);">اضغط على لون الخط وليس الكلمة المكتوبة. يمرن قدرتك على كبح
-            ردود الفعل التلقائية.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #3b82f6;"
-          onclick="startVisualSearchGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">الصيد البصري 👁️</h3>
-          <p style="font-size: 13px; color: var(--text2);">اعثر على الشكل أو الحرف المختلف في الشبكة بأسرع وقت ممكن.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #10b981;"
-          onclick="startSlideGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">لغز الألوان المنزلق 🧩</h3>
-          <p style="font-size: 13px; color: var(--text2);">رتب الدوائر الملونة لتطابق الهدف في الأعلى عبر تحريك المربع
-            الفارغ.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #8b5cf6;"
-          onclick="startSumMatchGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">تطابق المجموع 🧮</h3>
-          <p style="font-size: 13px; color: var(--text2);">ابحث عن رقمين متجاورين أفقياً أو عمودياً مجموعهما يساوي الرقم
-            المطلوب في المنتصف.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #6366f1;"
-          onclick="startShapeCounterGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">حصر الأشكال 📐</h3>
-          <p style="font-size: 13px; color: var(--text2);">قم بعد الأشكال الهندسية المختلفة في الرسمة.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #14b8a6;"
-          onclick="startPatternCopyGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">نسخ المسار ✍️</h3>
-          <p style="font-size: 13px; color: var(--text2);">قم بتوصيل النقاط لنسخ الشكل المرسوم أمامك بدقة.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #ec4899;"
-          onclick="startSizeSorterGame()">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 5px;">
-            <h3 style="margin: 0; color: var(--black);">ترتيب الأحجام 📏</h3><span
-              style="font-size:12px; color:var(--text3); font-weight:bold;" id="hs-sizesorter">🏆 0</span>
-          </div>
-          <p style="font-size: 13px; color: var(--text2);">قم بسحب وإفلات الأشكال لترتيبها تصاعدياً من الأصغر للأكبر.
-          </p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #f59e0b;"
-          onclick="startWordSearchGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">البحث عن الكلمات 🔎</h3>
-          <p style="font-size: 13px; color: var(--text2);">اسحب بإصبعك على الحروف لتشكيل الكلمات المطلوبة وشطبها من
-            القائمة.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #8b5cf6;"
-          onclick="startInfinityGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">مسار الانتباه ♾️</h3>
-          <p style="font-size: 13px; color: var(--text2);">تتبع المسار المضيء وانقر على الرقم المطابق له بأسرع وقت.</p>
-        </div>
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #ec4899;"
-          onclick="startMemoryConnectGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">خريطة الألوان 🎨</h3>
-          <p style="font-size: 13px; color: var(--text2);">اربط الألوان بناءً على تسلسل الأرقام المحددة لاختبار ذاكرتك.
-          </p>
-        </div>
-
-        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #f97316;"
-          onclick="startDirectionGame()">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 5px;">
-            <h3 style="margin: 0; color: var(--black);">الحركة والاتجاه 🧭</h3><span
-              style="font-size:12px; color:var(--text3); font-weight:bold;" id="hs-direction">🏆 0</span>
-          </div>
-          <p style="font-size: 13px; color: var(--text2);">حدد اتجاه الأسهم أو اتجاه حركتها بناءً على القاعدة المطلوبة
-            بأسرع وقت.</p>
-        </div>
-      </div>
-
-      <!-- Direction Game Area -->
-      <div id="focus-direction-area"
-        style="display: none; text-align: center; height: 500px; flex-direction: column; background-color: #0f172a; border-radius: 16px; overflow: hidden; margin-bottom: 20px;">
-        <!-- Top Bar -->
-        <div
-          style="display:flex; justify-content:space-between; align-items:center; background: rgba(255,255,255,0.1); padding: 15px 20px; color: white;">
-          <button onclick="endDirectionGameEarly()"
-            style="background:rgba(255,255,255,0.2); border:none; color:white; font-size:16px; font-weight:bold; cursor:pointer; padding: 5px 15px; border-radius: 8px;">←
-            رجوع</button>
-          <div style="font-weight: bold; display:flex; gap:20px; font-size:18px;">
-            <div style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">
-            <button class="circle-btn" onclick="adjustGameTime('dir', -10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:rgba(255,255,255,0.2); color:white; border:none; font-weight:bold;">-10</button>
-            <span id="direction-time" style="color:var(--black);">60</span>
-            <button class="circle-btn" onclick="adjustGameTime('dir', 10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:rgba(255,255,255,0.2); color:white; border:none; font-weight:bold;">+10</button>
-          </div>
-            <div>النقاط: <span id="direction-score" style="color:#fbbf24;">0</span></div>
-          </div>
-        </div>
-
-        <!-- Game Canvas -->
-        <div id="direction-canvas-container"
-          style="flex-grow: 1; position:relative; overflow:hidden; touch-action: none; cursor: grab;">
-          <div id="direction-layer" style="position:absolute; inset:0;"></div>
-          <div id="direction-hint"
-            style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.2); font-size:40px; pointer-events:none; font-weight:bold;">
-            اسحب على الشاشة (Swipe)</div>
-        </div>
-
-        <!-- Bottom Prompt -->
-        <div style="display:flex; background: rgba(255,255,255,0.1); height: 80px;">
-          <div id="prompt-pointing"
-            style="flex:1; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:bold; color:white; border-left:1px solid rgba(255,255,255,0.2); transition:0.3s;">
-            الاتجاه (POINTING)</div>
-          <div id="prompt-moving"
-            style="flex:1; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:bold; color:white; transition:0.3s;">
-            الحركة (MOVING)</div>
-        </div>
-      </div>
-
-      <!-- Stroop Game Area -->
-      <div id="focus-stroop-area" style="display: none; text-align: center;">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-          <div style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">
-            <button class="circle-btn" onclick="adjustGameTime('stroop', -10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">-10</button>
-            <span id="stroop-time" style="color:var(--black);">60</span>
-            <button class="circle-btn" onclick="adjustGameTime('stroop', 10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">+10</button>
-          </div>
-          <div style="font-weight: bold; color: var(--text2);">النقاط: <span id="stroop-score"
-              style="color:var(--primary);">0</span></div>
-        </div>
-        <div id="stroop-word" style="font-size: 48px; font-weight: 900; margin: 40px 0; letter-spacing: -1px;">أحمر
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-          <button class="btn btn-dark" style="background:#ef4444; color:white; font-size: 18px; padding: 15px;"
-            onclick="checkStroop('أحمر')">أحمر</button>
-          <button class="btn btn-dark" style="background:#3b82f6; color:white; font-size: 18px; padding: 15px;"
-            onclick="checkStroop('أزرق')">أزرق</button>
-          <button class="btn btn-dark" style="background:#22c55e; color:white; font-size: 18px; padding: 15px;"
-            onclick="checkStroop('أخضر')">أخضر</button>
-          <button class="btn btn-dark" style="background:#eab308; color:white; font-size: 18px; padding: 15px;"
-            onclick="checkStroop('أصفر')">أصفر</button>
-        </div>
-        <div id="stroop-bottom-timer"
-          style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">
-          00:00</div>
-        <button class="btn"
-          style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;"
-          onclick="quitFocusGame()">🔙 عودة للقائمة</button>
-      </div>
-      <!-- Visual Search Game Area -->
-      <div id="focus-visual-area" style="display: none; text-align: center;">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-          <div style="font-weight: bold; color: var(--text2);">المستوى: <span id="visual-level"
-              style="color:var(--black);">1</span></div>
-          <div style="font-weight: bold; color: var(--text2);">الوقت المتبقي: <span id="visual-time"
-              style="color:#ef4444;">15</span></div>
-        </div>
-        <div id="visual-grid"
-          style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 20px 0; font-size: 24px; user-select: none;">
-          <!-- Grid items populated by JS -->
-        </div>
-        <div id="visual-bottom-timer"
-          style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">
-          00:00</div>
-        <button class="btn"
-          style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;"
-          onclick="quitFocusGame()">🔙 عودة للقائمة</button>
-      </div>
-      <!-- Color Slide Game Area -->
-      <div id="focus-slide-area" style="display: none; text-align: center;">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-          <div style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">
-            <button class="circle-btn" onclick="adjustGameTime('slide', -10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">-10</button>
-            <span id="slide-time" style="color:var(--black);">02:00</span>
-            <button class="circle-btn" onclick="adjustGameTime('slide', 10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">+10</button>
-          </div>
-          <div style="font-weight: bold; color: var(--text2);">الحركات: <span id="slide-moves"
-              style="color:var(--primary);">0</span></div>
-        </div>
-        <div style="margin-bottom: 20px;">
-          <div style="font-size: 13px; color: var(--text2); margin-bottom: 5px;">الهدف (تطابق اللوحة مع هذا الشكل):
-          </div>
-          <div id="slide-target"
-            style="display: grid; grid-template-columns: repeat(3, 30px); gap: 4px; justify-content: center; opacity: 0.8;">
-            <!-- Target populated by JS -->
-          </div>
-        </div>
-        <div id="slide-grid"
-          style="display: grid; grid-template-columns: repeat(3, 80px); grid-template-rows: repeat(3, 80px); gap: 10px; justify-content: center; margin: 20px auto; background: var(--border); padding: 10px; border-radius: 12px; width:fit-content;">
-          <!-- Grid items populated by JS -->
-        </div>
-        <div id="slide-bottom-timer"
-          style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">
-          00:00</div>
-        <button class="btn"
-          style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;"
-          onclick="quitFocusGame()">🔙 عودة للقائمة</button>
-      </div>
-      <!-- Sum Match Area -->
-      <div id="focus-summatch-area" style="display: none; text-align: center;">
-        <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">المجموع المطلوب: <span id="sm-target"
-            style="color: var(--primary); font-size: 24px;">10</span></div>
-        <div style="margin-bottom: 15px; font-size: 14px; color: var(--text2);">الأزواج المتبقية: <span
-            id="sm-remaining">0</span></div>
-        <div id="sm-grid"
-          style="display: grid; gap: 4px; justify-content: center; margin: 20px auto; background: var(--surface2); padding: 10px; border-radius: 12px; width:fit-content; user-select: none; touch-action: none; position: relative;">
-        </div>
-        <div
-          style="font-size: 24px; font-weight: 800; color: var(--primary); margin: 20px 0; font-family: monospace; letter-spacing: 2px;"
-          id="sm-timer">00:00</div>
-        <button class="btn btn-dark" style="margin-top: 10px;"
-          onclick="document.getElementById('focus-summatch-area').style.display='none'; document.getElementById('focus-menu').style.display='block'; clearInterval(smInterval);">🔙
-          عودة للقائمة</button>
-      </div>
-      <!-- Shape Counter Area -->
-      <div id="focus-shapecounter-area" style="display: none; text-align: center;">
-        <h3 style="margin-bottom: 15px; color: var(--primary);">كم عدد الأشكال الموجودة في الرسم؟</h3>
-        <svg id="sc-svg" width="300" height="300" viewBox="0 0 300 300"
-          style="background: white; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);"></svg>
-        <div
-          style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; max-width: 320px; margin: 0 auto 20px;">
-          <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
-            <svg width="30" height="30">
-              <circle cx="15" cy="15" r="12" fill="none" stroke="black" stroke-width="2" />
-            </svg>
-            <input type="number" id="sc-circle-count" min="0"
-              style="width: 50px; text-align: center; border: 1px solid var(--border); border-radius: 6px; padding: 5px;">
-          </div>
-          <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
-            <svg width="30" height="30">
-              <rect x="3" y="3" width="24" height="24" fill="none" stroke="black" stroke-width="2" />
-            </svg>
-            <input type="number" id="sc-square-count" min="0"
-              style="width: 50px; text-align: center; border: 1px solid var(--border); border-radius: 6px; padding: 5px;">
-          </div>
-          <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
-            <svg width="30" height="30">
-              <polygon points="15,3 27,27 3,27" fill="none" stroke="black" stroke-width="2" />
-            </svg>
-            <input type="number" id="sc-triangle-count" min="0"
-              style="width: 50px; text-align: center; border: 1px solid var(--border); border-radius: 6px; padding: 5px;">
-          </div>
-          <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
-            <svg width="30" height="30">
-              <rect x="2" y="8" width="26" height="14" fill="none" stroke="black" stroke-width="2" />
-            </svg>
-            <input type="number" id="sc-rect-count" min="0"
-              style="width: 50px; text-align: center; border: 1px solid var(--border); border-radius: 6px; padding: 5px;">
-          </div>
-        </div>
-        <button class="btn btn-primary" onclick="checkShapeCounter()">تحقق من الإجابة</button>
-        <button class="btn btn-dark" style="margin-top: 10px;" onclick="closeShapeCounter()">🔙 عودة للقائمة</button>
-      </div>
-      <!-- Pattern Copy Area -->
-      <div id="focus-patterncopy-area" style="display: none; text-align: center;">
-        <h3 style="margin-bottom: 15px; color: var(--primary);">انقل الشكل المرسوم أمامك</h3>
-        <div
-          style="display: flex; justify-content: center; gap: 20px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
-          <div>
-            <div style="margin-bottom: 5px; font-weight: bold; color: var(--text2);">الشكل المطلوب</div>
-            <div id="pc-target-grid"
-              style="position: relative; width: 160px; height: 160px; background: white; border: 2px solid var(--border); border-radius: 8px;">
-            </div>
-          </div>
-          <div style="font-size: 24px; color: var(--text3);">⬅️</div>
-          <div>
-            <div style="margin-bottom: 5px; font-weight: bold; color: var(--primary);">مساحة الرسم</div>
-            <div id="pc-player-grid"
-              style="position: relative; width: 160px; height: 160px; background: white; border: 2px solid var(--primary); border-radius: 8px; touch-action: none;">
-            </div>
-          </div>
-        </div>
-        <div style="display: flex; gap: 10px; justify-content: center;">
-          <button class="btn btn-dark" onclick="resetPatternCopyPlayer()">مسح الرسم 🗑️</button>
-          <button class="btn btn-primary" onclick="checkPatternCopy()">تحقق من التطابق</button>
-        </div>
-        <button class="btn btn-dark" style="margin-top: 10px;" onclick="closePatternCopy()">🔙 عودة للقائمة</button>
-      </div>
-      <!-- Size Sorter Area -->
-      <div id="focus-sizesorter-area" style="display: none; text-align: center;">
-        <h3 style="margin-bottom: 15px; color: var(--primary);">رتب الأشكال تصاعدياً (من الأصغر للأكبر)</h3>
-        <div id="ss-container"
-          style="display: flex; gap: 10px; justify-content: center; align-items: center; min-height: 120px; margin: 20px auto; padding: 20px; background: var(--surface2); border-radius: 12px; width: fit-content; max-width: 100%; overflow-x: auto;">
-        </div>
-        <p style="font-size: 12px; color: var(--text2); margin-bottom: 15px;">انقر على شكل ثم انقر على شكل آخر لتبديل
-          أماكنهما.</p>
-        <button class="btn btn-dark" style="margin-top: 10px;" onclick="closeSizeSorter()">🔙 عودة للقائمة</button>
-      </div>
-      <!-- Word Search Game Area -->
-      <div id="focus-wordsearch-area" style="display: none; text-align: center;">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
-          <div style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">
-            <button class="circle-btn" onclick="adjustGameTime('ws', -10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">-10</button>
-            <span id="ws-time" style="color:var(--black);">00:00</span>
-            <button class="circle-btn" onclick="adjustGameTime('ws', 10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">+10</button>
-          </div>
-          <div style="font-weight: bold; color: var(--text2);">الكلمات المتبقية: <span id="ws-remaining"
-              style="color:var(--primary);">0</span></div>
-        </div>
-        <div id="ws-grid"
-          style="display: grid; gap: 4px; justify-content: center; margin: 20px auto; background: var(--surface2); padding: 10px; border-radius: 12px; width:fit-content; user-select: none; touch-action: none;">
-          <!-- Grid items populated by JS -->
-        </div>
-        <div style="margin-top: 15px;">
-          <div style="font-size: 14px; font-weight: 800; color: var(--black); margin-bottom: 10px;">الكلمات المطلوبة:
-          </div>
-          <div id="ws-words"
-            style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; font-size: 13px;">
-            <!-- Words populated by JS -->
-          </div>
-        </div>
-        <div id="ws-bottom-timer"
-          style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">
-          00:00</div>
-        <button class="btn"
-          style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;"
-          onclick="quitFocusGame()">🔙 عودة للقائمة</button>
-      </div>
-      <!-- Infinity Path Game Area -->
-      <div id="focus-infinity-area" style="display: none; text-align: center;">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-          <div style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">
-            <button class="circle-btn" onclick="adjustGameTime('inf', -10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">-10</button>
-            <span id="inf-time" style="color:var(--black);">00:00</span>
-            <button class="circle-btn" onclick="adjustGameTime('inf', 10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">+10</button>
-          </div>
-          <div style="font-weight: bold; color: var(--text2);">الدورات: <span id="inf-loops"
-              style="color:var(--primary);">0 / 3</span></div>
-        </div>
-        <div style="position: relative; width: 100%; max-width: 350px; height: 180px; margin: 0 auto 30px auto;">
-          <!-- SVG Infinity Path -->
-          <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" viewBox="0 0 100 50"
-            preserveAspectRatio="none">
-            <path d="M 50 25 C 35 5, 5 5, 5 25 C 5 45, 35 45, 50 25 C 65 5, 95 5, 95 25 C 95 45, 65 45, 50 25"
-              fill="none" stroke="var(--border-darker)" stroke-width="2" />
-          </svg>
-          <!-- Nodes Container -->
-          <div id="inf-nodes" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
-            <!-- Populated by JS -->
-          </div>
-        </div>
-        <div style="font-size: 14px; font-weight: bold; color: var(--text2); margin-bottom: 15px;">اختر الرقم المطابق
-          للدائرة المضيئة:</div>
-        <div id="inf-dice"
-          style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; justify-content: center; max-width: 300px; margin: 0 auto;">
-          <!-- Populated by JS -->
-        </div>
-        <div id="inf-bottom-timer"
-          style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">
-          00:00</div>
-        <button class="btn"
-          style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;"
-          onclick="quitFocusGame()">🔙 عودة للقائمة</button>
-      </div>
-      <!-- Memory Connect Game Area -->
-      <div id="focus-memory-area" style="display: none; text-align: center;">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-          <div style="font-weight: bold; color: var(--text2);">المستوى: <span id="mc-level"
-              style="color:var(--black);">1</span></div>
-          <div style="font-weight: bold; color: var(--text2);">النقاط: <span id="mc-score"
-              style="color:var(--primary);">0</span></div>
-        </div>
-        <div style="font-size: 12px; font-weight: bold; color: var(--text2); margin-bottom: 10px;">مفتاح الألوان (تذكرها
-          جيداً):</div>
-        <div id="mc-legend"
-          style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 20px; background: var(--surface2); padding: 10px; border-radius: 8px;">
-          <!-- Populated by JS -->
-        </div>
-        <div style="position: relative; width: 250px; height: 250px; margin: 0 auto 30px auto;">
-          <!-- SVG for drawing lines -->
-          <svg id="mc-lines" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
-            <!-- Lines will be drawn here -->
-          </svg>
-          <!-- Nodes Container -->
-          <div id="mc-nodes" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
-            <!-- Populated by JS -->
-          </div>
-        </div>
-        <div style="font-size: 14px; font-weight: bold; color: var(--text2); margin-bottom: 10px;">انقر على الألوان لتطابق هذا التسلسل:</div>
-        <div id="mc-sequence" style="font-size: 24px; font-weight: 900; letter-spacing: 4px; color: var(--black); margin-bottom: 20px;"></div>
-        <div
-          style="display:flex; justify-content:center; align-items:center; gap: 15px; margin: 20px 0 10px 0; direction: ltr;">
-          <button class="circle-btn" onclick="adjustMCTime(-10)"
-            style="background:var(--surface2); border:2px solid var(--border-darker); color:var(--text2); width:40px; height:40px; font-weight:bold; font-size:16px;">-10</button>
-          <div id="mc-bottom-timer"
-            style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); margin:0;">
-            00:00</div>
-          <button class="circle-btn" onclick="adjustMCTime(10)"
-            style="background:var(--surface2); border:2px solid var(--border-darker); color:var(--text2); width:40px; height:40px; font-weight:bold; font-size:16px;">+10</button>
-        </div>
-        <button class="btn"
-          style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;"
-          onclick="quitFocusGame()">🔙 عودة للقائمة</button>
-      </div>
-
-      <!-- Embedded Brain Performance Dashboard -->
-      <div id="daily-focus-dashboard"
-        style="margin-top: 30px; margin-bottom: 20px; border-top: 2px dashed var(--border-darker); padding-top: 20px;">
-
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
-          <h2 style="margin:0; font-weight:800; color:var(--black);">مؤشر الأداء الذهني ⚡</h2>
-        </div>
-
-        <select id="focus-dash-timeframe" class="sel" onchange="renderFocusDashboard()"
-          style="margin-bottom: 20px; padding: 10px; border-radius: 12px;">
-          <option value="today">اليوم</option>
-          <option value="7days">آخر 7 أيام</option>
-          <option value="30days">آخر 30 يوم</option>
-          <option value="alltime">كل الأوقات</option>
-        </select>
-
-        <div
-          style="background: var(--surface2); border: 1px solid var(--border-darker); border-radius: 16px; padding: 20px;">
-          <h3 style="margin:0 0 10px 0; color:var(--black); font-size:18px;">المؤشر العام (Overall LPI)</h3>
-          <p style="margin:0 0 20px 0; color:var(--text2); font-size:12px; line-height:1.6;">يتم حساب مؤشرك العام بناءً
-            على متوسط أفضل نتائجك في جميع المجالات خلال الفترة المحددة.</p>
-
-          <div id="focus-dash-categories" style="display: flex; flex-direction: column; gap: 15px;">
-            <!-- Categories injected here -->
-          </div>
-        </div>
-
-      </div>
-    </div>
-    <!-- REPORTS PAGE -->
-    <div class="page" id="page-reports">
-      <div class="add-bar" style="border-color: var(--primary);">
-        <div style="font-weight:800; font-size:16px; color: var(--primary)">التقارير التفصيلية 📈</div>
-      </div>
-      <div class="card-box" style="margin-bottom: 25px;">
-        <div class="field" style="margin-bottom: 0;">
-          <label>اختر الفترة الزمنية للتقرير:</label>
-          <div style="display:flex; gap:10px; margin-top:8px;">
-            <select class="sel" id="report-period" style="flex:1;">
-              <!-- Options populated dynamically -->
-            </select>
-            <button class="btn" onclick="generateReport()">إصدار التقرير 🚀</button>
-          </div>
-        </div>
-      </div>
-      <div id="report-results" style="display:none;">
-        <div class="zaha-dash">
-          <div class="z-metric">
-            <div class="z-num-row"><span class="z-icon">🎯</span><span class="z-num" id="rep-habits-pct">0%</span></div>
-            <span class="z-lbl">إنجاز العادات</span>
-          </div>
-          <div class="z-metric">
-            <div class="z-num-row"><span class="z-icon">🏛️</span><span class="z-num" id="rep-zaha-hours">0</span></div>
-            <span class="z-lbl">ساعات زها</span>
-          </div>
-          <div class="z-metric">
-            <div class="z-num-row"><span class="z-icon">🫁</span><span class="z-num" id="rep-breathe-days">0</span>
-            </div>
-            <span class="z-lbl">أيام التنفس</span>
-          </div>
-        </div>
-        <h3 style="margin: 25px 0 15px; font-weight:800; color: var(--black);">تفاصيل العادات (أنجزت / لم تنجز)</h3>
-        <div id="rep-habits-list"></div>
-        <button id="btn-export-pdf" class="btn btn-dark"
-          style="margin-top:20px; width:100%; display:block; padding: 15px; background: var(--surface2); color: var(--text);"
-          onclick="exportReportPDF()">تصدير التقرير كملف PDF 📥</button>
-      </div>
-    </div>
-  </div> <!-- End Main -->
-  <!-- MODALS -->
-  <!-- Notification Settings Modal -->
-  <!-- Settings Modal -->
-  <div class="modal-ov" id="modal-settings">
-    <div class="modal-box">
-      <div class="modal-hdr">
-        <div class="modal-title">إعدادات الحساب ⚙️</div>
-        <button class="modal-close" onclick="closeModal('settings')">×</button>
-      </div>
-      <div class="field" style="margin-bottom:15px;">
-        <label>الاسم المستعار</label>
-        <input type="text" id="s-name-m" class="inp" placeholder="الاسم">
-      </div>
-      <div class="field" style="margin-bottom:20px;">
-        <label>العمر</label>
-        <input type="number" id="s-age-m" class="inp" placeholder="مثال: 25">
-      </div>
-      <button class="btn btn-dark" style="width:100%;" onclick="saveAccountSettingsM()">حفظ التعديلات 💾</button>
-    </div>
-  </div>
-  <div class="modal-ov" id="modal-notif">
-    <div class="modal">
-      <div class="modal-title">تفعيل التنبيهات 🔔</div>
-      <p style="font-size:13px; color:var(--text2); margin-bottom:20px;">سيقوم المتصفح بإرسال إشعار لك يومياً في الوقت
-        المحدد لتذكيرك بتسجيل عاداتك ويومياتك.</p>
-      <div class="field"><label>وقت التنبيه اليومي</label><input type="time" class="inp" id="m-notif-time"
-          value="20:00" /></div>
-      <div class="modal-actions">
-        <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none"
-          onclick="closeModal('notif')">إلغاء</button>
-        <button class="btn" onclick="saveNotificationSettings()">حفظ وتفعيل</button>
-      </div>
-    </div>
-  </div>
-  <!-- Habit Modal -->
-  <div class="modal-ov" id="modal-habit">
-    <div class="modal">
-      <div class="modal-title" id="m-hab-title-text">إضافة عادة جديدة ✨</div>
-      <input type="hidden" id="m-hab-id">
-      <div class="field"><label>اسم العادة</label><input type="text" class="inp" id="m-hab-title"
-          placeholder="مثال: القراءة اليومية" /></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div class="field"><label>البداية</label><input type="date" class="inp" id="m-hab-start" /></div>
-        <div class="field"><label>النهاية (اختياري)</label><input type="date" class="inp" id="m-hab-end" /></div>
-      </div>
-      <div class="field"><label>ارتباط بهدف</label><select class="sel" id="m-hab-goal" style="width:100%"></select>
-      </div>
-      <div class="field"><label>ارتباط بكتاب (يدوي)</label><select class="sel" id="m-hab-book"
-          style="width:100%"></select></div>
-      <div class="field"><label>نظام التكرار</label>
-        <select class="sel" id="m-hab-freq" style="width:100%"
-          onchange="toggleHabitDays(this.value, 'm-hab-days-wrap')">
-          <option value="daily">يومياً</option>
-          <option value="specific">أيام محددة في الأسبوع</option>
-          <option value="weekly">أسبوعياً</option>
-          <option value="monthly">شهرياً</option>
-          <option value="yearly">سنوياً</option>
-        </select>
-      </div>
-      <div class="field" id="m-hab-days-wrap" style="display:none">
-        <label>اختر الأيام</label>
-        <div class="days-grid">
-          <div class="day-btn active" data-day="0" onclick="this.classList.toggle('active')">أحد</div>
-          <div class="day-btn active" data-day="1" onclick="this.classList.toggle('active')">إثنين</div>
-          <div class="day-btn active" data-day="2" onclick="this.classList.toggle('active')">ثلاثاء</div>
-          <div class="day-btn active" data-day="3" onclick="this.classList.toggle('active')">أربعاء</div>
-          <div class="day-btn active" data-day="4" onclick="this.classList.toggle('active')">خميس</div>
-          <div class="day-btn active" data-day="5" onclick="this.classList.toggle('active')">جمعة</div>
-          <div class="day-btn active" data-day="6" onclick="this.classList.toggle('active')">سبت</div>
-        </div>
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none"
-          onclick="closeModal('habit')">إلغاء</button>
-        <button class="btn" onclick="saveHabit()">حفظ العادة</button>
-      </div>
-    </div>
-  </div>
-  <!-- Goal Modal -->
-  <div class="modal-ov" id="modal-goal">
-    <div class="modal">
-      <div class="modal-title" id="m-goal-title-text">إضافة هدف 🏆</div>
-      <input type="hidden" id="m-goal-id">
-      <div class="field"><label>اسم الهدف</label><input type="text" class="inp" id="m-goal-title"
-          placeholder="مثال: تعلم لغة جديدة" /></div>
-      <div class="field"><label>تاريخ إنجاز الهدف (لحساب التقدم تلقائياً)</label><input type="date" class="inp"
-          id="m-goal-end" /></div>
-      <div class="modal-actions">
-        <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none"
-          onclick="closeModal('goal')">إلغاء</button>
-        <button class="btn" onclick="saveGoal()">حفظ الهدف</button>
-      </div>
-    </div>
-  </div>
-  <!-- Book Modal -->
-  <div class="modal-ov" id="modal-book">
-    <div class="modal">
-      <div class="modal-title" id="m-book-title-text">إضافة كتاب 📚</div>
-      <input type="hidden" id="m-book-id">
-      <div class="field"><label>اسم الكتاب</label><input type="text" class="inp" id="m-book-title"
-          placeholder="اسم الكتاب" /></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div class="field"><label>إجمالي الصفحات</label><input type="number" class="inp" id="m-book-total" min="1"
-            value="100" /></div>
-        <div class="field"><label>الصفحات المقروءة</label><input type="number" class="inp" id="m-book-read" min="0"
-            value="0" /></div>
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none"
-          onclick="closeModal('book')">إلغاء</button>
-        <button class="btn" onclick="saveBook()">حفظ الكتاب</button>
-      </div>
-    </div>
-  </div>
-  <!-- Zaha Modal -->
-  <div class="modal-ov" id="modal-zaha">
-    <div class="modal">
-      <div class="modal-title" id="m-zaha-title-text" style="color: var(--zaha)">توثيق حصة زها 🏛️</div>
-      <input type="hidden" id="m-zaha-id">
-      <div class="field"><label>اسم الدورة / الفريق</label><input type="text" class="inp" id="m-zaha-course"
-          placeholder="مثال: 3dmqx" /></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div class="field"><label>التاريخ</label><input type="date" class="inp" id="m-zaha-date" /></div>
-        <div class="field"><label>عدد الساعات</label><input type="number" class="inp" id="m-zaha-hours" min="1"
-            value="2" /></div>
-      </div>
-      <div class="field">
-        <label>ما تم تقديمه في الحصة (اكتب كنقاط)</label>
-        <textarea class="inp" id="m-zaha-summary" placeholder="- تعلم كذا...&#10;- إنشاء كذا..."></textarea>
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none"
-          onclick="closeModal('zaha')">إلغاء</button>
-        <button class="btn btn-zaha" onclick="saveZahaSession()">حفظ الحصة</button>
-      </div>
-    </div>
-  </div>
-  <!-- Breathe Modal -->
-  <div class="modal-ov" id="modal-breathe">
-    <div class="modal" style="text-align: center;">
-      <div class="modal-title" style="color: var(--primary)">تمارين التنفس التفاعلية 🫁</div>
-      <div class="field" style="text-align: center; margin-bottom: 20px;">
-        <label>اختر نوع التمرين:</label>
-        <select class="sel" id="breathe-type" style="width: 100%; margin-top: 8px;" onchange="resetBreathe()">
-          <option value="478">4-7-8 (استرخاء ونوم عميق)</option>
-          <option value="box">التنفس المربع (تركيز وهدوء)</option>
-          <option value="wimhof">فيم هوف (طاقة وحيوية)</option>
-        </select>
-      </div>
-      <div class="breathe-circle-wrap" id="breathe-wrap">
-        <div class="breathe-flower" id="breathe-circle">
-          <div class="petal"></div>
-          <div class="petal"></div>
-          <div class="petal"></div>
-          <div class="petal"></div>
-          <div class="petal"></div>
-          <div class="petal"></div>
-        </div>
-        <div class="breathe-text-container">
-          <div class="breathe-text" id="breathe-text">مستعد؟</div>
-          <div class="breathe-timer" id="breathe-timer">--</div>
-        </div>
-      </div>
-      <div style="font-size: 13px; color: var(--text2); margin-bottom: 20px;" id="breathe-desc">
-        شهيق لـ 4 ثوانٍ، احبس لـ 7 ثوانٍ، زفير لـ 8 ثوانٍ.
-      </div>
-      <div style="font-weight: 800; color: var(--primary); margin-bottom: 20px;">
-        الدورات المنجزة: <span id="breathe-cycles">0</span>
-      </div>
-      <div
-        style="font-size: 24px; font-weight: 800; color: var(--text); margin-bottom: 20px; font-family: 'JetBrains Mono', monospace;"
-        id="breathe-session-clock">00:00</div>
-      <div class="modal-actions" style="justify-content: center; gap: 15px;">
-        <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none"
-          onclick="closeBreatheModal()">إغلاق</button>
-        <button class="btn" id="btn-start-breathe" onclick="startBreathe()">ابدأ ▶</button>
-      </div>
-    </div>
-  </div>
-  <!-- Mobile Bottom Nav -->
-  <div class="bnav">
-    <div class="bnav-item active" data-page="daily" onclick="goPage(this)">☀️<span>عاداتي</span></div>
-    <div class="bnav-item" data-page="goals" onclick="goPage(this)">🏆<span>أهدافي</span></div>
-    <div class="bnav-item" data-page="books" onclick="goPage(this)">📚<span>ورقي</span></div>
-    <div class="bnav-item" data-page="reader" onclick="goPage(this)">📖<span>القارئ</span></div>
-
-    <div class="bnav-item" data-page="focus" onclick="goPage(this)">🧠<span>التركيز</span></div>
-    <div class="bnav-item" data-page="reports" onclick="goPage(this)">📈<span>تقارير</span></div>
-  </div>
-  <div class="toast" id="toast">✨ <span id="toast-msg"></span></div>
-  <script>
     const APP_VER = "v28_Production_Auth_Restored";
     // --- Sound Effects ---
     const sfxSoftUI = new Audio('sounds/SoftUI.aac');
@@ -3063,19 +214,6 @@
         reader.readAsDataURL(fileInput.files[0]);
       }
     }
-    function saveAccountSettingsM() {
-      const name = document.getElementById('s-name-m').value.trim();
-      const age = document.getElementById('s-age-m').value.trim();
-      if (name) {
-        state.settings.displayName = name;
-        document.getElementById('user-greeting-name').textContent = name;
-        document.title = `مُبين | ${name}`;
-      }
-      if (age) state.settings.age = age;
-      saveState();
-      closeModal('settings');
-      toast('تم حفظ الإعدادات بنجاح ✅');
-    }
     function finishSaveSettings() {
       saveState();
       document.getElementById('settings-popup').style.display = 'none';
@@ -3103,6 +241,16 @@
         }
       }
     });
+    function changeUserName() {
+      const currentName = document.getElementById('user-greeting-name').textContent;
+      const newName = prompt("أدخل اسمك الجديد:", currentName);
+      if (newName && newName.trim()) {
+        state.settings.displayName = newName.trim();
+        document.getElementById('user-greeting-name').textContent = state.settings.displayName;
+        document.title = `مُبين | ${state.settings.displayName}`;
+        saveState();
+      }
+    }
     async function saveState() { if (!currentUserUID) return; try { await db.ref(`users/${currentUserUID}/planner_state`).set(state); document.getElementById('syncDot').classList.add('on'); } catch (e) { document.getElementById('syncDot').classList.remove('on'); } }
     function populateGlobalSelectors() {
       const gHtml = `<option value="">-- بدون هدف مرتبط --</option>` + state.goals.map(g => `<option value="${g.id}">🎯 ${g.title}</option>`).join('');
@@ -3202,11 +350,11 @@
           }
         }
         state.history[today].push(id);
-        playSound('soft');
+        if (typeof playSound === 'function') playSound('soft');
         const active = getActiveHabitsForDate(today);
         const doneCount = active.filter(h => state.history[today].includes(h.id)).length;
         if (active.length > 0 && doneCount === active.length) {
-          playSound('achieve');
+          if (typeof playSound === 'function') playSound('achieve');
           toast('أتممت جميع عاداتك لليوم! عمل رائع! 🌟');
         }
       }
@@ -3232,7 +380,7 @@
       saveState();
       input.value = '';
       renderHabits();
-      renderDashboard();
+      updateDashboard();
     }
 
     function renderHabits() {
@@ -3301,9 +449,9 @@
       if (filterDays === 30) filterLabel = 'آخر شهر'; if (filterDays === 90) filterLabel = 'آخر 3 أشهر'; if (filterDays === 180) filterLabel = 'آخر 6 أشهر'; if (filterDays === 365) filterLabel = 'آخر سنة';
 
       container.innerHTML = `
-        <div class="card-hdr" style="flex-direction:column; align-items:flex-start; gap:10px; margin-bottom:20px;">
+        <div class="md-header" style="flex-direction:column; align-items:flex-start; gap:10px;">
           <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
-             <div class="card-title" style="margin-bottom:0;">التقدم التراكمي</div>
+             <div class="md-title" style="margin-bottom:0;">التقدم التراكمي</div>
              <select id="mini-dash-filter" onchange="renderDailyMiniDash()" style="font-size:12px; padding:2px 5px; border-radius:6px; border:1px solid var(--border); color:var(--text); background:var(--surface);">
                <option value="7" ${filterDays === 7 ? 'selected' : ''}>أسبوع</option>
                <option value="30" ${filterDays === 30 ? 'selected' : ''}>شهر</option>
@@ -3497,20 +645,16 @@
     // ═══════════════════════════════════════
     //  SMART READER LOGIC (PDF/DRIVE ADDED)
     // ═══════════════════════════════════════
-    function goToReaderTab() { goPage(document.querySelector('.nav-item[data-page="reader"]') || { dataset: { page: 'reader' } }); }
     function switchReaderMode(m) {
       document.getElementById('reader-import-section').style.display = m === 'import' ? 'block' : 'none';
       document.getElementById('reader-reading-area').style.display = m === 'read' ? 'block' : 'none';
       document.getElementById('reader-library-section').style.display = m === 'library' ? 'block' : 'none';
-      document.getElementById('reader-zaha-section').style.display = m === 'zaha' ? 'block' : 'none';
       document.getElementById('rtab-import').classList.toggle('active', m === 'import');
       document.getElementById('rtab-read').classList.toggle('active', m === 'read');
       document.getElementById('rtab-lib').classList.toggle('active', m === 'library');
-      document.getElementById('rtab-zaha').classList.toggle('active', m === 'zaha');
       document.getElementById('rtab-read').style.display = currentOpenBookId ? 'block' : 'none';
       document.getElementById('reader-progress-container').style.display = (m === 'read') ? 'block' : 'none';
       if (m === 'library') renderReaderLibrary();
-      if (m === 'zaha') renderZaha();
     }
     function renderReaderLibrary() {
       const grid = document.getElementById('reader-library-grid');
@@ -3776,7 +920,7 @@
       let duration = 0;
       const wrap = document.getElementById('breathe-wrap');
       if (breatheState === 1) { // Inhale
-        playSound('ring');
+        if (typeof playSound === 'function') playSound('ring');
         duration = breatheConfig.inhale;
         currentBreathePhase = 'شهيق...';
         wrap.style.setProperty('--dur', `${duration}s`);
@@ -3836,7 +980,7 @@
         state.journal[today].breatheDone = true;
         saveState();
         renderBreatheStatus();
-        playSound('achieve');
+        if (typeof playSound === 'function') playSound('achieve');
         toast('رائع! لقد أتممت تمرين التنفس اليومي 🎉');
       }
     }
@@ -3851,11 +995,6 @@
       }
     }
     // --- FOCUS GYM LOGIC ---
-    function resetFocusMistakes() {
-      focusMistakes = 0;
-      document.getElementById('mistake-count').textContent = 0;
-      document.getElementById('global-mistake-counter').style.display = 'block';
-    }
     let focusTimer = null;
     let isFocusGameActive = false;
     let focusMistakes = 0;
@@ -3874,16 +1013,6 @@
       return `${m}:${s}`;
     }
 
-        function adjustGameTime(game, amount) {
-      if(!isFocusGameActive) return;
-      if (game === 'stroop') { stroopTimeLeft += amount; if(stroopTimeLeft<0) stroopTimeLeft=0; document.getElementById('stroop-time').textContent = stroopTimeLeft; }
-      else if (game === 'slide') { slideTimeLeft += amount; if(slideTimeLeft<0) slideTimeLeft=0; document.getElementById('slide-time').textContent = formatGameTime(slideTimeLeft); }
-      else if (game === 'sm') { smTime += amount; if(smTime<0) smTime=0; document.getElementById('sm-time').textContent = formatGameTime(smTime); }
-      else if (game === 'sc') { scTime += amount; if(scTime<0) scTime=0; document.getElementById('sc-time').textContent = formatGameTime(scTime); }
-      else if (game === 'ws') { wsTime += amount; if(wsTime<0) wsTime=0; document.getElementById('ws-time').textContent = formatGameTime(wsTime); }
-      else if (game === 'inf') { infTime += amount; if(infTime<0) infTime=0; document.getElementById('inf-time').textContent = formatGameTime(infTime); }
-      else if (game === 'dir') { dirTime += amount; if(dirTime<0) dirTime=0; document.getElementById('direction-time').textContent = dirTime; }
-    }
     function recordGameScore(gameId, score) {
       if (!state.gameHistory) state.gameHistory = {};
       const dStr = today;
@@ -3892,6 +1021,9 @@
       state.gameHistory[dStr][gameId].push(score);
       saveState();
     }
+
+
+
 
     function renderFocusDashboard() {
       const timeframe = document.getElementById('focus-dash-timeframe').value;
@@ -3969,7 +1101,7 @@
     }
 
     function startStroopGame() {
-      resetFocusMistakes();
+      focusMistakes = 0; if (document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if (document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       document.getElementById('focus-menu').style.display = 'none';
       document.getElementById('focus-visual-area').style.display = 'none';
       document.getElementById('focus-stroop-area').style.display = 'block';
@@ -4008,10 +1140,10 @@
       if (stroopTimeLeft <= 0) return;
       if (selectedColorName === currentStroopColor) {
         stroopScore += 10;
-        playSound('soft');
+        if (typeof playSound === 'function') playSound('soft');
       } else {
         stroopScore = Math.max(0, stroopScore - 5);
-        playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
+        if (typeof playSound === 'function') playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
         document.getElementById('stroop-word').style.transform = 'translateX(10px)';
         setTimeout(() => document.getElementById('stroop-word').style.transform = 'translateX(0)', 100);
       }
@@ -4030,7 +1162,7 @@
       { base: '🙂', target: '🙃' }
     ];
     function startVisualSearchGame() {
-      resetFocusMistakes();
+      focusMistakes = 0; if (document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if (document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       document.getElementById('focus-menu').style.display = 'none';
       document.getElementById('focus-stroop-area').style.display = 'none';
       document.getElementById('focus-visual-area').style.display = 'block';
@@ -4079,7 +1211,7 @@
             }
             div.style.background = '#22c55e'; // Green
             div.style.color = 'white';
-            playSound('soft');
+            if (typeof playSound === 'function') playSound('soft');
             setTimeout(() => {
               visualLevel++;
               visualTimeLeft = Math.max(5, 15 - Math.floor(visualLevel / 2));
@@ -4106,7 +1238,7 @@
                 }
               }, 1000);
             }
-            playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
+            if (typeof playSound === 'function') playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
             div.style.background = '#ef4444'; // Red
             div.style.color = 'white';
             setTimeout(() => {
@@ -4123,13 +1255,13 @@
     }
     // Slide Logic
     let slideMoves = 0;
-    let slideTimeLeft = 120;
+    let slideTime = 0;
     let slideState = [];
     let slideTarget = [];
     let slideInterval = null;
     const slideColors = ['#ef4444', '#ef4444', '#3b82f6', '#3b82f6', '#22c55e', '#22c55e', '#eab308', '#eab308', null];
     function startSlideGame() {
-      resetFocusMistakes();
+      focusMistakes = 0; if (document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if (document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       document.getElementById('focus-menu').style.display = 'none';
       document.getElementById('focus-stroop-area').style.display = 'none';
       document.getElementById('focus-visual-area').style.display = 'none';
@@ -4193,14 +1325,8 @@
       if (!isFocusGameActive) {
         isFocusGameActive = true;
         slideInterval = setInterval(() => {
-          slideTimeLeft--;
-          document.getElementById('slide-time').textContent = formatGameTime(slideTimeLeft);
-        if (slideTimeLeft <= 0) {
-          clearInterval(slideInterval);
-          isFocusGameActive = false;
-          alert('انتهى الوقت للغز الانزلاق!');
-          startSlideGame();
-        }
+          slideTime++;
+          document.getElementById('slide-time').textContent = formatGameTime(slideTime);
           document.getElementById('slide-bottom-timer').textContent = formatGameTime(slideTime);
         }, 1000);
       }
@@ -4213,17 +1339,17 @@
         slideState[idx] = null;
         slideMoves++;
         document.getElementById('slide-moves').textContent = slideMoves;
-        playSound('soft');
+        if (typeof playSound === 'function') playSound('soft');
         renderSlideGrid();
         checkSlideWin();
       } else {
-        playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
+        if (typeof playSound === 'function') playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
       }
     }
     function checkSlideWin() {
       if (JSON.stringify(slideState) === JSON.stringify(slideTarget)) {
         clearInterval(slideInterval);
-        playSound('achieve');
+        if (typeof playSound === 'function') playSound('achieve');
         setTimeout(() => {
           alert(`تهانينا! حليت اللغز بـ ${slideMoves} حركات خلال ${document.getElementById('slide-time').textContent}`);
           startSlideGame();
@@ -4259,7 +1385,7 @@
     let startCell = null;
     let selectedCells = [];
     function startWordSearchGame() {
-      resetFocusMistakes();
+      focusMistakes = 0; if (document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if (document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       document.getElementById('focus-menu').style.display = 'none';
       document.getElementById('focus-stroop-area').style.display = 'none';
       document.getElementById('focus-visual-area').style.display = 'none';
@@ -4417,10 +1543,10 @@
         document.getElementById(`ws-word-${foundWord}`).style.textDecoration = 'line-through';
         document.getElementById(`ws-word-${foundWord}`).style.color = 'var(--text3)';
         document.getElementById('ws-remaining').textContent = wsWords.length - wsFound.length;
-        playSound('soft');
+        if (typeof playSound === 'function') playSound('soft');
         if (wsFound.length === wsWords.length) {
           clearInterval(wsInterval);
-          playSound('achieve');
+          if (typeof playSound === 'function') playSound('achieve');
           document.querySelectorAll('.ws-cell').forEach(c => {
             const r = parseInt(c.dataset.r);
             const col = parseInt(c.dataset.c);
@@ -4439,7 +1565,7 @@
         }
       } else {
         if (selectedCells.length > 1) {
-          playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
+          if (typeof playSound === 'function') playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
           selectedCells.forEach(c => {
             c.style.background = '#ef4444';
             c.style.color = 'white';
@@ -4486,7 +1612,7 @@
       { x: 35, y: 10 }   // TL1
     ];
     function startInfinityGame() {
-      resetFocusMistakes();
+      focusMistakes = 0; if (document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if (document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       document.getElementById('focus-menu').style.display = 'none';
       document.getElementById('focus-stroop-area').style.display = 'none';
       document.getElementById('focus-visual-area').style.display = 'none';
@@ -4568,7 +1694,7 @@
     }
     function handleInfClick(num) {
       if (infNodesData[infCurrentNode].num === num) {
-        playSound('soft');
+        if (typeof playSound === 'function') playSound('soft');
         infCurrentNode++;
         if (infCurrentNode >= infPathCoords.length) {
           infCurrentNode = 0;
@@ -4576,7 +1702,7 @@
           document.getElementById('inf-loops').textContent = `${infLoops} / 3`;
           if (infLoops >= 3) {
             clearInterval(infInterval);
-            playSound('achieve');
+            if (typeof playSound === 'function') playSound('achieve');
             setTimeout(() => {
               alert(`تهانينا! أكملت 3 دورات في مسار الانتباه خلال ${document.getElementById('inf-time').textContent}`);
               startInfinityGame();
@@ -4590,7 +1716,7 @@
         }
       } else {
         infTime += 2; // Penalty
-        playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
+        if (typeof playSound === 'function') playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
         const m = Math.floor(infTime / 60).toString().padStart(2, '0');
         const s = (infTime % 60).toString().padStart(2, '0');
         document.getElementById('inf-time').textContent = `${m}:${s}`;
@@ -4699,18 +1825,20 @@
     }
     function handleMCClick(num) {
       if (mcSequence[mcUserSequence.length] === num) {
+        // Correct
         mcUserSequence.push(num);
-        playSound('soft');
+        if (typeof playSound === 'function') playSound('soft');
         drawMCLines();
         if (mcUserSequence.length === mcSequence.length) {
           mcScore += mcLevel * 10;
           mcLevel++;
           updateMCScoreboard();
-          playSound('achieve');
+          if (typeof playSound === 'function') playSound('achieve');
           setTimeout(() => { nextMCLevel(); }, 800);
         }
       } else {
-        playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
+        // Wrong
+        if (typeof playSound === 'function') playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
         mcUserSequence = [];
         drawMCLines();
         const seqEl = document.getElementById('mc-sequence');
@@ -4718,7 +1846,10 @@
         seqEl.style.color = '#ef4444';
         setTimeout(() => {
           seqEl.style.transform = 'translateX(-10px)';
-          setTimeout(() => { seqEl.style.transform = 'translateX(0)'; seqEl.style.color = 'var(--black)'; }, 100);
+          setTimeout(() => {
+            seqEl.style.transform = 'translateX(0)';
+            seqEl.style.color = 'var(--black)';
+          }, 100);
         }, 100);
       }
     }
@@ -4900,7 +2031,7 @@
     let smTime = 0;
     let smInterval = null;
     function startSumMatchGame() {
-      resetFocusMistakes();
+      focusMistakes = 0; if (document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if (document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       hideAllFocusGames();
       document.getElementById('focus-summatch-area').style.display = 'block';
       smTarget = Math.floor(Math.random() * 8) + 7; // 7 to 14
@@ -5027,7 +2158,7 @@
               if (smPairsFound === smPairsToFind) {
                 clearInterval(smInterval);
                 setTimeout(() => {
-                  playSound('achieve');
+                  if (typeof playSound === 'function') playSound('achieve');
                   toast('عمل رائع! لقد وجدت كل الأزواج المتطابقة 🧮');
                   confetti({ particleCount: 150, spread: 70 });
                 }, 300);
@@ -5048,7 +2179,7 @@
     // --- Shape Counter Game ---
     let scExpected = { circle: 0, square: 0, triangle: 0, rect: 0 };
     function startShapeCounterGame() {
-      resetFocusMistakes();
+      focusMistakes = 0; if (document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if (document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       hideAllFocusGames();
       document.getElementById('focus-shapecounter-area').style.display = 'block';
       generateShapes();
@@ -5057,7 +2188,10 @@
       document.getElementById('sc-triangle-count').value = '';
       document.getElementById('sc-rect-count').value = '';
     }
-    function closeShapeCounter() { quitFocusGame(); }
+    function closeShapeCounter() {
+      document.getElementById('focus-shapecounter-area').style.display = 'none';
+      document.getElementById('focus-menu').style.display = 'block'; if (document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'none';
+    }
     function generateShapes() {
       const svg = document.getElementById('sc-svg');
       svg.innerHTML = '';
@@ -5119,7 +2253,7 @@
       const t = parseInt(document.getElementById('sc-triangle-count').value) || 0;
       const r = parseInt(document.getElementById('sc-rect-count').value) || 0;
       if (c === scExpected.circle && s === scExpected.square && t === scExpected.triangle && r === scExpected.rect) {
-        playSound('achieve');
+        if (typeof playSound === 'function') playSound('achieve');
         toast('أحسنت! إجابة صحيحة 💯');
         confetti({ particleCount: 100, spread: 70 });
         setTimeout(startShapeCounterGame, 2000);
@@ -5131,13 +2265,16 @@
     let pcTarget = [];
     let pcPlayer = [];
     function startPatternCopyGame() {
-      resetFocusMistakes();
+      focusMistakes = 0; if (document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if (document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       hideAllFocusGames();
       document.getElementById('focus-patterncopy-area').style.display = 'block';
       generatePatternCopy();
       resetPatternCopyPlayer();
     }
-    function closePatternCopy() { quitFocusGame(); }
+    function closePatternCopy() {
+      document.getElementById('focus-patterncopy-area').style.display = 'none';
+      document.getElementById('focus-menu').style.display = 'block'; if (document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'none';
+    }
     function drawGridDots(containerId, isPlayer) {
       const container = document.getElementById(containerId);
       container.innerHTML = '';
@@ -5242,7 +2379,7 @@
         if (revTarget[i] !== pcPlayer[i]) isRevMatch = false;
       }
       if (isMatch || isRevMatch) {
-        playSound('achieve');
+        if (typeof playSound === 'function') playSound('achieve');
         toast('ممتاز! مسار متطابق 💯');
         confetti({ particleCount: 100, spread: 70 });
         setTimeout(startPatternCopyGame, 2000);
@@ -5254,12 +2391,15 @@
     let ssShapes = [];
     let ssSelectedIdx = -1;
     function startSizeSorterGame() {
-      resetFocusMistakes();
+      focusMistakes = 0; if (document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if (document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       hideAllFocusGames();
       document.getElementById('focus-sizesorter-area').style.display = 'block';
       generateSizeSorter();
     }
-    function closeSizeSorter() { quitFocusGame(); }
+    function closeSizeSorter() {
+      document.getElementById('focus-sizesorter-area').style.display = 'none';
+      document.getElementById('focus-menu').style.display = 'block'; if (document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'none';
+    }
     function generateSizeSorter() {
       ssSelectedIdx = -1;
       const baseSizes = [20, 35, 50, 65, 80];
@@ -5315,7 +2455,7 @@
         if (ssShapes[i].size > ssShapes[i + 1].size) isSorted = false;
       }
       if (isSorted) {
-        playSound('achieve');
+        if (typeof playSound === 'function') playSound('achieve');
         toast('نجاح رائع! الترتيب صحيح 📏');
         confetti({ particleCount: 100, spread: 70 });
         setTimeout(startSizeSorterGame, 2000);
@@ -5332,6 +2472,8 @@
       if (document.getElementById('focus-patterncopy-area')) document.getElementById('focus-patterncopy-area').style.display = 'none';
       if (document.getElementById('focus-sizesorter-area')) document.getElementById('focus-sizesorter-area').style.display = 'none';
     }
+
+
 
     // --- Direction Game ---
     let dirTime = 60;
@@ -5402,7 +2544,7 @@
 
     function startDirectionGame() {
       initDirectionSwipe();
-      resetFocusMistakes();
+      focusMistakes = 0; if (document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = 0; if (document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'block';
       hideAllFocusGames();
       document.getElementById('focus-direction-area').style.display = 'flex';
       dirTime = 60;
@@ -5505,7 +2647,7 @@
       document.getElementById('direction-hint').style.display = 'none';
       let expected = dirRule === 'moving' ? dirMove : dirPoint;
       if (inputDir === expected) {
-        playSound('soft');
+        if (typeof playSound === 'function') playSound('soft');
         dirScore += 10;
         document.getElementById('direction-score').textContent = dirScore;
         // Fade out leaves and spawn new
@@ -5515,14 +2657,11 @@
         });
         setTimeout(spawnDirectionFlock, 150);
       } else {
-        playSound('error');
+        if (typeof playSound === 'function') playSound('error');
         shakeScreen();
         focusMistakes++;
         if (document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = focusMistakes;
       }
     }
 
-  </script>
-</body>
-
-</html>
+  
