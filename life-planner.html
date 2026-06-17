@@ -1694,29 +1694,7 @@
 
       </div>
     
-      <!-- Embedded Brain Performance Dashboard -->
-      <div id="daily-focus-dashboard" style="margin-top: 30px; margin-bottom: 20px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
-          <h2 style="margin:0; font-weight:800; color:var(--black);">مؤشر الأداء الذهني ⚡</h2>
-        </div>
-        
-        <select id="focus-dash-timeframe" class="input-field" onchange="renderFocusDashboard()" style="margin-bottom: 20px; padding: 10px; border-radius: 12px;">
-          <option value="today">اليوم</option>
-          <option value="7days">آخر 7 أيام</option>
-          <option value="30days">آخر 30 يوم</option>
-          <option value="alltime">كل الأوقات</option>
-        </select>
-        
-        <div style="background: var(--surface2); border: 1px solid var(--border-darker); border-radius: 16px; padding: 20px;">
-          <h3 style="margin:0 0 10px 0; color:var(--black); font-size:18px;">المؤشر العام (Overall LPI)</h3>
-          <p style="margin:0 0 20px 0; color:var(--text2); font-size:12px; line-height:1.6;">يتم حساب مؤشرك العام بناءً على متوسط أفضل نتائجك في جميع المجالات خلال الفترة المحددة.</p>
-          
-          <div id="focus-dash-categories" style="display: flex; flex-direction: column; gap: 15px;">
-            <!-- Categories injected here -->
-          </div>
-        </div>
-      </div>
-  
+      
     </div>
   <!-- ALL HABITS & STATS PAGE -->
     <div class="page" id="page-all-habits">
@@ -2122,8 +2100,33 @@
         <div id="mc-bottom-timer" style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary); margin: 20px auto 10px auto; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block; direction: ltr;">00:00</div>
         <button class="btn" style="background:var(--surface2); color:var(--text); margin-top:30px; width:100%; box-shadow:none;" onclick="quitFocusGame()">🔙 عودة للقائمة</button>
       </div>
+    
+      <!-- Embedded Brain Performance Dashboard -->
+      <div id="daily-focus-dashboard" style="margin-top: 30px; margin-bottom: 20px; border-top: 2px dashed var(--border-darker); padding-top: 20px;">
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+          <h2 style="margin:0; font-weight:800; color:var(--black);">مؤشر الأداء الذهني ⚡</h2>
+        </div>
+        
+        <select id="focus-dash-timeframe" class="input-field" onchange="renderFocusDashboard()" style="margin-bottom: 20px; padding: 10px; border-radius: 12px;">
+          <option value="today">اليوم</option>
+          <option value="7days">آخر 7 أيام</option>
+          <option value="30days">آخر 30 يوم</option>
+          <option value="alltime">كل الأوقات</option>
+        </select>
+        
+        <div style="background: var(--surface2); border: 1px solid var(--border-darker); border-radius: 16px; padding: 20px;">
+          <h3 style="margin:0 0 10px 0; color:var(--black); font-size:18px;">المؤشر العام (Overall LPI)</h3>
+          <p style="margin:0 0 20px 0; color:var(--text2); font-size:12px; line-height:1.6;">يتم حساب مؤشرك العام بناءً على متوسط أفضل نتائجك في جميع المجالات خلال الفترة المحددة.</p>
+          
+          <div id="focus-dash-categories" style="display: flex; flex-direction: column; gap: 15px;">
+            <!-- Categories injected here -->
+          </div>
+        </div>
+      
+      </div>
     </div>
-    <!-- REPORTS PAGE -->
+  <!-- REPORTS PAGE -->
     <div class="page" id="page-reports">
       <div class="add-bar" style="border-color: var(--primary);">
         <div style="font-weight:800; font-size:16px; color: var(--primary)">التقارير التفصيلية 📈</div>
@@ -3383,12 +3386,15 @@
       now.setHours(0,0,0,0);
       
       Object.keys(history).forEach(dStr => {
-        const d = new Date(dStr);
+        if(!dStr || !dStr.includes('-')) return;
+        const parts = dStr.split('-');
+        if(parts.length !== 3) return;
+        const d = new Date(parts[0], parts[1]-1, parts[2]); // Local midnight
         const diffDays = Math.floor((now - d) / (1000 * 60 * 60 * 24));
-        if (timeframe === 'today' && diffDays === 0) datesToInclude.push(dStr);
-        if (timeframe === '7days' && diffDays < 7) datesToInclude.push(dStr);
-        if (timeframe === '30days' && diffDays < 30) datesToInclude.push(dStr);
-        if (timeframe === 'alltime') datesToInclude.push(dStr);
+        if (timeframe === 'today' && dStr === today) datesToInclude.push(dStr);
+        else if (timeframe === '7days' && diffDays < 7 && diffDays >= 0) datesToInclude.push(dStr);
+        else if (timeframe === '30days' && diffDays < 30 && diffDays >= 0) datesToInclude.push(dStr);
+        else if (timeframe === 'alltime') datesToInclude.push(dStr);
       });
       
       // Calculate max score per game within the timeframe
