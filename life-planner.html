@@ -1696,7 +1696,25 @@
     
       <!-- Embedded Brain Performance Dashboard -->
       <div id="daily-focus-dashboard" style="margin-top: 30px; margin-bottom: 20px;">
-        ${dashContent}
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+          <h2 style="margin:0; font-weight:800; color:var(--black);">مؤشر الأداء الذهني ⚡</h2>
+        </div>
+        
+        <select id="focus-dash-timeframe" class="input-field" onchange="renderFocusDashboard()" style="margin-bottom: 20px; padding: 10px; border-radius: 12px;">
+          <option value="today">اليوم</option>
+          <option value="7days">آخر 7 أيام</option>
+          <option value="30days">آخر 30 يوم</option>
+          <option value="alltime">كل الأوقات</option>
+        </select>
+        
+        <div style="background: var(--surface2); border: 1px solid var(--border-darker); border-radius: 16px; padding: 20px;">
+          <h3 style="margin:0 0 10px 0; color:var(--black); font-size:18px;">المؤشر العام (Overall LPI)</h3>
+          <p style="margin:0 0 20px 0; color:var(--text2); font-size:12px; line-height:1.6;">يتم حساب مؤشرك العام بناءً على متوسط أفضل نتائجك في جميع المجالات خلال الفترة المحددة.</p>
+          
+          <div id="focus-dash-categories" style="display: flex; flex-direction: column; gap: 15px;">
+            <!-- Categories injected here -->
+          </div>
+        </div>
       </div>
   
     </div>
