@@ -4134,11 +4134,15 @@
       legendEl.innerHTML = '';
       for(let i=1; i<=9; i++) {
         const item = document.createElement('div');
+        item.id = 'mc-legend-' + i;
+        item.style.transition = 'all 0.3s ease';
         item.style.display = 'flex'; item.style.alignItems = 'center'; item.style.gap = '4px';
         const circle = document.createElement('div');
         circle.style.width = '16px'; circle.style.height = '16px'; circle.style.borderRadius = '50%';
         circle.style.background = mcColors[i];
         const num = document.createElement('div');
+        num.id = 'mc-legend-num-' + i;
+        num.style.transition = 'all 0.3s ease';
         num.textContent = i; num.style.fontWeight = 'bold'; num.style.fontSize = '12px';
         num.style.color = 'var(--text)';
         item.appendChild(circle); item.appendChild(num);
@@ -4170,19 +4174,45 @@
         dot.style.background = mcColors[num];
         dot.style.cursor = 'pointer';
         dot.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
-        dot.style.transition = 'transform 0.1s';
-        dot.onclick = () => handleMCClick(num);
+        dot.style.transition = 'transform 0.15s ease';
+        dot.onclick = function() { handleMCClick(num, this); };
         nodesEl.appendChild(dot);
       }
       const seqLength = Math.min(4 + Math.floor(mcLevel / 2), 9);
       const possibleNums = [...nums].sort(() => 0.5 - Math.random());
       mcSequence = possibleNums.slice(0, seqLength);
       document.getElementById('mc-sequence').textContent = mcSequence.join(' - ');
+      highlightNextMCTarget();
     }
-    function handleMCClick(num) {
+    
+    function highlightNextMCTarget() {
+      if(!isFocusGameActive) return;
+      const targetNum = mcSequence[mcUserSequence.length];
+      for(let i=1; i<=9; i++) {
+        const item = document.getElementById('mc-legend-' + i);
+        const numEl = document.getElementById('mc-legend-num-' + i);
+        if(!item || !numEl) continue;
+        if(i === targetNum) {
+          item.style.transform = 'scale(1.2)';
+          numEl.style.color = '#ef4444'; // Red highlight for the number
+          item.style.opacity = '1';
+        } else {
+          item.style.transform = 'scale(1)';
+          numEl.style.color = 'var(--text)';
+          item.style.opacity = '0.5'; // Dim others
+        }
+      }
+    }
+
+    function handleMCClick(num, el) {
+      if (el) {
+        el.style.transform = 'scale(0.8)';
+        setTimeout(() => { if (el) el.style.transform = 'scale(1)'; }, 150);
+      }
       if(mcSequence[mcUserSequence.length] === num) {
         // Correct
         mcUserSequence.push(num);
+        highlightNextMCTarget();
         if(typeof playSound === 'function') playSound('soft');
         drawMCLines();
         if(mcUserSequence.length === mcSequence.length) {
@@ -4196,6 +4226,8 @@
         // Wrong
         if(typeof playSound === 'function') playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
         mcUserSequence = [];
+        drawMCLines();
+        highlightNextMCTarget();
         drawMCLines();
         const seqEl = document.getElementById('mc-sequence');
         seqEl.style.transform = 'translateX(10px)';
