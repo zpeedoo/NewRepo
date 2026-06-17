@@ -1811,7 +1811,7 @@
       <!-- Menu to choose game -->
       <div id="focus-menu">
         <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #ef4444;" onclick="startStroopGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">اختبار ستروب (Stroop) 🎨</h3>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 5px;"><h3 style="margin: 0; color: var(--black);">اختبار ستروب (Stroop) 🎨</h3><span style="font-size:12px; color:var(--text3); font-weight:bold;" id="hs-stroop">🏆 0</span></div>
           <p style="font-size: 13px; color: var(--text2);">اضغط على لون الخط وليس الكلمة المكتوبة. يمرن قدرتك على كبح ردود الفعل التلقائية.</p>
         </div>
         <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #3b82f6;" onclick="startVisualSearchGame()">
@@ -1835,7 +1835,7 @@
           <p style="font-size: 13px; color: var(--text2);">قم بتوصيل النقاط لنسخ الشكل المرسوم أمامك بدقة.</p>
         </div>
         <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #ec4899;" onclick="startSizeSorterGame()">
-          <h3 style="margin-bottom: 5px; color: var(--black);">ترتيب الأحجام 📏</h3>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 5px;"><h3 style="margin: 0; color: var(--black);">ترتيب الأحجام 📏</h3><span style="font-size:12px; color:var(--text3); font-weight:bold;" id="hs-sizesorter">🏆 0</span></div>
           <p style="font-size: 13px; color: var(--text2);">قم بسحب وإفلات الأشكال لترتيبها تصاعدياً من الأصغر للأكبر.</p>
         </div>
         <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #f59e0b;" onclick="startWordSearchGame()">
@@ -1850,7 +1850,37 @@
           <h3 style="margin-bottom: 5px; color: var(--black);">خريطة الألوان 🎨</h3>
           <p style="font-size: 13px; color: var(--text2);">اربط الألوان بناءً على تسلسل الأرقام المحددة لاختبار ذاكرتك.</p>
         </div>
+      
+        <div class="card-box" style="margin-bottom: 20px; cursor: pointer; border-right: 4px solid #f97316;" onclick="startDirectionGame()">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 5px;"><h3 style="margin: 0; color: var(--black);">الحركة والاتجاه 🧭</h3><span style="font-size:12px; color:var(--text3); font-weight:bold;" id="hs-direction">🏆 0</span></div>
+          <p style="font-size: 13px; color: var(--text2);">حدد اتجاه الأسهم أو اتجاه حركتها بناءً على القاعدة المطلوبة بأسرع وقت.</p>
+        </div>
+</div>
+      
+      <!-- Direction Game Area -->
+      <div id="focus-direction-area" style="display: none; text-align: center;">
+        <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
+          <div style="font-weight: bold; color: var(--text2);">الوقت: <span id="direction-time" style="color:var(--black);">60</span></div>
+          <div style="font-weight: bold; color: var(--text2);">النقاط: <span id="direction-score" style="color:var(--primary);">0</span></div>
+        </div>
+        
+        <div id="direction-rule" style="background:var(--primary); color:white; padding:10px; border-radius:12px; font-size:24px; font-weight:bold; margin-bottom:15px; box-shadow:0 4px 10px rgba(0,0,0,0.1); letter-spacing:1px;">الحركة</div>
+        
+        <div id="direction-canvas-container" style="background:var(--black); border-radius:16px; height: 260px; position:relative; overflow:hidden; margin-bottom:20px;">
+           <div id="direction-layer" style="position:absolute; inset:0;"></div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; width: 220px; margin: 0 auto; margin-bottom:20px;">
+          <div></div>
+          <button class="btn btn-dark" style="font-size: 28px; padding: 15px;" onclick="handleDirectionInput('up')">⬆️</button>
+          <div></div>
+          <button class="btn btn-dark" style="font-size: 28px; padding: 15px;" onclick="handleDirectionInput('left')">⬅️</button>
+          <button class="btn btn-dark" style="font-size: 28px; padding: 15px;" onclick="handleDirectionInput('down')">⬇️</button>
+          <button class="btn btn-dark" style="font-size: 28px; padding: 15px;" onclick="handleDirectionInput('right')">➡️</button>
+        </div>
+        <button class="btn" style="width: 100%; border:1px solid var(--border);" onclick="endDirectionGameEarly()">إنهاء اللعبة مبكراً</button>
       </div>
+
       <!-- Stroop Game Area -->
       <div id="focus-stroop-area" style="display: none; text-align: center;">
         <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
@@ -2557,7 +2587,17 @@
       renderReaderLibrary();
       renderDashboard();
       if(typeof renderBreatheStatus === 'function') renderBreatheStatus();
-      if(typeof populateReportSelector === 'function') populateReportSelector();
+      
+      if (typeof updateHighScores === 'function') updateHighScores();
+    }
+    function updateHighScores() {
+      if(!state.highScores) state.highScores = {};
+      const g = ['stroop','visual','slide','summatch','shapecounter','patterncopy','sizesorter','wordsearch','infinity','memoryconnect','direction'];
+      g.forEach(id => {
+        if(document.getElementById('hs-'+id)) {
+           document.getElementById('hs-'+id).textContent = '🏆 ' + (state.highScores[id] || 0);
+        }
+      });
     }
     function getStreak(habitId) {
       const h = state.habits.find(x => x.id === habitId);
