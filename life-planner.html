@@ -64,23 +64,6 @@
       opacity: 0.7;
     }
 
-    .quick-task-input-wrapper {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      margin-top: -10px;
-      align-items: center;
-    }
-
-    .quick-task-input {
-      flex: 1;
-      padding: 12px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--surface2);
-      color: var(--black);
-      font-family: inherit;
-    }
 
     * {
       margin: 0;
@@ -1947,24 +1930,12 @@
         <div class="date-circle" id="hdr-day">19</div>
         <div class="date-text" id="hdr-date-full">Tue,<br>December</div>
       </div>
-      <div class="greeting" style="flex: 1;">
-        <p>قم بتنظيم يومك وأهدافك بسهولة!</p>
-      </div>
       <div class="header-actions">
-        <button class="circle-btn" onclick="openModal('settings')" title="إعدادات الحساب">⚙️</button>
         <button class="circle-btn" onclick="requestNotification()" title="تفعيل التنبيهات">🔔</button>
       </div>
     </div>
     <!-- Daily Habits -->
     <div class="page active" id="page-daily">
-      <div class="quick-task-input-wrapper">
-        <input type="text" id="quick-task-input" class="quick-task-input"
-          placeholder="أضف مهمة مميزة لليوم... (اضغط Enter)" onkeydown="if(event.key==='Enter') addQuickTask()">
-        <button class="btn btn-dark" onclick="addQuickTask()" style="padding: 12px 15px; border-radius: 12px;">إضافة
-          ➕</button>
-        <button class="btn btn-dark btn-circle" onclick="openModal('habit')" title="إضافة عادة يومية"
-          style="width: 45px; height: 45px; font-size: 20px; box-shadow: 0 3px 8px rgba(0,0,0,0.15); flex-shrink: 0;">+</button>
-      </div>
       <div id="habit-list" style="margin-bottom: 20px;"></div>
 
       <!-- Daily Breathing Card -->
@@ -3187,7 +3158,7 @@
     }
     function toggleHabitDays(val, wrapId) { document.getElementById(wrapId).style.display = val === 'specific' ? 'block' : 'none'; }
     function saveHabit() { const id = document.getElementById('m-hab-id').value; const title = document.getElementById('m-hab-title').value.trim(); if (!title) { toast('أدخل اسم العادة'); return; } const freq = document.getElementById('m-hab-freq').value; let days = []; if (freq === 'specific') { document.querySelectorAll('#m-hab-days-wrap .day-btn.active').forEach(b => days.push(parseInt(b.dataset.day))); if (!days.length) { toast('اختر يوم واحد على الأقل'); return; } } if (id) { const h = state.habits.find(x => x.id == id); if (h) { h.title = title; h.start = document.getElementById('m-hab-start').value || today; h.end = document.getElementById('m-hab-end').value; h.freq = freq; h.days = days; h.goalId = document.getElementById('m-hab-goal').value; h.bookId = document.getElementById('m-hab-book').value; } } else { state.habits.push({ id: state.nextId++, title, start: document.getElementById('m-hab-start').value || today, end: document.getElementById('m-hab-end').value, freq, days, goalId: document.getElementById('m-hab-goal').value, bookId: document.getElementById('m-hab-book').value }); } saveState(); renderAll(); closeModal('habit'); toast('تم الحفظ ✓'); }
-    function delHabit(id) { if (confirm('تأكيد الحذف؟')) { state.habits = state.habits.filter(h => h.id != id); saveState(); renderAll(); } }
+    function delHabit(id) { state.habits = state.habits.filter(h => h.id != id); saveState(); renderAll(); toast('تم حذف العادة ✓'); }
     function toggleHabit(id, bookId = null) {
       if (!state.history[today]) state.history[today] = [];
       if (state.history[today].includes(id)) {
@@ -3215,26 +3186,6 @@
     }
     function getActiveHabitsForDate(dateStr) { const d = new Date(dateStr); const dayIdx = d.getDay(); return state.habits.filter(h => { if (h.start && dateStr < h.start) return false; if (h.end && dateStr > h.end) return false; if (h.freq === 'specific' && !h.days.includes(dayIdx)) return false; return true; }); }
 
-    function addQuickTask() {
-      const input = document.getElementById('quick-task-input');
-      const text = input.value.trim();
-      if (!text) return;
-      const dStr = today;
-      state.habits.push({
-        id: Date.now(),
-        name: text,
-        freq: 'daily',
-        start: dStr,
-        end: dStr,
-        isTask: true,
-        createdAt: new Date().toISOString()
-      });
-      saveState();
-      input.value = '';
-      renderHabits();
-      renderDashboard();
-    }
-
     function renderHabits() {
       const activeToday = getActiveHabitsForDate(today);
       let html = activeToday.length ? activeToday.map(h => {
@@ -3243,7 +3194,7 @@
         let bInput = (bInfo && !done) ? `<input type="number" id="h-pages-${h.id}" class="inp" placeholder="كم صفحة؟" style="width:90px; padding:4px 8px; font-size:11px; height: 28px; margin-inline-end: 8px;" min="1" onclick="event.stopPropagation()">` : (bInfo && done) ? `<span style="font-size:11px; color:var(--primary); margin-inline-end: 8px; font-weight:bold;">تم التحديث ✓</span>` : '';
         const streak = getStreak(h.id);
         const streakHtml = streak > 0 ? `<span class="badge streak-badge">🔥 ${streak}</span>` : '';
-        return `<div class="list-item ${done ? 'done' : ''}" style="display:flex; align-items:center;"><div class="check-btn ${done ? 'active' : ''}" onclick="toggleHabit(${h.id}, ${h.bookId ? `'${h.bookId}'` : 'null'})">${done ? '✓' : ''}</div>${bInput}<div class="item-info" style="flex:1;"><div class="item-title">${h.title}</div><div class="item-meta">${streakHtml}${gInfo ? `<span class="badge goal-badge">🎯 ${gInfo.title}</span>` : ''}${bInfo ? `<span class="badge" style="background:#e0f2fe; color:#0284c7">📖 ${bInfo.title}</span>` : ''}</div></div><button class="del-btn" style="background:var(--surface2); margin-inline-start:10px; flex-shrink:0;" onclick="openModal('habit', ${h.id})" title="تعديل"><span style="font-size:14px;">⚙️</span></button></div>`;
+        return `<div class="list-item ${done ? 'done' : ''}" style="display:flex; align-items:center;"><div class="check-btn ${done ? 'active' : ''}" onclick="toggleHabit(${h.id}, ${h.bookId ? `'${h.bookId}'` : 'null'})">${done ? '✓' : ''}</div>${bInput}<div class="item-info" style="flex:1;"><div class="item-title">${h.title}</div><div class="item-meta">${streakHtml}${gInfo ? `<span class="badge goal-badge">🎯 ${gInfo.title}</span>` : ''}${bInfo ? `<span class="badge" style="background:#e0f2fe; color:#0284c7">📖 ${bInfo.title}</span>` : ''}</div></div><button class="del-btn" style="background:var(--surface2); margin-inline-start:10px; flex-shrink:0;" onclick="openModal('habit', ${h.id})" title="تعديل"><span style="font-size:14px;">⚙️</span></button><button class="del-btn" style="margin-inline-start:6px; flex-shrink:0;" onclick="delHabit(${h.id})" title="حذف">✕</button></div>`;
       }).join('') : '';
       if (state.journal[today] && state.journal[today].breatheTime > 0) {
         const totalSecs = state.journal[today].breatheTime;

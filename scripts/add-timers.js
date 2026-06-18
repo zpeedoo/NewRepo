@@ -3,14 +3,20 @@ let html = fs.readFileSync('life-planner.html', 'utf8');
 
 // Generic function inject
 const adjustFn = `    function adjustGameTime(game, amount) {
-      if(!isFocusGameActive) return;
-      if (game === 'stroop') { stroopTimeLeft += amount; if(stroopTimeLeft<0) stroopTimeLeft=0; document.getElementById('stroop-time').textContent = stroopTimeLeft; }
-      else if (game === 'slide') { slideTimeLeft += amount; if(slideTimeLeft<0) slideTimeLeft=0; document.getElementById('slide-time').textContent = formatGameTime(slideTimeLeft); }
-      else if (game === 'sm') { smTime += amount; if(smTime<0) smTime=0; document.getElementById('sm-time').textContent = formatGameTime(smTime); }
-      else if (game === 'sc') { scTime += amount; if(scTime<0) scTime=0; document.getElementById('sc-time').textContent = formatGameTime(scTime); }
-      else if (game === 'ws') { wsTime += amount; if(wsTime<0) wsTime=0; document.getElementById('ws-time').textContent = formatGameTime(wsTime); }
-      else if (game === 'inf') { infTime += amount; if(infTime<0) infTime=0; document.getElementById('inf-time').textContent = formatGameTime(infTime); }
-      else if (game === 'dir') { dirTime += amount; if(dirTime<0) dirTime=0; document.getElementById('direction-time').textContent = dirTime; }
+      if (!isFocusGameActive) return;
+      const tMap = {
+        stroop: () => { stroopTimeLeft = Math.max(0, stroopTimeLeft + amount); return stroopTimeLeft; },
+        slide:  () => { slideTimeLeft = Math.max(0, slideTimeLeft + amount); return formatGameTime(slideTimeLeft); },
+        sm:     () => { smTime = Math.max(0, smTime + amount); return formatGameTime(smTime); },
+        sc:     () => { scTime = Math.max(0, scTime + amount); return formatGameTime(scTime); },
+        ws:     () => { wsTime = Math.max(0, wsTime + amount); return formatGameTime(wsTime); },
+        inf:    () => { infTime = Math.max(0, infTime + amount); return formatGameTime(infTime); },
+        dir:    () => { dirTime = Math.max(0, dirTime + amount); return dirTime; }
+      };
+      if (tMap[game]) {
+        let prefix = game === 'dir' ? 'direction' : game;
+        document.getElementById(prefix + '-time').textContent = tMap[game]();
+      }
     }`;
 
 if (!html.includes('function adjustGameTime')) {
@@ -19,12 +25,12 @@ if (!html.includes('function adjustGameTime')) {
 
 // Replacement logic
 function addTimers(code, prefix, initialVal, isDirection) {
-  let style = "width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;";
-  let searchRegex = new RegExp(`<div[^>]*>الوق[^<]*<span id="${prefix}-time"[^>]*>([^<]+)</span></div>`);
-  
-  if (isDirection) {
-    style = "width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:rgba(255,255,255,0.2); color:white; border:none; font-weight:bold;";
-  }
+  let style = "width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; font-weight:bold; ";
+  style += isDirection 
+    ? "background:rgba(255,255,255,0.2); color:white; border:none;" 
+    : "background:var(--surface2); color:var(--text); border:1px solid var(--border-darker);";
+    
+  let searchRegex = new RegExp(`<div[^>]*>الوق[^<]*<span id="${prefix}-time"[^>]*>(?:[^<]+)</span></div>`);
   
   html = html.replace(searchRegex, `<div style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">
             <button class="circle-btn" onclick="adjustGameTime('${code}', -10)" style="${style}">-10</button>
