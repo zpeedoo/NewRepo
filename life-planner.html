@@ -1911,6 +1911,14 @@
     <!-- Top Header -->
     <div class="date-hdr">
       <div class="header-actions">
+        <button id="btn-search-global" class="circle-btn" onclick="openModal('search')" title="بحث"
+          style="background: var(--surface2); color: var(--black); border: 1px solid var(--border);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
         <button id="btn-add-task-global" class="circle-btn"
           style="background: var(--text2); color: white; border: none; display: flex; align-items: center; justify-content: center;"
           onclick="openModal('habit')" title="إضافة مهمة">
@@ -1923,16 +1931,10 @@
       </div>
 
       <div style="display: flex; align-items: center; gap: 15px;">
-        <button id="btn-search-global" class="circle-btn" onclick="openModal('search')" title="بحث" style="background: var(--surface2); color: var(--black); border: 1px solid var(--border);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-        </button>
         <button class="circle-btn" onclick="requestNotification()" title="تفعيل التنبيهات">🔔</button>
-        <div class="date-widget" style="cursor:pointer;" onclick="openModal('calendar')" title="عرض التقويم">
+        <div class="date-widget">
           <div class="date-circle" id="hdr-day">19</div>
-          <div class="date-text" id="hdr-date-full">Tue</div>
+          <div class="date-text" id="hdr-date-full">Tue,<br>December</div>
         </div>
       </div>
     </div>
@@ -2535,27 +2537,13 @@
   <!-- MODALS -->
   <!-- Notification Settings Modal -->
   <!-- Settings Modal -->
-  <div class="modal-ov" id="modal-calendar">
-    <div class="modal" style="max-width:350px;">
-      <div class="modal-hdr" style="margin-bottom: 15px;">
-        <div class="modal-title" id="cal-month-title">التقويم</div>
-        <div style="display:flex; gap:10px;">
-          <button class="circle-btn" style="width:30px; height:30px; background:var(--surface2);" onclick="changeMonth(-1)">&#8594;</button>
-          <button class="circle-btn" style="width:30px; height:30px; background:var(--surface2);" onclick="changeMonth(1)">&#8592;</button>
-          <button class="modal-close" onclick="closeModal('calendar')">×</button>
-        </div>
-      </div>
-      <div class="cal-header-days">
-        <div>الأحد</div><div>الإثنين</div><div>الثلاثاء</div><div>الأربعاء</div><div>الخميس</div><div>الجمعة</div><div>السبت</div>
-      </div>
-      <div class="cal-grid" id="cal-grid-body"></div>
-    </div>
-  </div>
   <div class="modal-ov" id="modal-search">
     <div class="modal">
       <div class="modal-title">البحث 🔍</div>
-      <input type="text" id="search-input" class="inp" placeholder="ابحث عن العادات، الأهداف، الكتب..." oninput="performSearch()" style="margin-bottom:15px;">
-      <div id="search-results" style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;"></div>
+      <input type="text" id="search-input" class="inp" placeholder="ابحث عن العادات، الأهداف، الكتب..."
+        oninput="performSearch()" style="margin-bottom:15px;">
+      <div id="search-results"
+        style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;"></div>
       <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
         <button class="btn btn-sec" onclick="closeModal('search')">إغلاق</button>
       </div>
@@ -2759,7 +2747,8 @@
     <div class="bnav-item" data-page="focus" onclick="goPage(this)">🧠<span>التركيز</span></div>
     <div class="bnav-item" data-page="reports" onclick="goPage(this)">📈<span>تقارير</span></div>
     <div class="bnav-item" onclick="openModal('settings')">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:2px;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:2px;">
         <line x1="3" y1="12" x2="21" y2="12"></line>
         <line x1="3" y1="6" x2="21" y2="6"></line>
         <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -2858,7 +2847,7 @@
     document.getElementById('hdr-day').textContent = dNow.getDate();
     const engDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const engMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    document.getElementById('hdr-date-full').innerHTML = `${engDays[dNow.getDay()]}`;
+    document.getElementById('hdr-date-full').innerHTML = `${engDays[dNow.getDay()]},<br>${engMonths[dNow.getMonth()]}`;
     async function checkAndMigrateDataThenLoad(uid) {
       const userRef = db.ref(`users/${uid}/planner_state`);
       userRef.once('value', async (snap) => {
@@ -3105,91 +3094,7 @@
       });
     }
 
-    let calCurrentYear = new Date().getFullYear();
-    let calCurrentMonth = new Date().getMonth();
-
-    function renderCalendar(year, month) {
-      const grid = document.getElementById('cal-grid-body');
-      grid.innerHTML = '';
-      const title = document.getElementById('cal-month-title');
-      const monthNames = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
-      title.textContent = `${monthNames[month]} ${year}`;
-
-      const firstDay = new Date(year, month, 1).getDay();
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-      for (let i = 0; i < firstDay; i++) {
-        const div = document.createElement('div');
-        div.className = 'cal-cell';
-        div.style.border = 'none';
-        grid.appendChild(div);
-      }
-
-      for (let d = 1; d <= daysInMonth; d++) {
-        const div = document.createElement('div');
-        div.className = 'cal-cell';
-        div.style.justifyContent = 'center';
-        div.style.fontSize = '14px';
-        div.style.fontWeight = 'bold';
-        div.textContent = d;
-
-        const dateObj = new Date(year, month, d);
-        dateObj.setHours(0,0,0,0);
-        const dayOfWeek = dateObj.getDay();
-
-        let hasTask = false;
-        for (const h of state.habits) {
-          let startD = new Date(h.start);
-          startD.setHours(0,0,0,0);
-          let endD = h.end ? new Date(h.end) : null;
-          if (endD) endD.setHours(0,0,0,0);
-          
-          if (dateObj >= startD && (!endD || dateObj <= endD)) {
-            if (h.freq === 'daily' || !h.freq) hasTask = true;
-            else if (h.freq === 'specific_days' && h.days && h.days.includes(dayOfWeek)) hasTask = true;
-          }
-          if (hasTask) break;
-        }
-
-        if (hasTask) {
-          div.style.background = 'var(--primary)';
-          div.style.color = 'white';
-        } else {
-          div.style.background = 'transparent';
-          div.style.color = 'var(--text3)';
-          div.style.opacity = '0.5';
-        }
-        
-        const todayD = new Date();
-        todayD.setHours(0,0,0,0);
-        if (dateObj.getTime() === todayD.getTime()) {
-          div.style.border = '2px solid var(--black)';
-        }
-
-        grid.appendChild(div);
-      }
-    }
-
-    function changeMonth(delta) {
-      calCurrentMonth += delta;
-      if (calCurrentMonth < 0) {
-        calCurrentMonth = 11;
-        calCurrentYear--;
-      } else if (calCurrentMonth > 11) {
-        calCurrentMonth = 0;
-        calCurrentYear++;
-      }
-      renderCalendar(calCurrentYear, calCurrentMonth);
-    }
-
     function openModal(type, id = null) {
-      if (type === 'calendar') {
-        calCurrentYear = new Date().getFullYear();
-        calCurrentMonth = new Date().getMonth();
-        renderCalendar(calCurrentYear, calCurrentMonth);
-        document.getElementById('modal-calendar').classList.add('show');
-        return;
-      }
       if (type === 'search') {
         document.getElementById('search-input').value = '';
         document.getElementById('search-results').innerHTML = '';
