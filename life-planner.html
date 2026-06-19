@@ -1432,34 +1432,9 @@
       margin-bottom: 10px;
     }
 
-    .sidebar-backdrop {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.4);
-      z-index: 1999;
-      backdrop-filter: blur(2px);
-    }
-    .sidebar-backdrop.open { display: block; }
-
     @media (max-width: 768px) {
-      #btn-mobile-menu { display: flex !important; }
       .sidebar {
-        display: flex;
-        position: fixed;
-        top: 0;
-        right: -300px;
-        width: 260px;
-        height: 100%;
-        background: var(--surface);
-        z-index: 2000;
-        transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: -5px 0 25px rgba(0,0,0,0.1);
-        flex-direction: column;
-        padding: 30px 0;
-      }
-      .sidebar.open {
-        right: 0;
+        display: none;
       }
 
       .bnav {
@@ -1850,7 +1825,6 @@
 </head>
 
 <body>
-  <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="toggleMobileSidebar()"></div>
   <button id="scrollTopBtn" onclick="scrollToTop()" title="العودة للأعلى"
     style="display: none; position: fixed; bottom: 90px; left: 20px; z-index: 1000; background: var(--primary); color: white; border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; cursor: pointer; box-shadow: 0 4px 10px rgba(230, 92, 79, 0.4); transition: background 0.3s, transform 0.3s; align-items: center; justify-content: center; padding-bottom: 4px;">↑</button>
   <div class="progress-container-global" id="reader-progress-container">
@@ -1937,13 +1911,6 @@
     <!-- Top Header -->
     <div class="date-hdr">
       <div class="header-actions">
-        <button id="btn-mobile-menu" class="circle-btn" onclick="toggleMobileSidebar()" title="القائمة" style="display:none; align-items: center; justify-content: center;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
         <button id="btn-add-task-global" class="circle-btn"
           style="background: var(--text2); color: white; border: none; display: flex; align-items: center; justify-content: center;"
           onclick="openModal('habit')" title="إضافة مهمة">
@@ -2759,6 +2726,14 @@
 
     <div class="bnav-item" data-page="focus" onclick="goPage(this)">🧠<span>التركيز</span></div>
     <div class="bnav-item" data-page="reports" onclick="goPage(this)">📈<span>تقارير</span></div>
+    <div class="bnav-item" onclick="openModal('settings')">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:2px;">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      <span>إعدادات</span>
+    </div>
   </div>
   <div class="toast" id="toast">✨ <span id="toast-msg"></span></div>
   <script>
@@ -5137,18 +5112,6 @@
         focusMistakes++;
         if (document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = focusMistakes;
         shakeScreen();
-      }
-    }
-
-    function toggleMobileSidebar() {
-      const sidebar = document.querySelector('.sidebar');
-      const backdrop = document.getElementById('sidebar-backdrop');
-      if (sidebar.classList.contains('open')) {
-        sidebar.classList.remove('open');
-        backdrop.classList.remove('open');
-      } else {
-        sidebar.classList.add('open');
-        backdrop.classList.add('open');
       }
     }
   </script>
