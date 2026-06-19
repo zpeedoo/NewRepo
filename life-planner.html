@@ -1993,30 +1993,31 @@
             <div class="circ-text" id="circ-txt-goals">0%</div>
           </div>
         </div>
-      </div>
 
-      <!-- Books Dashboard Row -->
-      <div class="metric-card" style="margin-bottom: 20px; padding: 20px; cursor:pointer;"
-        onclick="goPage({dataset:{page:'reader'}})">
-        <div style="flex:1">
-          <div class="metric-icon-wrap" style="background:#fef3c7; color:#d97706;">📚</div>
-          <div class="metric-title">تقدم قراءة الكتب</div>
-          <div style="display:flex; align-items:baseline; gap:8px; margin-top:4px;">
-            <div class="metric-val" id="dash-books-overall-pct" style="font-size:24px;">0%</div>
-            <div style="font-size:12px; color:var(--text3); font-weight:700;" id="dash-books-overall-pages">0/0 صفحة
+        <!-- Books Dashboard Row -->
+        <div class="metric-card" style="flex: 1; margin-bottom: 0; min-width: 200px; padding: 15px; cursor:pointer;"
+          onclick="goPage({dataset:{page:'reader'}})">
+          <div style="flex:1">
+            <div class="metric-icon-wrap" style="background:#fef3c7; color:#d97706;">📚</div>
+            <div class="metric-title">تقدم قراءة الكتب</div>
+            <div style="display:flex; align-items:baseline; gap:8px; margin-top:4px;">
+              <div class="metric-val" id="dash-books-overall-pct" style="font-size:24px;">0%</div>
+              <div style="font-size:12px; color:var(--text3); font-weight:700;" id="dash-books-overall-pages">0/0 صفحة
+              </div>
+            </div>
+            <div class="prog-bg" style="margin-top:12px; height:6px; border-radius:3px;">
+              <div class="prog-fill" id="dash-books-overall-bar"
+                style="background:#d97706; width:0%; transition:width 0.8s cubic-bezier(0.16,1,0.3,1);"></div>
             </div>
           </div>
-          <div class="prog-bg" style="margin-top:12px; height:6px; border-radius:3px;">
-            <div class="prog-fill" id="dash-books-overall-bar"
-              style="background:#d97706; width:0%; transition:width 0.8s cubic-bezier(0.16,1,0.3,1);"></div>
+          <div
+            style="display:flex; flex-direction:column; align-items:center; gap:6px; flex-shrink:0; margin-right:10px;">
+            <div style="font-size:22px; font-weight:800; font-family:'JetBrains Mono',monospace; color:var(--black);"
+              id="dash-books-overall-done">0/0</div>
+            <div style="font-size:11px; color:var(--text2); font-weight:700;">كتب مكتملة</div>
           </div>
         </div>
-        <div
-          style="display:flex; flex-direction:column; align-items:center; gap:6px; flex-shrink:0; margin-right:10px;">
-          <div style="font-size:22px; font-weight:800; font-family:'JetBrains Mono',monospace; color:var(--black);"
-            id="dash-books-overall-done">0/0</div>
-          <div style="font-size:11px; color:var(--text2); font-weight:700;">كتب مكتملة</div>
-        </div>
+
       </div>
       <div class="daily-layout">
         <div class="daily-main">
