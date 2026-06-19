@@ -1911,6 +1911,12 @@
     <!-- Top Header -->
     <div class="date-hdr">
       <div class="header-actions">
+        <button id="btn-search-global" class="circle-btn" onclick="openModal('search')" title="بحث" style="background: var(--surface2); color: var(--black); border: 1px solid var(--border);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
         <button id="btn-add-task-global" class="circle-btn"
           style="background: var(--text2); color: white; border: none; display: flex; align-items: center; justify-content: center;"
           onclick="openModal('habit')" title="إضافة مهمة">
@@ -2529,6 +2535,16 @@
   <!-- MODALS -->
   <!-- Notification Settings Modal -->
   <!-- Settings Modal -->
+  <div class="modal-ov" id="modal-search">
+    <div class="modal">
+      <div class="modal-title">البحث 🔍</div>
+      <input type="text" id="search-input" class="inp" placeholder="ابحث عن العادات، الأهداف، الكتب..." oninput="performSearch()" style="margin-bottom:15px;">
+      <div id="search-results" style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;"></div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
+        <button class="btn btn-sec" onclick="closeModal('search')">إغلاق</button>
+      </div>
+    </div>
+  </div>
   <div class="modal-ov" id="modal-settings">
     <div class="modal-box">
       <div class="modal-hdr">
@@ -3037,7 +3053,50 @@
       }
       renderAll();
     }
+    function performSearch() {
+      const q = document.getElementById('search-input').value.toLowerCase().trim();
+      const resContainer = document.getElementById('search-results');
+      resContainer.innerHTML = '';
+      if (!q) return;
+
+      let results = [];
+      state.habits.forEach(h => {
+        if (h.title.toLowerCase().includes(q)) results.push({ type: 'habit', label: 'عادة', title: h.title, id: h.id, page: 'daily' });
+      });
+      state.goals.forEach(g => {
+        if (g.title.toLowerCase().includes(q)) results.push({ type: 'goal', label: 'هدف', title: g.title, id: g.id, page: 'goals' });
+      });
+      state.books.forEach(b => {
+        if (b.title.toLowerCase().includes(q)) results.push({ type: 'book', label: 'كتاب', title: b.title, id: b.id, page: 'reader' });
+      });
+
+      if (results.length === 0) {
+        resContainer.innerHTML = '<div style="color:var(--text3); font-size:13px; text-align:center;">لا توجد نتائج</div>';
+        return;
+      }
+
+      results.forEach(r => {
+        const div = document.createElement('div');
+        div.style = "padding:10px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;";
+        div.innerHTML = `<div style="font-weight:bold; font-size:14px; color:var(--black);">${r.title}</div><div style="font-size:11px; padding:3px 8px; border-radius:12px; background:var(--primary); color:white;">${r.label}</div>`;
+        div.onclick = () => {
+          closeModal('search');
+          const navItem = document.querySelector(`.bnav-item[data-page="${r.page}"]`) || document.querySelector(`.nav-item[data-page="${r.page}"]`);
+          if (navItem) goPage(navItem);
+          setTimeout(() => openModal(r.type, r.id), 300);
+        };
+        resContainer.appendChild(div);
+      });
+    }
+
     function openModal(type, id = null) {
+      if (type === 'search') {
+        document.getElementById('search-input').value = '';
+        document.getElementById('search-results').innerHTML = '';
+        document.getElementById('modal-search').classList.add('show');
+        setTimeout(() => document.getElementById('search-input').focus(), 100);
+        return;
+      }
       if (type === 'settings') {
         document.getElementById('s-name-m').value = state.settings.displayName || "صديقي";
         document.getElementById('s-age-m').value = state.settings.age || "";
