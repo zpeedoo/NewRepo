@@ -1936,10 +1936,6 @@
   <div class="main" id="main">
     <!-- Top Header -->
     <div class="date-hdr">
-      <div class="date-widget">
-        <div class="date-circle" id="hdr-day">19</div>
-        <div class="date-text" id="hdr-date-full">Tue,<br>December</div>
-      </div>
       <div class="header-actions">
         <button id="btn-mobile-menu" class="circle-btn" onclick="toggleMobileSidebar()" title="القائمة" style="display:none; align-items: center; justify-content: center;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1957,7 +1953,14 @@
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
         </button>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 15px;">
         <button class="circle-btn" onclick="requestNotification()" title="تفعيل التنبيهات">🔔</button>
+        <div class="date-widget">
+          <div class="date-circle" id="hdr-day">19</div>
+          <div class="date-text" id="hdr-date-full">Tue,<br>December</div>
+        </div>
       </div>
     </div>
     <!-- Daily Habits -->
