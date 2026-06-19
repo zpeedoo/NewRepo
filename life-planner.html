@@ -1676,6 +1676,16 @@
       filter: brightness(1.1);
     }
 
+    @keyframes taskBtnAnim {
+      0% { transform: scale(1) rotate(0deg); }
+      30% { transform: scale(0.8) rotate(-15deg); }
+      60% { transform: scale(1.1) rotate(15deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    .anim-task-btn {
+      animation: taskBtnAnim 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    }
+
     .list-item:hover {
       background: var(--surface2);
       border-color: var(--border-darker);
@@ -1913,7 +1923,7 @@
       <div class="header-actions">
         <button id="btn-add-task-global" class="circle-btn"
           style="background: var(--text2); color: white; border: none; display: flex; align-items: center; justify-content: center; width: 55px; height: 55px;"
-          onclick="openModal('habit')" title="إضافة مهمة">
+          onclick="this.classList.add('anim-task-btn'); setTimeout(() => this.classList.remove('anim-task-btn'), 400); setTimeout(() => openModal('habit'), 150);" title="إضافة مهمة">
           <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
             stroke-linecap="round" stroke-linejoin="round">
             <line x1="12" y1="5" x2="12" y2="19"></line>
