@@ -1680,8 +1680,8 @@
     .btn,
     .circle-btn {
       transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                  box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                  opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .metric-card:hover,
@@ -1910,7 +1910,7 @@
     </div>
     <div class="nav-item active" data-page="daily" onclick="goPage(this)">☀️ عاداتي اليومية</div>
     <div class="nav-item" data-page="goals" onclick="goPage(this)">🏆 أهداف السنة</div>
-    <div class="nav-item" data-page="library" onclick="goPage(this)">📚 مكتبتي</div>
+    <div class="nav-item" data-page="reader" onclick="goPage(this)">📖 القراءة</div>
 
     <div class="nav-item" data-page="focus" onclick="goPage(this)">🧠 نادي التركيز</div>
     <div class="nav-item" data-page="reports" onclick="goPage(this)">📈 التقارير</div>
@@ -1982,23 +1982,6 @@
             <div class="circ-text" id="circ-txt-goals">0%</div>
           </div>
         </div>
-
-        <div class="metric-card" style="flex: 1; margin-bottom: 0; min-width: 200px; padding: 15px;">
-          <div style="flex:1">
-            <div class="metric-icon-wrap" style="background:#fef3c7; color:#d97706; width:35px; height:35px; font-size:16px;">📚</div>
-            <div class="metric-title" style="font-size:12px;">إنجاز الكتب</div>
-            <div class="metric-val" id="dash-books-val" style="font-size:18px;">0%</div>
-            <div style="font-size:11px; color:var(--text3); margin-top:2px;" id="dash-books-sub">0 كتاب</div>
-          </div>
-          <div class="circ-wrap" style="transform: scale(0.8); margin: -10px; transform-origin: left center;">
-            <svg width="70" height="70" viewBox="0 0 70 70">
-              <circle class="circ-bg" cx="35" cy="35" r="30"></circle>
-              <circle class="circ-val" id="circ-books" cx="35" cy="35" r="30" stroke="#d97706"
-                stroke-dasharray="188.4" stroke-dashoffset="188.4"></circle>
-            </svg>
-            <div class="circ-text" id="circ-txt-books" style="font-size:13px;">0%</div>
-          </div>
-        </div>
       </div>
       <div class="daily-layout">
         <div class="daily-main">
@@ -2046,48 +2029,23 @@
       </div>
       <div id="goal-list"></div>
     </div>
-    <!-- Books Library (Manual) -->
-    <!-- LIBRARY PAGE -->
-    <div class="page" id="page-library">
-      <!-- Grid View -->
-      <div id="lib-grid-view">
-        <div class="add-bar">
-          <div style="font-weight:800; font-size:16px">مكتبتي 📚</div>
-          <button class="btn btn-dark btn-circle" onclick="openAddBookForm()" title="إضافة PDF">+</button>
-        </div>
-        <div id="lib-add-form" class="card-box" style="display:none; margin-bottom:20px;">
-          <div class="card-title" style="margin-bottom:14px;">إضافة كتاب PDF</div>
-          <div class="field"><label>الاسم</label><input class="inp" id="lib-new-title" placeholder="اسم الكتاب"></div>
-          <div class="field"><label>الرابط (اختياري — Google Drive / PDF URL)</label><input class="inp" id="lib-new-url" placeholder="https://..." style="direction:ltr; text-align:left;"></div>
-          <div class="field"><label>عدد الصفحات الكلي</label><input class="inp" type="number" id="lib-new-pages" placeholder="100" min="1"></div>
-          <div style="display:flex; gap:10px; margin-top:10px;">
-            <button class="btn" onclick="saveLibBook()">إضافة 📚</button>
-            <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none;" onclick="closeAddBookForm()">إلغاء</button>
-          </div>
-        </div>
-        <div id="library-grid"></div>
+    <!-- ZAHA CENTER -->
+    <div class="page" id="page-reader">
+      <div class="add-bar">
+        <div style="font-weight:800; font-size:16px">الكتب الورقية واليدوية 📚</div>
+        <button class="btn btn-dark btn-circle" onclick="openModal('book')" title="إضافة كتاب">+</button>
       </div>
-      <!-- Reading View -->
-      <div id="lib-read-view" style="display:none;">
-        <div class="add-bar" style="margin-bottom:20px;">
-          <button class="btn btn-dark" style="padding:8px 16px; font-size:13px;" onclick="closeLibReadView()">← رجوع</button>
-          <div id="lib-read-title" style="font-weight:800; font-size:16px;"></div>
-        </div>
-        <button class="btn btn-zaha" id="lib-open-btn" onclick="openLibPdf()" style="width:100%; padding:14px; margin-bottom:14px; font-size:15px; justify-content:center;">افتح الكتاب في تبويب جديد ↗</button>
-        <div class="card-box">
-          <div class="card-title">ملاحظاتي</div>
-          <textarea id="lib-notes" class="inp" style="min-height:200px; margin-top:10px;" placeholder="اقتباسات، أفكار، ملاحظات..."></textarea>
-          <button class="btn" onclick="saveLibNotes()" style="margin-top:10px; width:100%; justify-content:center;">حفظ الملاحظات ✓</button>
-        </div>
-      </div>
+      <div id="books-list"></div>
     </div>
     <!-- FOCUS GYM PAGE -->
     <div class="page" id="page-focus">
       <div class="add-bar" style="border-color: #8b5cf6;">
         <div style="font-weight:800; font-size:16px; color: #8b5cf6">نادي التركيز 🧠</div>
       </div>
-      <div id="global-mistake-counter" style="display:none; text-align:center; margin-bottom:10px; font-size:13px; color:var(--text2); font-weight:700;">
-        الأخطاء: <span id="mistake-count" style="color:#ef4444; font-family:'JetBrains Mono',monospace; font-size:15px;">0</span>
+      <div id="global-mistake-counter"
+        style="display:none; text-align:center; margin-bottom:10px; font-size:13px; color:var(--text2); font-weight:700;">
+        الأخطاء: <span id="mistake-count"
+          style="color:#ef4444; font-family:'JetBrains Mono',monospace; font-size:15px;">0</span>
       </div>
       <!-- Menu to choose game -->
       <div id="focus-menu">
@@ -2176,11 +2134,14 @@
             style="background:rgba(255,255,255,0.2); border:none; color:white; font-size:16px; font-weight:bold; cursor:pointer; padding: 5px 15px; border-radius: 8px;">←
             رجوع</button>
           <div style="font-weight: bold; display:flex; gap:20px; font-size:18px;">
-            <div style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">
-            <button class="circle-btn" onclick="adjustGameTime('dir', -10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:rgba(255,255,255,0.2); color:white; border:none; font-weight:bold;">-10</button>
-            <span id="direction-time" style="color:var(--black);">60</span>
-            <button class="circle-btn" onclick="adjustGameTime('dir', 10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:rgba(255,255,255,0.2); color:white; border:none; font-weight:bold;">+10</button>
-          </div>
+            <div
+              style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">
+              <button class="circle-btn" onclick="adjustGameTime('dir', -10)"
+                style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:rgba(255,255,255,0.2); color:white; border:none; font-weight:bold;">-10</button>
+              <span id="direction-time" style="color:var(--black);">60</span>
+              <button class="circle-btn" onclick="adjustGameTime('dir', 10)"
+                style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:rgba(255,255,255,0.2); color:white; border:none; font-weight:bold;">+10</button>
+            </div>
             <div>النقاط: <span id="direction-score" style="color:#fbbf24;">0</span></div>
           </div>
         </div>
@@ -2208,10 +2169,13 @@
       <!-- Stroop Game Area -->
       <div id="focus-stroop-area" style="display: none; text-align: center;">
         <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-          <div style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">
-            <button class="circle-btn" onclick="adjustGameTime('stroop', -10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">-10</button>
+          <div
+            style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">
+            <button class="circle-btn" onclick="adjustGameTime('stroop', -10)"
+              style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">-10</button>
             <span id="stroop-time" style="color:var(--black);">60</span>
-            <button class="circle-btn" onclick="adjustGameTime('stroop', 10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">+10</button>
+            <button class="circle-btn" onclick="adjustGameTime('stroop', 10)"
+              style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">+10</button>
           </div>
           <div style="font-weight: bold; color: var(--text2);">النقاط: <span id="stroop-score"
               style="color:var(--primary);">0</span></div>
@@ -2257,10 +2221,13 @@
       <!-- Color Slide Game Area -->
       <div id="focus-slide-area" style="display: none; text-align: center;">
         <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-          <div style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">
-            <button class="circle-btn" onclick="adjustGameTime('slide', -10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">-10</button>
+          <div
+            style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">
+            <button class="circle-btn" onclick="adjustGameTime('slide', -10)"
+              style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">-10</button>
             <span id="slide-time" style="color:var(--black);">02:00</span>
-            <button class="circle-btn" onclick="adjustGameTime('slide', 10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">+10</button>
+            <button class="circle-btn" onclick="adjustGameTime('slide', 10)"
+              style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">+10</button>
           </div>
           <div style="font-weight: bold; color: var(--text2);">الحركات: <span id="slide-moves"
               style="color:var(--primary);">0</span></div>
@@ -2377,10 +2344,13 @@
       <!-- Word Search Game Area -->
       <div id="focus-wordsearch-area" style="display: none; text-align: center;">
         <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
-          <div style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">
-            <button class="circle-btn" onclick="adjustGameTime('ws', -10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">-10</button>
+          <div
+            style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">
+            <button class="circle-btn" onclick="adjustGameTime('ws', -10)"
+              style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">-10</button>
             <span id="ws-time" style="color:var(--black);">00:00</span>
-            <button class="circle-btn" onclick="adjustGameTime('ws', 10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">+10</button>
+            <button class="circle-btn" onclick="adjustGameTime('ws', 10)"
+              style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">+10</button>
           </div>
           <div style="font-weight: bold; color: var(--text2);">الكلمات المتبقية: <span id="ws-remaining"
               style="color:var(--primary);">0</span></div>
@@ -2407,10 +2377,13 @@
       <!-- Infinity Path Game Area -->
       <div id="focus-infinity-area" style="display: none; text-align: center;">
         <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-          <div style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">
-            <button class="circle-btn" onclick="adjustGameTime('inf', -10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">-10</button>
+          <div
+            style="font-weight: bold; color: var(--text2); display:flex; align-items:center; gap:8px; direction:ltr;">
+            <button class="circle-btn" onclick="adjustGameTime('inf', -10)"
+              style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">-10</button>
             <span id="inf-time" style="color:var(--black);">00:00</span>
-            <button class="circle-btn" onclick="adjustGameTime('inf', 10)" style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">+10</button>
+            <button class="circle-btn" onclick="adjustGameTime('inf', 10)"
+              style="width:24px; height:24px; font-size:12px; padding:0; min-height:0; line-height:1; background:var(--surface2); color:var(--text); border:1px solid var(--border-darker); font-weight:bold;">+10</button>
           </div>
           <div style="font-weight: bold; color: var(--text2);">الدورات: <span id="inf-loops"
               style="color:var(--primary);">0 / 3</span></div>
@@ -2464,8 +2437,11 @@
             <!-- Populated by JS -->
           </div>
         </div>
-        <div style="font-size: 14px; font-weight: bold; color: var(--text2); margin-bottom: 10px;">انقر على الألوان لتطابق هذا التسلسل:</div>
-        <div id="mc-sequence" style="font-size: 24px; font-weight: 900; letter-spacing: 4px; color: var(--black); margin-bottom: 20px;"></div>
+        <div style="font-size: 14px; font-weight: bold; color: var(--text2); margin-bottom: 10px;">انقر على الألوان
+          لتطابق هذا التسلسل:</div>
+        <div id="mc-sequence"
+          style="font-size: 24px; font-weight: 900; letter-spacing: 4px; color: var(--black); margin-bottom: 20px;">
+        </div>
         <div
           style="display:flex; justify-content:center; align-items:center; gap: 15px; margin: 20px 0 10px 0; direction: ltr;">
           <button class="circle-btn" onclick="adjustMCTime(-10)"
@@ -2481,6 +2457,34 @@
           onclick="quitFocusGame()">🔙 عودة للقائمة</button>
       </div>
 
+      <!-- Embedded Brain Performance Dashboard -->
+      <div id="daily-focus-dashboard"
+        style="margin-top: 30px; margin-bottom: 20px; border-top: 2px dashed var(--border-darker); padding-top: 20px;">
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+          <h2 style="margin:0; font-weight:800; color:var(--black);">مؤشر الأداء الذهني ⚡</h2>
+        </div>
+
+        <select id="focus-dash-timeframe" class="sel" onchange="renderFocusDashboard()"
+          style="margin-bottom: 20px; padding: 10px; border-radius: 12px;">
+          <option value="today">اليوم</option>
+          <option value="7days">آخر 7 أيام</option>
+          <option value="30days">آخر 30 يوم</option>
+          <option value="alltime">كل الأوقات</option>
+        </select>
+
+        <div
+          style="background: var(--surface2); border: 1px solid var(--border-darker); border-radius: 16px; padding: 20px;">
+          <h3 style="margin:0 0 10px 0; color:var(--black); font-size:18px;">المؤشر العام (Overall LPI)</h3>
+          <p style="margin:0 0 20px 0; color:var(--text2); font-size:12px; line-height:1.6;">يتم حساب مؤشرك العام بناءً
+            على متوسط أفضل نتائجك في جميع المجالات خلال الفترة المحددة.</p>
+
+          <div id="focus-dash-categories" style="display: flex; flex-direction: column; gap: 15px;">
+            <!-- Categories injected here -->
+          </div>
+        </div>
+
+      </div>
     </div>
     <!-- REPORTS PAGE -->
     <div class="page" id="page-reports">
@@ -2569,7 +2573,8 @@
       </div>
       <div class="field"><label>ارتباط بهدف</label><select class="sel" id="m-hab-goal" style="width:100%"></select>
       </div>
-
+      <div class="field"><label>ارتباط بكتاب (يدوي)</label><select class="sel" id="m-hab-book"
+          style="width:100%"></select></div>
       <div class="field"><label>نظام التكرار</label>
         <select class="sel" id="m-hab-freq" style="width:100%"
           onchange="toggleHabitDays(this.value, 'm-hab-days-wrap')">
@@ -2616,6 +2621,40 @@
     </div>
   </div>
   <!-- Book Modal -->
+  <div class="modal-ov" id="modal-book">
+    <div class="modal">
+      <div class="modal-title" id="m-book-title-text">إضافة كتاب 📚</div>
+      <input type="hidden" id="m-book-id">
+      <div class="field"><label>اسم الكتاب</label><input type="text" class="inp" id="m-book-title"
+          placeholder="اسم الكتاب" /></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="field"><label>إجمالي الصفحات</label><input type="number" class="inp" id="m-book-total" min="1"
+            value="100" /></div>
+        <div class="field"><label>الصفحات المقروءة</label><input type="number" class="inp" id="m-book-read" min="0"
+            value="0" /></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none"
+          onclick="closeModal('book')">إلغاء</button>
+        <button class="btn" onclick="saveBook()">حفظ الكتاب</button>
+      </div>
+    </div>
+  </div>
+  <!-- Book Notes Modal -->
+  <div class="modal-ov" id="modal-book-notes">
+    <div class="modal">
+      <div class="modal-title">ملاحظات الكتاب 📝</div>
+      <input type="hidden" id="m-bnotes-id">
+      <div class="field">
+        <textarea class="inp" id="m-bnotes-text" placeholder="اكتب ملاحظاتك هنا..." style="height:150px"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-dark" style="background:var(--surface2);color:var(--text2);box-shadow:none"
+          onclick="closeModal('book-notes')">إغلاق</button>
+        <button class="btn" onclick="saveBookNotes()">حفظ الملاحظات</button>
+      </div>
+    </div>
+  </div>
   <!-- Zaha Modal -->
   <div class="modal-ov" id="modal-zaha">
     <div class="modal">
@@ -2685,7 +2724,7 @@
   <div class="bnav">
     <div class="bnav-item active" data-page="daily" onclick="goPage(this)">☀️<span>عاداتي</span></div>
     <div class="bnav-item" data-page="goals" onclick="goPage(this)">🏆<span>أهدافي</span></div>
-    <div class="bnav-item" data-page="library" onclick="goPage(this)">📚<span>مكتبتي</span></div>
+    <div class="bnav-item" data-page="reader" onclick="goPage(this)">📖<span>القراءة</span></div>
 
     <div class="bnav-item" data-page="focus" onclick="goPage(this)">🧠<span>التركيز</span></div>
     <div class="bnav-item" data-page="reports" onclick="goPage(this)">📈<span>تقارير</span></div>
@@ -2772,7 +2811,7 @@
     }
     // ------------------------------------------------------------------------
     let state = {
-      habits: [], history: {}, goals: [], readerBooks: [], zahaSessions: [], nextId: 1,
+      habits: [], history: {}, goals: [], books: [], readerBooks: [], zahaSessions: [], nextId: 1,
       journal: {}, settings: { notifTime: '20:00' }
     };
     let currentOpenBookId = null; let readerData = []; let currentFontSize = 17; window.rawFileContent = "";
@@ -2837,6 +2876,7 @@
           state.habits = p.habits ? Object.values(p.habits) : [];
           state.history = p.history || {};
           state.goals = p.goals ? Object.values(p.goals) : [];
+          state.books = p.books ? Object.values(p.books) : [];
           state.readerBooks = p.readerBooks ? Object.values(p.readerBooks) : [];
           state.zahaSessions = p.zahaSessions ? Object.values(p.zahaSessions) : [];
           state.journal = p.journal || {};
@@ -2950,6 +2990,8 @@
     function populateGlobalSelectors() {
       const gHtml = `<option value="">-- بدون هدف مرتبط --</option>` + state.goals.map(g => `<option value="${g.id}">🎯 ${g.title}</option>`).join('');
       if (document.getElementById('m-hab-goal')) document.getElementById('m-hab-goal').innerHTML = gHtml;
+      const bHtml = `<option value="">-- بدون كتاب مرتبط --</option>` + state.books.map(b => `<option value="${b.id}">📖 ${b.title}</option>`).join('');
+      if (document.getElementById('m-hab-book')) document.getElementById('m-hab-book').innerHTML = bHtml;
     }
     function goPage(el) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -2958,6 +3000,8 @@
       const name = el.dataset.page;
       document.querySelectorAll(`.nav-item[data-page="${name}"], .bnav-item[data-page="${name}"]`).forEach(n => n.classList.add('active'));
       document.getElementById('page-' + name).classList.add('active');
+      document.getElementById('reader-progress-container').style.display = (name === 'reader' && currentOpenBookId) ? 'block' : 'none';
+      if (name === 'reader' && !currentOpenBookId) switchReaderMode('library');
       renderAll();
     }
     function openModal(type, id = null) {
@@ -2974,11 +3018,11 @@
         if (id) {
           const h = state.habits.find(x => x.id === id);
           if (!h) return;
-          document.getElementById('m-hab-id').value = h.id; document.getElementById('m-hab-title-text').textContent = 'تعديل العادة ✎'; document.getElementById('m-hab-title').value = h.title; document.getElementById('m-hab-start').value = h.start || today; document.getElementById('m-hab-end').value = h.end || ''; document.getElementById('m-hab-goal').value = h.goalId || ''; document.getElementById('m-hab-freq').value = h.freq || 'daily'; toggleHabitDays(h.freq || 'daily', 'm-hab-days-wrap'); document.querySelectorAll('#m-hab-days-wrap .day-btn').forEach(b => { if (h.days && h.days.includes(parseInt(b.dataset.day))) b.classList.add('active'); else b.classList.remove('active'); });
-        } else { document.getElementById('m-hab-id').value = ''; document.getElementById('m-hab-title-text').textContent = 'إضافة عادة جديدة ✨'; document.getElementById('m-hab-title').value = ''; document.getElementById('m-hab-goal').value = ''; }
+          document.getElementById('m-hab-id').value = h.id; document.getElementById('m-hab-title-text').textContent = 'تعديل العادة ✎'; document.getElementById('m-hab-title').value = h.title; document.getElementById('m-hab-start').value = h.start || today; document.getElementById('m-hab-end').value = h.end || ''; document.getElementById('m-hab-goal').value = h.goalId || ''; document.getElementById('m-hab-book').value = h.bookId || ''; document.getElementById('m-hab-freq').value = h.freq || 'daily'; toggleHabitDays(h.freq || 'daily', 'm-hab-days-wrap'); document.querySelectorAll('#m-hab-days-wrap .day-btn').forEach(b => { if (h.days && h.days.includes(parseInt(b.dataset.day))) b.classList.add('active'); else b.classList.remove('active'); });
+        } else { document.getElementById('m-hab-id').value = ''; document.getElementById('m-hab-title-text').textContent = 'إضافة عادة جديدة ✨'; document.getElementById('m-hab-title').value = ''; document.getElementById('m-hab-goal').value = ''; document.getElementById('m-hab-book').value = ''; }
       }
       else if (type === 'goal') { const endOfYear = new Date(new Date().getFullYear(), 11, 31).toISOString().split('T')[0]; if (id) { const g = state.goals.find(x => x.id === id); if (!g) return; document.getElementById('m-goal-id').value = g.id; document.getElementById('m-goal-title-text').textContent = 'تعديل الهدف ✎'; document.getElementById('m-goal-title').value = g.title; document.getElementById('m-goal-end').value = g.endDate || endOfYear; } else { document.getElementById('m-goal-id').value = ''; document.getElementById('m-goal-title-text').textContent = 'إضافة هدف 🏆'; document.getElementById('m-goal-title').value = ''; document.getElementById('m-goal-end').value = endOfYear; } }
-
+      else if (type === 'book') { if (id) { const b = state.books.find(x => x.id === id); if (!b) return; document.getElementById('m-book-id').value = b.id; document.getElementById('m-book-title-text').textContent = 'تعديل كتاب ✎'; document.getElementById('m-book-title').value = b.title; document.getElementById('m-book-total').value = b.totalPages; document.getElementById('m-book-read').value = b.readPages; } else { document.getElementById('m-book-id').value = ''; document.getElementById('m-book-title-text').textContent = 'إضافة كتاب 📚'; document.getElementById('m-book-title').value = ''; document.getElementById('m-book-total').value = '100'; document.getElementById('m-book-read').value = '0'; } }
       else if (type === 'zaha') { if (id) { const z = state.zahaSessions.find(x => x.id === id); if (!z) return; document.getElementById('m-zaha-id').value = z.id; document.getElementById('m-zaha-title-text').textContent = 'تعديل بيانات الحصة ✎'; document.getElementById('m-zaha-course').value = z.course; document.getElementById('m-zaha-date').value = z.date; document.getElementById('m-zaha-hours').value = z.hours; document.getElementById('m-zaha-summary').value = z.summary; } else { document.getElementById('m-zaha-id').value = ''; document.getElementById('m-zaha-title-text').textContent = 'توثيق حصة زها 🏛️'; document.getElementById('m-zaha-course').value = ''; document.getElementById('m-zaha-date').value = today; document.getElementById('m-zaha-hours').value = '2'; document.getElementById('m-zaha-summary').value = ''; } }
       document.getElementById(`modal-${type}`).classList.add('show');
     }
@@ -2989,10 +3033,12 @@
       renderHabits();
       renderAllHabits();
       renderGoals();
+      renderBooks();
       renderZaha();
-      renderLibrary();
+      renderReaderLibrary();
       renderDashboard();
       if (typeof renderBreatheStatus === 'function') renderBreatheStatus();
+
       if (typeof updateHighScores === 'function') updateHighScores();
     }
     function updateHighScores() {
@@ -3023,13 +3069,21 @@
       return streak;
     }
     function toggleHabitDays(val, wrapId) { document.getElementById(wrapId).style.display = val === 'specific' ? 'block' : 'none'; }
-    function saveHabit() { const id = document.getElementById('m-hab-id').value; const title = document.getElementById('m-hab-title').value.trim(); if (!title) { toast('أدخل اسم العادة'); return; } const freq = document.getElementById('m-hab-freq').value; let days = []; if (freq === 'specific') { document.querySelectorAll('#m-hab-days-wrap .day-btn.active').forEach(b => days.push(parseInt(b.dataset.day))); if (!days.length) { toast('اختر يوم واحد على الأقل'); return; } } if (id) { const h = state.habits.find(x => x.id == id); if (h) { h.title = title; h.start = document.getElementById('m-hab-start').value || today; h.end = document.getElementById('m-hab-end').value; h.freq = freq; h.days = days; h.goalId = document.getElementById('m-hab-goal').value; } } else { state.habits.push({ id: state.nextId++, title, start: document.getElementById('m-hab-start').value || today, end: document.getElementById('m-hab-end').value, freq, days, goalId: document.getElementById('m-hab-goal').value }); } saveState(); renderAll(); closeModal('habit'); toast('تم الحفظ ✓'); }
+    function saveHabit() { const id = document.getElementById('m-hab-id').value; const title = document.getElementById('m-hab-title').value.trim(); if (!title) { toast('أدخل اسم العادة'); return; } const freq = document.getElementById('m-hab-freq').value; let days = []; if (freq === 'specific') { document.querySelectorAll('#m-hab-days-wrap .day-btn.active').forEach(b => days.push(parseInt(b.dataset.day))); if (!days.length) { toast('اختر يوم واحد على الأقل'); return; } } if (id) { const h = state.habits.find(x => x.id == id); if (h) { h.title = title; h.start = document.getElementById('m-hab-start').value || today; h.end = document.getElementById('m-hab-end').value; h.freq = freq; h.days = days; h.goalId = document.getElementById('m-hab-goal').value; h.bookId = document.getElementById('m-hab-book').value; } } else { state.habits.push({ id: state.nextId++, title, start: document.getElementById('m-hab-start').value || today, end: document.getElementById('m-hab-end').value, freq, days, goalId: document.getElementById('m-hab-goal').value, bookId: document.getElementById('m-hab-book').value }); } saveState(); renderAll(); closeModal('habit'); toast('تم الحفظ ✓'); }
     function delHabit(id) { state.habits = state.habits.filter(h => h.id != id); saveState(); renderAll(); toast('تم حذف العادة ✓'); }
-    function toggleHabit(id) {
+    function toggleHabit(id, bookId = null) {
       if (!state.history[today]) state.history[today] = [];
       if (state.history[today].includes(id)) {
         state.history[today] = state.history[today].filter(x => x !== id);
       } else {
+        if (bookId) {
+          const pagesInput = document.getElementById(`h-pages-${id}`);
+          const b = state.books.find(x => x.id == bookId);
+          if (pagesInput && pagesInput.value && b) {
+            b.readPages = Math.min(b.readPages + parseInt(pagesInput.value), b.totalPages);
+            toast(`تمت إضافة ${pagesInput.value} صفحة للكتاب ✓`);
+          }
+        }
         state.history[today].push(id);
         playSound('soft');
         const active = getActiveHabitsForDate(today);
@@ -3048,17 +3102,18 @@
       const activeToday = getActiveHabitsForDate(today);
       let html = activeToday.length ? activeToday.map(h => {
         const done = (state.history[today] || []).includes(h.id);
-        const gInfo = state.goals.find(g => g.id == h.goalId);
+        const gInfo = state.goals.find(g => g.id == h.goalId); const bInfo = h.bookId ? state.books.find(b => b.id == h.bookId) : null;
+        let bInput = (bInfo && !done) ? `<input type="number" id="h-pages-${h.id}" class="inp" placeholder="كم صفحة؟" style="width:90px; padding:4px 8px; font-size:11px; height: 28px; margin-inline-end: 8px;" min="1" onclick="event.stopPropagation()">` : (bInfo && done) ? `<span style="font-size:11px; color:var(--primary); margin-inline-end: 8px; font-weight:bold;">تم التحديث ✓</span>` : '';
         const streak = getStreak(h.id);
         const streakHtml = streak > 0 ? `<span class="badge streak-badge">🔥 ${streak}</span>` : '';
-        return `<div class="list-item ${done ? 'done' : ''}" style="display:flex; align-items:center;"><div class="check-btn ${done ? 'active' : ''}" onclick="toggleHabit(${h.id})">${done ? '✓' : ''}</div><div class="item-info" style="flex:1;"><div class="item-title">${h.title}</div><div class="item-meta">${streakHtml}${gInfo ? `<span class="badge goal-badge">🎯 ${gInfo.title}</span>` : ''}</div></div><button class="del-btn" style="background:var(--surface2); margin-inline-start:10px; flex-shrink:0;" onclick="openModal('habit', ${h.id})" title="تعديل"><span style="font-size:14px;">⚙️</span></button><button class="del-btn" style="margin-inline-start:6px; flex-shrink:0;" onclick="delHabit(${h.id})" title="حذف">✕</button></div>`;
+        return `<div class="list-item ${done ? 'done' : ''}" style="display:flex; align-items:center;"><div class="check-btn ${done ? 'active' : ''}" onclick="toggleHabit(${h.id}, ${h.bookId ? `'${h.bookId}'` : 'null'})">${done ? '✓' : ''}</div>${bInput}<div class="item-info" style="flex:1;"><div class="item-title">${h.title}</div><div class="item-meta">${streakHtml}${gInfo ? `<span class="badge goal-badge">🎯 ${gInfo.title}</span>` : ''}${bInfo ? `<span class="badge" style="background:#e0f2fe; color:#0284c7">📖 ${bInfo.title}</span>` : ''}</div></div><button class="del-btn" style="background:var(--surface2); margin-inline-start:10px; flex-shrink:0;" onclick="openModal('habit', ${h.id})" title="تعديل"><span style="font-size:14px;">⚙️</span></button><button class="del-btn" style="margin-inline-start:6px; flex-shrink:0;" onclick="delHabit(${h.id})" title="حذف">✕</button></div>`;
       }).join('') : '';
       if (state.journal[today] && state.journal[today].breatheTime > 0) {
         const totalSecs = state.journal[today].breatheTime;
         const m = Math.floor(totalSecs / 60);
         const s = totalSecs % 60;
         const timeText = (m > 0 ? `${m} دقيقة و ` : '') + `${s} ثانية`;
-        html += `<div class="list-item done" style="border: 1px solid var(--primary);"><div class="check-btn active" style="background:var(--primary); color:white; border-color:var(--primary);">✓</div><div class="item-info"><div class="item-title">تمرين التنفس 🫁</div><div class="item-meta" style="color:var(--primary); font-weight:bold;">⏱ ${timeText}</div></div></div>`;
+        html += `<div class="list-item done" style="border: 1px solid var(--primary);"><div class="check-btn active" style="background:var(--primary); color:white; border-color:var(--primary);">✓</div><div class="item-info"><div class="item-title">تمرين التنفس المنجز 🫁</div><div class="item-meta" style="color:var(--primary); font-weight:bold;">⏱ إجمالي الوقت: ${timeText}</div></div></div>`;
       }
       if (!html) html = '<div class="empty">لا يوجد مهام اليوم</div>';
       document.getElementById('habit-list').innerHTML = html;
@@ -3095,25 +3150,13 @@
         if (expected > 0) { totalExpected += expected; totalDone += done; activeWeeklyHabits.push({ habit: h, expected, done }); }
       });
 
-      // إضافة تمرين التنفس
-      let breatheDoneCount = 0;
-      const fDateB = new Date(today); fDateB.setDate(fDateB.getDate() - filterDays + 1);
-      Object.keys(state.journal || {}).forEach(dStr => {
-        const d = new Date(dStr);
-        if (d >= fDateB && state.journal[dStr] && state.journal[dStr].breatheDone) breatheDoneCount++;
-      });
-      const breatheGoalId = state.settings && state.settings.breatheGoalId;
-      totalExpected += filterDays; totalDone += breatheDoneCount;
-      activeWeeklyHabits.push({ habit: { id: 'breathe', title: 'تمرين التنفس 🫁', goalId: breatheGoalId }, expected: filterDays, done: breatheDoneCount });
-
       if (activeWeeklyHabits.length === 0) { container.innerHTML = `<div class="empty" style="padding: 20px; border: none; background: transparent;">لا يوجد مهام مطلوبة لهذه الفترة</div>`; return; }
 
       const dPct = totalExpected === 0 ? 0 : Math.min(Math.round((totalDone / totalExpected) * 100), 100);
       const itemsHtml = activeWeeklyHabits.map(item => {
         const h = item.habit; const expected = item.expected; const done = item.done; const isDone = done >= expected; const pct = Math.min(Math.round((done / expected) * 100), 100);
-        const gInfo = state.goals.find(g => g.id == h.goalId); const icon = h.id === 'breathe' ? '🫁' : (gInfo ? '🎯' : '⚡');
-        const editBtn = h.id === 'breathe' ? '' : (!isDone ? `<button onclick="openModal('habit', ${h.id})" style="background:none; border:none; cursor:pointer; font-size:14px; opacity:0.7; padding:0;" title="تعديل">✏️</button>` : '');
-        return `<div class="md-item"><div class="md-icon">${icon}</div><div class="md-info"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="display:flex; align-items:center; gap:8px;"><div class="md-name" title="${h.title}">${h.title}</div>${editBtn}</div><div class="md-status ${isDone ? 'done' : ''}">${pct}%</div></div><div class="md-bar-bg"><div class="md-bar-fill ${isDone ? 'done' : ''}" style="width: ${pct}%"></div></div></div></div>`;
+        const gInfo = state.goals.find(g => g.id == h.goalId); const icon = h.bookId ? '📖' : (gInfo ? '🎯' : '⚡');
+        return `<div class="md-item"><div class="md-icon">${icon}</div><div class="md-info"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="display:flex; align-items:center; gap:8px;"><div class="md-name" title="${h.title}">${h.title}</div>${!isDone ? `<button onclick="openModal('habit', ${h.id})" style="background:none; border:none; cursor:pointer; font-size:14px; opacity:0.7; padding:0;" title="تعديل">✏️</button>` : ''}</div><div class="md-status ${isDone ? 'done' : ''}">${pct}%</div></div><div class="md-bar-bg"><div class="md-bar-fill ${isDone ? 'done' : ''}" style="width: ${pct}%"></div></div></div></div>`;
       }).join('');
 
       const circleOffset = 188.4 - (dPct / 100 * 188.4);
@@ -3206,6 +3249,12 @@
     function updateGoalUI(id, val) { const g = state.goals.find(x => x.id === id); if (g && !getGoalProgressInfo(id).isAuto) { g.progress = parseInt(val); document.getElementById(`goal-pct-${id}`).textContent = g.progress + '%'; document.getElementById(`goal-fill-${id}`).style.width = g.progress + '%'; renderDashboard(); } }
     function saveGoalUI(id, val) { const g = state.goals.find(x => x.id === id); if (g && !getGoalProgressInfo(id).isAuto) { g.progress = parseInt(val); saveState(); renderDashboard(); } }
     function renderGoals() { document.getElementById('goal-list').innerHTML = state.goals.length ? state.goals.map(g => { const info = getGoalProgressInfo(g.id); const pct = info.isAuto ? info.pct : (g.progress || 0); const dateStr = g.endDate ? `📅 حتى: ${g.endDate}` : 'بدون تاريخ نهاية'; return `<div class="list-item" style="display:flex; flex-direction:column; align-items:stretch; padding: 20px; border-radius: 16px;"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;"><div style="display:flex; gap: 8px; align-items:center;"><button class="del-btn" style="width:32px; height:32px; border-radius:8px; background:var(--surface); border:1px solid var(--border-darker); font-size:12px;" onclick="delGoal(${g.id})">✕</button><button class="del-btn" style="width:32px; height:32px; border-radius:8px; background:var(--surface); border:1px solid var(--border-darker); font-size:12px;" onclick="openModal('goal', ${g.id})">✏️</button><div class="card-pct" style="margin:0; padding:6px 14px; font-size:14px; background:var(--primary-light); color:var(--primary); border-radius:20px; font-weight:800;">${pct}%</div></div><div style="text-align: right;"><div class="card-title" style="margin:0; font-size: 16px;">${g.title}</div></div></div><div class="prog-wrap" style="margin-top: 5px; margin-bottom: 8px;"><div class="prog-bg" style="height: 6px; background: var(--border-darker);"><div class="prog-fill" id="goal-fill-${g.id}" style="background:var(--primary); width:${pct}%;"></div></div></div><div style="display:flex; justify-content: space-between; align-items: center; margin-top: 8px;"><div style="font-size:10px; color:var(--text3); font-weight:700;">${dateStr}</div><div style="font-size:11px; color:var(--primary); font-weight:700;">${info.isAuto ? 'محسوبة تلقائياً 🔒' : 'تحديث يدوي ⚙️'}</div></div>${!info.isAuto ? `<input type="range" min="0" max="100" value="${pct}" style="width:100%; margin-top:15px;" oninput="updateGoalUI(${g.id}, this.value)" onchange="saveGoalUI(${g.id}, this.value)">` : ''}</div>`; }).join('') : '<div class="empty">لم تقم بإضافة أهداف</div>'; }
+    function saveBook() { const id = document.getElementById('m-book-id').value; const title = document.getElementById('m-book-title').value.trim(); if (!title) { toast('أدخل اسم الكتاب'); return; } if (id) { const b = state.books.find(x => x.id == id); if (b) { b.title = title; b.totalPages = parseInt(document.getElementById('m-book-total').value) || 1; b.readPages = Math.min(parseInt(document.getElementById('m-book-read').value) || 0, b.totalPages); } } else { state.books.push({ id: state.nextId++, title, totalPages: parseInt(document.getElementById('m-book-total').value) || 1, readPages: Math.min(parseInt(document.getElementById('m-book-read').value) || 0, parseInt(document.getElementById('m-book-total').value) || 1) }); } saveState(); populateGlobalSelectors(); renderAll(); closeModal('book'); toast('تم حفظ الكتاب 📚'); }
+    function delBook(id) { if (confirm('تأكيد الحذف؟')) { state.books = state.books.filter(b => b.id != id); state.habits.forEach(h => { if (h.bookId == id) h.bookId = ""; }); saveState(); populateGlobalSelectors(); renderAll(); } }
+    function updateBookPagesInline(id, value) { const b = state.books.find(x => x.id === id); const val = parseInt(value); if (b && !isNaN(val) && val >= 0) { b.readPages = Math.min(val, b.totalPages); saveState(); renderAll(); } }
+    function openBookNotes(id) { const b = state.books.find(x => x.id === id); if (!b) return; document.getElementById('m-bnotes-id').value = id; document.getElementById('m-bnotes-text').value = b.notes || ''; document.getElementById('modal-book-notes').classList.add('show'); }
+    function saveBookNotes() { const id = parseInt(document.getElementById('m-bnotes-id').value); const b = state.books.find(x => x.id === id); if (b) { b.notes = document.getElementById('m-bnotes-text').value; saveState(); toast('تم حفظ الملاحظات 📝'); } closeModal('book-notes'); }
+    function renderBooks() { document.getElementById('books-list').innerHTML = state.books.length ? state.books.map(b => { const pct = Math.round((b.readPages / b.totalPages) * 100) || 0; const isDone = pct === 100; return `<div class="card-box"><div class="card-hdr"><div style="display:flex; align-items:center; gap:10px"><div style="font-size:24px">${isDone ? '🏆' : '📖'}</div><div><div class="card-title" style="text-decoration: ${isDone ? 'line-through' : 'none'}">${b.title}</div><div style="font-size:12px; color:var(--text3); font-family:'JetBrains Mono', monospace; margin-top:4px">${b.readPages} / ${b.totalPages} صفحة</div></div></div><div class="card-pct">${pct}%</div></div><div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" style="background:var(--primary);width:${pct}%"></div></div></div><div style="display:flex; justify-content:space-between; margin-top:20px; border-top: 1px solid var(--border); padding-top:16px;"><div style="display:flex; align-items:center; gap:8px;"><label style="font-size:12px;font-weight:bold;color:var(--text2)">الصفحة:</label><input type="number" class="inp" style="width:70px; padding:8px 12px; text-align:center;" min="0" max="${b.totalPages}" value="${b.readPages}" onchange="updateBookPagesInline(${b.id}, this.value)" ${isDone ? 'disabled' : ''}></div><div style="display:flex; gap:6px;"><button class="btn" style="background:var(--primary); color:white; padding:0 12px; border-radius:8px; font-size:12px; box-shadow:none; height:32px;" onclick="openBookNotes(${b.id})">ملاحظات 📝</button><button class="del-btn" onclick="openModal('book', ${b.id})">✎</button><button class="del-btn" onclick="delBook(${b.id})">✕</button></div></div></div>`; }).join('') : '<div class="empty">مكتبتك فارغة. أضف كتابك الأول للبدء!</div>'; }
     function saveZahaSession() {
       const id = document.getElementById('m-zaha-id').value;
       const course = document.getElementById('m-zaha-course').value.trim();
@@ -3285,12 +3334,12 @@
       if (document.getElementById('circ-txt-daily')) document.getElementById('circ-txt-daily').textContent = Math.round(dPct) + '%';
       updateCircle('circ-daily', dPct);
 
-      let totalP = 0, readP = 0; (state.readerBooks || []).forEach(b => { totalP += (b.total || 0); readP += (b.progress || 0); }); const booksPct = totalP > 0 ? (readP / totalP * 100) : 0;
-      const booksCount = (state.readerBooks || []).length;
-      if (document.getElementById('dash-books-val')) document.getElementById('dash-books-val').textContent = Math.round(booksPct) + '%';
-      if (document.getElementById('dash-books-sub')) document.getElementById('dash-books-sub').textContent = booksCount + ' كتاب';
-      if (document.getElementById('circ-txt-books')) document.getElementById('circ-txt-books').textContent = Math.round(booksPct) + '%';
-      updateCircle('circ-books', booksPct);
+      let totalP_manual = 0, readP_manual = 0; state.books.forEach(b => { totalP_manual += b.totalPages; readP_manual += b.readPages; }); const manualPct = totalP_manual > 0 ? (readP_manual / totalP_manual * 100) : 0;
+      let totalP_smart = 0, readP_smart = 0; state.readerBooks.forEach(b => { totalP_smart += b.total; readP_smart += b.progress; }); const smartPct = totalP_smart > 0 ? (readP_smart / totalP_smart * 100) : 0;
+
+      if (document.getElementById('dash-books-count')) document.getElementById('dash-books-count').textContent = state.books.length + state.readerBooks.length;
+      if (document.getElementById('circ-txt-books-smart')) document.getElementById('circ-txt-books-smart').textContent = Math.round(smartPct) + '%'; updateCircle('circ-books-smart', smartPct);
+      if (document.getElementById('circ-txt-books-manual')) document.getElementById('circ-txt-books-manual').textContent = Math.round(manualPct) + '%'; updateCircle('circ-books-manual', manualPct);
 
       let gAvg = state.goals.length > 0 ? state.goals.reduce((s, g) => s + (getGoalProgressInfo(g.id).isAuto ? getGoalProgressInfo(g.id).pct : (g.progress || 0)), 0) / state.goals.length : 0;
       if (document.getElementById('dash-goals-val')) document.getElementById('dash-goals-val').textContent = Math.round(gAvg) + '%';
@@ -3310,103 +3359,187 @@
       const gradient = ctx.createLinearGradient(0, 0, 0, 300); gradient.addColorStop(0, isDark ? 'rgba(255, 118, 105, 0.8)' : 'rgba(230, 92, 79, 0.8)'); gradient.addColorStop(1, isDark ? 'rgba(255, 118, 105, 0.05)' : 'rgba(230, 92, 79, 0.05)');
       dashChart = new Chart(ctx, { type: 'bar', data: { labels, datasets: [{ data: habitsVals, backgroundColor: gradient, borderRadius: 8, barThickness: daysFilter <= 7 ? 16 : (daysFilter <= 30 ? 8 : 'flex') }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100, grid: { color: isDark ? '#333' : '#f3f4f6' }, ticks: { color: isDark ? '#a0a0a0' : '#9ca3af', maxTicksLimit: 10 } }, x: { grid: { display: false }, ticks: { color: isDark ? '#a0a0a0' : '#6b7280', maxTicksLimit: 15 } } } } });
     }
-    // --- Library Logic ---
-    let currentLibBookId = null;
-    function renderLibrary() {
-      const grid = document.getElementById('library-grid');
-      if (!grid) return;
-      const books = state.readerBooks || [];
-      if (!books.length) { grid.innerHTML = '<div class="empty">مكتبتك فارغة — أضف كتابك الأول!</div>'; return; }
-      grid.innerHTML = books.map(b => {
-        const pct = b.total > 0 ? Math.round((b.progress / b.total) * 100) : 0;
-        return `<div class="card-box" style="margin-bottom:14px;">
-          <div class="card-hdr" style="cursor:pointer;" onclick="openLibBook(${b.id})">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <div style="font-size:26px;">📄</div>
-              <div class="card-title">${b.title}</div>
-            </div>
-            <div style="display:flex; gap:6px; align-items:center;">
-              <span style="font-size:13px; font-weight:800; color:var(--primary); font-family:'JetBrains Mono',monospace;">${pct}%</span>
-              <button class="del-btn" onclick="event.stopPropagation(); delLibBook(${b.id})" title="حذف">✕</button>
-            </div>
-          </div>
-          <div class="prog-wrap" style="margin-top:8px;">
-            <div class="prog-bg"><div class="prog-fill" style="background:var(--primary);width:${pct}%"></div></div>
-          </div>
-          <div style="display:flex; align-items:center; gap:8px; margin-top:10px;" onclick="event.stopPropagation()">
-            <input type="number" value="${b.progress || 0}" min="0" id="card-cur-${b.id}" class="inp" style="width:70px; padding:6px 8px; font-size:13px; text-align:center;" placeholder="0" onchange="saveLibCardProgress(${b.id})">
-            <span style="color:var(--text3);">/</span>
-            <input type="number" value="${b.total || 0}" min="1" id="card-tot-${b.id}" class="inp" style="width:70px; padding:6px 8px; font-size:13px; text-align:center;" placeholder="100" onchange="saveLibCardProgress(${b.id})">
-            <span style="font-size:12px; color:var(--text3);">صفحة</span>
-          </div>
-        </div>`;
+    // ═══════════════════════════════════════
+    //  SMART READER LOGIC (PDF/DRIVE ADDED)
+    // ═══════════════════════════════════════
+    function goToReaderTab() { goPage(document.querySelector('.nav-item[data-page="reader"]') || { dataset: { page: 'reader' } }); }
+    function switchReaderMode(m) {
+      // Feature removed per user request: only manual books remain in reader page
+    }
+    function renderReaderLibrary() {
+      const grid = document.getElementById('reader-library-grid');
+      if (state.readerBooks.length === 0) { grid.innerHTML = `<div class="empty" style="grid-column: 1 / -1;">مكتبتك الذكية فارغة. ارفع كتاباً جديداً!</div>`; return; }
+      grid.innerHTML = state.readerBooks.map(book => {
+        const pct = Math.round((book.progress / book.total) * 100) || 0;
+        const icon = book.type === 'pdf' ? '🔗' : '📘';
+        return `<div class="reader-book-card" onclick="openReaderBook(${book.id})"><div class="rbc-actions"><div class="rbc-btn" style="color: var(--zaha);" onclick="renameReaderBook(event, ${book.id})" title="تعديل الاسم">✏️</div><div class="rbc-btn" style="color: #ef4444;" onclick="deleteReaderBook(event, ${book.id})" title="حذف الكتاب">✕</div></div><span class="rbc-icon">${icon}</span><div class="rbc-title" title="${book.title}">${book.title}</div><div style="font-size:11px; color:var(--text3); margin-bottom:8px;">${pct}% مُنجز</div><div class="rbc-prog-bg"><div class="rbc-prog-fill" style="width:${pct}%"></div></div></div>`;
       }).join('');
     }
-    function openAddBookForm() { document.getElementById('lib-add-form').style.display = 'block'; }
-    function closeAddBookForm() {
-      document.getElementById('lib-add-form').style.display = 'none';
-      ['lib-new-title','lib-new-url','lib-new-pages'].forEach(id => document.getElementById(id).value = '');
+    function renameReaderBook(event, id) { event.stopPropagation(); const bookMeta = state.readerBooks.find(b => b.id === id); if (!bookMeta) return; const card = event.target.closest('.reader-book-card'); const titleDiv = card.querySelector('.rbc-title'); if (titleDiv.querySelector('input')) return; const currentTitle = bookMeta.title; const input = document.createElement('input'); input.type = 'text'; input.value = currentTitle; input.className = 'inp'; input.style.width = '100%'; input.style.fontSize = '13px'; input.style.padding = '4px 8px'; input.style.textAlign = 'center'; titleDiv.innerHTML = ''; titleDiv.appendChild(input); input.focus(); input.addEventListener('click', (e) => e.stopPropagation()); function finishRename() { const newName = input.value.trim(); if (newName !== "" && newName !== currentTitle) { bookMeta.title = newName; saveState(); renderReaderLibrary(); toast('تم التعديل ✓'); } else { titleDiv.textContent = currentTitle; } } input.addEventListener('blur', finishRename); input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); else if (e.key === 'Escape') { input.value = currentTitle; input.blur(); } }); }
+    function deleteReaderBook(event, id) { event.stopPropagation(); if (!confirm('حذف هذا الكتاب نهائياً؟')) return; state.readerBooks = state.readerBooks.filter(b => b.id !== id); db.ref(`users/${currentUserUID}/book_contents/${id}`).remove(); saveState(); if (currentOpenBookId === id) { currentOpenBookId = null; switchReaderMode('library'); } renderAll(); }
+    function getPreviewUrl(url, pageNumber) {
+      if (url.includes('drive.google.com/file/d/')) {
+        return url.replace(/\/view.*/, '/preview');
+      }
+      if (!url.includes('#page=')) {
+        return url + '#page=' + (pageNumber || 1);
+      }
+      return url.replace(/#page=\d+/, '#page=' + (pageNumber || 1));
     }
-    function saveLibBook() {
-      const title = document.getElementById('lib-new-title').value.trim();
-      const url = document.getElementById('lib-new-url').value.trim();
-      const pages = parseInt(document.getElementById('lib-new-pages').value) || 1;
-      if (!title) { toast('أدخل اسم الكتاب'); return; }
-      if (!state.readerBooks) state.readerBooks = [];
-      state.readerBooks.push({ id: Date.now(), title, url, progress: 0, total: pages, notes: '' });
-      saveState();
-      closeAddBookForm();
-      renderLibrary();
-      toast('تمت الإضافة 📚');
+    async function openReaderBook(id) {
+      currentOpenBookId = id;
+      document.getElementById('global-loading').style.display = 'flex';
+      const bookMeta = state.readerBooks.find(b => b.id === id);
+      if (!bookMeta) { document.getElementById('global-loading').style.display = 'none'; return; }
+      document.getElementById('current-reading-title').textContent = bookMeta.title;
+      document.getElementById('reader-search').value = '';
+      if (bookMeta.type === 'pdf') {
+        document.getElementById('global-loading').style.display = 'none';
+        document.getElementById('reader-text-view').style.display = 'none';
+        document.getElementById('pdf-viewer-container').style.display = 'block';
+        document.getElementById('reader-text-tools').style.display = 'none'; // hide zoom/search
+        document.getElementById('pdf-iframe').removeAttribute('srcdoc');
+        document.getElementById('pdf-iframe').src = getPreviewUrl(bookMeta.url, bookMeta.progress || 1);
+        document.getElementById('pdf-total-pages').textContent = bookMeta.total;
+        document.getElementById('pdf-current-page').value = bookMeta.progress;
+        document.getElementById('btn-open-pdf').style.display = 'flex';
+        // Set up explicit "Open in New Window" button
+        document.getElementById('btn-open-pdf').onclick = function () {
+          window.open(bookMeta.url, '_blank');
+        };
+        switchReaderMode('read');
+      } else if (bookMeta.type === 'html') {
+        try {
+          const snap = await db.ref(`users/${currentUserUID}/book_contents/${id}`).once('value');
+          const data = snap.val();
+          document.getElementById('global-loading').style.display = 'none';
+          document.getElementById('reader-text-view').style.display = 'none';
+          document.getElementById('pdf-viewer-container').style.display = 'block';
+          document.getElementById('reader-text-tools').style.display = 'none';
+          document.getElementById('pdf-iframe').removeAttribute('src');
+          document.getElementById('pdf-iframe').srcdoc = data ? data.rawHtml : "<h1>محتوى غير متوفر</h1>";
+          document.getElementById('pdf-total-pages').textContent = bookMeta.total || 1;
+          document.getElementById('pdf-current-page').value = bookMeta.progress || 0;
+          document.getElementById('btn-open-pdf').style.display = 'none'; // hide for srcdoc
+          switchReaderMode('read');
+        } catch (e) {
+          document.getElementById('global-loading').style.display = 'none'; alert("خطأ في التحميل.");
+        }
+      } else {
+        document.getElementById('pdf-viewer-container').style.display = 'none';
+        document.getElementById('reader-text-view').style.display = 'block';
+        document.getElementById('reader-text-tools').style.display = 'flex';
+        try {
+          const snap = await db.ref(`users/${currentUserUID}/book_contents/${id}`).once('value');
+          readerData = snap.val() || [];
+          document.getElementById('global-loading').style.display = 'none';
+          switchReaderMode('read');
+          renderBookContent();
+        } catch (e) {
+          document.getElementById('global-loading').style.display = 'none'; alert("خطأ في التحميل.");
+        }
+      }
     }
-    function saveLibCardProgress(id) {
-      const b = (state.readerBooks || []).find(x => x.id === id);
-      if (!b) return;
-      const total = parseInt(document.getElementById('card-tot-' + id).value) || 1;
-      const cur = Math.min(parseInt(document.getElementById('card-cur-' + id).value) || 0, total);
-      b.total = total; b.progress = cur;
-      saveState(); renderLibrary(); renderDashboard();
+    function updatePdfProgress() {
+      if (!currentOpenBookId) return;
+      const bookMeta = state.readerBooks.find(b => b.id === currentOpenBookId);
+      if (!bookMeta || bookMeta.type !== 'pdf') return;
+      let currentPage = parseInt(document.getElementById('pdf-current-page').value) || 0;
+      if (currentPage > bookMeta.total) currentPage = bookMeta.total;
+      if (currentPage < 0) currentPage = 0;
+      document.getElementById('pdf-current-page').value = currentPage;
+      bookMeta.progress = currentPage;
+      saveState(); // sync
+      renderDashboard(); // Update circles
+      toast('تم حفظ تقدمك بنجاح ✓');
     }
-    function delLibBook(id) {
-      state.readerBooks = (state.readerBooks || []).filter(b => b.id !== id);
-      if (currentLibBookId === id) closeLibReadView();
-      saveState();
-      renderLibrary();
-      toast('تم الحذف ✓');
+    function handleFileSelect(input) { const file = input.files[0]; if (file) { document.getElementById('readerFileName').textContent = file.name; document.getElementById('saveReaderBtn').disabled = false; if (!document.getElementById('new-book-title').value) { document.getElementById('new-book-title').value = file.name.replace(/\.[^/.]+$/, ""); } const reader = new FileReader(); reader.onload = (e) => { window.rawFileContent = e.target.result; }; reader.onerror = () => { alert("خطأ أثناء قراءة الملف"); }; reader.readAsText(file); } }
+    async function processAndSaveFile() {
+      const titleInput = document.getElementById('new-book-title').value.trim();
+      if (!window.rawFileContent || !titleInput) { alert("اختر الملف واكتب الاسم."); return; }
+      if (!currentUserUID) return;
+      document.getElementById('global-loading').style.display = 'flex';
+      const fileName = document.getElementById('readerFileName').textContent.toLowerCase();
+      const newBookId = Date.now();
+      try {
+        if (fileName.endsWith('.html') || fileName.endsWith('.htm')) {
+          const newBookMeta = { id: newBookId, title: titleInput, type: 'html', progress: 0, total: 1 };
+          await db.ref(`users/${currentUserUID}/book_contents/${newBookId}`).set({ rawHtml: window.rawFileContent });
+          state.readerBooks.push(newBookMeta);
+        } else {
+          let textToParse = window.rawFileContent;
+          if (textToParse.trim().toLowerCase().startsWith('<')) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(textToParse, 'text/html');
+            textToParse = doc.body.innerText;
+          }
+          const allParas = textToParse.split(/\n\s*\n/).map(p => p.trim()).filter(p => p.length > 0);
+          const arrangedData = [];
+          for (let i = 0; i < allParas.length; i += 2) {
+            arrangedData.push({ en: allParas[i] || "", ar: allParas[i + 1] || "...", read: false });
+          }
+          const newBookMeta = { id: newBookId, title: titleInput, type: 'text', progress: 0, total: arrangedData.length };
+          await db.ref(`users/${currentUserUID}/book_contents/${newBookId}`).set(arrangedData);
+          state.readerBooks.push(newBookMeta);
+        }
+        await saveState();
+        document.getElementById('global-loading').style.display = 'none';
+        alert("تم الحفظ ✓");
+        document.getElementById('new-book-title').value = '';
+        document.getElementById('readerFileName').textContent = 'اضغط هنا للاختيار';
+        document.getElementById('saveReaderBtn').disabled = true;
+        window.rawFileContent = '';
+        openReaderBook(newBookId);
+      } catch (e) {
+        document.getElementById('global-loading').style.display = 'none'; alert("خطأ سحابي: " + e.message);
+      }
     }
-    function openLibBook(id) {
-      const b = (state.readerBooks || []).find(x => x.id === id);
-      if (!b) return;
-      currentLibBookId = id;
-      document.getElementById('lib-grid-view').style.display = 'none';
-      document.getElementById('lib-read-view').style.display = 'block';
-      document.getElementById('lib-read-title').textContent = b.title;
-      document.getElementById('lib-notes').value = b.notes || '';
-      const openBtn = document.getElementById('lib-open-btn');
-      if (openBtn) openBtn.style.display = b.url ? 'flex' : 'none';
+    async function savePdfBook() {
+      const title = document.getElementById('pdf-book-title').value.trim();
+      const url = document.getElementById('pdf-book-url').value.trim();
+      const pages = parseInt(document.getElementById('pdf-book-pages').value) || 1;
+      if (!title || !url) { alert("يرجى إدخال الاسم والرابط."); return; }
+      const newBookId = Date.now();
+      const newBookMeta = { id: newBookId, title: title, type: 'pdf', url: url, progress: 0, total: pages };
+      document.getElementById('global-loading').style.display = 'flex';
+      try {
+        state.readerBooks.push(newBookMeta);
+        await saveState();
+        document.getElementById('pdf-book-title').value = '';
+        document.getElementById('pdf-book-url').value = '';
+        document.getElementById('pdf-book-pages').value = '';
+        document.getElementById('global-loading').style.display = 'none';
+        alert("تم الحفظ ✓");
+        openReaderBook(newBookId);
+      } catch (e) {
+        document.getElementById('global-loading').style.display = 'none';
+        alert("خطأ: " + e.message);
+      }
     }
-    function closeLibReadView() {
-      document.getElementById('lib-read-view').style.display = 'none';
-      document.getElementById('lib-grid-view').style.display = 'block';
-      currentLibBookId = null;
-    }
-    function saveLibNotes() {
-      if (!currentLibBookId) return;
-      const b = (state.readerBooks || []).find(x => x.id === currentLibBookId);
-      if (!b) return;
-      b.notes = document.getElementById('lib-notes').value;
-      saveState();
-      toast('تم حفظ الملاحظات ✓');
-    }
-    function openLibPdf() {
-      const b = (state.readerBooks || []).find(x => x.id === currentLibBookId);
-      if (b && b.url) window.open(b.url, '_blank');
+    function toggleReaderPara(index) { if (!currentUserUID || !readerData[index] || !currentOpenBookId) return; const newStatus = !readerData[index].read; readerData[index].read = newStatus; const block = document.getElementById(`r-block-${index}`); const btn = block.querySelector('.check-btn'); if (newStatus) { block.classList.add('read-done'); btn.classList.add('active'); } else { block.classList.remove('read-done'); btn.classList.remove('active'); } updateReaderStatsUI(); db.ref(`users/${currentUserUID}/book_contents/${currentOpenBookId}/${index}/read`).set(newStatus); const bookMeta = state.readerBooks.find(b => b.id === currentOpenBookId); if (bookMeta) { bookMeta.progress = readerData.filter(p => p.read).length; saveState(); } }
+    function updateReaderStatsUI() { if (readerData.length === 0) return; const total = readerData.length; const readCount = readerData.filter(p => p.read).length; const pct = Math.round((readCount / total) * 100); const statEl = document.getElementById('reader-stats-summary'); if (statEl) { statEl.innerHTML = `<div class="rs-text">إنجاز الكتاب: ${readCount} من ${total} فقرة</div><div class="rs-pct">${pct}%</div>`; } }
+    function jumpToLastRead() { if (readerData.length === 0) return; const firstUnreadIndex = readerData.findIndex(p => !p.read); if (firstUnreadIndex !== -1) { const el = document.getElementById(`r-block-${firstUnreadIndex}`); const mainContainer = document.getElementById('main'); if (el && mainContainer) { const targetY = el.offsetTop - 150; mainContainer.scrollTo({ top: targetY, behavior: 'smooth' }); } } else { toast('لقد أنهيت الكتاب بالكامل! 🏆'); } }
+    function changeFontSize(delta) { currentFontSize += delta; if (currentFontSize < 12) currentFontSize = 12; if (currentFontSize > 30) currentFontSize = 30; document.querySelectorAll('.text-en, .text-ar').forEach(el => { el.style.fontSize = currentFontSize + 'px'; }); }
+    function searchReaderBook(query) { const blocks = document.querySelectorAll('.paragraph-block-reader'); const q = query.toLowerCase(); blocks.forEach(block => { if (block.innerText.toLowerCase().includes(q)) { block.style.display = 'block'; } else { block.style.display = 'none'; } }); }
+    function renderBookContent() {
+      const area = document.getElementById('reader-content-blocks');
+      if (!area) return;
+      if (readerData.length === 0) { area.innerHTML = `<div style="text-align:center; padding:40px; color:#888;">الكتاب فارغ.</div>`; updateReaderStatsUI(); return; }
+      area.innerHTML = readerData.map((block, index) => { const tsMatch = block.en.match(/\[(\d{2}:\d{2}:\d{2})\]/); const ts = tsMatch ? tsMatch[1] : null; const cleanEn = block.en.replace(/\[\d{2}:\d{2}:\d{2}\]/, ''); const isRead = block.read === true; return `<div class="paragraph-block-reader ${isRead ? 'read-done' : ''}" id="r-block-${index}"><div class="check-btn ${isRead ? 'active' : ''}" style="position:absolute; top:20px; right:20px; z-index:10;" onclick="toggleReaderPara(${index})">✓</div>${ts ? `<div class="timestamp-badge">${ts}</div>` : ''}<div class="text-en" style="padding-inline-start: 40px; font-size:${currentFontSize}px;">${cleanEn.replace(/\n/g, '<br>')}</div><div class="text-ar" style="padding-inline-start: 40px; font-size:${currentFontSize}px;">${block.ar.replace(/\n/g, '<br>')}</div></div>`; }).join(''); updateReaderStatsUI();
     }
     document.getElementById('main').addEventListener('scroll', function () {
       var mainEl = document.getElementById('main');
       var winScroll = mainEl.scrollTop;
       var height = mainEl.scrollHeight - mainEl.clientHeight;
       var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+      // Progress bar for text books
+      if (document.getElementById('page-reader').classList.contains('active') && currentOpenBookId) {
+        const bookMeta = state.readerBooks.find(b => b.id === currentOpenBookId);
+        if (bookMeta && bookMeta.type === 'text') {
+          const progBar = document.getElementById("readingProgress");
+          if (progBar && !isNaN(scrolled)) progBar.style.width = scrolled + "%";
+        }
+      }
       const topBtn = document.getElementById('scrollTopBtn');
       if (winScroll > 400) topBtn.style.display = 'flex';
       else topBtn.style.display = 'none';
@@ -3557,19 +3690,9 @@
         state.journal[today].breatheDone = true;
         saveState();
         renderBreatheStatus();
-        renderHabits();
-        renderDailyMiniDash();
         playSound('achieve');
         toast('رائع! لقد أتممت تمرين التنفس اليومي 🎉');
       }
-    }
-    function deleteBreatheToday() {
-      if (!state.journal[today]) return;
-      delete state.journal[today].breatheTime;
-      delete state.journal[today].breatheDone;
-      saveState();
-      renderHabits();
-      renderBreatheStatus();
     }
     function renderBreatheStatus() {
       const statusEl = document.getElementById('breathe-status');
@@ -3605,16 +3728,100 @@
       return `${m}:${s}`;
     }
 
-        function adjustGameTime(game, amount) {
-      if(!isFocusGameActive) return;
-      if (game === 'stroop') { stroopTimeLeft += amount; if(stroopTimeLeft<0) stroopTimeLeft=0; document.getElementById('stroop-time').textContent = stroopTimeLeft; }
-      else if (game === 'slide') { slideTimeLeft += amount; if(slideTimeLeft<0) slideTimeLeft=0; document.getElementById('slide-time').textContent = formatGameTime(slideTimeLeft); }
-      else if (game === 'sm') { smTime += amount; if(smTime<0) smTime=0; document.getElementById('sm-time').textContent = formatGameTime(smTime); }
-      else if (game === 'sc') { scTime += amount; if(scTime<0) scTime=0; document.getElementById('sc-time').textContent = formatGameTime(scTime); }
-      else if (game === 'ws') { wsTime += amount; if(wsTime<0) wsTime=0; document.getElementById('ws-time').textContent = formatGameTime(wsTime); }
-      else if (game === 'inf') { infTime += amount; if(infTime<0) infTime=0; document.getElementById('inf-time').textContent = formatGameTime(infTime); }
-      else if (game === 'dir') { dirTime += amount; if(dirTime<0) dirTime=0; document.getElementById('direction-time').textContent = dirTime; }
+    function adjustGameTime(game, amount) {
+      if (!isFocusGameActive) return;
+      if (game === 'stroop') { stroopTimeLeft += amount; if (stroopTimeLeft < 0) stroopTimeLeft = 0; document.getElementById('stroop-time').textContent = stroopTimeLeft; }
+      else if (game === 'slide') { slideTimeLeft += amount; if (slideTimeLeft < 0) slideTimeLeft = 0; document.getElementById('slide-time').textContent = formatGameTime(slideTimeLeft); }
+      else if (game === 'sm') { smTime += amount; if (smTime < 0) smTime = 0; document.getElementById('sm-time').textContent = formatGameTime(smTime); }
+      else if (game === 'sc') { scTime += amount; if (scTime < 0) scTime = 0; document.getElementById('sc-time').textContent = formatGameTime(scTime); }
+      else if (game === 'ws') { wsTime += amount; if (wsTime < 0) wsTime = 0; document.getElementById('ws-time').textContent = formatGameTime(wsTime); }
+      else if (game === 'inf') { infTime += amount; if (infTime < 0) infTime = 0; document.getElementById('inf-time').textContent = formatGameTime(infTime); }
+      else if (game === 'dir') { dirTime += amount; if (dirTime < 0) dirTime = 0; document.getElementById('direction-time').textContent = dirTime; }
     }
+    function recordGameScore(gameId, score) {
+      if (!state.gameHistory) state.gameHistory = {};
+      const dStr = today;
+      if (!state.gameHistory[dStr]) state.gameHistory[dStr] = {};
+      if (!state.gameHistory[dStr][gameId]) state.gameHistory[dStr][gameId] = [];
+      state.gameHistory[dStr][gameId].push(score);
+      saveState();
+    }
+
+    function renderFocusDashboard() {
+      const timeframe = document.getElementById('focus-dash-timeframe').value;
+      const history = state.gameHistory || {};
+
+      let datesToInclude = [];
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+
+      Object.keys(history).forEach(dStr => {
+        if (!dStr || !dStr.includes('-')) return;
+        const parts = dStr.split('-');
+        if (parts.length !== 3) return;
+        const d = new Date(parts[0], parts[1] - 1, parts[2]); // Local midnight
+        const diffDays = Math.floor((now - d) / (1000 * 60 * 60 * 24));
+        if (timeframe === 'today' && dStr === today) datesToInclude.push(dStr);
+        else if (timeframe === '7days' && diffDays < 7 && diffDays >= 0) datesToInclude.push(dStr);
+        else if (timeframe === '30days' && diffDays < 30 && diffDays >= 0) datesToInclude.push(dStr);
+        else if (timeframe === 'alltime') datesToInclude.push(dStr);
+      });
+
+      // Calculate max score per game within the timeframe
+      const bestScores = { stroop: 0, vs: 0, slide: 0, sm: 0, sc: 0, direction: 0, sizesorter: 0, mc: 0 };
+
+      datesToInclude.forEach(dStr => {
+        const dayData = history[dStr];
+        Object.keys(bestScores).forEach(game => {
+          if (dayData[game] && dayData[game].length > 0) {
+            const maxForDay = Math.max(...dayData[game]);
+            if (maxForDay > bestScores[game]) bestScores[game] = maxForDay;
+          }
+        });
+      });
+
+      // Map to Categories
+      // Speed: direction, vs
+      // Memory: mc
+      // Attention: stroop, vs, direction
+      // Flexibility: stroop, slide, sizesorter
+      // Reasoning & Math: sm, sc
+
+      const calcAvg = (gamesArr) => {
+        let sum = 0, count = 0;
+        gamesArr.forEach(g => { if (bestScores[g] > 0) { sum += bestScores[g]; count++; } });
+        return count > 0 ? Math.round(sum / count) : 0;
+      };
+
+      const categories = [
+        { name: 'السرعة (Speed)', score: calcAvg(['direction', 'vs']), max: 8000 },
+        { name: 'الذاكرة (Memory)', score: calcAvg(['mc']), max: 3000 },
+        { name: 'الانتباه (Attention)', score: calcAvg(['stroop', 'vs', 'direction']), max: 6000 },
+        { name: 'المرونة (Flexibility)', score: calcAvg(['stroop', 'slide', 'sizesorter']), max: 4000 },
+        { name: 'المنطق (Reasoning & Math)', score: calcAvg(['sm', 'sc']), max: 5000 }
+      ];
+
+      let html = '';
+      categories.forEach(c => {
+        let scoreText = c.score > 0 ? c.score : '--';
+        let pct = c.score > 0 ? Math.min(100, Math.max(5, (c.score / c.max) * 100)) : 0;
+
+        html += `
+          <div>
+            <div style="font-size:14px; font-weight:bold; color:var(--black); margin-bottom:5px;">${c.name}</div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="flex:1; height:12px; background:var(--border); border-radius:6px; overflow:hidden;">
+                <div style="width:${pct}%; height:100%; background:linear-gradient(90deg, #fcd34d, #f59e0b); border-radius:6px; transition: width 0.5s;"></div>
+              </div>
+              <div style="font-weight:bold; color:var(--text); font-family:'JetBrains Mono', monospace; width:40px; text-align:right;">${scoreText}</div>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('focus-dash-categories').innerHTML = html;
+    }
+
     function startStroopGame() {
       resetFocusMistakes();
       document.getElementById('focus-menu').style.display = 'none';
@@ -3646,6 +3853,7 @@
           if (stroopTimeLeft <= 0) {
             clearInterval(focusTimer);
             isFocusGameActive = false;
+            recordGameScore('stroop', stroopScore);
             alert(`انتهى الوقت! نقاطك: ${stroopScore}`);
             startStroopGame();
           }
@@ -3841,12 +4049,12 @@
         slideInterval = setInterval(() => {
           slideTimeLeft--;
           document.getElementById('slide-time').textContent = formatGameTime(slideTimeLeft);
-        if (slideTimeLeft <= 0) {
-          clearInterval(slideInterval);
-          isFocusGameActive = false;
-          alert('انتهى الوقت للغز الانزلاق!');
-          startSlideGame();
-        }
+          if (slideTimeLeft <= 0) {
+            clearInterval(slideInterval);
+            isFocusGameActive = false;
+            alert('انتهى الوقت للغز الانزلاق!');
+            startSlideGame();
+          }
           document.getElementById('slide-bottom-timer').textContent = formatGameTime(slideTime);
         }, 1000);
       }
@@ -4274,6 +4482,7 @@
         if (mcTime <= 0) {
           clearInterval(mcInterval);
           isFocusGameActive = false;
+          recordGameScore('mc', mcScore);
           alert(`انتهى الوقت! نقاطك: ${mcScore}`);
           startMemoryConnectGame();
         }
@@ -4297,8 +4506,6 @@
       legendEl.innerHTML = '';
       for (let i = 1; i <= 9; i++) {
         const item = document.createElement('div');
-        item.id = 'mc-legend-item-' + i;
-        item.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
         item.style.display = 'flex'; item.style.alignItems = 'center'; item.style.gap = '4px';
         const circle = document.createElement('div');
         circle.style.width = '16px'; circle.style.height = '16px'; circle.style.borderRadius = '50%';
@@ -4308,43 +4515,6 @@
         num.style.color = 'var(--text)';
         item.appendChild(circle); item.appendChild(num);
         legendEl.appendChild(item);
-      }
-    }
-    function updateMCSequenceHighlight() {
-      const seqEl = document.getElementById('mc-sequence');
-      if (!seqEl.querySelector('span')) return;
-      for (let i = 0; i < mcSequence.length; i++) {
-        const span = document.getElementById(`mc-seq-num-${i}`);
-        if (!span) continue;
-        if (i < mcUserSequence.length) {
-          span.style.color = '#10b981';
-          span.style.transform = 'scale(1)';
-          span.style.opacity = '0.4';
-        } else if (i === mcUserSequence.length) {
-          span.style.color = 'var(--primary)';
-          span.style.transform = 'scale(1.5)';
-          span.style.opacity = '1';
-        } else {
-          span.style.color = 'var(--text)';
-          span.style.transform = 'scale(1)';
-          span.style.opacity = '1';
-        }
-      }
-
-      const currentTargetNum = mcSequence[mcUserSequence.length];
-      for (let i = 1; i <= 9; i++) {
-        const legendItem = document.getElementById('mc-legend-item-' + i);
-        if (!legendItem) continue;
-        if (mcUserSequence.length >= mcSequence.length) {
-          legendItem.style.opacity = '1';
-          legendItem.style.transform = 'scale(1)';
-        } else if (currentTargetNum === i) {
-          legendItem.style.opacity = '1';
-          legendItem.style.transform = 'scale(1.3)';
-        } else {
-          legendItem.style.opacity = '0.4';
-          legendItem.style.transform = 'scale(0.9)';
-        }
       }
     }
     function nextMCLevel() {
@@ -4372,55 +4542,20 @@
         dot.style.background = mcColors[num];
         dot.style.cursor = 'pointer';
         dot.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
-        dot.style.transition = 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)';
-        dot.onclick = function() { handleMCClick(num, this); };
+        dot.style.transition = 'transform 0.1s';
+        dot.onclick = () => handleMCClick(num);
         nodesEl.appendChild(dot);
       }
       const seqLength = Math.min(4 + Math.floor(mcLevel / 2), 9);
       const possibleNums = [...nums].sort(() => 0.5 - Math.random());
       mcSequence = possibleNums.slice(0, seqLength);
-      
-      const seqContainer = document.getElementById('mc-sequence');
-      seqContainer.innerHTML = '';
-      seqContainer.style.direction = 'ltr';
-      seqContainer.style.display = 'inline-flex';
-      seqContainer.style.alignItems = 'center';
-      seqContainer.style.gap = '10px';
-
-      mcSequence.forEach((n, i) => {
-        const span = document.createElement('span');
-        span.id = `mc-seq-num-${i}`;
-        span.textContent = n;
-        span.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-        span.style.display = 'inline-block';
-        seqContainer.appendChild(span);
-        
-        if (i < mcSequence.length - 1) {
-          const dash = document.createElement('span');
-          dash.textContent = '-';
-          dash.style.color = 'var(--text3)';
-          seqContainer.appendChild(dash);
-        }
-      });
-      updateMCSequenceHighlight();
+      document.getElementById('mc-sequence').textContent = mcSequence.join(' - ');
     }
-    function handleMCClick(num, el) {
-      if (el) {
-        el.style.transform = 'scale(0.85)';
-        el.style.boxShadow = '0 0 15px ' + mcColors[num];
-        setTimeout(() => {
-          if (el) {
-            el.style.transform = 'scale(1)';
-            el.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
-          }
-        }, 150);
-      }
-
+    function handleMCClick(num) {
       if (mcSequence[mcUserSequence.length] === num) {
         mcUserSequence.push(num);
         playSound('soft');
         drawMCLines();
-        updateMCSequenceHighlight();
         if (mcUserSequence.length === mcSequence.length) {
           mcScore += mcLevel * 10;
           mcLevel++;
@@ -4429,17 +4564,9 @@
           setTimeout(() => { nextMCLevel(); }, 800);
         }
       } else {
-        if (el) {
-          el.style.backgroundColor = '#ef4444'; // turn red on mistake
-          el.style.transform = 'translateX(-5px)';
-          setTimeout(() => el.style.transform = 'translateX(5px)', 50);
-          setTimeout(() => el.style.transform = 'translateX(0)', 100);
-          setTimeout(() => {
-            el.style.backgroundColor = mcColors[num];
-          }, 400);
-        }
         playSound('error'); focusMistakes++; document.getElementById('mistake-count').textContent = focusMistakes;
-
+        mcUserSequence = [];
+        drawMCLines();
         const seqEl = document.getElementById('mc-sequence');
         seqEl.style.transform = 'translateX(10px)';
         seqEl.style.color = '#ef4444';
@@ -5153,6 +5280,7 @@
       if (dirAnimFrame) cancelAnimationFrame(dirAnimFrame);
       document.getElementById('focus-direction-area').style.display = 'none';
       if (!state.highScores.direction || dirScore > state.highScores.direction) state.highScores.direction = dirScore; saveState(); updateHighScores();
+      recordGameScore('direction', dirScore);
       document.getElementById('focus-menu').style.display = 'block';
       if (document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'none';
       if (dirTime <= 0) alert(`انتهى الوقت! نقاطك: ${dirScore}`);
