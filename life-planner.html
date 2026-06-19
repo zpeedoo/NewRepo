@@ -148,18 +148,20 @@
     .bnav {
       display: none;
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--nav-bg);
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 40px);
+      max-width: 400px;
+      background: var(--surface);
       backdrop-filter: blur(12px);
-      border-top: 1px solid var(--border);
+      border: 1px solid var(--border);
+      border-radius: 30px;
       z-index: 100;
-      justify-content: space-between;
+      justify-content: space-around;
       align-items: center;
-      padding: 6px 2px;
-      padding-bottom: max(8px, env(safe-area-inset-bottom));
-      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+      padding: 8px 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
 
     .bnav-item {
@@ -170,18 +172,28 @@
       align-items: center;
       justify-content: center;
       color: var(--text2);
-      padding: 6px 0;
-      font-size: 18px;
+      padding: 8px 0;
       cursor: pointer;
       transition: 0.2s;
-      border-radius: 8px;
+      border-radius: 20px;
+    }
+
+    .bnav-item svg {
+      width: 24px;
+      height: 24px;
+      stroke-width: 2;
+      stroke: currentColor;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      margin-bottom: 2px;
     }
 
     .bnav-item span {
       display: block;
-      font-size: 8.5px;
+      font-size: 10px;
       font-weight: 700;
-      margin-top: 4px;
+      margin-top: 2px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -1676,6 +1688,28 @@
       filter: brightness(1.1);
     }
 
+    @keyframes taskBtnAnim {
+      0% {
+        transform: scale(1) rotate(0deg);
+      }
+
+      30% {
+        transform: scale(0.8) rotate(-15deg);
+      }
+
+      60% {
+        transform: scale(1.1) rotate(15deg);
+      }
+
+      100% {
+        transform: scale(1) rotate(0deg);
+      }
+    }
+
+    .anim-task-btn {
+      animation: taskBtnAnim 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    }
+
     .list-item:hover {
       background: var(--surface2);
       border-color: var(--border-darker);
@@ -1821,6 +1855,87 @@
         display: none !important;
       }
     }
+
+    /* Settings Page Styles (WhatsApp Style) */
+    .settings-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 0 20px 0;
+      border-bottom: 1px solid var(--border-darker);
+      margin-bottom: 10px;
+    }
+    .settings-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .settings-name {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 5px;
+    }
+    .settings-status {
+      font-size: 14px;
+      color: var(--text2);
+    }
+    .settings-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .settings-item {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .settings-item:hover {
+      background-color: var(--surface2);
+    }
+    .settings-icon {
+      width: 24px;
+      height: 24px;
+      color: var(--text2);
+      margin-left: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .settings-text-wrapper {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 15px;
+    }
+    .settings-item:last-child .settings-text-wrapper {
+      border-bottom: none;
+    }
+    .settings-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .settings-subtitle {
+      font-size: 13px;
+      color: var(--text2);
+    }
+    .settings-item.danger .settings-icon,
+    .settings-item.danger .settings-title {
+      color: #ef4444;
+    }
   </style>
 </head>
 
@@ -1910,18 +2025,26 @@
   <div class="main" id="main">
     <!-- Top Header -->
     <div class="date-hdr">
-      <div class="date-widget">
-        <div class="date-circle" id="hdr-day">19</div>
-        <div class="date-text" id="hdr-date-full">Tue,<br>December</div>
-      </div>
       <div class="header-actions">
         <button id="btn-add-task-global" class="circle-btn"
-          style="background: var(--text2); color: white; border: none; display: flex; align-items: center; justify-content: center;"
-          onclick="openModal('habit')" title="إضافة مهمة">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+          style="background: var(--text2); color: white; border: none; display: flex; align-items: center; justify-content: center; width: 55px; height: 55px;"
+          onclick="this.classList.add('anim-task-btn'); setTimeout(() => this.classList.remove('anim-task-btn'), 400); setTimeout(() => openModal('habit'), 150);"
+          title="إضافة مهمة">
+          <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
             stroke-linecap="round" stroke-linejoin="round">
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <button id="btn-search-global" class="circle-btn" onclick="openModal('search')" title="بحث"
+          style="background: var(--surface2); color: var(--black); border: 1px solid var(--border);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
         </button>
         <button class="circle-btn" onclick="requestNotification()" title="تفعيل التنبيهات">🔔</button>
@@ -1976,30 +2099,31 @@
             <div class="circ-text" id="circ-txt-goals">0%</div>
           </div>
         </div>
-      </div>
 
-      <!-- Books Dashboard Row -->
-      <div class="metric-card" style="margin-bottom: 20px; padding: 20px; cursor:pointer;"
-        onclick="goPage({dataset:{page:'reader'}})">
-        <div style="flex:1">
-          <div class="metric-icon-wrap" style="background:#fef3c7; color:#d97706;">📚</div>
-          <div class="metric-title">تقدم قراءة الكتب</div>
-          <div style="display:flex; align-items:baseline; gap:8px; margin-top:4px;">
-            <div class="metric-val" id="dash-books-overall-pct" style="font-size:24px;">0%</div>
-            <div style="font-size:12px; color:var(--text3); font-weight:700;" id="dash-books-overall-pages">0/0 صفحة
+        <!-- Books Dashboard Row -->
+        <div class="metric-card" style="flex: 1; margin-bottom: 0; min-width: 200px; padding: 15px; cursor:pointer;"
+          onclick="goPage({dataset:{page:'reader'}})">
+          <div style="flex:1">
+            <div class="metric-icon-wrap" style="background:#fef3c7; color:#d97706;">📚</div>
+            <div class="metric-title">تقدم قراءة الكتب</div>
+            <div style="display:flex; align-items:baseline; gap:8px; margin-top:4px;">
+              <div class="metric-val" id="dash-books-overall-pct" style="font-size:24px;">0%</div>
+              <div style="font-size:12px; color:var(--text3); font-weight:700;" id="dash-books-overall-pages">0/0 صفحة
+              </div>
+            </div>
+            <div class="prog-bg" style="margin-top:12px; height:6px; border-radius:3px;">
+              <div class="prog-fill" id="dash-books-overall-bar"
+                style="background:#d97706; width:0%; transition:width 0.8s cubic-bezier(0.16,1,0.3,1);"></div>
             </div>
           </div>
-          <div class="prog-bg" style="margin-top:12px; height:6px; border-radius:3px;">
-            <div class="prog-fill" id="dash-books-overall-bar"
-              style="background:#d97706; width:0%; transition:width 0.8s cubic-bezier(0.16,1,0.3,1);"></div>
+          <div
+            style="display:flex; flex-direction:column; align-items:center; gap:6px; flex-shrink:0; margin-right:10px;">
+            <div style="font-size:22px; font-weight:800; font-family:'JetBrains Mono',monospace; color:var(--black);"
+              id="dash-books-overall-done">0/0</div>
+            <div style="font-size:11px; color:var(--text2); font-weight:700;">كتب مكتملة</div>
           </div>
         </div>
-        <div
-          style="display:flex; flex-direction:column; align-items:center; gap:6px; flex-shrink:0; margin-right:10px;">
-          <div style="font-size:22px; font-weight:800; font-family:'JetBrains Mono',monospace; color:var(--black);"
-            id="dash-books-overall-done">0/0</div>
-          <div style="font-size:11px; color:var(--text2); font-weight:700;">كتب مكتملة</div>
-        </div>
+
       </div>
       <div class="daily-layout">
         <div class="daily-main">
@@ -2207,7 +2331,8 @@
         </div>
 
         <!-- Bottom Prompt -->
-        <div style="display:flex; background: var(--surface); border-top: 2px dashed var(--border-darker); height: 80px;">
+        <div
+          style="display:flex; background: var(--surface); border-top: 2px dashed var(--border-darker); height: 80px;">
           <div id="prompt-pointing"
             style="flex:1; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:bold; color:var(--text); border-left:2px dashed var(--border-darker); transition:0.3s;">
             الاتجاه (POINTING)</div>
@@ -2243,7 +2368,8 @@
           <button class="btn btn-dark" style="background:#eab308; color:white; font-size: 18px; padding: 15px;"
             onclick="checkStroop('أصفر')">أصفر</button>
         </div>
-        <div style="display:flex; justify-content:center; align-items:center; gap: 15px; margin: 20px 0 10px 0; direction: ltr;">
+        <div
+          style="display:flex; justify-content:center; align-items:center; gap: 15px; margin: 20px 0 10px 0; direction: ltr;">
           <button class="circle-btn" onclick="adjustGameTime('stroop', -60)"
             style="background:var(--surface2); border:2px solid var(--border-darker); color:gray; width:40px; height:40px; font-weight:bold; font-size:18px;">-</button>
           <div id="stroop-bottom-timer"
@@ -2285,7 +2411,8 @@
           style="display: grid; grid-template-columns: repeat(3, 80px); grid-template-rows: repeat(3, 80px); gap: 10px; justify-content: center; margin: 20px auto; background: var(--border); padding: 10px; border-radius: 12px; width:fit-content;">
           <!-- Grid items populated by JS -->
         </div>
-        <div style="display:flex; justify-content:center; align-items:center; gap: 15px; margin: 20px 0 10px 0; direction: ltr;">
+        <div
+          style="display:flex; justify-content:center; align-items:center; gap: 15px; margin: 20px 0 10px 0; direction: ltr;">
           <button class="circle-btn" onclick="adjustGameTime('slide', -60)"
             style="background:var(--surface2); border:2px solid var(--border-darker); color:gray; width:40px; height:40px; font-weight:bold; font-size:18px;">-</button>
           <div id="slide-bottom-timer"
@@ -2383,12 +2510,15 @@
             <!-- Words populated by JS -->
           </div>
         </div>
-        <div style="display:flex; justify-content:center; align-items:center; gap: 15px; margin: 20px 0 10px 0; direction: ltr;">
+        <div
+          style="display:flex; justify-content:center; align-items:center; gap: 15px; margin: 20px 0 10px 0; direction: ltr;">
           <div id="ws-bottom-timer"
             style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #ef4444; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); margin:0;">
             00:00</div>
         </div>
-        <button class="btn btn-dark" style="margin-top: 10px; width: fit-content; padding: 12px 30px; border-radius: 30px; margin-left: auto; margin-right: auto;" onclick="quitFocusGame()">عودة للقائمة</button>
+        <button class="btn btn-dark"
+          style="margin-top: 10px; width: fit-content; padding: 12px 30px; border-radius: 30px; margin-left: auto; margin-right: auto;"
+          onclick="quitFocusGame()">عودة للقائمة</button>
       </div>
       <!-- Infinity Path Game Area -->
       <div id="focus-infinity-area" style="display: none; text-align: center;">
@@ -2422,12 +2552,15 @@
           style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; justify-content: center; max-width: 300px; margin: 0 auto;">
           <!-- Populated by JS -->
         </div>
-        <div style="display:flex; justify-content:center; align-items:center; gap: 15px; margin: 20px 0 10px 0; direction: ltr;">
+        <div
+          style="display:flex; justify-content:center; align-items:center; gap: 15px; margin: 20px 0 10px 0; direction: ltr;">
           <div id="inf-bottom-timer"
             style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #ef4444; margin: 0; background: var(--surface2); padding: 10px 20px; border-radius: 16px; border: 2px dashed var(--border-darker); display: inline-block;">
             00:00</div>
         </div>
-        <button class="btn btn-dark" style="margin-top: 10px; width: fit-content; padding: 12px 30px; border-radius: 30px; margin-left: auto; margin-right: auto;" onclick="quitFocusGame()">عودة للقائمة</button>
+        <button class="btn btn-dark"
+          style="margin-top: 10px; width: fit-content; padding: 12px 30px; border-radius: 30px; margin-left: auto; margin-right: auto;"
+          onclick="quitFocusGame()">عودة للقائمة</button>
       </div>
       <!-- Memory Connect Game Area -->
       <div id="focus-memory-area" style="display: none; text-align: center;">
@@ -2468,14 +2601,17 @@
           <button class="circle-btn" onclick="adjustMCTime(60)"
             style="background:var(--surface2); border:2px solid var(--border-darker); color:gray; width:40px; height:40px; font-weight:bold; font-size:18px;">+</button>
         </div>
-        <button class="btn btn-dark" style="margin-top: 10px; width: fit-content; padding: 12px 30px; border-radius: 30px; margin-left: auto; margin-right: auto;" onclick="quitFocusGame()">عودة للقائمة</button>
+        <button class="btn btn-dark"
+          style="margin-top: 10px; width: fit-content; padding: 12px 30px; border-radius: 30px; margin-left: auto; margin-right: auto;"
+          onclick="quitFocusGame()">عودة للقائمة</button>
       </div>
 
     </div>
     <!-- REPORTS PAGE -->
     <div class="page" id="page-reports">
-      <div class="add-bar" style="border-color: var(--primary);">
+      <div class="add-bar" style="border-color: var(--primary); display: flex; justify-content: space-between; align-items: center;">
         <div style="font-weight:800; font-size:16px; color: var(--primary)">التقارير التفصيلية 📈</div>
+        <button class="btn btn-sec" style="padding: 4px 12px; font-size: 13px; margin: 0;" data-page="account" onclick="goPage(this)">رجوع</button>
       </div>
       <div class="card-box" style="margin-bottom: 25px;">
         <div class="field" style="margin-bottom: 0;">
@@ -2511,27 +2647,156 @@
           onclick="exportReportPDF()">تصدير التقرير كملف PDF 📥</button>
       </div>
     </div>
+    <!-- ACCOUNT PAGE -->
+    <div class="page" id="page-account" style="padding: 0; background: var(--surface);">
+      <!-- Top header / Profile Section -->
+      <div class="settings-header">
+        <div class="settings-avatar" id="account-avatar" onclick="document.getElementById('hidden-pic-upload').click()" style="cursor: pointer; position: relative; overflow: hidden; background-size: cover; background-position: center;">
+          <img id="account-avatar-img" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
+          <span id="account-avatar-icon">👤</span>
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); font-size: 10px; padding: 2px 0; text-align: center; color: white; line-height: 1.2;">تغيير</div>
+        </div>
+        <div class="settings-name" id="account-display-name">المستخدم</div>
+        <div class="settings-status">متصل عبر التطبيق</div>
+      </div>
+
+      <!-- Settings List -->
+      <div class="settings-list">
+        <!-- Profile -->
+        <div class="settings-item" onclick="document.getElementById('profile-fields').style.display = document.getElementById('profile-fields').style.display === 'none' ? 'block' : 'none'">
+          <div class="settings-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          </div>
+          <div class="settings-text-wrapper">
+            <div class="settings-title">الملف الشخصي</div>
+            <div class="settings-subtitle">الاسم، العمر، والصورة</div>
+          </div>
+        </div>
+        <!-- Collapsible fields for Profile -->
+        <div id="profile-fields" style="display: none; padding: 15px 20px; background: var(--surface2); border-bottom: 1px solid var(--border);">
+          <div class="field" style="margin-bottom:15px;">
+            <label>الاسم المستعار</label>
+            <input type="text" id="s-name-m" class="inp" placeholder="الاسم">
+          </div>
+          <div class="field" style="margin-bottom:20px;">
+            <label>العمر</label>
+            <input type="number" id="s-age-m" class="inp" placeholder="مثال: 25">
+          </div>
+          <button class="btn btn-dark" style="width:100%; padding: 12px;" onclick="saveAccountSettingsM()">حفظ التعديلات 💾</button>
+        </div>
+
+        <!-- Notifications -->
+        <div class="settings-item" onclick="openModal('notif')">
+          <div class="settings-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          </div>
+          <div class="settings-text-wrapper">
+            <div class="settings-title">التنبيهات</div>
+            <div class="settings-subtitle">أوقات التذكير اليومي للعادات</div>
+          </div>
+        </div>
+
+        <!-- Reports -->
+        <div class="settings-item" data-page="reports" onclick="goPage(this)">
+          <div class="settings-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>
+          </div>
+          <div class="settings-text-wrapper">
+            <div class="settings-title">التقارير التفصيلية</div>
+            <div class="settings-subtitle">إحصائيات إنجاز العادات والأهداف</div>
+          </div>
+        </div>
+
+        <!-- Account / Security -->
+        <div class="settings-item" data-page="security" onclick="goPage(this)">
+          <div class="settings-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          </div>
+          <div class="settings-text-wrapper">
+            <div class="settings-title">الحساب والأمان</div>
+            <div class="settings-subtitle">البريد الإلكتروني، وتغيير كلمة المرور</div>
+          </div>
+        </div>
+
+        <!-- About -->
+        <div class="settings-item" onclick="toast('تطبيق مُبين الإصدار 1.000')">
+          <div class="settings-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          </div>
+          <div class="settings-text-wrapper">
+            <div class="settings-title">عن التطبيق</div>
+            <div class="settings-subtitle">الإصدار 1.000</div>
+          </div>
+        </div>
+
+        <!-- Logout -->
+        <div class="settings-item danger" onclick="handleLogout()">
+          <div class="settings-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          </div>
+          <div class="settings-text-wrapper">
+            <div class="settings-title">تسجيل الخروج</div>
+            <div class="settings-subtitle">الخروج من حسابك الحالي</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECURITY PAGE -->
+    <div class="page" id="page-security" style="padding: 0; background: var(--surface);">
+      <div class="add-bar" style="border-color: var(--border); display: flex; justify-content: space-between; align-items: center; border-radius: 0; border-left: none; border-right: none; border-top: none;">
+        <div style="font-weight:800; font-size:16px; color: var(--text);">الحساب والأمان</div>
+        <button class="btn btn-sec" style="padding: 4px 12px; font-size: 13px; margin: 0; background: var(--surface2); color: var(--text); border: none;" data-page="account" onclick="goPage(this)">رجوع</button>
+      </div>
+      <div class="settings-list" style="margin-top: 10px;">
+        <div class="settings-item">
+          <div class="settings-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          </div>
+          <div class="settings-text-wrapper">
+            <div class="settings-title">البريد الإلكتروني</div>
+            <div class="settings-subtitle" id="security-email-display">جاري التحميل...</div>
+          </div>
+        </div>
+        <div class="settings-item" onclick="toast('لا توجد تنبيهات أمان حالية')">
+          <div class="settings-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          </div>
+          <div class="settings-text-wrapper">
+            <div class="settings-title">تنبيهات الأمان</div>
+            <div class="settings-subtitle">الاطلاع على الأجهزة المتصلة</div>
+          </div>
+        </div>
+        <div class="settings-item" onclick="toast('هذه الميزة ستتوفر قريباً!')">
+          <div class="settings-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </div>
+          <div class="settings-text-wrapper">
+            <div class="settings-title">التحقق بخطوتين (2FA)</div>
+            <div class="settings-subtitle">طبقة حماية إضافية لحسابك</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div> <!-- End Main -->
   <!-- MODALS -->
   <!-- Notification Settings Modal -->
   <!-- Settings Modal -->
-  <div class="modal-ov" id="modal-settings">
-    <div class="modal-box">
-      <div class="modal-hdr">
-        <div class="modal-title">إعدادات الحساب ⚙️</div>
-        <button class="modal-close" onclick="closeModal('settings')">×</button>
+  <div class="modal-ov" id="modal-search">
+    <div class="modal">
+      <div class="modal-title">البحث 🔍</div>
+      <input type="text" id="search-input" class="inp" placeholder="ابحث عن العادات، الأهداف، الكتب..."
+        oninput="performSearch()" style="margin-bottom:15px;">
+      <div id="search-results"
+        style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;"></div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
+        <button class="btn btn-sec" onclick="closeModal('search')">إغلاق</button>
       </div>
-      <div class="field" style="margin-bottom:15px;">
-        <label>الاسم المستعار</label>
-        <input type="text" id="s-name-m" class="inp" placeholder="الاسم">
-      </div>
-      <div class="field" style="margin-bottom:20px;">
-        <label>العمر</label>
-        <input type="number" id="s-age-m" class="inp" placeholder="مثال: 25">
-      </div>
-      <button class="btn btn-dark" style="width:100%;" onclick="saveAccountSettingsM()">حفظ التعديلات 💾</button>
     </div>
   </div>
+  <!-- Settings moved to page -->
   <div class="modal-ov" id="modal-notif">
     <div class="modal">
       <div class="modal-title">تفعيل التنبيهات 🔔</div>
@@ -2696,7 +2961,9 @@
   <div class="modal-ov" id="modal-game-alert">
     <div class="modal" style="text-align: center;">
       <div class="modal-title" style="color: var(--primary)">تنبيه اللعبة 🎮</div>
-      <div id="game-alert-text" style="margin: 20px 0; font-size: 16px; font-weight: bold; color: var(--text); line-height: 1.6; white-space: pre-wrap;"></div>
+      <div id="game-alert-text"
+        style="margin: 20px 0; font-size: 16px; font-weight: bold; color: var(--text); line-height: 1.6; white-space: pre-wrap;">
+      </div>
       <div class="modal-actions" style="justify-content: center;">
         <button class="btn btn-primary" onclick="closeModal('game-alert')" style="width: 120px;">حسناً</button>
       </div>
@@ -2704,12 +2971,29 @@
   </div>
   <!-- Mobile Bottom Nav -->
   <div class="bnav">
-    <div class="bnav-item active" data-page="daily" onclick="goPage(this)">☀️<span>عاداتي</span></div>
-    <div class="bnav-item" data-page="goals" onclick="goPage(this)">🏆<span>أهدافي</span></div>
-    <div class="bnav-item" data-page="reader" onclick="goPage(this)">📖<span>القراءة</span></div>
-
-    <div class="bnav-item" data-page="focus" onclick="goPage(this)">🧠<span>التركيز</span></div>
-    <div class="bnav-item" data-page="reports" onclick="goPage(this)">📈<span>تقارير</span></div>
+    <div class="bnav-item active" data-page="daily" onclick="goPage(this)">
+      <svg viewBox="0 0 24 24"><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path><circle cx="12" cy="12" r="5"></circle></svg>
+      <span>عاداتي</span>
+    </div>
+    <div class="bnav-item" data-page="goals" onclick="goPage(this)">
+      <svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+      <span>أهدافي</span>
+    </div>
+    <div class="bnav-item" data-page="reader" onclick="goPage(this)">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path></svg>
+      <span>القراءة</span>
+    </div>
+    <div class="bnav-item" data-page="focus" onclick="goPage(this)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+      <span>التركيز</span>
+    </div>
+    <div class="bnav-item" data-page="account" onclick="goPage(this)">
+      <svg viewBox="0 0 24 24">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      <span>حسابي</span>
+    </div>
   </div>
   <div class="toast" id="toast">✨ <span id="toast-msg"></span></div>
   <script>
@@ -2742,6 +3026,8 @@
           // Fetch user name or email for greeting
           let displayName = user.email ? user.email.split('@')[0] : "صديقي";
           document.getElementById('user-greeting-name').textContent = displayName;
+          const secEmailDisplay = document.getElementById('security-email-display');
+          if(secEmailDisplay && user.email) secEmailDisplay.textContent = user.email;
           document.title = `مُبين | ${displayName}`;
           checkAndMigrateDataThenLoad(currentUserUID);
           setupNotifications();
@@ -2799,10 +3085,8 @@
     let currentOpenBookId = null; let readerData = []; let currentFontSize = 17; window.rawFileContent = "";
     const dNow = new Date();
     const today = new Date(dNow.getTime() - (dNow.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-    document.getElementById('hdr-day').textContent = dNow.getDate();
     const engDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const engMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    document.getElementById('hdr-date-full').innerHTML = `${engDays[dNow.getDay()]},<br>${engMonths[dNow.getMonth()]}`;
     async function checkAndMigrateDataThenLoad(uid) {
       const userRef = db.ref(`users/${uid}/planner_state`);
       userRef.once('value', async (snap) => {
@@ -2932,12 +3216,14 @@
       const age = document.getElementById('s-age-m').value.trim();
       if (name) {
         state.settings.displayName = name;
-        document.getElementById('user-greeting-name').textContent = name;
+        const userGreet = document.getElementById('user-greeting-name');
+        if(userGreet) userGreet.textContent = name;
+        const accDispName = document.getElementById('account-display-name');
+        if(accDispName) accDispName.textContent = name;
         document.title = `مُبين | ${name}`;
       }
       if (age) state.settings.age = age;
       saveState();
-      closeModal('settings');
       toast('تم حفظ الإعدادات بنجاح ✅');
     }
     function finishSaveSettings() {
@@ -2954,6 +3240,23 @@
         } else {
           iconDiv.innerHTML = '👋';
           iconDiv.style.background = 'var(--black)';
+        }
+      }
+      const accAvatarImg = document.getElementById('account-avatar-img');
+      const accAvatarIcon = document.getElementById('account-avatar-icon');
+      const accAvatar = document.getElementById('account-avatar');
+      const accName = document.getElementById('account-display-name');
+      if (accName && state.settings.displayName) accName.textContent = state.settings.displayName;
+      if (accAvatarImg && accAvatarIcon && accAvatar) {
+        if (state.settings.profilePic) {
+          accAvatarImg.src = state.settings.profilePic;
+          accAvatarImg.style.display = 'block';
+          accAvatarIcon.style.display = 'none';
+          accAvatar.style.background = 'transparent';
+        } else {
+          accAvatarImg.style.display = 'none';
+          accAvatarIcon.style.display = 'inline';
+          accAvatar.style.background = 'var(--primary)';
         }
       }
     }
@@ -3013,7 +3316,50 @@
       }
       renderAll();
     }
+    function performSearch() {
+      const q = document.getElementById('search-input').value.toLowerCase().trim();
+      const resContainer = document.getElementById('search-results');
+      resContainer.innerHTML = '';
+      if (!q) return;
+
+      let results = [];
+      state.habits.forEach(h => {
+        if (h.title.toLowerCase().includes(q)) results.push({ type: 'habit', label: 'عادة', title: h.title, id: h.id, page: 'daily' });
+      });
+      state.goals.forEach(g => {
+        if (g.title.toLowerCase().includes(q)) results.push({ type: 'goal', label: 'هدف', title: g.title, id: g.id, page: 'goals' });
+      });
+      state.books.forEach(b => {
+        if (b.title.toLowerCase().includes(q)) results.push({ type: 'book', label: 'كتاب', title: b.title, id: b.id, page: 'reader' });
+      });
+
+      if (results.length === 0) {
+        resContainer.innerHTML = '<div style="color:var(--text3); font-size:13px; text-align:center;">لا توجد نتائج</div>';
+        return;
+      }
+
+      results.forEach(r => {
+        const div = document.createElement('div');
+        div.style = "padding:10px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;";
+        div.innerHTML = `<div style="font-weight:bold; font-size:14px; color:var(--black);">${r.title}</div><div style="font-size:11px; padding:3px 8px; border-radius:12px; background:var(--primary); color:white;">${r.label}</div>`;
+        div.onclick = () => {
+          closeModal('search');
+          const navItem = document.querySelector(`.bnav-item[data-page="${r.page}"]`) || document.querySelector(`.nav-item[data-page="${r.page}"]`);
+          if (navItem) goPage(navItem);
+          setTimeout(() => openModal(r.type, r.id), 300);
+        };
+        resContainer.appendChild(div);
+      });
+    }
+
     function openModal(type, id = null) {
+      if (type === 'search') {
+        document.getElementById('search-input').value = '';
+        document.getElementById('search-results').innerHTML = '';
+        document.getElementById('modal-search').classList.add('show');
+        setTimeout(() => document.getElementById('search-input').focus(), 100);
+        return;
+      }
       if (type === 'settings') {
         document.getElementById('s-name-m').value = state.settings.displayName || "صديقي";
         document.getElementById('s-age-m').value = state.settings.age || "";
@@ -3767,16 +4113,16 @@
     }
 
     function adjustGameTime(game, amount) {
-      if (game === 'stroop') { 
-        stroopTimeLeft += amount; 
-        if (stroopTimeLeft < 0) stroopTimeLeft = 0; 
-        document.getElementById('stroop-time').textContent = stroopTimeLeft; 
+      if (game === 'stroop') {
+        stroopTimeLeft += amount;
+        if (stroopTimeLeft < 0) stroopTimeLeft = 0;
+        document.getElementById('stroop-time').textContent = stroopTimeLeft;
         document.getElementById('stroop-bottom-timer').textContent = formatGameTime(stroopTimeLeft);
       }
-      else if (game === 'slide') { 
-        slideTimeLeft += amount; 
-        if (slideTimeLeft < 0) slideTimeLeft = 0; 
-        document.getElementById('slide-time').textContent = formatGameTime(slideTimeLeft); 
+      else if (game === 'slide') {
+        slideTimeLeft += amount;
+        if (slideTimeLeft < 0) slideTimeLeft = 0;
+        document.getElementById('slide-time').textContent = formatGameTime(slideTimeLeft);
         document.getElementById('slide-bottom-timer').textContent = formatGameTime(slideTimeLeft);
       }
       else if (game === 'sm') { smTime += amount; if (smTime < 0) smTime = 0; document.getElementById('sm-time').textContent = formatGameTime(smTime); }
@@ -4539,9 +4885,9 @@
       if (wsInterval) clearInterval(wsInterval);
       if (infInterval) clearInterval(infInterval);
       if (typeof dirInterval !== 'undefined' && dirInterval) clearInterval(dirInterval);
-      
+
       const games = [
-        'focus-stroop-area', 'focus-slide-area', 'focus-wordsearch-area', 
+        'focus-stroop-area', 'focus-slide-area', 'focus-wordsearch-area',
         'focus-infinity-area', 'focus-memory-area', 'focus-shapecounter-area',
         'focus-summatch-area', 'focus-direction-area'
       ];
@@ -4550,7 +4896,7 @@
         if (el) el.style.display = 'none';
       });
 
-      document.getElementById('focus-menu').style.display = 'block'; 
+      document.getElementById('focus-menu').style.display = 'block';
       if (document.getElementById('global-mistake-counter')) document.getElementById('global-mistake-counter').style.display = 'none';
     }
     // --- Reports Logic ---
@@ -5086,11 +5432,10 @@
       } else {
         playSound('error');
         focusMistakes++;
-        if(document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = focusMistakes;
+        if (document.getElementById('mistake-count')) document.getElementById('mistake-count').textContent = focusMistakes;
         shakeScreen();
       }
     }
-
   </script>
 </body>
 
