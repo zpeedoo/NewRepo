@@ -1911,14 +1911,6 @@
     <!-- Top Header -->
     <div class="date-hdr">
       <div class="header-actions">
-        <button id="btn-search-global" class="circle-btn" onclick="openModal('search')" title="بحث"
-          style="background: var(--surface2); color: var(--black); border: 1px solid var(--border);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-        </button>
         <button id="btn-add-task-global" class="circle-btn"
           style="background: var(--text2); color: white; border: none; display: flex; align-items: center; justify-content: center;"
           onclick="openModal('habit')" title="إضافة مهمة">
@@ -1931,11 +1923,15 @@
       </div>
 
       <div style="display: flex; align-items: center; gap: 15px;">
+        <button id="btn-search-global" class="circle-btn" onclick="openModal('search')" title="بحث"
+          style="background: var(--surface2); color: var(--black); border: 1px solid var(--border);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
         <button class="circle-btn" onclick="requestNotification()" title="تفعيل التنبيهات">🔔</button>
-        <div class="date-widget">
-          <div class="date-circle" id="hdr-day">19</div>
-          <div class="date-text" id="hdr-date-full">Tue,<br>December</div>
-        </div>
       </div>
     </div>
     <!-- Daily Habits -->
@@ -2844,10 +2840,8 @@
     let currentOpenBookId = null; let readerData = []; let currentFontSize = 17; window.rawFileContent = "";
     const dNow = new Date();
     const today = new Date(dNow.getTime() - (dNow.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-    document.getElementById('hdr-day').textContent = dNow.getDate();
     const engDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const engMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    document.getElementById('hdr-date-full').innerHTML = `${engDays[dNow.getDay()]},<br>${engMonths[dNow.getMonth()]}`;
     async function checkAndMigrateDataThenLoad(uid) {
       const userRef = db.ref(`users/${uid}/planner_state`);
       userRef.once('value', async (snap) => {
