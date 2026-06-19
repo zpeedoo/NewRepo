@@ -1983,6 +1983,25 @@
           </div>
         </div>
       </div>
+
+      <!-- Books Dashboard Row -->
+      <div class="metric-card" style="margin-bottom: 20px; padding: 20px; cursor:pointer;" onclick="goPage({dataset:{page:'reader'}})">
+        <div style="flex:1">
+          <div class="metric-icon-wrap" style="background:#fef3c7; color:#d97706;">📚</div>
+          <div class="metric-title">تقدم قراءة الكتب</div>
+          <div style="display:flex; align-items:baseline; gap:8px; margin-top:4px;">
+            <div class="metric-val" id="dash-books-overall-pct" style="font-size:24px;">0%</div>
+            <div style="font-size:12px; color:var(--text3); font-weight:700;" id="dash-books-overall-pages">0/0 صفحة</div>
+          </div>
+          <div class="prog-bg" style="margin-top:12px; height:6px; border-radius:3px;">
+            <div class="prog-fill" id="dash-books-overall-bar" style="background:#d97706; width:0%; transition:width 0.8s cubic-bezier(0.16,1,0.3,1);"></div>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px; flex-shrink:0; margin-right:10px;">
+          <div style="font-size:22px; font-weight:800; font-family:'JetBrains Mono',monospace; color:var(--black);" id="dash-books-overall-done">0/0</div>
+          <div style="font-size:11px; color:var(--text2); font-weight:700;">كتب مكتملة</div>
+        </div>
+      </div>
       <div class="daily-layout">
         <div class="daily-main">
 
@@ -2035,6 +2054,33 @@
         <div style="font-weight:800; font-size:16px">الكتب الورقية واليدوية 📚</div>
         <button class="btn btn-dark btn-circle" onclick="openModal('book')" title="إضافة كتاب">+</button>
       </div>
+
+      <!-- Books Dashboard -->
+      <div class="card-box" style="margin-bottom:20px;" id="books-dashboard">
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:16px; margin-bottom:20px;">
+          <div style="text-align:center;">
+            <div style="font-size:28px; font-weight:800; font-family:'JetBrains Mono',monospace; color:var(--black);" id="bd-total">0</div>
+            <div style="font-size:12px; color:var(--text2); font-weight:700; margin-top:4px;">إجمالي الكتب</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:28px; font-weight:800; font-family:'JetBrains Mono',monospace; color:#10b981;" id="bd-done">0</div>
+            <div style="font-size:12px; color:var(--text2); font-weight:700; margin-top:4px;">مكتملة 🏆</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:28px; font-weight:800; font-family:'JetBrains Mono',monospace; color:var(--primary);" id="bd-pct">0%</div>
+            <div style="font-size:12px; color:var(--text2); font-weight:700; margin-top:4px;">التقدم الكلي</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:22px; font-weight:800; font-family:'JetBrains Mono',monospace; color:var(--black);" id="bd-pages">0/0</div>
+            <div style="font-size:12px; color:var(--text2); font-weight:700; margin-top:4px;">صفحات مقروءة</div>
+          </div>
+        </div>
+        <div style="font-size:12px; color:var(--text2); font-weight:700; margin-bottom:8px;">التقدم الإجمالي</div>
+        <div class="prog-bg" style="height:12px; border-radius:6px;">
+          <div class="prog-fill" id="bd-bar" style="background:var(--primary); width:0%; height:100%; border-radius:6px; transition:width 0.8s cubic-bezier(0.16,1,0.3,1);"></div>
+        </div>
+      </div>
+
       <div id="books-list"></div>
     </div>
     <!-- FOCUS GYM PAGE -->
@@ -3243,7 +3289,42 @@
         }
       }, 60000);
     }
-    function getGoalProgressInfo(goalId) { const goal = state.goals.find(g => g.id == goalId); const linked = state.habits.filter(h => h.goalId == goalId); if (linked.length === 0) return { isAuto: false, pct: null, habitsTotal: 0 }; let exTot = 0; let dnTot = 0; let goalEndD = goal.endDate ? new Date(goal.endDate) : new Date(new Date().getFullYear(), 11, 31); linked.forEach(h => { let ex = 0; let dn = 0; let startD = new Date(h.start || today); let endD = h.end ? new Date(Math.min(new Date(h.end), goalEndD)) : goalEndD; let cur = new Date(startD); cur.setHours(0, 0, 0, 0); endD.setHours(0, 0, 0, 0); let daysInRange = 0; while (cur <= endD) { daysInRange++; if (h.freq === 'daily' || (h.freq === 'specific' && h.days.includes(cur.getDay()))) { ex++; } cur.setDate(cur.getDate() + 1); } if (h.freq === 'weekly') ex = Math.ceil(daysInRange / 7); if (h.freq === 'monthly') ex = Math.ceil(daysInRange / 30); if (h.freq === 'yearly') ex = Math.ceil(daysInRange / 365); Object.keys(state.history).forEach(d => { let histDate = new Date(d); if (histDate >= startD && histDate <= endD && state.history[d].includes(h.id)) dn++; }); exTot += ex; dnTot += dn; }); let pct = exTot > 0 ? Math.round((dnTot / exTot) * 100) : 0; return { isAuto: true, pct: Math.min(pct, 100), habitsTotal: linked.length }; }
+    function getGoalProgressInfo(goalId) {
+      const goal = state.goals.find(g => g.id == goalId);
+      const linked = state.habits.filter(h => h.goalId == goalId);
+      if (linked.length === 0) return { isAuto: false, pct: null, habitsTotal: 0 };
+      let exTot = 0; let dnTot = 0;
+      // todayUTC: UTC midnight — نفس طريقة تخزين تواريخ السجل
+      const todayUTC = new Date(today);
+      const goalEndUTC = goal.endDate ? new Date(goal.endDate) : new Date(`${new Date().getFullYear()}-12-31`);
+      linked.forEach(h => {
+        let ex = 0; let dn = 0;
+        const startUTC = new Date(h.start || today);
+        const habitEndUTC = h.end ? new Date(h.end) : goalEndUTC;
+        // نحسب فقط حتى اليوم (لا أيام المستقبل)
+        const endUTC = new Date(Math.min(habitEndUTC, goalEndUTC, todayUTC));
+        // حلقة عد الأيام المتوقعة (نستخدم منتصف ليل محلي للتكرار فقط)
+        let cur = new Date(startUTC); cur.setHours(0, 0, 0, 0);
+        let loopEnd = new Date(endUTC); loopEnd.setHours(0, 0, 0, 0);
+        let daysInRange = 0;
+        while (cur <= loopEnd) {
+          daysInRange++;
+          if (h.freq === 'daily' || (h.freq === 'specific' && h.days.includes(cur.getDay()))) ex++;
+          cur.setDate(cur.getDate() + 1);
+        }
+        if (h.freq === 'weekly') ex = Math.ceil(daysInRange / 7);
+        if (h.freq === 'monthly') ex = Math.ceil(daysInRange / 30);
+        if (h.freq === 'yearly') ex = Math.ceil(daysInRange / 365);
+        // مقارنة السجل بـ UTC midnight (متسقة مع new Date("YYYY-MM-DD"))
+        Object.keys(state.history).forEach(d => {
+          const histDate = new Date(d);
+          if (histDate >= startUTC && histDate <= endUTC && state.history[d].includes(h.id)) dn++;
+        });
+        exTot += ex; dnTot += dn;
+      });
+      const pct = exTot > 0 ? (dnTot > 0 ? Math.max(1, Math.round((dnTot / exTot) * 100)) : 0) : 0;
+      return { isAuto: true, pct: Math.min(pct, 100), habitsTotal: linked.length };
+    }
     function saveGoal() { const id = document.getElementById('m-goal-id').value; const title = document.getElementById('m-goal-title').value.trim(); const endDate = document.getElementById('m-goal-end').value; if (!title) { toast('أدخل اسم الهدف'); return; } if (id) { const g = state.goals.find(x => x.id == id); if (g) { g.title = title; g.endDate = endDate; } } else { state.goals.push({ id: state.nextId++, title, endDate, progress: 0 }); } saveState(); populateGlobalSelectors(); renderAll(); closeModal('goal'); toast('تم الحفظ 🎯'); }
     function delGoal(id) { if (confirm('تأكيد الحذف؟')) { state.goals = state.goals.filter(g => g.id != id); state.habits.forEach(h => { if (h.goalId == id) h.goalId = ""; }); saveState(); populateGlobalSelectors(); renderAll(); } }
     function updateGoalUI(id, val) { const g = state.goals.find(x => x.id === id); if (g && !getGoalProgressInfo(id).isAuto) { g.progress = parseInt(val); document.getElementById(`goal-pct-${id}`).textContent = g.progress + '%'; document.getElementById(`goal-fill-${id}`).style.width = g.progress + '%'; renderDashboard(); } }
@@ -3254,7 +3335,18 @@
     function updateBookPagesInline(id, value) { const b = state.books.find(x => x.id === id); const val = parseInt(value); if (b && !isNaN(val) && val >= 0) { b.readPages = Math.min(val, b.totalPages); saveState(); renderAll(); } }
     function openBookNotes(id) { const b = state.books.find(x => x.id === id); if (!b) return; document.getElementById('m-bnotes-id').value = id; document.getElementById('m-bnotes-text').value = b.notes || ''; document.getElementById('modal-book-notes').classList.add('show'); }
     function saveBookNotes() { const id = parseInt(document.getElementById('m-bnotes-id').value); const b = state.books.find(x => x.id === id); if (b) { b.notes = document.getElementById('m-bnotes-text').value; saveState(); toast('تم حفظ الملاحظات 📝'); } closeModal('book-notes'); }
-    function renderBooks() { document.getElementById('books-list').innerHTML = state.books.length ? state.books.map(b => { const pct = Math.round((b.readPages / b.totalPages) * 100) || 0; const isDone = pct === 100; return `<div class="card-box"><div class="card-hdr"><div style="display:flex; align-items:center; gap:10px"><div style="font-size:24px">${isDone ? '🏆' : '📖'}</div><div><div class="card-title" style="text-decoration: ${isDone ? 'line-through' : 'none'}">${b.title}</div><div style="font-size:12px; color:var(--text3); font-family:'JetBrains Mono', monospace; margin-top:4px">${b.readPages} / ${b.totalPages} صفحة</div></div></div><div class="card-pct">${pct}%</div></div><div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" style="background:var(--primary);width:${pct}%"></div></div></div><div style="display:flex; justify-content:space-between; margin-top:20px; border-top: 1px solid var(--border); padding-top:16px;"><div style="display:flex; align-items:center; gap:8px;"><label style="font-size:12px;font-weight:bold;color:var(--text2)">الصفحة:</label><input type="number" class="inp" style="width:70px; padding:8px 12px; text-align:center;" min="0" max="${b.totalPages}" value="${b.readPages}" onchange="updateBookPagesInline(${b.id}, this.value)" ${isDone ? 'disabled' : ''}></div><div style="display:flex; gap:6px;"><button class="btn" style="background:var(--primary); color:white; padding:0 12px; border-radius:8px; font-size:12px; box-shadow:none; height:32px;" onclick="openBookNotes(${b.id})">ملاحظات 📝</button><button class="del-btn" onclick="openModal('book', ${b.id})">✎</button><button class="del-btn" onclick="delBook(${b.id})">✕</button></div></div></div>`; }).join('') : '<div class="empty">مكتبتك فارغة. أضف كتابك الأول للبدء!</div>'; }
+    function renderBooks() {
+      const totalPages = state.books.reduce((s, b) => s + (Number(b.totalPages) || 0), 0);
+      const readPages  = state.books.reduce((s, b) => s + (Number(b.readPages)  || 0), 0);
+      const doneBooksCount = state.books.filter(b => b.readPages >= b.totalPages && b.totalPages > 0).length;
+      const overallPct = totalPages > 0 ? Math.round((readPages / totalPages) * 100) : 0;
+      const el = id => document.getElementById(id);
+      if (el('bd-total'))  el('bd-total').textContent  = state.books.length;
+      if (el('bd-done'))   el('bd-done').textContent   = doneBooksCount;
+      if (el('bd-pct'))    el('bd-pct').textContent    = overallPct + '%';
+      if (el('bd-pages'))  el('bd-pages').textContent  = `${readPages}/${totalPages}`;
+      if (el('bd-bar'))    el('bd-bar').style.width    = overallPct + '%';
+      document.getElementById('books-list').innerHTML = state.books.length ? state.books.map(b => { const pct = Math.round((b.readPages / b.totalPages) * 100) || 0; const isDone = pct === 100; return `<div class="card-box"><div class="card-hdr"><div style="display:flex; align-items:center; gap:10px"><div style="font-size:24px">${isDone ? '🏆' : '📖'}</div><div><div class="card-title" style="text-decoration: ${isDone ? 'line-through' : 'none'}">${b.title}</div><div style="font-size:12px; color:var(--text3); font-family:'JetBrains Mono', monospace; margin-top:4px">${b.readPages} / ${b.totalPages} صفحة</div></div></div><div class="card-pct">${pct}%</div></div><div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" style="background:var(--primary);width:${pct}%"></div></div></div><div style="display:flex; justify-content:space-between; margin-top:20px; border-top: 1px solid var(--border); padding-top:16px;"><div style="display:flex; align-items:center; gap:8px;"><label style="font-size:12px;font-weight:bold;color:var(--text2)">الصفحة:</label><input type="number" class="inp" style="width:70px; padding:8px 12px; text-align:center;" min="0" max="${b.totalPages}" value="${b.readPages}" onchange="updateBookPagesInline(${b.id}, this.value)" ${isDone ? 'disabled' : ''}></div><div style="display:flex; gap:6px;"><button class="btn" style="background:var(--primary); color:white; padding:0 12px; border-radius:8px; font-size:12px; box-shadow:none; height:32px;" onclick="openBookNotes(${b.id})">ملاحظات 📝</button><button class="del-btn" onclick="openModal('book', ${b.id})">✎</button><button class="del-btn" onclick="delBook(${b.id})">✕</button></div></div></div>`; }).join('') : '<div class="empty">مكتبتك فارغة. أضف كتابك الأول للبدء!</div>'; }
     function saveZahaSession() {
       const id = document.getElementById('m-zaha-id').value;
       const course = document.getElementById('m-zaha-course').value.trim();
@@ -3346,6 +3438,17 @@
       if (document.getElementById('circ-txt-goals')) document.getElementById('circ-txt-goals').textContent = Math.round(gAvg) + '%';
       updateCircle('circ-goals', gAvg);
 
+      const bTotalP = state.books.reduce((s, b) => s + (Number(b.totalPages) || 0), 0);
+      const bReadP  = state.books.reduce((s, b) => s + (Number(b.readPages)  || 0), 0);
+      const bDone   = state.books.filter(b => b.readPages >= b.totalPages && b.totalPages > 0).length;
+      const bTotal  = state.books.length;
+      const bPct    = bTotalP > 0 ? Math.round((bReadP / bTotalP) * 100) : 0;
+      const el = id => document.getElementById(id);
+      if (el('dash-books-overall-pct'))   el('dash-books-overall-pct').textContent   = bPct + '%';
+      if (el('dash-books-overall-pages')) el('dash-books-overall-pages').textContent = `${bReadP}/${bTotalP} صفحة`;
+      if (el('dash-books-overall-bar'))   el('dash-books-overall-bar').style.width   = bPct + '%';
+      if (el('dash-books-overall-done'))  el('dash-books-overall-done').textContent  = `${bDone}/${bTotal}`;
+
       if (typeof renderChart === 'function' && document.getElementById('productivityChart')) renderChart();
     }
     function renderChart() {
@@ -3368,6 +3471,7 @@
     }
     function renderReaderLibrary() {
       const grid = document.getElementById('reader-library-grid');
+      if (!grid) return;
       if (state.readerBooks.length === 0) { grid.innerHTML = `<div class="empty" style="grid-column: 1 / -1;">مكتبتك الذكية فارغة. ارفع كتاباً جديداً!</div>`; return; }
       grid.innerHTML = state.readerBooks.map(book => {
         const pct = Math.round((book.progress / book.total) * 100) || 0;
