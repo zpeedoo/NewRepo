@@ -1,6 +1,6 @@
 # دليل هيكلية كود تطبيق مُبين (Life Planner)
-**الإصدار الموثَّق:** `v28_Production_Auth_Restored`  
-**آخر تحديث للوثيقة:** 2026-06-19
+**الإصدار الموثَّق:** `v29_Firebase_Architecture_Optimized`  
+**آخر تحديث للوثيقة:** 2026-06-20
 
 بناءً على مبادئ **Ponytail Rules (الكسل الذكي)**، يهدف هذا الدليل إلى تفصيل بنية ملف `life-planner.html` لتسهيل فهمه وإجراء التعديلات عليه مستقبلاً بسرعة دون الحاجة لقراءة الكود بالكامل.
 
@@ -8,7 +8,7 @@
 
 ## 1. التقنيات والمكتبات المستخدمة (Dependencies)
 - **الأساس:** HTML, CSS, Vanilla JavaScript (ملف واحد، بدون أطر عمل)
-- **قواعد البيانات والمصادقة:** Firebase Auth + Realtime Database
+- **قواعد البيانات والمصادقة:** Firebase Auth + Realtime Database + Firebase Storage
 - **المكتبات الخارجية:**
   - `Chart.js` — الرسوم البيانية في التقارير
   - `html2pdf.js` — تصدير التقارير بصيغة PDF
@@ -64,7 +64,7 @@
 ```javascript
 let state = {
   habits: [],         // مصفوفة العادات
-  history: {},        // سجل الإنجاز اليومي { "2026-01-01": [id1, id2] }
+  history: {},        // سجل الإنجاز اليومي { "2026-01-01": [id1, id2] } (يتم تحميله ومزامنته بشكل منفصل)
   goals: [],          // مصفوفة الأهداف
   books: [],          // الكتب اليدوية (بالصفحات)
   readerBooks: [],    // كتب المكتبة الذكية (PDF / HTML / Text)
@@ -74,22 +74,22 @@ let state = {
     notifTime: '20:00',
     displayName: '',
     age: '',
-    profilePic: ''    // base64 string (مصغّر لـ 150px)
+    profilePic: ''    // رابط الصورة في Firebase Storage (أو base64 في حال الفشل)
   },
   highScores: {       // أعلى نقطة لكل لعبة
     stroop: 0,
     direction: 0,
     // slide, summatch, shapecounter, wordsearch, infinity, memoryconnect
   },
-  gameHistory: {},    // { "2026-01-01": { stroop: [10, 20], direction: [30] } }
-  nextId: 1           // عداد المعرفات الفريدة
+  gameHistory: {}     // { "2026-01-01": { stroop: [10, 20], direction: [30] } }
+  // ملاحظة: تم إزالة nextId ويتم استخدام Date.now() بدلاً منه لتجنب التضارب
 }
 ```
 
-### دوال المزامنة والتحميل
-- `checkAndMigrateDataThenLoad(uid)` — يُستدعى عند تسجيل الدخول، يدمج البيانات القديمة (migration) ثم يستدعي `loadState()`
-- `loadState()` — يستمع لـ Firebase بـ `.on('value')` لتحديث الواجهة فور أي تغيير سحابي
-- `saveState()` — يحفظ `state` كاملاً إلى `users/{uid}/planner_state`
+### دوال المزامنة والتحميل (تم تحسينها معمارياً)
+- `checkAndMigrateDataThenLoad(uid)` — يُستدعى عند تسجيل الدخول. يقوم بدمج `history` المنفصل من السحابة إلى الكائن المحلي، ثم يستدعي `loadState()`.
+- `loadState()` — يستمع لـ `planner_state` و `history` بـ `.on('value')` عبر مستمعين منفصلين لضمان عدم استهلاك البيانات.
+- `saveState()` — يحفظ `state` كاملاً إلى `users/{uid}/planner_state`، **مع استبعاد `history`** لتقليل حجم الرفع. يتم حفظ `history` بشكل مباشر ومنفصل عند تحديد عادة بـ `db.ref(users/.../history/today).set(...)`.
 
 ---
 
@@ -125,35 +125,30 @@ let state = {
 **المصادقة:** `handleLogin()`, `handleSignUp()`, `handleReset()`, `logout()`  
 **العادات:** `saveHabit()`, `delHabit(id)`, `toggleHabit(id, bookId)`, `getActiveHabitsForDate(dateStr)`, `getStreak(habitId)`  
 **الأهداف:** `saveGoal()`, `delGoal(id)`, `getGoalProgressInfo(goalId)`  
-**الكتب اليدوية:** `saveBook()`, `delBook(id)`, `updateBookPagesInline(id, val)`, `openBookNotes(id)`, `saveBookNotes()`  
-**الملف الشخصي:** `saveAccountSettings()`, `saveAccountSettingsM()`, `handleDirectPicUpload(fileInput)`
-
-### دوال تمارين التنفس
-| الدالة | الغرض |
-|---|---|
-| `openBreatheModal()` | فتح النافذة |
-| `startBreathe()` | بدء الجلسة (يبدأ عداد الجلسة الكلي) |
-| `resetBreathe()` | إعادة الضبط + إيقاف العداد وحفظ الوقت المنقضي |
-| `stopBreathe()` | إيقاف + تراكم `breatheTime` في `state.journal[today]` |
-| `runBreatheCycle()` | حلقة تكرارية لمراحل: شهيق → حبس → زفير → حبس |
-| `checkBreatheGoal()` | تعليم "منجز" عند إتمام 4 دورات |
-
-**الأنواع المتاحة:** 4-7-8 / التنفس المربع / Wim Hof
+**الكتب اليدوية:** `saveBook()`, `delBook(id)` (بإستخدام `await db.ref().remove()`), `updateBookPagesInline(id, val)`, `openBookNotes(id)`, `saveBookNotes()`  
+**الملف الشخصي:** `saveAccountSettings()`, `saveAccountSettingsM()`, `handleDirectPicUpload(fileInput)` (ترفع الصورة إلى Firebase Storage)
 
 ---
 
-## 5. نادي التركيز — الألعاب الثمانية
+## 5. التحديثات المعمارية الجوهرية (Architecture Improvements)
+- **IDs مبنية على الوقت (`Date.now()`):** تم إزالة `nextId++` بالكامل لمنع التضارب بين الأجهزة (Collisions).
+- **فصل الـ History (Decoupling):** يتم حفظ الـ `history` يومياً بشكل منفصل في العقدة `users/{uid}/history/{date}`. في حال تحديد العادة يتم الرفع للعقدة الخاصة باليوم فقط، وهذا يقلل حجم البيانات المرسلة بنسبة هائلة (>95%).
+- **استخدام Firebase Storage:** الصور الشخصية تُرفع السحابة كـ Blob، مما يمنع تضخم ملف `planner_state` بسبب نصوص الـ base64، مع وجود Local Fallback للحفظ محلياً في حال فشل الرفع السحابي.
 
-| اللعبة | الدالة | المتغيرات الرئيسية |
-|---|---|---|
-| Stroop | `startStroopGame()`, `checkStroop(color)` | `stroopScore`, `stroopTimeLeft`, `currentStroopColor` |
-| لغز الألوان المنزلق | `startSlideGame()`, `moveSlideTile(idx)` | `slideState[]`, `slideTarget[]`, `slideMoves` |
-| تطابق المجموع | `startSumMatchGame()`, `handleSmClick(r,c,el)` | `smGrid[][]`, `smTarget`, `smPairsFound` |
-| حصر الأشكال | `startShapeCounterGame()`, `checkShapeCounter()` | `scExpected{}`, SVG مُولَّد عشوائياً |
-| البحث عن الكلمات | `startWordSearchGame()`, `generateWordSearchGrid()` | `wsGrid[][]`, `wsWords[]`, `wsPassword` (كلمة سر مخفية) |
-| مسار الانتباه | `startInfinityGame()`, `handleInfClick(num)` | `infPathCoords[]`, `infCurrentNode`, `infLoops` |
-| خريطة الألوان | `startMemoryConnectGame()`, `handleMCClick(num)` | `mcSequence[]`, `mcUserSequence[]`, `mcNodesList[]` |
-| الحركة والاتجاه | `startDirectionGame()`, `handleDirectionInput(dir)` | `dirRule` (moving/pointing), `dirMove`, `dirPoint`, `dirArrows[]` |
+---
+
+## 6. نادي التركيز — الألعاب الثمانية
+
+| اللعبة | المتغيرات الرئيسية |
+|---|---|
+| Stroop | `stroopScore`, `stroopTimeLeft`, `currentStroopColor` |
+| لغز الألوان المنزلق | `slideState[]`, `slideTarget[]`, `slideMoves` |
+| تطابق المجموع | `smGrid[][]`, `smTarget`, `smPairsFound` |
+| حصر الأشكال | `scExpected{}`, SVG مُولَّد عشوائياً |
+| البحث عن الكلمات | `wsGrid[][]`, `wsWords[]`, `wsPassword` (كلمة سر مخفية) |
+| مسار الانتباه | `infPathCoords[]`, `infCurrentNode`, `infLoops` |
+| خريطة الألوان | `mcSequence[]`, `mcUserSequence[]`, `mcNodesList[]` |
+| الحركة والاتجاه | `dirRule` (moving/pointing), `dirMove`, `dirPoint`, `dirArrows[]` |
 
 **خصائص مشتركة بين الألعاب:**
 - `hideAllFocusGames()` — تخفي جميع مناطق الألعاب
@@ -163,15 +158,9 @@ let state = {
 - `focusMistakes` + `resetFocusMistakes()` — عداد الأخطاء الموحَّد
 - `playSound(type)` — تشغيل المؤثر الصوتي المناسب
 
-**لعبة الاتجاه (Direction) — تفاصيل إضافية:**
-- تعتمد على Swipe (يمين/يسار/أعلى/أسفل) بالماوس أو اللمس
-- تُظهر سرباً من أوراق SVG متحركة تتحرك في اتجاه معين
-- قاعدتان تتبادلان: "في أي اتجاه تشير الأوراق؟" أو "في أي اتجاه تتحرك؟"
-- تتبع أعلى نقطة في `state.highScores.direction`
-
 ---
 
-## 6. نظام التحقق من الهوية (Auth Flow)
+## 7. نظام التحقق من الهوية (Auth Flow)
 
 ```
 تحميل الصفحة
@@ -179,7 +168,7 @@ let state = {
 auth.onAuthStateChanged()
     ├── مسجّل → checkAndMigrateDataThenLoad(uid)
     │               ↓
-    │           دمج بيانات قديمة إن وُجدت (migration)
+    │           دمج history السحابي مع local state
     │               ↓
     │           loadState() → Firebase .on('value') → renderAll()
     │
@@ -188,33 +177,24 @@ auth.onAuthStateChanged()
 
 ---
 
-## 7. توافق مبادئ Ponytail Rules
-
-- **ملف واحد:** لا bundlers، يعمل كملف محلي أو PWA
-- **`customConfirm` مركزي:** بدلاً من `window.confirm` أو نوافذ مكررة
-- **SVG بـ `currentColor`:** متوافق مع Dark Mode دون تغييرات إضافية
-- **`renderAll()` موحَّد:** نقطة دخول واحدة لتحديث كل الواجهة
-- **Migration فردي:** `checkAndMigrateDataThenLoad` يُشغَّل مرة عند الدخول فقط
-
----
-
 ## 8. سجل التحديثات (بالترتيب — الأحدث أولاً)
 
-### v28 — Production Auth Restored (الحالي)
+### v29 — Firebase Architecture Optimized (الحالي)
+- **فصل سجل العادات (History Decoupling):** أصبحت `history` تُحفظ كمسار منفصل في Firebase لتسريع المزامنة وتقليل البيانات المستهلكة.
+- **معرفات مبنية على `Date.now()`:** منع حالات التضارب (Collisions).
+- **التكامل مع Firebase Storage:** تحويل صورة الحساب إلى ملفات في Storage لتخفيف العبء على الـ Realtime Database.
+- **التأكيد السحابي القوي:** استخدام `await` عند حذف الكيانات الكبيرة كمسودات الكتب لضمان عدم حذفها محلياً فقط وقت انقطاع الإنترنت.
+
+### v28 — Production Auth Restored
 - **بحث شامل:** زر بحث في الـ Header يفتح `#modal-search` ويبحث فورياً عبر العادات والأهداف والكتب مع رابط مباشر لكل نتيجة
-- **لعبة الاتجاه والحركة:** لعبة ثامنة تعتمد على Swipe بدلاً من الضغط، مع سرب أوراق SVG متحرك وقاعدتين متبادلتين
-- **نظام المؤثرات الصوتية:** ملفات `.aac` محلية (SoftUI / Ring / Achievement / Error) تُشغَّل عبر `playSound(type)`
-- **نظام أعلى نقطة:** `state.highScores` لألعاب Stroop والاتجاه، يُعرض في قائمة الألعاب
+- **لعبة الاتجاه والحركة:** لعبة ثامنة تعتمد على Swipe بدلاً من الضغط
+- **نظام المؤثرات الصوتية:** ملفات `.aac` محلية تُشغَّل عبر `playSound(type)`
+- **نظام أعلى نقطة:** `state.highScores` لألعاب Stroop والاتجاه
 - **سجل نتائج الألعاب:** `state.gameHistory[date][gameId]` لحفظ جميع النتائج
-- **عداد الأخطاء الموحَّد:** `focusMistakes` يظهر في أعلى صفحة نادي التركيز
 
 ### تحديثات سابقة موثَّقة
-- **صفحة الحساب (Account Page):** بنمط WhatsApp مع صورة شخصية قابلة للرفع (تُصغَّر لـ 150px وتُحفظ base64)
-- **صفحة الأمان:** `#page-security` منفصلة مع عرض البريد الإلكتروني و 2FA placeholder
-- **نافذة تأكيد مركزية:** `customConfirm()` موحَّدة لكل عمليات الحذف وتسجيل الخروج
+- **صفحة الحساب (Account Page):** بنمط WhatsApp وتعديل الإعدادات الشخصية
+- **نافذة تأكيد مركزية:** `customConfirm()`
 - **إزالة التحديث اليدوي للأهداف:** التقدم يُحسب آلياً من العادات المرتبطة فقط
-- **تبسيط تكرار العادة:** حُذفت خيارات أسبوعي/شهري/سنوي من النموذج (يومي + أيام محددة فقط)
-- **أيقونات SVG:** استبدال كل الإيموجيز في الـ Nav والداش بورد والألعاب بأيقونات SVG
-- **Mini-Dash مع فلتر:** فلتر الفترة الزمنية (7/30/90/180/365 يوم) في ملخص اليومية
-- **عداد وقت جلسة التنفس:** عداد تراكمي للوقت الكلي يُحفظ يومياً في `state.journal[today].breatheTime`
-- **Migration البيانات:** `checkAndMigrateDataThenLoad` يدمج البيانات القديمة والمحلية تلقائياً عند أول دخول
+- **تبسيط تكرار العادة:** يومي + أيام محددة فقط
+- **أيقونات SVG بدلاً من الإيموجيز**
